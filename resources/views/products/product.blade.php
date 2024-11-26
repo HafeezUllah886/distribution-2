@@ -27,10 +27,8 @@
                             <th>Brand</th>
                             <th>Category</th>
                             <th>Unit</th>
-                            <th>TP</th>
                             <th>P Price</th>
-                            <th>WS Price</th>
-                            <th>RT Price</th>
+                            <th>S Price</th>
                             <th>Discount</th>
                             <th>Action</th>
                         </thead>
@@ -43,9 +41,7 @@
                                     <td>{{ $item->brand->name }}</td>
                                     <td>{{ $item->category->name }}</td>
                                     <td>{{ $item->unit->name }}</td>
-                                    <td>{{ $item->tp }}</td>
                                     <td>{{ $item->pprice }}</td>
-                                    <td>{{ $item->wsprice }}</td>
                                     <td>{{ $item->price }}</td>
                                     <td>{{ $item->discount }}</td>
                                     <td>
@@ -97,25 +93,13 @@
                                                         </select>
                                                     </div>
                                                     <div class="form-group mt-2">
-                                                        <label for="tp">TP</label>
-                                                        <input type="number" step="any" name="tp" required
-                                                            value="{{ $item->tp }}" min="0" id="tp"
-                                                            class="form-control">
-                                                    </div>
-                                                    <div class="form-group mt-2">
                                                         <label for="pprice">Purchase Price</label>
                                                         <input type="number" step="any" name="pprice" required
                                                             value="{{ $item->pprice }}" min="0" id="pprice"
                                                             class="form-control">
                                                     </div>
                                                     <div class="form-group mt-2">
-                                                        <label for="wsprice">Whole Sale Price</label>
-                                                        <input type="number" step="any" name="wsprice" required
-                                                            value="{{ $item->wsprice }}" min="0" id="wsprice"
-                                                            class="form-control">
-                                                    </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="price">Retail Price</label>
+                                                        <label for="price">Sale Price</label>
                                                         <input type="number" step="any" name="price" required
                                                             value="{{ $item->price }}" min="0" id="price"
                                                             class="form-control">
@@ -202,13 +186,6 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mt-2">
-                                    <label for="tp">TP</label>
-                                    <input type="number" name="tp" required min="0" step="any" id="tp"
-                                        class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mt-2">
                                     <label for="pprice">Purchase Price</label>
                                     <input type="number" step="any" name="pprice" required
                                         value="" min="0" id="pprice"
@@ -217,15 +194,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mt-2">
-                                    <label for="wsprice">Whole Sale Price</label>
-                                    <input type="number" step="any" name="wsprice" required
-                                        value="" min="0" id="wsprice"
-                                        class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mt-2">
-                                    <label for="price">Retail Price</label>
+                                    <label for="price">Sale Price</label>
                                     <input type="number" step="any" name="price" required
                                         value="" min="0" id="price"
                                         class="form-control">
@@ -239,7 +208,7 @@
                                         id="discount" class="form-control">
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -88,7 +88,7 @@ return [
     'locale' => env('APP_LOCALE', 'en'),
 
     'domains' => [
-        'bilawal-dist.test',
+        'distribution-2.test',
         'jaffar-s.test',
         'jaffar.diamondquetta.com',
         'jaffartest.diamondquetta.com',
@@ -97,7 +97,7 @@ return [
 
     'databases' => [
         'u788011464_jaffar',
-        'bilawaldist',
+        'distribution2',
         'test',
     ],
 

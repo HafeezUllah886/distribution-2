@@ -160,14 +160,14 @@ function calculateGrowthPercentage($oldValue, $newValue) {
 
 function projectNameAuth()
 {
-    return "Bilawal Distribution";
+    return "GS Marketing";
 }
 
 function projectNameHeader()
 {
-    return "BILAWAL DISTRIBUTION";
+    return "GS MARKETING";
 }
 function projectNameShort()
 {
-    return "BD";
+    return "GS";
 }
