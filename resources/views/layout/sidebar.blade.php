@@ -62,7 +62,7 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
-                <li class="nav-item">
+               {{--  <li class="nav-item">
                     <a class="nav-link menu-link" href="#sales" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-shopping-cart-fill"></i><span data-key="t-apps">Sale</span>
@@ -78,16 +78,16 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> --}}
                 @endif
 
-                <li class="nav-item">
+               {{--  <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('orders.index', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()])}}">
                         <i class="ri-shopping-cart-fill"></i><span data-key="t-apps">Orders</span>
                     </a>
-                </li>
+                </li> --}}
                 @if (auth()->user()->role == "Admin")
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="#purchase" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-shopping-cart-line"></i><span data-key="t-apps">Purchase</span>
@@ -104,8 +104,8 @@
                             </li>
                         </ul>
                     </div>
-                </li>
-                <li class="nav-item">
+                </li> --}}
+                {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="#stock" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-stack-line"></i><span data-key="t-apps">Stocks</span>
@@ -120,7 +120,7 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#products" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
@@ -191,8 +191,33 @@
                         </ul>
                     </div>
                 </li>
-
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarOtherUsers" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarOtherUsers">
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Other Users</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarOtherUsers">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('otherusers.index', ['Order Booker']) }}" class="nav-link"
+                                    data-key="t-form-select">
+                                   Order Bookers </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('otherusers.index', ['Operator']) }}" class="nav-link"
+                                    data-key="t-form-select">
+                                   Operators </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('otherusers.index', ['Accountant']) }}" class="nav-link"
+                                    data-key="t-form-select">
+                                   Accountants </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarReports" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarReports">
                         <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Reports</span>
@@ -241,17 +266,13 @@
                             </li>
                         </ul>
                     </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('orderbooker.index') }}" >
-                        <i class="ri-apps-2-line"></i> <span data-key="t-apps">Orderbookers</span>
-                    </a>
-                </li>
-                <li class="nav-item">
+                </li> --}}
+
+                {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('targets.index') }}" >
                         <i class="ri-apps-2-line"></i> <span data-key="t-apps">Targets</span>
                     </a>
-                </li>
+                </li> --}}
                 @endif
             </ul>
         </div>

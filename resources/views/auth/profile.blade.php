@@ -13,11 +13,11 @@
     <div class="card mt-3">
         <div class="card-header">
             <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
-                <li class="nav-item" role="presentation">
+               {{--  <li class="nav-item" role="presentation">
                     <a class="nav-link active" data-bs-toggle="tab" href="#personalDetails" role="tab" aria-selected="true" >
                         <i class="fas fa-home"></i> User Details
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item" role="presentation">
                     <a class="nav-link " data-bs-toggle="tab" href="#changePassword" role="tab" aria-selected="false" tabindex="-1">
                         <i class="far fa-user"></i> Change Password
@@ -27,7 +27,7 @@
         </div>
         <div class="card-body p-4">
             <div class="tab-content">
-                <div class="tab-pane active show" id="personalDetails" role="tabpanel">
+                {{-- <div class="tab-pane active show" id="personalDetails" role="tabpanel">
                     <form method="post" action="{{ route('updateProfile') }}">
                         @csrf
                         <div class="row">
@@ -60,9 +60,9 @@
                         </div>
                         <!--end row-->
                     </form>
-                </div>
+                </div> --}}
                 <!--end tab-pane-->
-                <div class="tab-pane" id="changePassword" role="tabpanel">
+                <div class="tab-pane active show" id="changePassword" role="tabpanel">
                     <form method="post" action="{{route('changePassword')}}">
                         @csrf
                         <div class="row g-2">

@@ -2,6 +2,7 @@
 
 use App\Models\ref;
 use App\Models\transactions;
+use App\Models\userAccounts;
 
 function createTransaction($accountID, $date, $cr, $db, $notes, $ref){
     transactions::create(
@@ -19,6 +20,17 @@ function createTransaction($accountID, $date, $cr, $db, $notes, $ref){
 
 function getAccountBalance($id){
     $transactions  = transactions::where('accountID', $id);
+
+    $cr = $transactions->sum('cr');
+    $db = $transactions->sum('db');
+    $balance = $cr - $db;
+
+    return $balance;
+}
+
+function getUserAccountBalance($id){
+    $userAccount = userAccounts::where('userID', $id)->first();
+    $transactions  = transactions::where('accountID', $userAccount->accountID);
 
     $cr = $transactions->sum('cr');
     $db = $transactions->sum('db');

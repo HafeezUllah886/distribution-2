@@ -16,6 +16,10 @@ class AccountsController extends Controller
     public function index($filter)
     {
         $accounts = accounts::where('type', $filter)->orderBy('title', 'asc')->get();
+        if($filter == "Other")
+        {
+            $accounts = accounts::Other()->get();
+        }
 
         return view('Finance.accounts.index', compact('accounts', 'filter'));
     }

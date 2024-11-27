@@ -45,16 +45,12 @@
                                                 <th scope="col" class="text-start">Size</th>
                                                 <th scope="col" class="text-start">Price Pack</th>
                                                 <th scope="col" class="text-start">Price Unit</th>
-                                                <th scope="col" class="text-start">WS Price Pack</th>
-                                                <th scope="col" class="text-start">WS Price Unit</th>
-                                                <th scope="col" class="text-start">RP Pack</th>
-                                                <th scope="col" class="text-start">RP Unit</th>
                                             </tr>
                                         </thead>
                                         <tbody >
                                         @foreach ($categories as $key => $cat)
                                             <tr>
-                                               <td colspan="9" class="text-uppercase border-1 border-dark no-padding"><strong>{{$cat->name}}</strong></td> 
+                                               <td colspan="9" class="text-uppercase border-1 border-dark no-padding"><strong>{{$cat->name}}</strong></td>
                                             </tr>
                                             @foreach ($cat->products as $product)
                                             <tr>
@@ -63,10 +59,6 @@
                                                 <td class="text-start border-1 border-dark no-padding">{{ $product->unit->value }}</td>
                                                 <td class="text-start border-1 border-dark no-padding">{{ number_format($product->price * $product->unit->value) }}</td>
                                                 <td class="text-start border-1 border-dark no-padding">{{ number_format($product->price) }}</td>
-                                                <td class="text-start border-1 border-dark no-padding">{{ number_format($product->wsprice * $product->unit->value) }}</td>
-                                                <td class="text-start border-1 border-dark no-padding">{{ number_format($product->wsprice) }}</td>
-                                                <td class="text-start border-1 border-dark no-padding">{{ number_format($product->tp * $product->unit->value) }}</td>
-                                                <td class="text-start border-1 border-dark no-padding">{{ number_format($product->tp) }}</td>
                                             </tr>
                                             @endforeach
                                         @endforeach

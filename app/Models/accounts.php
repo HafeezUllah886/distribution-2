@@ -27,6 +27,12 @@ class accounts extends Model
 
     }
 
+    public function scopeOther($query)
+    {
+        return $query->whereNotIn('type', ['Business', 'Customer', 'Vendor']);
+
+    }
+
     public function transactions()
     {
         return $this->hasMany(transactions::class, 'accountID');

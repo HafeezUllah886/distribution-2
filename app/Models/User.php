@@ -22,6 +22,7 @@ class User extends Authenticatable
         'password',
         'contact',
         'role',
+        'status'
     ];
 
     /**
@@ -45,5 +46,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function account()
+    {
+        return $this->hasOne(userAccounts::class, 'userID');
     }
 }
