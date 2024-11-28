@@ -90,13 +90,13 @@ return [
     'domains' => [
         'distribution-2.test',
         'jaffar-s.test',
-        'jaffar.diamondquetta.com',
+        'gs.diamondquetta.com',
         'jaffartest.diamondquetta.com',
         'jaffar.run',
     ],
 
     'databases' => [
-        'u788011464_jaffar',
+        'u788011464_gs',
         'distribution2',
         'test',
     ],
