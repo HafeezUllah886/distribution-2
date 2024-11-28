@@ -16,11 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('type');
             $table->string('category')->nullable();
-            $table->string('cnic')->nullable();
             $table->string('contact')->nullable();
-            $table->string('address')->nullable();
-            $table->string('ntn')->nullable();
-            $table->string('strn')->nullable();
+            $table->string('c_type')->default('Other');
             $table->timestamps();
         });
     }

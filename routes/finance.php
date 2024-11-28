@@ -9,6 +9,7 @@ use App\Http\Controllers\profileController;
 use App\Http\Controllers\TransferController;
 use App\Http\Middleware\adminCheck;
 use App\Http\Middleware\confirmPassword;
+use App\Models\attachment;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth', adminCheck::class)->group(function () {
@@ -35,5 +36,12 @@ Route::middleware('auth', adminCheck::class)->group(function () {
 
         return response()->json(['data' => $result]);
     });
+
+    Route::get("/attachment/{ref}", function($ref)
+    {
+        $attachment = attachment::where("refID", $ref)->first();
+
+        return response()->file(public_path($attachment->path));
+    })->name('viewAttachment');
 });
 

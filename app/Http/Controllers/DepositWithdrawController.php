@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\currencymgmt;
 use App\Models\deposit_withdraw;
 use App\Models\transactions;
 use Illuminate\Http\Request;
@@ -17,8 +18,9 @@ class DepositWithdrawController extends Controller
     {
         $trans = deposit_withdraw::orderBy('id', 'desc')->get();
         $accounts = accounts::orderby('type', 'asc')->orderby('title', 'asc')->get();
+        $currencies = currencymgmt::all();
 
-        return view('Finance.deposit_withdraw.index', compact('trans', 'accounts'));
+        return view('Finance.deposit_withdraw.index', compact('trans', 'accounts', 'currencies'));
     }
 
     /**
@@ -34,8 +36,14 @@ class DepositWithdrawController extends Controller
      */
     public function store(Request $request)
     {
+
+
         try
         {
+
+            $request->validate([
+                'file' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            ]);
             DB::beginTransaction();
             $ref = getRef();
             deposit_withdraw::create(
@@ -43,7 +51,7 @@ class DepositWithdrawController extends Controller
                     'accountID' => $request->accountID,
                     'date' => $request->date,
                     'type' => $request->type,
-                    'amount' => $request->amount,
+                    'amount' => $request->total,
                     'notes' => $request->notes,
                     'refID' => $ref
                 ]
@@ -51,12 +59,17 @@ class DepositWithdrawController extends Controller
 
             if($request->type == 'Deposit')
             {
-                createTransaction($request->accountID, $request->date, $request->amount, 0, "Deposit: ".$request->notes, $ref);
+                createTransaction($request->accountID, $request->date, $request->total, 0, "Deposit: ".$request->notes, $ref);
+                createCurrencyTransaction($request->accountID, $request->currencyID, $request->currency, 'cr', $request->date, "Deposit: ".$request->notes, $ref);
+
             }
             else
             {
-                createTransaction($request->accountID, $request->date, 0, $request->amount, "Withdraw: ".$request->notes, $ref);
+                createTransaction($request->accountID, $request->date, 0, $request->total, "Withdraw: ".$request->notes, $ref);
+                createCurrencyTransaction($request->accountID, $request->currencyID, $request->currency, 'db', $request->date, "Deposit: ".$request->notes, $ref);
             }
+
+            createAttachment($request->file('file'), $ref);
 
             DB::commit();
             return back()->with('success', "Transaction Created");

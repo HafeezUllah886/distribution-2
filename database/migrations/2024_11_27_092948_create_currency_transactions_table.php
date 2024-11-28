@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('currency_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('currencyID')->constrained('currencymgmts', 'id');
+            $table->foreignId('accountID')->constrained('accounts', 'id');
             $table->date('date');
             $table->float('cr', 2)->default(0);
             $table->float('db', 2)->default(0);

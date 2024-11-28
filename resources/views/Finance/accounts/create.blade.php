@@ -61,52 +61,9 @@
                             </div>
                             <div class="col-6 mt-2 customer" >
                                 <div class="form-group">
-                                    <label for="cnic">CNIC #</label>
-                                    <input type="text" name="cnic" id="cnic" value="{{ old('cnic') }}"
-                                        class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-6 mt-2 customer" >
-                                <div class="form-group">
                                     <label for="contact">Contact #</label>
                                     <input type="text" name="contact" id="contact" value="{{ old('contact') }}"
                                         class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-6 mt-2 customer" >
-                                <div class="form-group">
-                                    <label for="address">Address</label>
-                                    <input type="text" name="address" id="address" value="{{ old('address') }}"
-                                        class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-6 mt-2 customer" >
-                                <div class="form-group">
-                                    <label for="ntn">NTN #</label>
-                                    <input type="text" name="ntn" id="ntn" value="{{ old('ntn') }}"
-                                        class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-6 mt-2 customer" >
-                                <div class="form-group">
-                                    <label for="strn">STRN #</label>
-                                    <input type="text" name="strn" id="strn" value="{{ old('strn') }}"
-                                        class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-12 mt-2">
-                                <div class="form-group">
-                                    <label for="initial">Initial Amount</label>
-                                    <div class="input-group">
-                                        <input type="number" step="any" id="initial" name="initial" value="0"
-                                            min="0" class="form-control">
-                                        <div class="input-group-append">
-                                            <select class="form-control" name="initialType" id="inputGroupSelect04">
-                                                <option value="0">Credit</option>
-                                                <option value="1">Debit</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 mt-3">

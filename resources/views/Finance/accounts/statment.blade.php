@@ -89,7 +89,6 @@
                                         </tbody>
                                     </table><!--end table-->
                                 </div>
-
                             </div>
                             <!--end card-body-->
                         </div><!--end col-->

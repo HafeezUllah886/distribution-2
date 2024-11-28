@@ -59,11 +59,7 @@ class AccountsController extends Controller
                             'title' => $request->title,
                             'type' => $request->type,
                             'category' => $request->category,
-                            'cnic' => $request->cnic,
                             'contact' => $request->contact,
-                            'address' => $request->address,
-                            'ntn' => $request->ntn,
-                            'strn' => $request->strn,
                             'c_type' => $request->c_type,
                         ]
                     );
@@ -77,18 +73,6 @@ class AccountsController extends Controller
                             'category' => $request->category
                         ]
                     );
-                }
-
-                if($request->initial > 0)
-                {
-                    if($request->initialType == '0')
-                    {
-                        createTransaction($account->id,now(), $request->initial,0, "Initial Amount", $ref);
-                    }
-                    else
-                    {
-                        createTransaction($account->id,now(), 0, $request->initial, "Initial Amount", $ref);
-                    }
                 }
            DB::commit();
            return back()->with('success', "Account Created Successfully");
@@ -146,11 +130,7 @@ class AccountsController extends Controller
             [
                 'title' => $request->title,
                 'category' => $request->category,
-                'cnic' => $request->cnic ?? null,
                 'contact' => $request->contact ?? null,
-                'address' => $request->address ?? null,
-                'ntn' => $request->ntn ?? null,
-                'strn' => $request->strn ?? null,
                 'c_type' => $request->c_type,
             ]
         );

@@ -15,17 +15,16 @@ class currencies_seeder extends Seeder
     public function run(): void
     {
         $data = [
-            ['title' => "5000"],
-            ['title' => "1000"],
-            ['title' => "100"],
-            ['title' => "75"],
-            ['title' => "50"],
-            ['title' => "20"],
-            ['title' => "10"],
-            ['title' => "5"],
-            ['title' => "2"],
-            ['title' => "1"],
-            ['title' => "Others"],
+            ['title' => "5000", 'value' => '5000'],
+            ['title' => "1000", 'value' => '1000'],
+            ['title' => "100", 'value' => '100'],
+            ['title' => "75", 'value' => '75'],
+            ['title' => "50", 'value' => '50'],
+            ['title' => "20", 'value' => '20'],
+            ['title' => "10", 'value' => '10'],
+            ['title' => "5", 'value' => '5'],
+            ['title' => "2", 'value' => '2'],
+            ['title' => "1", 'value' => '1'],
         ];
         currencymgmt::insert($data);
     }

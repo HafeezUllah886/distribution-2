@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('accounts', function (Blueprint $table) {
-            $table->string('c_type')->default('Other');
+        Schema::create('attachments', function (Blueprint $table) {
+            $table->id();
+            $table->text('path');
+            $table->bigInteger('refID');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('accounts', function (Blueprint $table) {
-            $table->string('c_type')->default('Other');
-        });
+        Schema::dropIfExists('attachments');
     }
 };

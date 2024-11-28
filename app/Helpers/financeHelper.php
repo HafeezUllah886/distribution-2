@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\attachment;
+use App\Models\currency_transactions;
 use App\Models\ref;
 use App\Models\transactions;
 use App\Models\userAccounts;
@@ -16,6 +18,51 @@ function createTransaction($accountID, $date, $cr, $db, $notes, $ref){
         ]
     );
 
+}
+
+function createCurrencyTransaction($accountID, $currencyID, $currency, $type ,$date, $notes, $ref){
+    foreach($currencyID as $key => $id)
+    {
+        if($type == "cr")
+        {
+            currency_transactions::create(
+                [
+                    'accountID' => $accountID,
+                    'currencyID' => $id,
+                    'date' => $date,
+                    'cr' => $currency[$key],
+                    'notes' => $notes,
+                    'refID' => $ref,
+                ]
+            );
+        }
+        else
+        {
+            currency_transactions::create(
+                [
+                    'accountID' => $accountID,
+                    'currencyID' => $id,
+                    'date' => $date,
+                    'db' => $currency[$key],
+                    'notes' => $notes,
+                    'refID' => $ref,
+                ]
+            );
+        }
+    }
+}
+
+function createAttachment($file, $ref)
+{
+    $filename = time() . '.' . $file->getClientOriginalExtension();
+    $file->move('attachments', $filename);
+
+    attachment::create(
+        [
+            'path' => "attachments/" . $filename,
+            'refID' => $ref,
+        ]
+    );
 }
 
 function getAccountBalance($id){

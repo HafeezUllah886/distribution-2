@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\UnitsController;
+use App\Http\Controllers\WarehousesController;
 use App\Http\Middleware\adminCheck;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoriesController::class)->middleware(adminCheck::class);
     Route::resource('brands', brandsController::class)->middleware(adminCheck::class);
     Route::resource('product', ProductsController::class)->middleware(adminCheck::class);
+    Route::resource('warehouses', WarehousesController::class);
 
 });
 
