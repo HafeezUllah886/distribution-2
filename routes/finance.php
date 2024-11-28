@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\authController;
+use App\Http\Controllers\CurrencymgmtController;
 use App\Http\Controllers\DepositWithdrawController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\PaymentReceivingController;
@@ -29,6 +30,8 @@ Route::middleware('auth', adminCheck::class)->group(function () {
     Route::resource('receivings', PaymentReceivingController::class);
     Route::get('receiving/delete/{ref}', [PaymentReceivingController::class, 'delete'])->name('receiving.delete')->middleware(confirmPassword::class);
     Route::get('receiving/pdf/{id}', [PaymentReceivingController::class, 'pdf'])->name('receiving.pdf');
+
+    Route::get('currency/details/{id}', [CurrencymgmtController::class, 'details'])->name('currency.details');
 
     Route::get('/accountbalance/{id}', function ($id) {
         // Call your Laravel helper function here

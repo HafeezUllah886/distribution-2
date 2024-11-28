@@ -78,7 +78,7 @@
                                         @endphp
                                             <tr>
                                                 <td>{{ $key+1 }}</td>
-                                                <td>{{ $trans->refID }}</td>
+                                                <td><a href="{{route('viewAttachment', $trans->refID)}}" target="_black">{{ $trans->refID }} <i class="ri-attachment-2"></i></a></td>
                                                 <td>{{ date('d M Y', strtotime($trans->date)) }}</td>
                                                 <td class="text-start">{{ $trans->notes }}</td>
                                                 <td class="text-end">{{ number_format($trans->cr) }}</td>

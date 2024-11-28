@@ -23,33 +23,46 @@ function createTransaction($accountID, $date, $cr, $db, $notes, $ref){
 function createCurrencyTransaction($accountID, $currencyID, $currency, $type ,$date, $notes, $ref){
     foreach($currencyID as $key => $id)
     {
-        if($type == "cr")
+        if($currency[$key] > 0)
         {
-            currency_transactions::create(
-                [
-                    'accountID' => $accountID,
-                    'currencyID' => $id,
-                    'date' => $date,
-                    'cr' => $currency[$key],
-                    'notes' => $notes,
-                    'refID' => $ref,
-                ]
-            );
+            if($type == "cr")
+            {
+                currency_transactions::create(
+                    [
+                        'accountID' => $accountID,
+                        'currencyID' => $id,
+                        'date' => $date,
+                        'cr' => $currency[$key],
+                        'notes' => $notes,
+                        'refID' => $ref,
+                    ]
+                );
+            }
+            else
+            {
+                currency_transactions::create(
+                    [
+                        'accountID' => $accountID,
+                        'currencyID' => $id,
+                        'date' => $date,
+                        'db' => $currency[$key],
+                        'notes' => $notes,
+                        'refID' => $ref,
+                    ]
+                );
+            }
         }
-        else
-        {
-            currency_transactions::create(
-                [
-                    'accountID' => $accountID,
-                    'currencyID' => $id,
-                    'date' => $date,
-                    'db' => $currency[$key],
-                    'notes' => $notes,
-                    'refID' => $ref,
-                ]
-            );
-        }
+
     }
+}
+
+function deleteAttachment($ref)
+{
+    $attachment = attachment::where('refID', $ref)->first();
+    if (file_exists(public_path($attachment->path))) {
+        unlink(public_path($attachment->path));
+    }
+    $attachment->delete();
 }
 
 function createAttachment($file, $ref)
@@ -78,6 +91,16 @@ function getAccountBalance($id){
 function getUserAccountBalance($id){
     $userAccount = userAccounts::where('userID', $id)->first();
     $transactions  = transactions::where('accountID', $userAccount->accountID);
+
+    $cr = $transactions->sum('cr');
+    $db = $transactions->sum('db');
+    $balance = $cr - $db;
+
+    return $balance;
+}
+
+function getCurrencyBalance($id, $account){
+    $transactions  = currency_transactions::where('currencyID', $id)->where('accountID', $account);
 
     $cr = $transactions->sum('cr');
     $db = $transactions->sum('db');

@@ -29,9 +29,7 @@ class OtherusersController extends Controller
 
         try
         {
-
         DB::beginTransaction();
-
         $request->validate(
             [
                 'name' => "unique:users,name|required",

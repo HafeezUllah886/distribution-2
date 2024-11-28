@@ -37,12 +37,19 @@
                                                                                 View Statment
                                                                             </button>
                                                                         </li>
+                                                                        <li>
+                                                                            <a class="dropdown-item" href="{{route('currency.details', $user->account->accountID)}}">
+                                                                                <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                                                Currency Details
+                                                                            </a>
+                                                                        </li>
                                                                           <li>
                                                                               <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit_{{$user->id}}">
                                                                                   <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                                                   Edits
                                                                               </a>
                                                                           </li>
+
                                                                           <li>
                                                                               <a class="dropdown-item text-{{$user->status == "Blocked" ? "success" : "danger"}}" href="{{route('otherusers.status', [$user->id])}}">
                                                                                   <i class="ri-user-settings-fill align-bottom me-2 text-muted"></i>

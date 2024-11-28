@@ -61,18 +61,47 @@ class AccountsController extends Controller
                             'category' => $request->category,
                             'contact' => $request->contact,
                             'c_type' => $request->c_type,
+                            'cashable' => "no"
                         ]
                     );
                 }
                 else
                 {
+                   if($request->type == "Business")
+                   {
+                        if($request->category == "Cash")
+                        {
+                            $account = accounts::create(
+                                [
+                                    'title' => $request->title,
+                                    'type' => $request->type,
+                                    'category' => $request->category
+                                ]
+                            );
+                        }
+                        else
+                        {
+                            $account = accounts::create(
+                                [
+                                    'title' => $request->title,
+                                    'type' => $request->type,
+                                    'category' => $request->category,
+                                    'cashable' => "no"
+                                ]
+                            );
+                        }
+                   }
+                   else
+                   {
                     $account = accounts::create(
                         [
                             'title' => $request->title,
                             'type' => $request->type,
-                            'category' => $request->category
+                            'category' => $request->category,
+                            'cashable' => "no"
                         ]
                     );
+                   }
                 }
            DB::commit();
            return back()->with('success', "Account Created Successfully");

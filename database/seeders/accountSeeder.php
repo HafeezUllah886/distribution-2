@@ -25,7 +25,8 @@ class accountSeeder extends Seeder
             [
                 'title' => "Walk-In Customer",
                 'type' => "Customer",
-                
+                'cashable' => 'no'
+
             ]
         );
 
@@ -33,6 +34,7 @@ class accountSeeder extends Seeder
             [
                 'title' => "Walk-In Vendor",
                 'type' => "Vendor",
+                'cashable' => 'no'
             ]
         );
     }

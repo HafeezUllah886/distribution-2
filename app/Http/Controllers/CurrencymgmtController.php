@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\currencymgmt;
 use App\Http\Controllers\Controller;
+use App\Models\accounts;
 use Illuminate\Http\Request;
 
 class CurrencymgmtController extends Controller
@@ -64,5 +65,13 @@ class CurrencymgmtController extends Controller
     public function destroy(currencymgmt $currencymgmt)
     {
         //
+    }
+
+    public function details($accountID)
+    {
+        $account = accounts::find($accountID);
+        $currencies = currencymgmt::all();
+
+        return view('Finance.currencymgmt.details', compact('account', 'currencies'));
     }
 }
