@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\currency_transactions;
+use App\Models\currencymgmt;
 use App\Models\transactions;
 use App\Models\transfer;
 use Illuminate\Http\Request;
@@ -17,7 +19,8 @@ class TransferController extends Controller
     {
         $transfers = transfer::orderby('id', 'desc')->get();
         $accounts = accounts::all();
-        return view('Finance.transfer.index', compact('transfers', 'accounts'));
+        $currencies = currencymgmt::all();
+        return view('Finance.transfer.index', compact('transfers', 'accounts', 'currencies'));
     }
 
     /**
@@ -51,31 +54,21 @@ class TransferController extends Controller
                     'from' => $request->from,
                     'to' => $request->to,
                     'date' => $request->date,
-                    'amount' => $request->amount,
+                    'amount' => $request->total,
                     'notes' => $request->notes,
                     'refID' => $ref,
                 ]
             );
             $fromAccount = $transfer->fromAccount->title;
             $toAccount = $transfer->toAccount->title;
-            if($transfer->fromAccount->type == "Customer")
-            {
-                createTransaction($request->from,$request->date, $request->amount, 0, "Transfered to $toAccount", $ref);
-                createTransaction($request->to, $request->date, $request->amount, 0, "Transfered from $fromAccount", $ref);
-              
-            }
-            elseif($transfer->toAccount->type == "Customer")
-            {
-                createTransaction($request->from,$request->date, 0, $request->amount, "Transfered to $toAccount", $ref);
-                createTransaction($request->to, $request->date, 0, $request->amount, "Transfered from $fromAccount", $ref);
-             
-            }
-            else
-            {
-                createTransaction($request->from,$request->date, 0, $request->amount, "Transfered to $toAccount", $ref);
-                createTransaction($request->to, $request->date, $request->amount, 0, "Transfered from $fromAccount", $ref);
-                
-            }
+
+            createTransaction($request->from,$request->date, 0, $request->total, "Transfered to $toAccount :" .$request->notes, $ref);
+            createTransaction($request->to, $request->date, $request->total, 0, "Transfered from $fromAccount :" .$request->notes, $ref);
+
+            createCurrencyTransaction($request->from, $request->currencyID, $request->currency, 'db', $request->date, "Transfered to $toAccount :".$request->notes, $ref);
+            createCurrencyTransaction($request->to, $request->currencyID, $request->currency, 'cr', $request->date, "Transfered from $fromAccount :".$request->notes, $ref);
+
+            createAttachment($request->file('file'), $ref);
             DB::commit();
             return back()->with('success', "Transfered Successfully");
         }
@@ -120,6 +113,9 @@ class TransferController extends Controller
             DB::beginTransaction();
             transfer::where('refID', $ref)->delete();
             transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+
+            deleteAttachment($ref);
             DB::commit();
             session()->forget('confirmed_password');
             return redirect()->route('transfers.index')->with('success', "Transfer Deleted");

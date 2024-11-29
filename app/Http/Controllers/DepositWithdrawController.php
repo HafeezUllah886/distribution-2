@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\deposit_withdraw;
 use App\Models\transactions;
@@ -112,6 +113,7 @@ class DepositWithdrawController extends Controller
             DB::beginTransaction();
             deposit_withdraw::where('refID', $ref)->delete();
             transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
             DB::commit();
             deleteAttachment($ref);
             session()->forget('confirmed_password');

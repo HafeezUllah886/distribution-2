@@ -176,10 +176,10 @@
                                 <a href="{{ route('deposit_withdraw.index') }}" class="nav-link"
                                     data-key="t-input-masks">Deposit / Withdraw</a>
                             </li>
-                           {{--  <li class="nav-item">
+                           {{-- <li class="nav-item">
                                 <a href="{{ route('receivings.index') }}" class="nav-link"
                                     data-key="t-input-masks">Payment Receiving</a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item">
                                 <a href="{{ route('transfers.index') }}" class="nav-link"
                                     data-key="t-advanced">Transfer</a>
@@ -187,7 +187,7 @@
                             <li class="nav-item">
                                 <a href="{{ route('expenses.index') }}" class="nav-link" data-key="t-range-slider">
                                     Expenses</a>
-                            </li> --}}
+                            </li>
                         </ul>
                     </div>
                 </li>

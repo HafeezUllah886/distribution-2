@@ -17,6 +17,7 @@ class currencies_seeder extends Seeder
         $data = [
             ['title' => "5000", 'value' => '5000'],
             ['title' => "1000", 'value' => '1000'],
+            ['title' => "500", 'value' => '500'],
             ['title' => "100", 'value' => '100'],
             ['title' => "75", 'value' => '75'],
             ['title' => "50", 'value' => '50'],

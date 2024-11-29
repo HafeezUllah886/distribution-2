@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\currencymgmt;
 use App\Models\expenses;
 use App\Models\transactions;
 use Illuminate\Http\Request;
@@ -17,7 +18,8 @@ class ExpensesController extends Controller
     {
         $expenses = expenses::orderby('id', 'desc')->get();
         $accounts = accounts::business()->get();
-        return view('Finance.expense.index', compact('expenses', 'accounts'));
+        $currencies = currencymgmt::all();
+        return view('Finance.expense.index', compact('expenses', 'accounts','currencies'));
     }
 
     /**
@@ -40,15 +42,16 @@ class ExpensesController extends Controller
             expenses::create(
                 [
                     'accountID' => $request->accountID,
-                    'amount' => $request->amount,
+                    'amount' => $request->total,
                     'date' => $request->date,
                     'notes' => $request->notes,
                     'refID' => $ref,
                 ]
             );
+            createTransaction($request->accountID, $request->date, 0, $request->total, "Expense - ".$request->notes, $ref);
+            createCurrencyTransaction($request->accountID, $request->currencyID, $request->currency, 'db', $request->date, "Expense: ".$request->notes, $ref);
 
-            createTransaction($request->accountID, $request->date, 0, $request->amount, "Expense - ".$request->notes, $ref);
-
+            createAttachment($request->file('file'), $ref);
             DB::commit();
             return back()->with('success', 'Expense Saved');
         }

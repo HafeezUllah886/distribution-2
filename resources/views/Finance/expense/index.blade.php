@@ -54,38 +54,69 @@
 
     <div id="new" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
         style="display: none;">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="myModalLabel">Create Expense</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
-                <form action="{{ route('expenses.store') }}" method="post">
+                <form action="{{ route('expenses.store') }}" enctype="multipart/form-data" method="post">
                     @csrf
                     <div class="modal-body">
-                        <div class="form-group mt-2">
-                            <label for="account">Account</label>
-                            <select name="accountID" id="account" required class="selectize">
-                                <option value=""></option>
-                                @foreach ($accounts as $account)
-                                    <option value="{{ $account->id }}">{{ $account->title }}</option>
-                                @endforeach
-                            </select>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group mt-2">
+                                    <label for="account">Account</label>
+                                    <select name="accountID" id="account" required class="selectize">
+                                        <option value=""></option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{ $account->id }}">{{ $account->title }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="date">Date</label>
+                                    <input type="date" name="date" required id="date" value="{{ date('Y-m-d') }}"
+                                        class="form-control">
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="notes">Notes</label>
+                                    <textarea name="notes" required id="notes" cols="30" class="form-control" rows="5"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                    <table class="w-100">
+                                        <thead>
+                                            <th>Currency</th>
+                                            <th>Amount</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($currencies as $currency)
+                                                <tr>
+                                                    <td>{{$currency->title}}</td>
+                                                    <td>
+                                                        <input type="number" class="form-control form-control-sm" data-value="{{$currency->title}}" id="currency_{{$currency->id}}" oninput="updateTotal()" name="currency[]" value="0">
+                                                        <input type="hidden" class="form-control" name="currencyID[]" value="{{$currency->id}}">
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            <tr>
+                                                <td>Total Amount</td>
+                                                <td>
+                                                    <input type="number" class="form-control form-control-sm" readonly id="total" name="total" value="0">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Attachement</td>
+                                                <td>
+                                                    <input type="file" class="form-control form-control-sm" name="file">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
                         </div>
-                        <div class="form-group mt-2">
-                            <label for="amount">Amount</label>
-                            <input type="number" step="any" name="amount" required id="amount"
-                                class="form-control">
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="date">Date</label>
-                            <input type="date" name="date" required id="date" value="{{ date('Y-m-d') }}"
-                                class="form-control">
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="notes">Notes</label>
-                            <textarea name="notes" required id="notes" cols="30" class="form-control" rows="5"></textarea>
-                        </div>
+
 
                     </div>
                     <div class="modal-footer">
@@ -122,5 +153,19 @@
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
         $(".selectize").selectize();
+
+        function updateTotal() {
+            console.warn("Working");
+
+            var total = 0;
+            $("input[id^='currency_']").each(function() {
+                var inputId = $(this).attr('id');
+                var inputVal = $(this).val();
+                var inputValue = $(this).data('value');
+                var value = inputVal * inputValue;
+                total += parseFloat(value);
+            });
+            $("#total").val(total.toFixed(2));
+        }
     </script>
 @endsection
