@@ -14,8 +14,13 @@ class units_seeder extends Seeder
     public function run(): void
     {
         $data = [
-            ['name' => "Nos", "value" => 1],
-            ['name' => "Box of 10's", "value" => 10],
+            ['name' => "Piece", "value" => 1],
+            ['name' => "Dzn", "value" => 12],
+            ['name' => "Cotton", "value" => 6],
+            ['name' => "Cotton", "value" => 12],
+            ['name' => "Cotton", "value" => 24],
+            ['name' => "Cotton", "value" => 24],
+            ['name' => "Bag", "value" => 100],
         ];
         units::insert($data);
     }

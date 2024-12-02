@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\brands;
 use App\Models\categories;
+use App\Models\product_units;
 use App\Models\products;
 use App\Models\units;
 use Illuminate\Http\Request;
@@ -13,13 +14,23 @@ class ProductsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($s_cat , $s_brand)
     {
-        $items = products::all();
-        $units = units::all();
+        $products = products::query();
+
+        if ($s_cat != 'all') {
+            $products->where('catID', $s_cat);
+        }
+
+        if ($s_brand != 'all') {
+            $products->where('brandID', $s_brand);
+        }
+
+        $items = $products->get();
+
         $cats = categories::orderBy('name', 'asc')->get();
         $brands = brands::orderBy('name', 'asc')->get();
-        return view('products.product', compact('items', 'units', 'cats', 'brands'));
+        return view('products.product', compact('items', 'cats', 'brands', 's_cat', 's_brand'));
     }
 
     /**
@@ -27,7 +38,11 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        //
+        $cats = categories::orderBy('name', 'asc')->get();
+        $brands = brands::orderBy('name', 'asc')->get();
+        $units = units::all();
+
+        return view('products.create', compact('cats', 'brands', 'units'));
     }
 
     /**
@@ -44,7 +59,20 @@ class ProductsController extends Controller
             ]
         );
 
-        products::create($request->all());
+        $product = products::create($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status']));
+
+        $units = $request->unit_names;
+
+        foreach($units as $key => $unit)
+        {
+            product_units::create(
+                [
+                    'productID' => $product->id,
+                    'unit_name' => $unit,
+                    'value' =>  $request->unit_values[$key],
+                ]
+            );
+        }
 
         return back()->with('success', 'Product Created');
     }
@@ -61,9 +89,13 @@ class ProductsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(products $products)
+    public function edit(products $product)
     {
-        //
+        $cats = categories::orderBy('name', 'asc')->get();
+        $brands = brands::orderBy('name', 'asc')->get();
+        $units = units::all();
+
+        return view('products.edit', compact('cats', 'brands', 'units', 'product'));
     }
 
     /**
@@ -81,7 +113,25 @@ class ProductsController extends Controller
         );
 
         $product = products::find($id);
-        $product->update($request->all());
+        $product->update($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status']));
+
+        foreach($product->units as $unit)
+        {
+            $unit->delete();
+        }
+
+        $units = $request->unit_names;
+
+        foreach($units as $key => $unit)
+        {
+            product_units::create(
+                [
+                    'productID' => $product->id,
+                    'unit_name' => $unit,
+                    'value' =>  $request->unit_values[$key],
+                ]
+            );
+        }
 
         return back()->with('success', 'Product Updated');
     }

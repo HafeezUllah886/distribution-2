@@ -29,4 +29,9 @@ class products extends Model
     {
         return $this->belongsTo(brands::class, 'brandID');
     }
+
+    public function units()
+    {
+        return $this->hasMany(product_units::class, 'productID');
+    }
 }

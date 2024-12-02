@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+       $this->call(AreaSeeder::class);
        $this->call(userSeeder::class);
        $this->call(units_seeder::class);
        $this->call(brandsSeeder::class);
@@ -22,5 +23,6 @@ class DatabaseSeeder extends Seeder
        $this->call(accountSeeder::class);
        $this->call(currencies_seeder::class);
        $this->call(warehouseSeeder::class);
+
     }
 }
