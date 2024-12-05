@@ -42,4 +42,11 @@ class accounts extends Model
     {
         return $this->hasMany(sales::class, 'customerID');
     }
+
+    public function customerArea()
+{
+    return $this->hasOne(customer_area::class, 'customerID');
+}
+
+
 }

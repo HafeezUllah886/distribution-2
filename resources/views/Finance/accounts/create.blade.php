@@ -59,10 +59,28 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-6 mt-2 customer" >
+                            <div class="col-6 mt-2 customer">
+                                <div class="form-group ">
+                                    <label for="area">Area</label>
+                                    <select name="area" id="area" class="selectize">
+                                        <option value=""></option>
+                                        @foreach ($areas as $area)
+                                            <option value="{{$area->id}}">{{$area->town->name}} - {{$area->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6 mt-2" >
                                 <div class="form-group">
                                     <label for="contact">Contact #</label>
                                     <input type="text" name="contact" id="contact" value="{{ old('contact') }}"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-6 mt-2" >
+                                <div class="form-group">
+                                    <label for="email">Email #</label>
+                                    <input type="email" name="email" id="email" value="{{ old('email') }}"
                                         class="form-control">
                                 </div>
                             </div>
@@ -76,14 +94,16 @@
     </div>
     </div>
     <!-- Default Modals -->
-
-
 @endsection
 
-
+@section('page-css')
+    <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
+@endsection
 @section('page-js')
+<script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
         $(".customer").hide();
+        $(".selectize").selectize();
         $("#type").on("change",  function (){
             var type = $("#type").find(":selected").val();
 

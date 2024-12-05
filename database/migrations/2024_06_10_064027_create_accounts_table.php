@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('type');
             $table->string('category')->nullable();
             $table->string('contact')->nullable();
+            $table->string('email')->nullable();
             $table->string('c_type')->default('Other');
             $table->string('cashable')->default('yes');
             $table->timestamps();
