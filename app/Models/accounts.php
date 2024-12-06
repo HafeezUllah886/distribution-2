@@ -13,17 +13,17 @@ class accounts extends Model
 
     public function scopeBusiness($query)
     {
-        return $query->where('type', 'Business');
+        return $query->where('type', 'Business')->where('status', 'Active');
     }
 
     public function scopeCustomer($query)
     {
-        return $query->where('type', 'Customer');
+        return $query->where('type', 'Customer')->where('status', 'Active');
     }
 
     public function scopeVendor($query)
     {
-        return $query->where('type', 'Vendor');
+        return $query->where('type', 'Vendor')->where('status', 'Active');
 
     }
 
@@ -43,9 +43,9 @@ class accounts extends Model
         return $this->hasMany(sales::class, 'customerID');
     }
 
-    public function customerArea()
+    public function area()
 {
-    return $this->hasOne(customer_area::class, 'customerID');
+    return $this->belongsTo(area::class, 'areaID');
 }
 
 

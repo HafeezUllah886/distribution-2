@@ -65,14 +65,8 @@ class AccountsController extends Controller
                             'category' => $request->category,
                             'contact' => $request->contact,
                             'c_type' => $request->c_type,
-                            'cashable' => "no"
-                        ]
-                    );
-
-                    customer_area::create(
-                        [
-                            'customerID' => $account->id,
-                            'areaID'    =>  $request->area,
+                            'cashable' => "no",
+                            'areaID' =>  $request->area,
                         ]
                     );
                 }
@@ -88,7 +82,8 @@ class AccountsController extends Controller
                                     'type' => $request->type,
                                     'contact' => $request->contact,
                                     'email' => $request->email,
-                                    'category' => $request->category
+                                    'category' => $request->category,
+                                    'areaID' => 1,
                                 ]
                             );
                         }
@@ -101,7 +96,8 @@ class AccountsController extends Controller
                                     'contact' => $request->contact,
                                     'email' => $request->email,
                                     'category' => $request->category,
-                                    'cashable' => "no"
+                                    'cashable' => "no",
+                                    'areaID' => 1,
                                 ]
                             );
                         }
@@ -115,7 +111,8 @@ class AccountsController extends Controller
                             'contact' => $request->contact,
                             'email' => $request->email,
                             'category' => $request->category,
-                            'cashable' => "no"
+                            'cashable' => "no",
+                            'areaID' => 1,
                         ]
                     );
                    }
@@ -178,6 +175,7 @@ class AccountsController extends Controller
                 'category' => $request->category,
                 'contact' => $request->contact ?? null,
                 'c_type' => $request->c_type,
+                'areaID' => $request->area ?? 1,
             ]
         );
 
@@ -190,5 +188,26 @@ class AccountsController extends Controller
     public function destroy(accounts $accounts)
     {
         //
+    }
+
+    public function status($id)
+    {
+        $account = accounts::find($id);
+        if($account->status == "Active")
+        {
+           $status = "Inactive";
+        }
+        else
+        {
+            $status = "Active";
+        }
+
+        $account->update(
+            [
+                'status' => $status,
+            ]
+        );
+
+        return back()->with('success', "Status Updated");
     }
 }
