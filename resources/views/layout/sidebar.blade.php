@@ -87,7 +87,7 @@
                     </a>
                 </li> --}}
                 @if (auth()->user()->role == "Admin")
-                {{-- <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#purchase" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-shopping-cart-line"></i><span data-key="t-apps">Purchase</span>
@@ -104,7 +104,7 @@
                             </li>
                         </ul>
                     </div>
-                </li> --}}
+                </li>
                 {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="#stock" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">

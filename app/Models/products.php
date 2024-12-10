@@ -34,4 +34,10 @@ class products extends Model
     {
         return $this->hasMany(product_units::class, 'productID');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'Active');
+
+    }
 }

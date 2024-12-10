@@ -58,7 +58,7 @@ function lastDayOfPreviousYear() {
 }
 
 
-function createStock($id, $cr, $db, $date, $notes, $ref)
+function createStock($id, $cr, $db, $date, $notes, $ref, $warehouse)
 {
     stock::create(
         [
@@ -67,7 +67,8 @@ function createStock($id, $cr, $db, $date, $notes, $ref)
             'db'            => $db,
             'date'          => $date,
             'notes'         => $notes,
-            'refID'         => $ref
+            'refID'         => $ref,
+            'warehouseID'   => $warehouse
         ]
     );
 }

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('productID')->constrained('products', 'id');
+            $table->foreignId('warehouseID')->constrained('warehouses', 'id');
             $table->date('date');
             $table->float('cr')->default(0);
             $table->float('db')->default(0);

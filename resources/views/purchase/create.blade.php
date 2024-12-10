@@ -29,89 +29,66 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-12">
-
                                 <table class="table table-striped table-hover">
                                     <thead>
-                                        <th width="30%">Item</th>
-                                        <th class="text-center">Qty</th>
+                                        <th width="20%">Item</th>
                                         <th width="10%" class="text-center">Unit</th>
-                                        <th class="text-center">P-Price</th>
-                                        <th class="text-center">S-Price</th>
-                                        <th class="text-center">WS Price</th>
-                                        <th class="text-center">RT Price</th>
-                                        <th class="text-center">GST 18%</th>
-                                        <th class="text-center">Amount</th>
+                                        <th class="text-center">Qty</th>
                                         <th class="text-center">Bonus</th>
+                                        <th class="text-center">Price</th>
+                                        <th class="text-center">Discount Value</th>
+                                        <th class="text-center">Discount %</th>
+                                        <th class="text-center">Amount</th>
                                         <th></th>
                                     </thead>
                                     <tbody id="products_list"></tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="" class="text-end">Total</th>
+                                            <th colspan="2" class="text-end">Total</th>
                                             <th class="text-end" id="totalQty">0.00</th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
-                                            <th></th>
-                                            <th class="text-end" id="totalGst">0.00</th>
                                             <th class="text-end" id="totalAmount">0.00</th>
                                             <th></th>
                                         </tr>
                                     </tfoot>
                                 </table>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <label for="comp">Purchase Inv No.</label>
                                     <input type="text" name="inv" id="inv" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <div class="form-group">
-                                    <label for="discount">Discount</label>
-                                    <input type="number" name="discount" oninput="updateTotal()" id="discount" step="any" value="0" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="form-group">
-                                    <label for="fright">Fright (-)</label>
+                                    <label for="fright">Fright</label>
                                     <input type="number" name="fright" id="fright" oninput="updateTotal()" min="0" step="any" value="0" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <div class="form-group">
-                                    <label for="fright1">Fright (+)</label>
-                                    <input type="number" name="fright1" id="fright1" oninput="updateTotal()" min="0" step="any" value="0" class="form-control">
+                                    <label for="claim">Claimable Amount</label>
+                                    <input type="number" name="claim" id="claim" min="0" step="any" value="0" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-2">
-                                <div class="form-group">
-                                    <label for="whTax">WH Tax</label>
-                                    <div class="input-group mb-3">
-                                        <input type="number" name="whTax" id="whTax" oninput="updateTotal()" max="50" min="0" step="any" value="0" aria-describedby="basic-addon2" class="form-control">
-                                        <span class="input-group-text whTaxValue" id="basic-addon2">0</span>
-                                      </div>
-
-                                </div>
-
-                            </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <label for="net">Net Amount</label>
                                     <input type="number" name="net" id="net" step="any" readonly value="0" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-3 mt-2">
+                            <div class="col-4 mt-2">
                                 <div class="form-group">
                                     <label for="date">Date</label>
                                     <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}"
                                         class="form-control">
                                 </div>
                             </div>
-                            <div class="col-3 mt-2">
+                            <div class="col-4 mt-2">
                                 <div class="form-group">
                                     <label for="vendor">Vendor</label>
                                     <select name="vendorID" id="vendor" class="selectize1">
@@ -121,23 +98,13 @@
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="col-3 mt-2">
+                            <div class="col-4 mt-2">
                                 <div class="form-group">
-                                    <label for="account">Account</label>
-                                    <select name="accountID" id="account" class="selectize1">
-                                        @foreach ($accounts as $account)
-                                            <option value="{{ $account->id }}">{{ $account->title }}</option>
+                                    <label for="warehouseID">Warehouse</label>
+                                    <select name="warehouseID" id="warehouseID" class="form-control">
+                                        @foreach ($warehouses as $warehouse)
+                                            <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
                                         @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-3 mt-2">
-                                <div class="form-group">
-                                    <label for="status">Payment Status</label>
-                                    <select name="status" id="status" class="selectize1">
-                                        <option value="paid">Paid</option>
-                                        <option value="pending">Pending</option>
                                     </select>
                                 </div>
                             </div>
@@ -150,11 +117,9 @@
                             <div class="col-12 mt-2">
                                 <button type="submit" class="btn btn-primary w-100">Create Purchase</button>
                             </div>
-
+                        </div>
+                    </form>
                 </div>
-            </form>
-            </div>
-
         </div>
         <!--end card-->
     </div>
@@ -188,7 +153,8 @@
 
             },
         });
-        var units = @json($units);
+
+        var warehouses = @json($warehouses);
         var existingProducts = [];
 
         function getSingleProduct(id) {
@@ -200,26 +166,22 @@
                         return element === product.id;
                     });
                     if (found.length > 0) {
-
                     } else {
-
                         var id = product.id;
+                        var units = product.units;
                         var html = '<tr id="row_' + id + '">';
-                        html += '<td class="no-padding">' + product.code + ' | ' + product.name + '</td>';
-                        html += '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="0" class="form-control text-center no-padding" id="qty_' + id + '"></td>';
+                        html += '<td class="no-padding">' + product.name + '</td>';
                         html += '<td class="no-padding"><select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges(' + id +')" id="unit_' + id + '">';
                             units.forEach(function(unit) {
-                                var isSelected = (unit.id == product.unitID);
-                                html += '<option data-unit="'+unit.value+'" value="' + unit.id + '" ' + (isSelected ? 'selected' : '') + '>' + unit.name + '</option>';
+                                html += '<option data-unit="'+unit.value+'" value="' + unit.id + '">' + unit.unit_name + '</option>';
                             });
                         html += '</select></td>';
-                        html += '<td class="no-padding"><input type="number" name="pprice[]" oninput="updateChanges(' + id + ')" required step="any" value="'+product.pprice+'" min="1" class="form-control text-center no-padding" id="pprice_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="price[]" required step="any" value="'+product.price+'" min="0" class="form-control text-center no-padding" id="price_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="wsprice[]" required step="any" value="'+product.wsprice+'" min="1" class="form-control text-center no-padding" id="wsprice_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="tp[]" required step="any" value="'+product.tp+'" min="1" class="form-control text-center no-padding" id="tp_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="gstValue[]" readonly required step="any" value="0" class="form-control text-center no-padding" id="gstValue_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="1" class="form-control text-center no-padding" id="qty_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="bonus[]" min="0" required step="any" value="0" class="form-control text-center no-padding" id="bonus_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' + id + ')" required step="any" value="'+product.pprice+'" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="discount[]" required step="any" value="0" min="0" required oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discount_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="discountp[]" required step="any" value="0" required min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discountp_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="bonus[]" min="0" required step="any" value="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="bonus_' + id + '"></td>';
                         html += '<td class="no-padding"> <span class="btn btn-sm btn-danger" onclick="deleteRow('+id+')">X</span> </td>';
                         html += '<input type="hidden" name="id[]" value="' + id + '">';
                         html += '</tr>';
@@ -233,17 +195,14 @@
 
         function updateChanges(id) {
             var qty = parseFloat($('#qty_' + id).val());
-            var unit = $('#unit_' + id).find('option:selected');
-            unit = unit.data('unit');
-            var newQty = qty * unit;
-            var pprice = parseFloat($('#pprice_' + id).val());
-            var tp = parseFloat($('#tp_' + id).val());
             var bonus = parseFloat($('#bonus_' + id).val());
+            var price = parseFloat($('#price_' + id).val());
+            var discount = parseFloat($('#discount_' + id).val());
+            var discountp = parseFloat($('#discountp_' + id).val());
 
-            var gstValue = (tp * 18 / 100) * (newQty + bonus);
-            var amount = newQty * pprice;
+            var discountValue = price * discountp / 100;
+            var amount = (price - discount - discountValue) * qty;
             $("#amount_"+id).val(amount.toFixed(2));
-            $("#gstValue_"+id).val(gstValue.toFixed(2));
             updateTotal();
         }
 
@@ -257,15 +216,6 @@
 
             $("#totalAmount").html(total.toFixed(2));
 
-            var gst = 0;
-            $("input[id^='gstValue_']").each(function() {
-                var inputId = $(this).attr('id');
-                var inputValue = $(this).val();
-                gst += parseFloat(inputValue);
-            });
-
-            $("#totalGst").html(gst.toFixed(2));
-
             var totalQty = 0;
             $("input[id^='qty_']").each(function() {
                 var inputId = $(this).attr('id');
@@ -275,16 +225,9 @@
 
             $("#totalQty").html(totalQty.toFixed(2));
 
-            var discount = parseFloat($("#discount").val());
             var fright = parseFloat($("#fright").val());
-            var fright1 = parseFloat($("#fright1").val());
-            var whTax = parseFloat($("#whTax").val());
 
-            var taxValue = total * whTax / 100;
-
-            $(".whTaxValue").html(taxValue.toFixed(2));
-
-            var net = (total + taxValue + fright1) - (discount + fright);
+            var net = (total + fright);
 
             $("#net").val(net.toFixed(2));
         }

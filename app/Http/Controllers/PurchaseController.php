@@ -10,6 +10,7 @@ use App\Models\purchase_payments;
 use App\Models\stock;
 use App\Models\transactions;
 use App\Models\units;
+use App\Models\warehouses;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,7 @@ class PurchaseController extends Controller
         $start = $request->start ?? now()->toDateString();
         $end = $request->end ?? now()->toDateString();
 
-        $purchases = purchase::with('payments')->whereBetween("date", [$start, $end])->orderby('id', 'desc')->get();
+        $purchases = purchase::whereBetween("date", [$start, $end])->orderby('id', 'desc')->get();
         return view('purchase.index', compact('purchases', 'start', 'end'));
     }
 
@@ -33,11 +34,12 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        $products = products::orderby('name', 'asc')->get();
+        $products = products::active()->orderby('name', 'asc')->get();
         $units = units::all();
         $vendors = accounts::vendor()->get();
+        $warehouses = warehouses::all();
         $accounts = accounts::business()->get();
-        return view('purchase.create', compact('products', 'units', 'vendors', 'accounts'));
+        return view('purchase.create', compact('products', 'units', 'vendors', 'accounts', 'warehouses'));
     }
 
     /**
@@ -45,8 +47,7 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
-
-        try
+       try
         {
             if($request->isNotFilled('id'))
             {
@@ -57,12 +58,11 @@ class PurchaseController extends Controller
             $purchase = purchase::create(
                 [
                   'vendorID'        => $request->vendorID,
+                  'warehouseID'     => $request->warehouseID,
                   'date'            => $request->date,
                   'notes'           => $request->notes,
-                  'discount'        => $request->discount,
                   'fright'          => $request->fright,
-                  'fright1'          => $request->fright1,
-                  'wh'              => $request->whTax,
+                  'claim'           => $request->claim,
                   'inv'             => $request->inv,
                   'refID'           => $ref,
                 ]
@@ -70,84 +70,74 @@ class PurchaseController extends Controller
 
             $ids = $request->id;
 
+            $totalQty = 0;
+            foreach($ids as $key => $id)
+            {
+                $unit = units::find($request->unit[$key]);
+                $qty = $request->qty[$key] * $unit->value;
+                $totalQty += $qty;
+            }
+            $epp = 0;
+            if(($request->fright - $request->claim) > 0)
+            {
+                $epp = ($request->fright - $request->claim) / $totalQty;
+            }
+
             $total = 0;
+            $productsTotal = 0;
+
             foreach($ids as $key => $id)
             {
                 $unit = units::find($request->unit[$key]);
                 $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key];
-                $qty1 = $request->qty[$key] * $unit->value;
-                $pprice = $request->pprice[$key] ;
-                $price = $request->price[$key];
-                $wsprice = $request->wsprice[$key];
-                $tp = $request->tp[$key];
-                $amount = $pprice * $qty1;
+                $price = $request->price[$key] ;
+                $discount = $request->discount[$key] ;
+                $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
+                $netPrice = ($price - $discount - $discountvalue) + $epp;
+                $amount = $netPrice * $request->qty[$key];
                 $total += $amount;
+                $productsTotal += $request->amount[$key];
 
                 purchase_details::create(
                     [
                         'purchaseID'    => $purchase->id,
                         'productID'     => $id,
-                        'pprice'        => $pprice,
                         'price'         => $price,
-                        'wsprice'       => $wsprice,
-                        'tp'            => $tp,
-                        'qty'           => $qty1,
-                        'gstValue'      => $request->gstValue[$key],
+                        'discount'      => $discount,
+                        'discountp'     => $request->discountp[$key],
+                        'discountvalue' => $discountvalue,
+                        'qty'           => $request->qty[$key],
+                        'epp'           => $epp,
+                        'netprice'      => $netPrice,
                         'amount'        => $amount,
                         'date'          => $request->date,
                         'bonus'         => $request->bonus[$key],
                         'unitID'        => $unit->id,
-                        'unitValue'     => $unit->value,
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, $qty, 0, $request->date, "Purchased", $ref);
+                createStock($id, $qty, 0, $request->date, "Purchased", $ref, $request->warehouseID);
 
                 $product = products::find($id);
                 $product->update(
                     [
-                        'pprice' => $pprice,
-                        'price'  => $price,
-                        'wsprice' => $wsprice,
+                        'pprice' => $price,
                     ]
                 );
             }
 
-            $whTax = $total * $request->whTax / 100;
-
-            $net = ($total + $whTax + $request->fright1) - ($request->discount + $request->fright);
+            $net = ($productsTotal + $request->fright);
 
             $purchase->update(
                 [
-
-                    'whValue'   => $whTax,
-                    'net'       => $net,
+                    'net' => $net,
                 ]
             );
 
-            if($request->status == 'paid')
-            {
-                purchase_payments::create(
-                    [
-                        'purchaseID'    => $purchase->id,
-                        'accountID'     => $request->accountID,
-                        'date'          => $request->date,
-                        'amount'        => $net,
-                        'notes'         => "Full Paid",
-                        'refID'         => $ref,
-                    ]
-                );
+            createTransaction($request->vendorID, $request->date, 0, $net, "Pending Amount of Purchase No. $purchase->id", $ref);
 
-                createTransaction($request->accountID, $request->date, 0, $net, "Payment of Purchase No. $purchase->id", $ref);
-            }
-            else
-            {
-                createTransaction($request->vendorID, $request->date, 0, $net, "Pending Amount of Purchase No. $purchase->id", $ref);
-
-            }
             DB::commit();
             return back()->with('success', "Purchase Created");
-
         }
         catch(\Exception $e)
         {
@@ -338,7 +328,7 @@ class PurchaseController extends Controller
 
     public function getSignleProduct($id)
     {
-        $product = products::find($id);
+        $product = products::with('units')->find($id);
         return $product;
     }
 }

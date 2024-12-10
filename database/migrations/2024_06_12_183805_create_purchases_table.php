@@ -14,12 +14,10 @@ return new class extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->foreignId('vendorID')->constrained('accounts', 'id');
+            $table->foreignId('warehouseID')->constrained('warehouses', 'id');
             $table->date('date');
-            $table->float("wh")->default(0);
-            $table->float('whValue')->default(0);
-            $table->float('discount')->default(0);
             $table->float('fright')->default(0);
-            $table->float('fright1')->default(0);
+            $table->float('claim')->default(0);
             $table->text('notes')->nullable();
             $table->string("inv")->nullable();
             $table->float('net')->default(0);
