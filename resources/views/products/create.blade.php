@@ -52,6 +52,16 @@
                                        </select>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mt-2">
+                                        <label for="vendorID">Vendor</label>
+                                       <select name="vendorID" id="vendorID" class="selectize">
+                                        @foreach ($vendors as $vendor)
+                                            <option value="{{$vendor->id}}">{{$vendor->title}}</option>
+                                        @endforeach
+                                       </select>
+                                    </div>
+                                </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group mt-2">
@@ -75,6 +85,24 @@
                                         <input type="number" step="any" name="discount" required
                                             value="0" min="0"
                                             id="discount" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mt-2">
+                                        <label for="fright">Fright</label>
+                                        <input type="number" step="any" name="fright" required value="0" min="0" id="fright" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mt-2">
+                                        <label for="labor">Labor Charges</label>
+                                        <input type="number" step="any" name="labor" required value="0" min="0" id="labor" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mt-2">
+                                        <label for="claim">Claim</label>
+                                        <input type="number" step="any" name="claim" required value="0" min="0" id="claim" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-6">

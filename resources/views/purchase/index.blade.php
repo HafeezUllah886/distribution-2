@@ -24,6 +24,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Purchases</h3>
+                    <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create New</button>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -92,6 +93,34 @@
         </div>
     </div>
     <!-- Default Modals -->
+
+    <div id="new" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Select Vendor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <form action="{{ route('purchase.create') }}" method="get">
+                  @csrf
+                         <div class="modal-body">
+                                <div class="form-group">
+                                       <label for="vendorID">Vendor</label>
+                                       <select name="vendorID" id="vendorID" class="form-control">
+                                        @foreach ($vendors as $vendor)
+                                            <option value="{{$vendor->id}}">{{$vendor->title}}</option>
+                                        @endforeach
+                                       </select>
+                                </div>
+                         </div>
+                         <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                         </div>
+                  </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 @endsection
 
 @section('page-css')

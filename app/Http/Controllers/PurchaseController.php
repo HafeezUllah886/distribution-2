@@ -26,15 +26,17 @@ class PurchaseController extends Controller
         $end = $request->end ?? now()->toDateString();
 
         $purchases = purchase::whereBetween("date", [$start, $end])->orderby('id', 'desc')->get();
-        return view('purchase.index', compact('purchases', 'start', 'end'));
+
+        $vendors = accounts::vendor()->get();
+        return view('purchase.index', compact('purchases', 'start', 'end', 'vendors'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $products = products::active()->orderby('name', 'asc')->get();
+        $products = products::active()->vendor($request->vendorID)->orderby('name', 'asc')->get();
         $units = units::all();
         $vendors = accounts::vendor()->get();
         $warehouses = warehouses::all();

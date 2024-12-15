@@ -15,11 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('nameurdu');
+            $table->foreignId('vendorID')->constrained('accounts', 'id');
             $table->foreignId('catID')->constrained('categories', 'id');
             $table->foreignId('brandID')->constrained('brands', 'id');
             $table->float('pprice')->default(0);
             $table->float('price')->default(0);
             $table->float('discount')->default(0);
+            $table->float('fright')->default(0);
+            $table->float('labor')->default(0);
+            $table->float('claim')->default(0);
             $table->string('status')->default('Active');
             $table->timestamps();
         });

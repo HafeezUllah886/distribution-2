@@ -40,4 +40,10 @@ class products extends Model
         return $query->where('status', 'Active');
 
     }
+    public function scopeVendor($query, $id)
+    {
+        return $query->where('vendorID', $id);
+
+    }
+
 }

@@ -95,10 +95,6 @@
                     <div class="collapse menu-dropdown" id="purchase">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a onclick="newWindow('{{ route('purchase.create') }}')" class="nav-link"
-                                    data-key="t-chat">Create Purchase</a>
-                            </li>
-                            <li class="nav-item">
                                 <a href="{{ route('purchase.index', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()]) }}" class="nav-link" data-key="t-chat"> Purchase
                                     History </a>
                             </li>

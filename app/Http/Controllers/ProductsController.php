@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\accounts;
 use App\Models\brands;
 use App\Models\categories;
 use App\Models\product_units;
@@ -30,6 +31,7 @@ class ProductsController extends Controller
 
         $cats = categories::orderBy('name', 'asc')->get();
         $brands = brands::orderBy('name', 'asc')->get();
+
         return view('products.product', compact('items', 'cats', 'brands', 's_cat', 's_brand'));
     }
 
@@ -41,8 +43,9 @@ class ProductsController extends Controller
         $cats = categories::orderBy('name', 'asc')->get();
         $brands = brands::orderBy('name', 'asc')->get();
         $units = units::all();
+        $vendors = accounts::vendor()->get();
 
-        return view('products.create', compact('cats', 'brands', 'units'));
+        return view('products.create', compact('cats', 'brands', 'units', 'vendors'));
     }
 
     /**
@@ -59,7 +62,7 @@ class ProductsController extends Controller
             ]
         );
 
-        $product = products::create($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status']));
+        $product = products::create($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim']));
 
         $units = $request->unit_names;
 
@@ -94,8 +97,9 @@ class ProductsController extends Controller
         $cats = categories::orderBy('name', 'asc')->get();
         $brands = brands::orderBy('name', 'asc')->get();
         $units = units::all();
+        $vendors = accounts::vendor()->get();
 
-        return view('products.edit', compact('cats', 'brands', 'units', 'product'));
+        return view('products.edit', compact('cats', 'brands', 'units', 'product', 'vendors'));
     }
 
     /**
@@ -113,7 +117,7 @@ class ProductsController extends Controller
         );
 
         $product = products::find($id);
-        $product->update($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status']));
+        $product->update($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim']));
 
         foreach($product->units as $unit)
         {
