@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_accounts', function (Blueprint $table) {
+        Schema::create('users_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('userID')->constrained('users', 'id');
-            $table->foreignId('accountID')->constrained('accounts', 'id');
+            $table->date('date');
+            $table->float('cr', 2)->default(0);
+            $table->float('db', 2)->default(0);
+            $table->text('notes');
+            $table->bigInteger('refID');
             $table->timestamps();
         });
     }
@@ -24,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_accounts');
+        Schema::dropIfExists('users_transactions');
     }
 };

@@ -48,8 +48,22 @@ class User extends Authenticatable
         ];
     }
 
-    public function account()
+    public function scopeOrderbookers($query)
     {
-        return $this->hasOne(userAccounts::class, 'userID');
+        return $query->where('role', 'Order Booker');
+    }
+
+    public function scopeAccountants($query)
+    {
+        return $query->where('role', 'Accountant');
+    }
+    public function scopeOperators($query)
+    {
+        return $query->where('role', 'Operator');
+    }
+
+    public function products()
+    {
+        return $this->hasMany(orderbooker_products::class, 'userID');
     }
 }

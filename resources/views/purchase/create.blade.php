@@ -10,7 +10,6 @@
                                 <div class="col-6"><h3> Create Purchase </h3></div>
                                 <div class="col-6 d-flex flex-row-reverse"><button onclick="window.close()" class="btn btn-danger">Close</button></div>
                             </div>
-
                         </div>
                     </div>
                 </div><!--end row-->
@@ -39,6 +38,7 @@
                                         <th class="text-center">Price</th>
                                         <th class="text-center">Discount Value</th>
                                         <th class="text-center">Discount %</th>
+                                        <th class="text-center">Fright</th>
                                         <th class="text-center">Amount</th>
                                         <th></th>
                                     </thead>
@@ -51,6 +51,7 @@
                                             <th></th>
                                             <th></th>
                                             <th></th>
+                                            <th class="text-end" id="totalFright">0.00</th>
                                             <th class="text-end" id="totalAmount">0.00</th>
                                             <th></th>
                                         </tr>
@@ -65,14 +66,14 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label for="fright">Fright</label>
-                                    <input type="number" name="fright" id="fright" oninput="updateTotal()" min="0" step="any" value="0" class="form-control">
+                                    <label for="orderdate">Order Date</label>
+                                    <input type="date" name="orderdate" id="orderdate" value="{{ date('Y-m-d') }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="claim">Claimable Amount</label>
-                                    <input type="number" name="claim" id="claim" min="0" step="any" value="0" class="form-control">
+                                    <input type="number" name="claim" id="claim" min="0" oninput="updateTotal()" step="any" value="0" class="form-control">
                                 </div>
                             </div>
                             <div class="col-3">
@@ -179,8 +180,9 @@
                         html += '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="1" class="form-control text-center no-padding" id="qty_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="bonus[]" min="0" required step="any" value="0" class="form-control text-center no-padding" id="bonus_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' + id + ')" required step="any" value="'+product.pprice+'" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="discount[]" required step="any" value="0" min="0" required oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discount_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="discountp[]" required step="any" value="0" required min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discountp_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="discount[]" required step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discount_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="discountp[]" required step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discountp_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="fright[]" required step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="fright_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_' + id + '"></td>';
                         html += '<td class="no-padding"> <span class="btn btn-sm btn-danger" onclick="deleteRow('+id+')">X</span> </td>';
                         html += '<input type="hidden" name="id[]" value="' + id + '">';
@@ -199,6 +201,7 @@
             var price = parseFloat($('#price_' + id).val());
             var discount = parseFloat($('#discount_' + id).val());
             var discountp = parseFloat($('#discountp_' + id).val());
+            var fright = parseFloat($('#fright_' + id).val());
 
             var discountValue = price * discountp / 100;
             var amount = (price - discount - discountValue) * qty;
@@ -216,6 +219,15 @@
 
             $("#totalAmount").html(total.toFixed(2));
 
+            var totalFright = 0;
+            $("input[id^='fright_']").each(function() {
+                var inputId = $(this).attr('id');
+                var inputValue = $(this).val();
+                totalFright += parseFloat(inputValue);
+            });
+
+            $("#totalFright").html(totalFright.toFixed(2));
+
             var totalQty = 0;
             $("input[id^='qty_']").each(function() {
                 var inputId = $(this).attr('id');
@@ -225,9 +237,8 @@
 
             $("#totalQty").html(totalQty.toFixed(2));
 
-            var fright = parseFloat($("#fright").val());
-
-            var net = (total + fright);
+            var claim = $("#claim").val();
+            var net = total - claim;
 
             $("#net").val(net.toFixed(2));
         }

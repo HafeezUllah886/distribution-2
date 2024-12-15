@@ -32,13 +32,13 @@
                                                                       <ul class="dropdown-menu dropdown-menu-end">
                                                                         <li>
                                                                             <button class="dropdown-item" href="javascript:void(0);"
-                                                                                onclick="ViewStatment({{ $user->account->accountID }})"><i
+                                                                                onclick="ViewStatment({{ $user->id }})"><i
                                                                                     class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                                                 View Statment
                                                                             </button>
                                                                         </li>
                                                                         <li>
-                                                                            <a class="dropdown-item" href="{{route('currency.details', $user->account->accountID)}}">
+                                                                            <a class="dropdown-item" href="{{route('currency.details', $user->id)}}">
                                                                                 <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                                                 Currency Details
                                                                             </a>

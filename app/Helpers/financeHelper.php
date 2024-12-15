@@ -5,11 +5,26 @@ use App\Models\currency_transactions;
 use App\Models\ref;
 use App\Models\transactions;
 use App\Models\userAccounts;
+use App\Models\users_transactions;
 
 function createTransaction($accountID, $date, $cr, $db, $notes, $ref){
     transactions::create(
         [
             'accountID' => $accountID,
+            'date' => $date,
+            'cr' => $cr,
+            'db' => $db,
+            'notes' => $notes,
+            'refID' => $ref,
+        ]
+    );
+
+}
+
+function createUserTransaction($userID, $date, $cr, $db, $notes, $ref){
+    users_transactions::create(
+        [
+            'userID' => $userID,
             'date' => $date,
             'cr' => $cr,
             'db' => $db,
@@ -89,8 +104,7 @@ function getAccountBalance($id){
 }
 
 function getUserAccountBalance($id){
-    $userAccount = userAccounts::where('userID', $id)->first();
-    $transactions  = transactions::where('accountID', $userAccount->accountID);
+    $transactions  = users_transactions::where('userID', $id);
 
     $cr = $transactions->sum('cr');
     $db = $transactions->sum('db');
@@ -98,6 +112,7 @@ function getUserAccountBalance($id){
 
     return $balance;
 }
+
 
 function getCurrencyBalance($id, $account){
     $transactions  = currency_transactions::where('currencyID', $id)->where('accountID', $account);

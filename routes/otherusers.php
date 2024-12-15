@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderbookerProductsController;
 use App\Http\Controllers\OtherusersController;
 use App\Http\Controllers\UserAccountsController;
 use Illuminate\Support\Facades\Route;
@@ -12,4 +13,5 @@ Route::middleware('auth')->group(function () {
     Route::get('otherusers/status/{id}', [OtherusersController::class, 'status'])->name('otherusers.status');
 
     Route::resource('/userAccounts', UserAccountsController::class);
+    Route::resource('/orderbooker/products', OrderbookerProductsController::class);
 });

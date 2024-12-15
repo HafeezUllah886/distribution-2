@@ -21,9 +21,9 @@ class userSeeder extends Seeder
             'contact' => "03451231237"
         ]);
         User::create([
-            'name' => "Orderbooker",
+            'name' => "Order Booker",
             'password' => Hash::make("orderbooker"),
-            'role' => 'Orderbooker',
+            'role' => 'Order Booker',
             'contact' => "03451231238"
         ]);
     }
