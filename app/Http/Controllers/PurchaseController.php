@@ -25,7 +25,7 @@ class PurchaseController extends Controller
         $start = $request->start ?? now()->toDateString();
         $end = $request->end ?? now()->toDateString();
 
-        $purchases = purchase::whereBetween("date", [$start, $end])->orderby('id', 'desc')->get();
+        $purchases = purchase::whereBetween("recdate", [$start, $end])->orderby('id', 'desc')->get();
 
         $vendors = accounts::vendor()->get();
         return view('purchase.index', compact('purchases', 'start', 'end', 'vendors'));
@@ -38,10 +38,10 @@ class PurchaseController extends Controller
     {
         $products = products::active()->vendor($request->vendorID)->orderby('name', 'asc')->get();
         $units = units::all();
-        $vendors = accounts::vendor()->get();
+        $vendor = $request->vendorID;
         $warehouses = warehouses::all();
         $accounts = accounts::business()->get();
-        return view('purchase.create', compact('products', 'units', 'vendors', 'accounts', 'warehouses'));
+        return view('purchase.create', compact('products', 'units', 'vendor', 'accounts', 'warehouses'));
     }
 
     /**
@@ -61,10 +61,11 @@ class PurchaseController extends Controller
                 [
                   'vendorID'        => $request->vendorID,
                   'warehouseID'     => $request->warehouseID,
-                  'date'            => $request->date,
+                  'orderdate'       => $request->orderdate,
+                  'recdate'         => $request->recdate,
                   'notes'           => $request->notes,
-                  'fright'          => $request->fright,
-                  'claim'           => $request->claim,
+                  'bilty'           => $request->bilty,
+                  'transporter'     => $request->transporter,
                   'inv'             => $request->inv,
                   'refID'           => $ref,
                 ]
@@ -72,33 +73,19 @@ class PurchaseController extends Controller
 
             $ids = $request->id;
 
-            $totalQty = 0;
-            foreach($ids as $key => $id)
-            {
-                $unit = units::find($request->unit[$key]);
-                $qty = $request->qty[$key] * $unit->value;
-                $totalQty += $qty;
-            }
-            $epp = 0;
-            if(($request->fright - $request->claim) > 0)
-            {
-                $epp = ($request->fright - $request->claim) / $totalQty;
-            }
-
             $total = 0;
-            $productsTotal = 0;
-
             foreach($ids as $key => $id)
             {
                 $unit = units::find($request->unit[$key]);
                 $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key];
+                $pc = $request->qty[$key] * $unit->value;
                 $price = $request->price[$key] ;
                 $discount = $request->discount[$key] ;
+                $claim = $request->claim[$key];
                 $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
-                $netPrice = ($price - $discount - $discountvalue) + $epp;
+                $netPrice = ($price - $discount - $discountvalue - $claim);
                 $amount = $netPrice * $request->qty[$key];
                 $total += $amount;
-                $productsTotal += $request->amount[$key];
 
                 purchase_details::create(
                     [
@@ -109,26 +96,22 @@ class PurchaseController extends Controller
                         'discountp'     => $request->discountp[$key],
                         'discountvalue' => $discountvalue,
                         'qty'           => $request->qty[$key],
-                        'epp'           => $epp,
+                        'pc'            => $pc,
                         'netprice'      => $netPrice,
                         'amount'        => $amount,
-                        'date'          => $request->date,
+                        'date'          => $request->recdate,
                         'bonus'         => $request->bonus[$key],
+                        'labor'         => $request->labor[$key],
+                        'fright'        => $request->fright[$key],
+                        'claim'         => $claim,
                         'unitID'        => $unit->id,
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, $qty, 0, $request->date, "Purchased", $ref, $request->warehouseID);
-
-                $product = products::find($id);
-                $product->update(
-                    [
-                        'pprice' => $price,
-                    ]
-                );
+                createStock($id, $qty, 0, $request->recdate, "Purchased", $ref, $request->warehouseID);
             }
 
-            $net = ($productsTotal + $request->fright);
+            $net = $total;
 
             $purchase->update(
                 [
@@ -136,7 +119,7 @@ class PurchaseController extends Controller
                 ]
             );
 
-            createTransaction($request->vendorID, $request->date, 0, $net, "Pending Amount of Purchase No. $purchase->id", $ref);
+            createTransaction($request->vendorID, $request->recdate, 0, $net, "Pending Amount of Purchase No. $purchase->id", $ref);
 
             DB::commit();
             return back()->with('success', "Purchase Created");

@@ -20,8 +20,11 @@ return new class extends Migration
             $table->float('discountp', 10);
             $table->float('discountvalue', 10);
             $table->float('qty')->default(0);
+            $table->float('pc')->default(0);
             $table->float('bonus')->default(0);
-            $table->float('epp', 10);
+            $table->float('fright', 10);
+            $table->float('labor', 10);
+            $table->float('claim', 10);
             $table->float('netprice', 10);
             $table->float('amount');
             $table->date('date');

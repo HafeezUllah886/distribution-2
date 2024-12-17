@@ -89,8 +89,8 @@
                             <div class="col-4 mt-2">
                                 <div class="form-group">
                                     <label for="date">Receiving Date</label>
-                                    <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}"
-                                        class="form-control">
+                                    <input type="date" name="recdate" id="date" value="{{ date('Y-m-d') }}" class="form-control">
+                                    <input type="hidden" name="vendorID" value="{{ $vendor }}">
                                 </div>
                             </div>
                             <div class="col-4 mt-2">
@@ -194,7 +194,6 @@
                 }
             });
         }
-
         function updateChanges(id) {
             var qty = parseFloat($('#qty_' + id).val());
             var bonus = parseFloat($('#bonus_' + id).val());
@@ -204,9 +203,7 @@
             var fright = parseFloat($('#fright_' + id).val());
             var labor = parseFloat($('#labor_' + id).val());
             var claim = parseFloat($('#claim_' + id).val());
-
             var discountValue = price * discountp / 100;
-
             var amount = (price - discount - discountValue - claim) * qty;
             $("#amount_"+id).val(amount.toFixed(2));
             $("#frightValue_"+id).val(fright * qty);

@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('vendorID')->constrained('accounts', 'id');
             $table->foreignId('warehouseID')->constrained('warehouses', 'id');
-            $table->date('date');
-            $table->float('fright')->default(0);
-            $table->float('claim')->default(0);
-            $table->text('notes')->nullable();
+            $table->date('orderdate');
+            $table->date('recdate');
             $table->string("inv")->nullable();
+            $table->string("bilty")->nullable();
+            $table->string("transporter")->nullable();
+            $table->text('notes')->nullable();
             $table->float('net')->default(0);
             $table->bigInteger('refID');
             $table->timestamps();

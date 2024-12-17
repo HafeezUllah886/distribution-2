@@ -42,7 +42,7 @@
                             <th>#</th>
                             <th>Inv #</th>
                             <th>Vendor</th>
-                            <th>Date</th>
+                            <th>Receving Date</th>
                             <th>Amount</th>
                             <th>Action</th>
                         </thead>
@@ -52,7 +52,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $purchase->inv }}</td>
                                     <td>{{ $purchase->vendor->title }}</td>
-                                    <td>{{ date('d M Y', strtotime($purchase->date)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($purchase->recdate)) }}</td>
                                     <td>{{ number_format($purchase->net) }}</td>
                                     <td>
                                         <div class="dropdown">
