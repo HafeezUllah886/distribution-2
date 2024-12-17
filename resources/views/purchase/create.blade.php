@@ -51,8 +51,8 @@
                                             <th class="text-end" id="totalQty">0.00</th>
                                             <th></th>
                                             <th></th>
-                                            <th></th>
-                                            <th></th>
+                                            <th class="text-end" id="totalDiscount">0.00</th>
+                                            <th class="text-end" id="totalPDiscount">0.00</th>
                                             <th class="text-end" id="totalFright">0.00</th>
                                             <th class="text-end" id="totalLabor">0.00</th>
                                             <th class="text-end" id="totalClaim">0.00</th>
@@ -173,8 +173,8 @@
                         html += '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="1" class="form-control text-center no-padding" id="qty_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="bonus[]" min="0" required step="any" value="0" class="form-control text-center no-padding" id="bonus_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' + id + ')" required step="any" value="'+product.pprice+'" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="discount[]" required step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discount_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="discountp[]" required step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discountp_' + id + '"></td>';
+                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="discount[]" required step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discount_' + id + '"><span class="input-group-text no-padding discountText_'+id+'" id="basic-addon2"></span></td>';
+                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="discountp[]" required step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discountp_' + id + '"><span class="input-group-text no-padding discountpText_'+id+'" id="basic-addon2"></span></td>';
                         html += '<td class="no-padding"><div class="input-group"><input type="number" name="fright[]" required step="any" oninput="updateChanges(' + id + ')" value="'+product.fright+'" min="0" class="form-control text-center no-padding" id="fright_' + id + '"> <span class="input-group-text no-padding frightText_'+id+'" id="basic-addon2"></span></div></td>';
                         html += '<td class="no-padding"><div class="input-group"><input type="number" name="labor[]" required step="any" oninput="updateChanges(' + id + ')" value="'+product.labor+'" min="0" class="form-control text-center no-padding" id="labor_' + id + '"> <span class="input-group-text no-padding laborText_'+id+'" id="basic-addon2"></span></div></td>';
                         html += '<td class="no-padding"><div class="input-group"><input type="number" name="claim[]" required step="any" oninput="updateChanges(' + id + ')" value="'+product.claim+'" min="0" class="form-control text-center no-padding" id="claim_' + id + '"> <span class="input-group-text no-padding claimText_'+id+'" id="basic-addon2"></span></div></td>';
@@ -184,6 +184,8 @@
                         html += '<input type="hidden" name="frightValue[]" id="frightValue_'+id+'" value="0">';
                         html += '<input type="hidden" name="laborValue[]" id="laborValue_'+id+'" value="0">';
                         html += '<input type="hidden" name="claimValue[]" id="claimValue_'+id+'" value="0">';
+                        html += '<input type="hidden" name="discountValue[]" id="discountValue_'+id+'" value="0">';
+                        html += '<input type="hidden" name="discountPValue[]" id="discountPValue_'+id+'" value="0">';
                         html += '</tr>';
                         $("#products_list").prepend(html);
                         existingProducts.push(id);
@@ -204,6 +206,7 @@
             var claim = parseFloat($('#claim_' + id).val());
 
             var discountValue = price * discountp / 100;
+
             var amount = (price - discount - discountValue - claim) * qty;
             $("#amount_"+id).val(amount.toFixed(2));
             $("#frightValue_"+id).val(fright * qty);
@@ -212,6 +215,10 @@
             $(".frightText_"+id).html(fright * qty);
             $(".laborText_"+id).html(labor * qty);
             $(".claimText_"+id).html(claim * qty);
+            $(".discountText_"+id).html(discount * qty);
+            $("#discountValue_"+id).val(discount * qty);
+            $(".discountpText_"+id).html(discountValue * qty);
+            $("#discountPValue_"+id).val(discountValue * qty);
             updateTotal();
         }
 
@@ -251,6 +258,24 @@
             });
 
             $("#totalClaim").html(totalClaim.toFixed(2));
+
+            var totalDiscount = 0;
+            $("input[id^='discountValue_']").each(function() {
+                var inputId = $(this).attr('id');
+                var inputValue = $(this).val();
+                totalDiscount += parseFloat(inputValue);
+            });
+
+            $("#totalDiscount").html(totalDiscount.toFixed(2));
+
+            var totalPDiscount = 0;
+            $("input[id^='discountPValue_']").each(function() {
+                var inputId = $(this).attr('id');
+                var inputValue = $(this).val();
+                totalPDiscount += parseFloat(inputValue);
+            });
+
+            $("#totalPDiscount").html(totalPDiscount.toFixed(2));
 
             var totalQty = 0;
             $("input[id^='qty_']").each(function() {
