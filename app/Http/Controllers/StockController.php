@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\product_units;
 use App\Models\products;
 use App\Models\stock;
 use App\Models\units;
@@ -38,8 +39,12 @@ class StockController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id, $unitID, $from, $to)
+    public function show(Request $request, $id)
     {
+        $id = $request->productID;
+        $from = $request->from;
+        $to = $request->to;
+        $unitID = $request->unit;
         $product = products::find($id);
 
         $stocks = stock::where('productID', $id)->whereBetween('date', [$from, $to])->get();
@@ -50,10 +55,10 @@ class StockController extends Controller
 
         $cur_cr = stock::where('productID', $id)->sum('cr');
         $cur_db = stock::where('productID', $id)->sum('db');
-        
+
         $cur_balance = $cur_cr - $cur_db;
 
-        $unit = units::find($unitID);
+        $unit = product_units::find($unitID);
         return view('stock.details', compact('product', 'pre_balance', 'cur_balance', 'stocks', 'unit', 'from', 'to'));
     }
     /**

@@ -101,7 +101,7 @@
                         </ul>
                     </div>
                 </li>
-                {{-- <li class="nav-item">
+                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#stock" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-stack-line"></i><span data-key="t-apps">Stocks</span>
@@ -111,12 +111,12 @@
                             <li class="nav-item">
                                 <a href="{{ route('product_stock.index') }}" class="nav-link" data-key="t-chat">Products Stock</a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="{{ route('stockAdjustments.index') }}" class="nav-link" data-key="t-chat">Stock Adjustment</a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </div>
-                </li> --}}
+                </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#products" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">

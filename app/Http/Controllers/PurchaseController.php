@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\product_units;
 use App\Models\products;
 use App\Models\purchase;
 use App\Models\purchase_details;
@@ -76,7 +77,7 @@ class PurchaseController extends Controller
             $total = 0;
             foreach($ids as $key => $id)
             {
-                $unit = units::find($request->unit[$key]);
+                $unit = product_units::find($request->unit[$key]);
                 $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key];
                 $pc = $request->qty[$key] * $unit->value;
                 $price = $request->price[$key] ;
