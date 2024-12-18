@@ -8,7 +8,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-6"><h3> Create Purchase </h3></div>
-                                <div class="col-6 d-flex flex-row-reverse"><button onclick="window.close()" class="btn btn-danger">Close</button></div>
+                                <div class="col-6 d-flex flex-row-reverse"><a href="{{route('purchase.index')}}" class="btn btn-danger">Close</a></div>
                             </div>
                         </div>
                     </div>
