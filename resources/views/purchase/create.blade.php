@@ -34,6 +34,7 @@
                                         <th width="20%">Item</th>
                                         <th width="10%" class="text-center">Unit</th>
                                         <th class="text-center">Qty</th>
+                                        <th class="text-center">loose</th>
                                         <th class="text-center">Bonus</th>
                                         <th class="text-center">Price</th>
                                         <th class="text-center">Discount Value</th>
@@ -48,7 +49,9 @@
                                     <tfoot>
                                         <tr>
                                             <th colspan="2" class="text-end">Total</th>
-                                            <th class="text-end" id="totalQty">0.00</th>
+                                           {{--  <th class="text-end" id="totalQty">0.00</th> --}}
+                                            <th></th>
+                                            <th></th>
                                             <th></th>
                                             <th></th>
                                             <th class="text-end" id="totalDiscount">0.00</th>
@@ -171,6 +174,7 @@
                             });
                         html += '</select></td>';
                         html += '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="1" class="form-control text-center no-padding" id="qty_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="loose[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="0" class="form-control text-center no-padding" id="loose_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="bonus[]" min="0" required step="any" value="0" class="form-control text-center no-padding" id="bonus_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' + id + ')" required step="any" value="'+product.pprice+'" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
                         html += '<td class="no-padding"><div class="input-group"><input type="number" name="discount[]" required step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discount_' + id + '"><span class="input-group-text no-padding discountText_'+id+'" id="basic-addon2"></span></td>';
@@ -196,6 +200,7 @@
         }
         function updateChanges(id) {
             var qty = parseFloat($('#qty_' + id).val());
+            var loose = parseFloat($('#loose_' + id).val());
             var bonus = parseFloat($('#bonus_' + id).val());
             var price = parseFloat($('#price_' + id).val());
             var discount = parseFloat($('#discount_' + id).val());
@@ -203,7 +208,9 @@
             var fright = parseFloat($('#fright_' + id).val());
             var labor = parseFloat($('#labor_' + id).val());
             var claim = parseFloat($('#claim_' + id).val());
+            var unit = $('#unit_' + id).find(':selected').data('unit');
             var discountValue = price * discountp / 100;
+            qty = loose + (qty * unit);
             var amount = (price - discount - discountValue - claim) * qty;
             $("#amount_"+id).val(amount.toFixed(2));
             $("#frightValue_"+id).val(fright * qty);
@@ -274,14 +281,7 @@
 
             $("#totalPDiscount").html(totalPDiscount.toFixed(2));
 
-            var totalQty = 0;
-            $("input[id^='qty_']").each(function() {
-                var inputId = $(this).attr('id');
-                var inputValue = $(this).val();
-                totalQty += parseFloat(inputValue);
-            });
 
-            $("#totalQty").html(totalQty.toFixed(2));
 
             var claim = $("#claim").val();
             var net = total - claim;

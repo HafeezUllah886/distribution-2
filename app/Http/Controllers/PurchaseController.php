@@ -78,8 +78,8 @@ class PurchaseController extends Controller
             foreach($ids as $key => $id)
             {
                 $unit = product_units::find($request->unit[$key]);
-                $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key];
-                $pc = $request->qty[$key] * $unit->value;
+                $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
+                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
                 $price = $request->price[$key] ;
                 $discount = $request->discount[$key] ;
                 $claim = $request->claim[$key];
@@ -98,6 +98,7 @@ class PurchaseController extends Controller
                         'discountvalue' => $discountvalue,
                         'qty'           => $request->qty[$key],
                         'pc'            => $pc,
+                        'loose'         => $request->loose[$key],
                         'netprice'      => $netPrice,
                         'amount'        => $amount,
                         'date'          => $request->recdate,

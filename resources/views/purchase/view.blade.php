@@ -65,6 +65,7 @@
                                                         <th scope="col" class="text-start">Product</th>
                                                         <th scope="col" class="text-start">Unit</th>
                                                         <th scope="col" class="text-end">Qty</th>
+                                                        <th scope="col" class="text-end">Loose</th>
                                                         <th scope="col" class="text-end">Bonus</th>
                                                         <th scope="col" class="text-end">Price</th>
                                                         <th scope="col" class="text-end">Dis-Val</th>
@@ -84,16 +85,20 @@
                                                         $totalFright = 0;
                                                         $totalClaim = 0;
                                                         $totalLabor = 0;
+                                                        $totalLoose = 0;
+                                                        $totalBonus = 0;
                                                     @endphp
                                                    @foreach ($purchase->details as $key => $product)
                                                    @php
-                                                   $qty = $product->qty;
+                                                   $qty = $product->pc;
                                                    $discount = $product->discount * $qty;
                                                    $discountvalue = $product->discountvalue * $qty;
                                                    $claim = $product->claim * $qty;
                                                    $fright = $product->fright * $qty;
                                                    $labor = $product->labor * $qty;
-                                                   $totalQty += $qty;
+                                                   $totalQty += $product->qty;
+                                                   $totalLoose += $product->loose;
+                                                   $totalBonus += $product->bonus;
                                                    $totalDiscount += $discount;
                                                    $totalDiscountValue += $discountvalue;
                                                    $totalClaim += $claim;
@@ -105,6 +110,7 @@
                                                         <td class="text-start p-1 m-1">{{$product->product->name}}</td>
                                                         <td class="text-start m-1 p-1">{{$product->unit->name}}</td>
                                                         <td class="text-end m-1 p-1">{{number_format($product->qty)}}</td>
+                                                        <td class="text-end m-1 p-1">{{number_format($product->loose)}}</td>
                                                         <td class="text-end m-1 p-1">{{number_format($product->bonus)}}</td>
                                                         <td class="text-end p-1 m-1">{{number_format($product->price,2)}}</td>
                                                         <td class="text-end p-1 m-1">{{number_format($product->discount)}} | {{number_format($discount)}}</td>
@@ -121,7 +127,8 @@
                                                     <tr>
                                                         <th colspan="3" class="text-end">Total</th>
                                                         <th class="text-end">{{number_format($totalQty)}}</th>
-                                                        <th></th>
+                                                        <th class="text-end">{{number_format($totalLoose)}}</th>
+                                                        <th class="text-end">{{number_format($totalBonus)}}</th>
                                                         <th></th>
                                                         <th class="text-end">{{number_format($totalDiscount)}}</th>
                                                         <th class="text-end">{{number_format($totalDiscountValue)}}</th>
