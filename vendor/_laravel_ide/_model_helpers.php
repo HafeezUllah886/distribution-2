@@ -4592,6 +4592,7 @@ namespace App\Models {
      * @property float $fright
      * @property double $bonus
      * @property double $pc
+     * @property double $loose
      * @property double $qty
      * @property float $discountvalue
      * @property float $discountp
@@ -4610,6 +4611,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereDiscountp($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereDiscountvalue($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereQty($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereLoose($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details wherePc($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereBonus($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereFright($value)

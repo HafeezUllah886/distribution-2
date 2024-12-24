@@ -29,7 +29,7 @@ return new class extends Migration
             $table->float('netprice', 10);
             $table->float('amount');
             $table->date('date');
-            $table->foreignId('unitID')->constrained('units', 'id');
+            $table->foreignId('unitID')->constrained('product_units', 'id');
             $table->bigInteger('refID');
             $table->timestamps();
         });
