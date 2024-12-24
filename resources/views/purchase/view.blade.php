@@ -108,7 +108,7 @@
                                                        <tr>
                                                         <td class="p-1 m-1">{{$key+1}}</td>
                                                         <td class="text-start p-1 m-1">{{$product->product->name}}</td>
-                                                        <td class="text-start m-1 p-1">{{$product->units->name}}</td>
+                                                        <td class="text-start m-1 p-1">{{$product->unit->name}}</td>
                                                         <td class="text-end m-1 p-1">{{number_format($product->qty)}}</td>
                                                         <td class="text-end m-1 p-1">{{number_format($product->loose)}}</td>
                                                         <td class="text-end m-1 p-1">{{number_format($product->bonus)}}</td>
