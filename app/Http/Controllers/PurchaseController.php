@@ -85,7 +85,7 @@ class PurchaseController extends Controller
                 $claim = $request->claim[$key];
                 $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
                 $netPrice = ($price - $discount - $discountvalue - $claim);
-                $amount = $netPrice * $request->qty[$key];
+                $amount = $netPrice * $pc;
                 $total += $amount;
 
                 purchase_details::create(
