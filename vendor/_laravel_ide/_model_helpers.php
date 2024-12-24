@@ -782,6 +782,16 @@ namespace App\Models {
     /**
      * App\Models\attachment
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property string $path
+     * @property int $id
+     * @method static \Illuminate\Database\Eloquent\Builder|attachment whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|attachment wherePath($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|attachment whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|attachment whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|attachment whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|attachment newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|attachment newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|attachment query()
@@ -1508,6 +1518,26 @@ namespace App\Models {
     /**
      * App\Models\currency_transactions
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property string $notes
+     * @property float $db
+     * @property float $cr
+     * @property date $date
+     * @property int $accountID
+     * @property int $currencyID
+     * @property int $id
+     * @method static \Illuminate\Database\Eloquent\Builder|currency_transactions whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|currency_transactions whereCurrencyid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|currency_transactions whereAccountid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|currency_transactions whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|currency_transactions whereCr($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|currency_transactions whereDb($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|currency_transactions whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|currency_transactions whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|currency_transactions whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|currency_transactions whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|currency_transactions newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|currency_transactions newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|currency_transactions query()
@@ -1744,6 +1774,16 @@ namespace App\Models {
     /**
      * App\Models\currencymgmt
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $value
+     * @property string $title
+     * @property int $id
+     * @method static \Illuminate\Database\Eloquent\Builder|currencymgmt whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|currencymgmt whereTitle($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|currencymgmt whereValue($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|currencymgmt whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|currencymgmt whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|currencymgmt newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|currencymgmt newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|currencymgmt query()
@@ -2218,7 +2258,25 @@ namespace App\Models {
     /**
      * App\Models\deposit_withdraw
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property string $type
+     * @property string|null $notes
+     * @property date $date
+     * @property double $amount
+     * @property int $accountID
+     * @property int $id
      * @property-read \App\Models\accounts $account
+     * @method static \Illuminate\Database\Eloquent\Builder|deposit_withdraw whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|deposit_withdraw whereAccountid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|deposit_withdraw whereAmount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|deposit_withdraw whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|deposit_withdraw whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|deposit_withdraw whereType($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|deposit_withdraw whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|deposit_withdraw whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|deposit_withdraw whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|deposit_withdraw newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|deposit_withdraw newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|deposit_withdraw query()
@@ -2455,7 +2513,23 @@ namespace App\Models {
     /**
      * App\Models\expenses
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property string $notes
+     * @property double $amount
+     * @property date $date
+     * @property int $accountID
+     * @property int $id
      * @property-read \App\Models\accounts $account
+     * @method static \Illuminate\Database\Eloquent\Builder|expenses whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|expenses whereAccountid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|expenses whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|expenses whereAmount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|expenses whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|expenses whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|expenses whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|expenses whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|expenses newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|expenses newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|expenses query()
@@ -2692,8 +2766,34 @@ namespace App\Models {
     /**
      * App\Models\order_details
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property double $bonus
+     * @property double $unitValue
+     * @property int $unitID
+     * @property date $date
+     * @property double $amount
+     * @property double $discount
+     * @property float $price
+     * @property double $qty
+     * @property int $productID
+     * @property int $orderID
+     * @property int $id
      * @property-read \App\Models\products $product
      * @property-read \App\Models\units $unit
+     * @method static \Illuminate\Database\Eloquent\Builder|order_details whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|order_details whereOrderid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|order_details whereProductid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|order_details whereQty($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|order_details wherePrice($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|order_details whereDiscount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|order_details whereAmount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|order_details whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|order_details whereUnitid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|order_details whereUnitvalue($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|order_details whereBonus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|order_details whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|order_details whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|order_details newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|order_details newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|order_details query()
@@ -2930,7 +3030,13 @@ namespace App\Models {
     /**
      * App\Models\orderbooker_products
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $id
      * @property-read \App\Models\products $product
+     * @method static \Illuminate\Database\Eloquent\Builder|orderbooker_products whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|orderbooker_products whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|orderbooker_products whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|orderbooker_products newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|orderbooker_products newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|orderbooker_products query()
@@ -3167,10 +3273,30 @@ namespace App\Models {
     /**
      * App\Models\orders
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string|null $notes
+     * @property string $status
+     * @property double $net
+     * @property int|null $saleID
+     * @property date $date
+     * @property int $orderbookerID
+     * @property int $customerID
+     * @property int $id
      * @property-read \App\Models\accounts $customer
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\order_details> $details
      * @property-read int|null $details_count
      * @property-read \App\Models\User $orderbooker
+     * @method static \Illuminate\Database\Eloquent\Builder|orders whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|orders whereCustomerid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|orders whereOrderbookerid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|orders whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|orders whereSaleid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|orders whereNet($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|orders whereStatus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|orders whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|orders whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|orders whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|orders newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|orders newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|orders query()
@@ -3407,9 +3533,29 @@ namespace App\Models {
     /**
      * App\Models\paymentReceiving
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property string|null $notes
+     * @property double $amount
+     * @property date $date
+     * @property int $userID
+     * @property int $toID
+     * @property int $fromID
+     * @property int $id
      * @property-read \App\Models\accounts $fromAccount
      * @property-read \App\Models\accounts $inAccount
      * @property-read \App\Models\User $receivedBy
+     * @method static \Illuminate\Database\Eloquent\Builder|paymentReceiving whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|paymentReceiving whereFromid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|paymentReceiving whereToid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|paymentReceiving whereUserid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|paymentReceiving whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|paymentReceiving whereAmount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|paymentReceiving whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|paymentReceiving whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|paymentReceiving whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|paymentReceiving whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|paymentReceiving newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|paymentReceiving newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|paymentReceiving query()
@@ -3894,6 +4040,21 @@ namespace App\Models {
     /**
      * App\Models\products
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string $status
+     * @property double $claim
+     * @property double $labor
+     * @property double $fright
+     * @property double $discount
+     * @property double $price
+     * @property double $pprice
+     * @property int $brandID
+     * @property int $catID
+     * @property int $vendorID
+     * @property string $nameurdu
+     * @property string $name
+     * @property int $id
      * @property-read \App\Models\units $unit
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\sale_details> $saleDetails
      * @property-read int|null $saleDetails_count
@@ -3901,6 +4062,21 @@ namespace App\Models {
      * @property-read \App\Models\brands $brand
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\product_units> $units
      * @property-read int|null $units_count
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereNameurdu($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereVendorid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereCatid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereBrandid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products wherePprice($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products wherePrice($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereDiscount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereFright($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereLabor($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereClaim($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereStatus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|products active()
      * @method static \Illuminate\Database\Eloquent\Builder|products vendor()
      * @method static \Illuminate\Database\Eloquent\Builder|products newModelQuery()
@@ -4139,9 +4315,35 @@ namespace App\Models {
     /**
      * App\Models\purchase
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property double $net
+     * @property string|null $notes
+     * @property string|null $transporter
+     * @property string|null $bilty
+     * @property string|null $inv
+     * @property date $recdate
+     * @property date $orderdate
+     * @property int $warehouseID
+     * @property int $vendorID
+     * @property int $id
      * @property-read \App\Models\accounts $vendor
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\purchase_details> $details
      * @property-read int|null $details_count
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereVendorid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereWarehouseid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereOrderdate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereRecdate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereInv($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereBilty($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereTransporter($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereNet($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|purchase newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|purchase query()
@@ -4378,8 +4580,50 @@ namespace App\Models {
     /**
      * App\Models\purchase_details
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property int $unitID
+     * @property date $date
+     * @property double $amount
+     * @property float $netprice
+     * @property float $claim
+     * @property float $labor
+     * @property float $fright
+     * @property double $bonus
+     * @property double $pc
+     * @property double $loose
+     * @property double $qty
+     * @property float $discountvalue
+     * @property float $discountp
+     * @property float $discount
+     * @property float $price
+     * @property int $productID
+     * @property int $purchaseID
+     * @property int $id
      * @property-read \App\Models\products $product
-     * @property-read \App\Models\units $unit
+     * @property-read \App\Models\product_units $unit
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details wherePurchaseid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereProductid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details wherePrice($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereDiscount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereDiscountp($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereDiscountvalue($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereQty($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereLoose($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details wherePc($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereBonus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereFright($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereLabor($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereClaim($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereNetprice($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereAmount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereUnitid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details query()
@@ -4860,8 +5104,42 @@ namespace App\Models {
     /**
      * App\Models\sale_details
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property double $unitValue
+     * @property int $unitID
+     * @property double $bonus
+     * @property date $date
+     * @property double $gstValue
+     * @property double $gst
+     * @property double $tp
+     * @property double $ti
+     * @property double $discount
+     * @property float $price
+     * @property double $qty
+     * @property int $productID
+     * @property int $salesID
+     * @property int $id
      * @property-read \App\Models\products $product
      * @property-read \App\Models\units $unit
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereSalesid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereProductid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereQty($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details wherePrice($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereDiscount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereTi($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereTp($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereGst($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereGstvalue($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereBonus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereUnitid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereUnitvalue($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details query()
@@ -5098,8 +5376,26 @@ namespace App\Models {
     /**
      * App\Models\sale_payments
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property string|null $notes
+     * @property double $amount
+     * @property date $date
+     * @property int $accountID
+     * @property int $salesID
+     * @property int $id
      * @property-read \App\Models\accounts $account
      * @property-read \App\Models\sales $bill
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereSalesid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereAccountid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereAmount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_payments newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|sale_payments newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|sale_payments query()
@@ -5336,12 +5632,40 @@ namespace App\Models {
     /**
      * App\Models\sales
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property string|null $notes
+     * @property double $net
+     * @property double $fright1
+     * @property double $fright
+     * @property double $discount
+     * @property double $whValue
+     * @property double $wh
+     * @property date $date
+     * @property int $orderbookerID
+     * @property int $customerID
+     * @property int $id
      * @property-read \App\Models\accounts $customer
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\sale_details> $details
      * @property-read int|null $details_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\sale_payments> $payments
      * @property-read int|null $payments_count
      * @property-read \App\Models\User $orderbooker
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereCustomerid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereOrderbookerid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereWh($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereWhvalue($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereDiscount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereFright($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereFright1($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereNet($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|sales newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|sales query()
@@ -5578,6 +5902,26 @@ namespace App\Models {
     /**
      * App\Models\stock
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property string|null $notes
+     * @property double $db
+     * @property double $cr
+     * @property date $date
+     * @property int $warehouseID
+     * @property int $productID
+     * @property int $id
+     * @method static \Illuminate\Database\Eloquent\Builder|stock whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stock whereProductid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stock whereWarehouseid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stock whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stock whereCr($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stock whereDb($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stock whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stock whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stock whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stock whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|stock newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|stock newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|stock query()
@@ -5814,8 +6158,30 @@ namespace App\Models {
     /**
      * App\Models\stockAdjustment
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property date $date
+     * @property string|null $notes
+     * @property string $type
+     * @property double $unitValue
+     * @property int $unitID
+     * @property double $qty
+     * @property int $productID
+     * @property int $id
      * @property-read \App\Models\products $product
      * @property-read \App\Models\units $unit
+     * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment whereProductid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment whereQty($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment whereUnitid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment whereUnitvalue($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment whereType($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|stockAdjustment query()
@@ -6052,8 +6418,22 @@ namespace App\Models {
     /**
      * App\Models\targetDetails
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $unitID
+     * @property double $qty
+     * @property int $productID
+     * @property int $targetID
+     * @property int $id
      * @property-read \App\Models\products $product
      * @property-read \App\Models\units $unit
+     * @method static \Illuminate\Database\Eloquent\Builder|targetDetails whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|targetDetails whereTargetid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|targetDetails whereProductid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|targetDetails whereQty($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|targetDetails whereUnitid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|targetDetails whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|targetDetails whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|targetDetails newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|targetDetails newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|targetDetails query()
@@ -6290,9 +6670,23 @@ namespace App\Models {
     /**
      * App\Models\targets
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string|null $notes
+     * @property date $endDate
+     * @property date $startDate
+     * @property int $customerID
+     * @property int $id
      * @property-read \App\Models\accounts $customer
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\targetDetails> $details
      * @property-read int|null $details_count
+     * @method static \Illuminate\Database\Eloquent\Builder|targets whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|targets whereCustomerid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|targets whereStartdate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|targets whereEnddate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|targets whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|targets whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|targets whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|targets newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|targets newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|targets query()
@@ -7030,8 +7424,26 @@ namespace App\Models {
     /**
      * App\Models\transfer
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property string|null $notes
+     * @property date $date
+     * @property double $amount
+     * @property int $to
+     * @property int $from
+     * @property int $id
      * @property-read \App\Models\accounts $fromAccount
      * @property-read \App\Models\accounts $toAccount
+     * @method static \Illuminate\Database\Eloquent\Builder|transfer whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|transfer whereFrom($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|transfer whereTo($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|transfer whereAmount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|transfer whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|transfer whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|transfer whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|transfer whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|transfer whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|transfer newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|transfer newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|transfer query()
@@ -7514,7 +7926,25 @@ namespace App\Models {
     /**
      * App\Models\users_transactions
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property int $refID
+     * @property string $notes
+     * @property float $db
+     * @property float $cr
+     * @property date $date
+     * @property int $userID
+     * @property int $id
      * @property-read \App\Models\User $user
+     * @method static \Illuminate\Database\Eloquent\Builder|users_transactions whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|users_transactions whereUserid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|users_transactions whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|users_transactions whereCr($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|users_transactions whereDb($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|users_transactions whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|users_transactions whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|users_transactions whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|users_transactions whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|users_transactions newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|users_transactions newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|users_transactions query()
