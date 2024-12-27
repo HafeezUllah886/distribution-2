@@ -4598,6 +4598,7 @@ namespace App\Models {
      * @property float $discountp
      * @property float $discount
      * @property float $price
+     * @property int $warehouseID
      * @property int $productID
      * @property int $purchaseID
      * @property int $id
@@ -4606,6 +4607,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details wherePurchaseid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereProductid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereWarehouseid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details wherePrice($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereDiscount($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase_details whereDiscountp($value)

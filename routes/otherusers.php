@@ -3,6 +3,7 @@
 use App\Http\Controllers\OrderbookerProductsController;
 use App\Http\Controllers\OtherusersController;
 use App\Http\Controllers\UserAccountsController;
+use App\Http\Middleware\confirmPassword;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -13,5 +14,6 @@ Route::middleware('auth')->group(function () {
     Route::get('otherusers/status/{id}', [OtherusersController::class, 'status'])->name('otherusers.status');
 
     Route::resource('/userAccounts', UserAccountsController::class);
-    Route::resource('/orderbooker/products', OrderbookerProductsController::class);
+    Route::resource('/orderbookerproducts', OrderbookerProductsController::class);
+    Route::get("orderbookerproduct/delete/{id}", [OrderbookerProductsController::class, 'destroy'])->name('orderbookerproduct.delete')->middleware([confirmPassword::class]);
 });

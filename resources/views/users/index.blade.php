@@ -49,6 +49,14 @@
                                                                                   Edits
                                                                               </a>
                                                                           </li>
+                                                                          @if ($type == "Order Booker")
+                                                                            <li>
+                                                                                <a class="dropdown-item" href="{{route('orderbookerproducts.index')}}/{{$user->id}}">
+                                                                                    <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                                                    Assigned Products
+                                                                                </a>
+                                                                            </li>
+                                                                          @endif
 
                                                                           <li>
                                                                               <a class="dropdown-item text-{{$user->status == "Blocked" ? "success" : "danger"}}" href="{{route('otherusers.status', [$user->id])}}">

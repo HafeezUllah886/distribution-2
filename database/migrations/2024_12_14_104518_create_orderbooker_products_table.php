@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('orderbooker_products', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('orderbookerID')->constrained('users', 'id');
+            $table->foreignId('productID')->constrained('products', 'id');
             $table->timestamps();
         });
     }
