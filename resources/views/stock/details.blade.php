@@ -36,8 +36,8 @@
                                     <!--end col-->
                                     <div class="col-lg-3 col-6">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Balance</p>
-                                        <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">Current &nbsp;</small><span id="invoice-date">{{ number_format($cur_balance / $unit->value) }} {{$unit->unit_name}}</span> </h5>
-                                        <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">Previous </small><span id="invoice-date">{{ number_format($pre_balance / $unit->value) }} {{$unit->unit_name}}</span> </h5>
+                                        <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">Current &nbsp;</small><span id="invoice-date">{{packInfo($unit->value, $unit->unit_name, $cur_balance)}} </span> </h5>
+                                        <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">Previous </small><span id="invoice-date">{{packInfo($unit->value, $unit->unit_name, $pre_balance)}}</span> </h5>
                                     </div>
                                     <!--end col-->
                                     <div class="col-lg-3 col-6">
@@ -80,9 +80,9 @@
                                                 <td>{{ $stock->refID }}</td>
                                                 <td>{{ date('d M Y', strtotime($stock->date)) }}</td>
                                                 <td class="text-start">{{ $stock->notes }}</td>
-                                                <td class="text-end">{{ number_format($stock->cr / $unit->value,2) }} {{$unit->unit_name}}</td>
-                                                <td class="text-end">{{ number_format($stock->db / $unit->value,2) }} {{$unit->unit_name}}</td>
-                                                <td class="text-end">{{ number_format($balance / $unit->value,2) }} {{$unit->unit_name}}</td>
+                                                <td class="text-end">{{packInfo($unit->value, $unit->unit_name, $stock->cr)}} </td>
+                                                <td class="text-end">{{packInfo($unit->value, $unit->unit_name, $stock->db)}} </td>
+                                                <td class="text-end">{{packInfo($unit->value, $unit->unit_name, $balance)}} </td>
                                             </tr>
                                         @endforeach
                                         </tbody>

@@ -12,6 +12,8 @@
                             <th>#</th>
                             <th>Product</th>
                             <th>Stock</th>
+                            <th>Stock Value (P)</th>
+                            <th>Stock Value (S)</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
@@ -19,7 +21,9 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $product->name }}</td>
-                                    <td>{{ number_format(getStock($product->id) / $product->units[0]->value, 2) }} {{$product->units[0]->unit_name}}</td>
+                                    <td>{{packInfo($product->units[0]->value, $product->units[0]->unit_name , getStock($product->id))}} </td>
+                                    <td>{{number_format(productStockValue($product->id))}} </td>
+                                    <td>{{number_format(productStockValueS($product->id))}} </td>
                                     <td>
                                         <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#new_{{$product->id}}">
                                                 Details
@@ -51,6 +55,15 @@
                                                         <select name="unit" class="form-control" id="unit">
                                                             @foreach ($product->units as $unit)
                                                                 <option value="{{$unit->id}}">{{$unit->unit_name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                       </div>
+                                                       <div class="form-group mt-2">
+                                                        <label for="warehouse">Warehouse</label>
+                                                        <select name="warehouse" class="form-control" id="warehouse">
+                                                            <option value="all">All</option>
+                                                            @foreach ($warehouses as $warehouse)
+                                                                <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
                                                             @endforeach
                                                         </select>
                                                        </div>

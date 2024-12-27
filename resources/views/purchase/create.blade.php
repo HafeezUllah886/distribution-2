@@ -213,16 +213,16 @@
             qty = loose + (qty * unit);
             var amount = (price - discount - discountValue - claim) * qty;
             $("#amount_"+id).val(amount.toFixed(2));
-            $("#frightValue_"+id).val(fright * qty);
-            $("#laborValue_"+id).val(labor * qty);
-            $("#claimValue_"+id).val(claim * qty);
-            $(".frightText_"+id).html(fright * qty);
-            $(".laborText_"+id).html(labor * qty);
-            $(".claimText_"+id).html(claim * qty);
-            $(".discountText_"+id).html(discount * qty);
-            $("#discountValue_"+id).val(discount * qty);
-            $(".discountpText_"+id).html(discountValue * qty);
-            $("#discountPValue_"+id).val(discountValue * qty);
+            $("#frightValue_"+id).val((fright * qty).toFixed(0));
+            $("#laborValue_"+id).val((labor * qty).toFixed(0));
+            $("#claimValue_"+id).val((claim * qty).toFixed(0));
+            $(".frightText_"+id).html(((fright * qty).toFixed(0)).toFixed(0));
+            $(".laborText_"+id).html((labor * qty).toFixed(0));
+            $(".claimText_"+id).html((claim * qty).toFixed(0));
+            $(".discountText_"+id).html((discount * qty).toFixed(0));
+            $("#discountValue_"+id).val((discount * qty).toFixed(0));
+            $(".discountpText_"+id).html((discountValue * qty).toFixed(0));
+            $("#discountPValue_"+id).val((discountValue * qty).toFixed(0));
             updateTotal();
         }
 

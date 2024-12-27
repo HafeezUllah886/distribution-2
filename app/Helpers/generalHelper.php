@@ -107,7 +107,6 @@ function avgSalePrice($from, $to, $id)
     return $sale_price;
 }
 
-
 function avgPurchasePrice($from, $to, $id)
 {
     $purchases = purchase_details::where('productID', $id);
@@ -150,6 +149,34 @@ function productStockValue($id)
     dashboard();
     return $price * $stock;
 }
+
+function productStockValues($id)
+{
+    $stock = getStock($id);
+    $price = avgSalePrice('all', 'all', $id);
+    dashboard();
+    return $price * $stock;
+}
+
+
+function packInfo($size, $name, $qty)
+ {
+    $packs = intdiv($qty, $size);
+    $remains = $qty - ($packs*$size);
+    if($packs == 0 && $remains == 0)
+    {
+        return "0 Pcs";
+    }
+    if($packs == 0)
+    {
+        return "$remains Pcs";
+    }
+    if($remains == 0)
+    {
+        return "$packs $name";
+    }
+    return "$packs $name, $remains Pcs";
+ }
 
 function calculateGrowthPercentage($oldValue, $newValue) {
     if ($oldValue == 0) {

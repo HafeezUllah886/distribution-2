@@ -91,6 +91,7 @@ class PurchaseController extends Controller
                 purchase_details::create(
                     [
                         'purchaseID'    => $purchase->id,
+                        'warehouseID'   => $request->warehouseID,
                         'productID'     => $id,
                         'price'         => $price,
                         'discount'      => $discount,
