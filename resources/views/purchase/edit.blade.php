@@ -18,7 +18,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-6"><h3> Edit Purchase </h3></div>
-                                <div class="col-6 d-flex flex-row-reverse"><button onclick="window.close()" class="btn btn-danger">Close</button></div>
+                                <div class="col-6 d-flex flex-row-reverse"><a href="{{route('purchase.index')}}" class="btn btn-danger">Close</a></div>
                             </div>
                         </div>
                     </div>
@@ -26,7 +26,7 @@
                 <div class="card-body">
                     <form action="{{ route('purchase.update', $purchase->id) }}" method="post">
                         @csrf
-                        @method("PUT")
+                        @method('PUT')
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
@@ -39,161 +39,164 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-12">
-
                                 <table class="table table-striped table-hover">
                                     <thead>
-                                        <th width="30%">Item</th>
+                                        <th width="20%">Item</th>
                                         <th width="10%" class="text-center">Unit</th>
                                         <th class="text-center">Qty</th>
-                                        <th class="text-center">P-Price</th>
-                                        <th class="text-center">S-Price</th>
-                                        <th class="text-center">WS Price</th>
-                                        <th class="text-center">RT Price</th>
-                                        <th class="text-center">GST 18%</th>
-                                        <th class="text-center">Amount</th>
+                                        <th class="text-center">loose</th>
                                         <th class="text-center">Bonus</th>
+                                        <th class="text-center">Price</th>
+                                        <th class="text-center">Discount Value</th>
+                                        <th class="text-center">Discount %</th>
+                                        <th class="text-center">Fright</th>
+                                        <th class="text-center">Labor</th>
+                                        <th class="text-center">Claim</th>
+                                        <th class="text-center">Amount</th>
                                         <th></th>
                                     </thead>
                                     <tbody id="products_list">
                                         @foreach ($purchase->details as $product)
-                                        @php
-                                            $id = $product->product->id;
-                                        @endphp
-                                        <tr id="row_{{$id}}">
-                                            <td class="no-padding">{{$product->product->code . " | " . $product->product->name}}</td>
-                                            <td class="no-padding">
-                                                <select name="unit[]" class="form-control text-center" onchange="updateChanges({{ $id }})" id="unit_{{ $id }}">
-                                                    @foreach ($units as $unit)
-                                                        @php
-                                                            if($unit->id == $product->unitID)
-                                                            {
-                                                                $unitValue = $product->unitValue;
-                                                            }
-                                                        @endphp
-                                                        <option data-unit="{{ $unit->value }}" value="{{ $unit->id }}" @selected($unit->id == $product->unitID)>{{ $unit->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td class="no-padding">
-                                                    <input type="number" name="qty[]" oninput="updateChanges({{ $id }})" min="0.1"
-                                                    required step="any" value="{{$product->qty / $unitValue}}" class="form-control text-center" id="qty_{{ $id }}">
-                                            </td>
-                                            <td class="no-padding"><input type="number" name="pprice[]" oninput="updateChanges({{$id}})" required step="any" value="{{$product->pprice}}" min="1" class="form-control text-center no-padding" id="pprice_{{$id}}"></td>
-                                            <td class="no-padding"><input type="number" name="price[]" required step="any" value="{{$product->price}}" min="0" class="form-control text-center no-padding" id="price_{{$id}}"></td>
-                                            <td class="no-padding"><input type="number" name="wsprice[]" required step="any" value="{{$product->wsprice}}" min="1" class="form-control text-center no-padding" id="wsprice_{{$id}}"></td>
-                                            <td class="no-padding"><input type="number" name="tp[]" required step="any" value="{{$product->tp}}" min="1" class="form-control text-center no-padding" id="tp_{{$id}}"></td>
-                                            <td class="no-padding"><input type="number" name="gstValue[]" readonly required step="any" value="{{$product->gstValue}}" class="form-control text-center no-padding" id="gstValue_{{$id}}"></td>
-                                            <td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="{{$product->amount}}" class="form-control text-center no-padding" id="amount_{{$id}}"></td>
-                                            <td class="no-padding"><input type="number" name="bonus[]" min="0" required step="any" value="{{$product->bonus}}" oninput="updateChanges({{$id}})" class="form-control text-center no-padding" id="bonus_{{$id}}"></td>
-                                            <td class="no-padding"> <span class="btn btn-sm btn-danger" onclick="deleteRow({{$id}})">X</span> </td>
-                                            <input type="hidden" name="id[]" value="{{$id}}">
-                                        </tr>
+                                            <tr id="row_{{$product->productID}}">
+                                                <td class="no-padding">{{$product->product->name}}</td>
+                                                <td class="no-padding text-center">
+                                                    <select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges({{$product->productID}})" id="unit_{{$product->productID}}">
+                                                        @foreach ($product->product->units as $unit)
+                                                            <option data-unit="{{$unit->value}}" value="{{$unit->id}}" @if($unit->id == $product->unitID) selected @endif>{{$unit->unit_name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td class="no-padding text-center">
+                                                    <input type="number" name="qty[]" oninput="updateChanges({{$product->productID}})" min="0" required step="any" value="{{$product->qty}}" class="form-control text-center no-padding" id="qty_{{$product->productID}}">
+                                                </td>
+                                                <td class="no-padding text-center">
+                                                    <input type="number" name="loose[]" oninput="updateChanges({{$product->productID}})" min="0" required step="any" value="{{$product->loose}}" class="form-control text-center no-padding" id="loose_{{$product->productID}}">
+                                                </td>
+                                                <td class="no-padding text-center">
+                                                    <input type="number" name="bonus[]" min="0" required step="any" value="{{$product->bonus}}" class="form-control text-center no-padding" id="bonus_{{$product->productID}}">
+                                                </td>
+                                                <td class="no-padding text-center">
+                                                    <input type="number" name="price[]" oninput="updateChanges({{$product->productID}})" required step="any" value="{{$product->price}}" min="1" class="form-control text-center no-padding" id="price_{{$product->productID}}">
+                                                </td>
+                                                <td class="no-padding text-center">
+                                                    <div class="input-group">
+                                                        <input type="number" name="discount[]" required step="any" value="{{$product->discount}}" min="0" oninput="updateChanges({{$product->productID}})" class="form-control text-center no-padding" id="discount_{{$product->productID}}">
+                                                        <span class="input-group-text no-padding discountText_{{$product->productID}}" id="basic-addon2"> </span>
+                                                    </div>
+                                                </td>
+                                                <td class="no-padding text-center">
+                                                    <div class="input-group">
+                                                        <input type="number" name="discountp[]" required step="any" value="{{$product->discountp}}" min="0" oninput="updateChanges({{$product->productID}})" class="form-control text-center no-padding" id="discountp_{{$product->productID}}">
+                                                        <span class="input-group-text no-padding discountpText_{{$product->productID}}" id="basic-addon2"></span>
+                                                    </div>
+                                                </td>
+                                                <td class="no-padding text-center">
+                                                    <div class="input-group">
+                                                        <input type="number" name="fright[]" required step="any" oninput="updateChanges({{$product->productID}})" value="{{$product->fright}}" min="0" class="form-control text-center no-padding" id="fright_{{$product->productID}}">
+                                                        <span class="input-group-text no-padding frightText_{{$product->productID}}" id="basic-addon2"></span>
+                                                    </div>
+                                                </td>
+                                                <td class="no-padding text-center">
+                                                    <div class="input-group">
+                                                        <input type="number" name="labor[]" required step="any" oninput="updateChanges({{$product->productID}})" value="{{$product->labor}}" min="0" class="form-control text-center no-padding" id="labor_{{$product->productID}}">
+                                                        <span class="input-group-text no-padding laborText_{{$product->productID}}" id="basic-addon2"></span>
+                                                    </div>
+                                                </td>
+                                                <td class="no-padding text-center">
+                                                    <div class="input-group">
+                                                        <input type="number" name="claim[]" required step="any" oninput="updateChanges({{$product->productID}})" value="{{$product->claim}}" min="0" class="form-control text-center no-padding" id="claim_{{$product->productID}}">
+                                                        <span class="input-group-text no-padding claimText_{{$product->productID}}" id="basic-addon2"></span>
+                                                    </div>
+                                                </td>
+                                                <td class="no-padding text-center">
+                                                    <input type="number" name="amount[]" min="0.1" readonly required step="any" value="{{$product->amount}}" class="form-control text-center no-padding" id="amount_{{$product->productID}}">
+                                                </td>
+                                                <td class="no-padding text-center">
+                                                    <span class="btn btn-sm btn-danger" onclick="deleteRow({{$product->productID}})">X</span>
+                                                </td>
+                                                <input type="hidden" name="id[]" value="{{$product->productID}}">
+                                                <input type="hidden" name="frightValue[]" id="frightValue_{{$product->productID}}" value="{{$product->fright}}">
+                                                <input type="hidden" name="laborValue[]" id="laborValue_{{$product->productID}}" value="{{$product->labor}}">
+                                                <input type="hidden" name="claimValue[]" id="claimValue_{{$product->productID}}" value="{{$product->claim}}">
+                                                <input type="hidden" name="discountValue[]" id="discountValue_{{$product->productID}}" value="{{$product->discount}}">
+                                                <input type="hidden" name="discountPValue[]" id="discountPValue_{{$product->productID}}" value="{{$product->discountp}}">
+                                            </tr>
+
                                         @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="7" class="text-end">Total</th>
-
-                                            <th class="text-end" id="totalGst">0.00</th>
+                                            <th colspan="2" class="text-end">Total</th>
+                                           {{--  <th class="text-end" id="totalQty">0.00</th> --}}
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th class="text-end" id="totalDiscount">0.00</th>
+                                            <th class="text-end" id="totalPDiscount">0.00</th>
+                                            <th class="text-end" id="totalFright">0.00</th>
+                                            <th class="text-end" id="totalLabor">0.00</th>
+                                            <th class="text-end" id="totalClaim">0.00</th>
                                             <th class="text-end" id="totalAmount">0.00</th>
                                             <th></th>
                                         </tr>
                                     </tfoot>
                                 </table>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <label for="comp">Purchase Inv No.</label>
-                                    <input type="text" name="inv" value="{{$purchase->inv}}" id="inv" class="form-control">
+                                    <input type="text" name="inv" value="{{ $purchase->inv }}" id="inv" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <div class="form-group">
-                                    <label for="discount">Discount</label>
-                                    <input type="number" name="discount" value="{{$purchase->discount}}" oninput="updateTotal()" id="discount" step="any" value="0" class="form-control">
+                                    <label for="comp">Bilty No.</label>
+                                    <input type="text" name="bilty" value="{{ $purchase->bilty }}" id="bilty" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <div class="form-group">
-                                    <label for="fright">Fright (-)</label>
-                                    <input type="number" name="fright" id="fright" value="{{$purchase->fright}}" oninput="updateTotal()" min="0" step="any" value="0" class="form-control">
+                                    <label for="comp">Transporter</label>
+                                    <input type="text" name="transporter" value="{{ $purchase->transporter }}" id="transporter" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <div class="form-group">
-                                    <label for="fright1">Fright (+)</label>
-                                    <input type="number" name="fright1" id="fright1" value="{{$purchase->fright1}}" oninput="updateTotal()" min="0" step="any" value="0" class="form-control">
+                                    <label for="orderdate">Order Date</label>
+                                    <input type="date" name="orderdate" id="orderdate" value="{{ date('Y-m-d', strtotime($purchase->orderdate)) }}" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-2">
+                            <div class="col-4 mt-2">
                                 <div class="form-group">
-                                    <label for="whTax">WH Tax</label>
-                                    <div class="input-group mb-3">
-                                        <input type="number" name="whTax" id="whTax" value="{{$purchase->wh}}" oninput="updateTotal()" max="50" min="0" step="any" value="0" aria-describedby="basic-addon2" class="form-control">
-                                        <span class="input-group-text whTaxValue" id="basic-addon2">0</span>
-                                      </div>
-
-                                </div>
-
-                            </div>
-                            <div class="col-2">
-                                <div class="form-group">
-                                    <label for="net">Net Amount</label>
-                                    <input type="number" name="net" id="net" step="any" readonly value="0" class="form-control">
+                                    <label for="date">Receiving Date</label>
+                                    <input type="date" name="recdate" id="date" value="{{ date('Y-m-d', strtotime($purchase->recdate)) }}" class="form-control">
+                                    <input type="hidden" name="vendorID" value="{{ $purchase->vendorID }}">
                                 </div>
                             </div>
-                            <div class="col-3 mt-2">
+                            <div class="col-4 mt-2">
                                 <div class="form-group">
-                                    <label for="date">Date</label>
-                                    <input type="date" name="date" id="date" value="{{$purchase->date}}"
-                                        class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-3 mt-2">
-                                <div class="form-group">
-                                    <label for="vendor">Vendor</label>
-                                    <select name="vendorID" id="vendor" class="selectize1">
-                                        @foreach ($vendors as $vendor)
-                                            <option value="{{ $vendor->id }}" @selected($vendor->id == $purchase->vendorID)>{{ $vendor->title }}</option>
+                                    <label for="warehouseID">Warehouse</label>
+                                    <select name="warehouseID" id="warehouseID" class="form-control">
+                                        @foreach ($warehouses as $warehouse)
+                                            <option value="{{$warehouse->id}}" @selected($warehouse->id == $purchase->warehouseID)>{{$warehouse->name}}</option>
                                         @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-3 mt-2">
-                                <div class="form-group">
-                                    <label for="account">Account</label>
-                                    <select name="accountID" id="account" class="selectize1">
-                                        @foreach ($accounts as $account)
-                                            <option value="{{ $account->id }}">{{ $account->title }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-3 mt-2">
-                                <div class="form-group">
-                                    <label for="status">Payment Status</label>
-                                    <select name="status" id="status" class="selectize1">
-                                        <option value="paid">Paid</option>
-                                        <option value="pending">Pending</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-12 mt-2">
                                 <div class="form-group">
                                     <label for="notes">Notes</label>
-                                    <textarea name="notes" id="notes" class="form-control" cols="30" rows="5">{{$purchase->notes}}</textarea>
+                                    <textarea name="notes" id="notes" class="form-control" cols="30" rows="5">{{ $purchase->notes }}</textarea>
                                 </div>
                             </div>
                             <div class="col-12 mt-2">
                                 <button type="submit" class="btn btn-primary w-100">Update Purchase</button>
                             </div>
+                        </div>
+                    </form>
                 </div>
-            </form>
-            </div>
-
         </div>
         <!--end card-->
     </div>
@@ -224,11 +227,8 @@
                     this.clear();
                     this.focus();
                 }
-
             },
         });
-        var units = @json($units);
-
 
         function getSingleProduct(id) {
             $.ajax({
@@ -239,30 +239,33 @@
                         return element === product.id;
                     });
                     if (found.length > 0) {
-
                     } else {
-
                         var id = product.id;
+                        var units = product.units;
                         var html = '<tr id="row_' + id + '">';
-                        html += '<td class="no-padding">' + product.code + ' | ' + product.name + '</td>';
-
+                        html += '<td class="no-padding">' + product.name + '</td>';
                         html += '<td class="no-padding"><select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges(' + id +')" id="unit_' + id + '">';
                             units.forEach(function(unit) {
-                                var isSelected = (unit.id == product.unitID);
-                                html += '<option data-unit="'+unit.value+'" value="' + unit.id + '" ' + (isSelected ? 'selected' : '') + '>' + unit.name + '</option>';
+                                html += '<option data-unit="'+unit.value+'" value="' + unit.id + '">' + unit.unit_name + '</option>';
                             });
                         html += '</select></td>';
-                        html += '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="0" class="form-control text-center no-padding" id="qty_' + id + '"></td>';
-
-                        html += '<td class="no-padding"><input type="number" name="pprice[]" oninput="updateChanges(' + id + ')" required step="any" value="'+product.pprice+'" min="1" class="form-control text-center no-padding" id="pprice_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="price[]" required step="any" value="'+product.price+'" min="0" class="form-control text-center no-padding" id="price_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="wsprice[]" required step="any" value="'+product.wsprice+'" min="1" class="form-control text-center no-padding" id="wsprice_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="tp[]" required step="any" value="'+product.tp+'" min="1" class="form-control text-center no-padding" id="tp_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="gstValue[]" readonly required step="any" value="0" class="form-control text-center no-padding" id="gstValue_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="1" class="form-control text-center no-padding" id="qty_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="loose[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="0" class="form-control text-center no-padding" id="loose_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="bonus[]" min="0" required step="any" value="0" class="form-control text-center no-padding" id="bonus_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' + id + ')" required step="any" value="'+product.pprice+'" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
+                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="discount[]" required step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discount_' + id + '"><span class="input-group-text no-padding discountText_'+id+'" id="basic-addon2"></span></td>';
+                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="discountp[]" required step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discountp_' + id + '"><span class="input-group-text no-padding discountpText_'+id+'" id="basic-addon2"></span></td>';
+                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="fright[]" required step="any" oninput="updateChanges(' + id + ')" value="'+product.fright+'" min="0" class="form-control text-center no-padding" id="fright_' + id + '"> <span class="input-group-text no-padding frightText_'+id+'" id="basic-addon2"></span></div></td>';
+                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="labor[]" required step="any" oninput="updateChanges(' + id + ')" value="'+product.labor+'" min="0" class="form-control text-center no-padding" id="labor_' + id + '"> <span class="input-group-text no-padding laborText_'+id+'" id="basic-addon2"></span></div></td>';
+                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="claim[]" required step="any" oninput="updateChanges(' + id + ')" value="'+product.claim+'" min="0" class="form-control text-center no-padding" id="claim_' + id + '"> <span class="input-group-text no-padding claimText_'+id+'" id="basic-addon2"></span></div></td>';
                         html += '<td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="bonus[]" min="0" required step="any" value="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="bonus_' + id + '"></td>';
                         html += '<td class="no-padding"> <span class="btn btn-sm btn-danger" onclick="deleteRow('+id+')">X</span> </td>';
                         html += '<input type="hidden" name="id[]" value="' + id + '">';
+                        html += '<input type="hidden" name="frightValue[]" id="frightValue_'+id+'" value="0">';
+                        html += '<input type="hidden" name="laborValue[]" id="laborValue_'+id+'" value="0">';
+                        html += '<input type="hidden" name="claimValue[]" id="claimValue_'+id+'" value="0">';
+                        html += '<input type="hidden" name="discountValue[]" id="discountValue_'+id+'" value="0">';
+                        html += '<input type="hidden" name="discountPValue[]" id="discountPValue_'+id+'" value="0">';
                         html += '</tr>';
                         $("#products_list").prepend(html);
                         existingProducts.push(id);
@@ -271,24 +274,34 @@
                 }
             });
         }
-
         function updateChanges(id) {
             var qty = parseFloat($('#qty_' + id).val());
-            var unit = $('#unit_' + id).find('option:selected');
-            unit = unit.data('unit');
-            var newQty = qty * unit;
-            var pprice = parseFloat($('#pprice_' + id).val());
-            var tp = parseFloat($('#tp_' + id).val());
+            var loose = parseFloat($('#loose_' + id).val());
             var bonus = parseFloat($('#bonus_' + id).val());
-
-            var gstValue = (tp * 18 / 100) * (newQty + bonus);
-            var amount = newQty * pprice;
+            var price = parseFloat($('#price_' + id).val());
+            var discount = parseFloat($('#discount_' + id).val());
+            var discountp = parseFloat($('#discountp_' + id).val());
+            var fright = parseFloat($('#fright_' + id).val());
+            var labor = parseFloat($('#labor_' + id).val());
+            var claim = parseFloat($('#claim_' + id).val());
+            var unit = $('#unit_' + id).find(':selected').data('unit');
+            var discountValue = price * discountp / 100;
+            qty = loose + (qty * unit);
+            var amount = (price - discount - discountValue - claim) * qty;
             $("#amount_"+id).val(amount.toFixed(2));
-            $("#gstValue_"+id).val(gstValue.toFixed(2));
+            $("#frightValue_"+id).val((fright * qty).toFixed(0));
+            $("#laborValue_"+id).val((labor * qty).toFixed(0));
+            $("#claimValue_"+id).val((claim * qty).toFixed(0));
+            $(".frightText_"+id).html(((fright * qty).toFixed(0)));
+            $(".laborText_"+id).html((labor * qty).toFixed(0));
+            $(".claimText_"+id).html((claim * qty).toFixed(0));
+            $(".discountText_"+id).html((discount * qty).toFixed(0));
+            $("#discountValue_"+id).val((discount * qty).toFixed(0));
+            $(".discountpText_"+id).html((discountValue * qty).toFixed(0));
+            $("#discountPValue_"+id).val((discountValue * qty).toFixed(0));
             updateTotal();
         }
 
-        updateTotal();
         function updateTotal() {
             var total = 0;
             $("input[id^='amount_']").each(function() {
@@ -299,25 +312,53 @@
 
             $("#totalAmount").html(total.toFixed(2));
 
-            var gst = 0;
-            $("input[id^='gstValue_']").each(function() {
+            var totalFright = 0;
+            $("input[id^='frightValue_']").each(function() {
                 var inputId = $(this).attr('id');
                 var inputValue = $(this).val();
-                gst += parseFloat(inputValue);
+                totalFright += parseFloat(inputValue);
             });
 
-            $("#totalGst").html(gst.toFixed(2));
+            $("#totalFright").html(totalFright.toFixed(2));
 
-            var discount = parseFloat($("#discount").val());
-            var fright = parseFloat($("#fright").val());
-            var fright1 = parseFloat($("#fright1").val());
-            var whTax = parseFloat($("#whTax").val());
+            var totalLabor = 0;
+            $("input[id^='laborValue_']").each(function() {
+                var inputId = $(this).attr('id');
+                var inputValue = $(this).val();
+                totalLabor += parseFloat(inputValue);
+            });
 
-            var taxValue = total * whTax / 100;
+            $("#totalLabor").html(totalLabor.toFixed(2));
 
-            $(".whTaxValue").html(taxValue.toFixed(2));
+            var totalClaim = 0;
+            $("input[id^='claimValue_']").each(function() {
+                var inputId = $(this).attr('id');
+                var inputValue = $(this).val();
+                totalClaim += parseFloat(inputValue);
+            });
 
-            var net = (total + taxValue + fright1) - (discount + fright);
+            $("#totalClaim").html(totalClaim.toFixed(2));
+
+            var totalDiscount = 0;
+            $("input[id^='discountValue_']").each(function() {
+                var inputId = $(this).attr('id');
+                var inputValue = $(this).val();
+                totalDiscount += parseFloat(inputValue);
+            });
+
+            $("#totalDiscount").html(totalDiscount.toFixed(2));
+
+            var totalPDiscount = 0;
+            $("input[id^='discountPValue_']").each(function() {
+                var inputId = $(this).attr('id');
+                var inputValue = $(this).val();
+                totalPDiscount += parseFloat(inputValue);
+            });
+
+            $("#totalPDiscount").html(totalPDiscount.toFixed(2));
+
+            var claim = $("#claim").val();
+            var net = total - claim;
 
             $("#net").val(net.toFixed(2));
         }
@@ -330,6 +371,9 @@
             updateTotal();
         }
 
+    @foreach ($purchase->details as $product)
+        updateChanges({{$product->productID}});
+    @endforeach
 
     </script>
 @endsection

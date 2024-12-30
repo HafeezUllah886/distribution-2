@@ -216,7 +216,7 @@
             $("#frightValue_"+id).val((fright * qty).toFixed(0));
             $("#laborValue_"+id).val((labor * qty).toFixed(0));
             $("#claimValue_"+id).val((claim * qty).toFixed(0));
-            $(".frightText_"+id).html(((fright * qty).toFixed(0)).toFixed(0));
+            $(".frightText_"+id).html(((fright * qty).toFixed(0)));
             $(".laborText_"+id).html((labor * qty).toFixed(0));
             $(".claimText_"+id).html((claim * qty).toFixed(0));
             $(".discountText_"+id).html((discount * qty).toFixed(0));
@@ -280,8 +280,6 @@
             });
 
             $("#totalPDiscount").html(totalPDiscount.toFixed(2));
-
-
 
             var claim = $("#claim").val();
             var net = total - claim;

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AreaController;
+use App\Http\Controllers\BranchesController;
 use App\Http\Controllers\brandsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ProductsController;
@@ -18,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('product', ProductsController::class)->middleware(adminCheck::class);
     Route::get('products/index/{category}/{brand}', [ProductsController::class, 'index'])->name('products.index')->middleware(adminCheck::class);
     Route::resource('warehouses', WarehousesController::class);
+    Route::resource('branches', BranchesController::class);
 
     Route::resource('towns', TownController::class);
     Route::resource('areas', AreaController::class);
