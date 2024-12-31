@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(orderbooker_products::class, 'userID');
     }
+
+    public function branch()
+    {
+        return $this->belongsTo(branches::class, "branchID");
+    }
 }

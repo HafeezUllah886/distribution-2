@@ -18,13 +18,15 @@ class userSeeder extends Seeder
             'name' => "Admin",
             'password' => Hash::make("admin"),
             'role' => 'Admin',
-            'contact' => "03451231237"
+            'contact' => "03451231237",
+            'branchID' => 1,
         ]);
         User::create([
             'name' => "Order Booker",
             'password' => Hash::make("orderbooker"),
             'role' => 'Order Booker',
-            'contact' => "03451231238"
+            'contact' => "03451231238",
+            'branchID' => 1,
         ]);
     }
 }

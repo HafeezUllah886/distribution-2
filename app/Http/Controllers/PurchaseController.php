@@ -61,6 +61,7 @@ class PurchaseController extends Controller
             $purchase = purchase::create(
                 [
                   'vendorID'        => $request->vendorID,
+                  'branchID'        => Auth()->user()->branchID,
                   'warehouseID'     => $request->warehouseID,
                   'orderdate'       => $request->orderdate,
                   'recdate'         => $request->recdate,

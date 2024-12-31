@@ -14,7 +14,8 @@ class warehouseSeeder extends Seeder
     public function run(): void
     {
         $data = [
-            ['name' => "Main Warehouse"],
+            ['name' => "Main Warehouse", 'branchID' => 1, 'address' => "Main Road, Lahore", 'contact' => "03451231237"],
+            ['name' => "Warehouse I", 'branchID' => 1, 'address' => "Branch Road, Lahore", 'contact' => "03451231238"],
         ];
         warehouses::insert($data);
     }

@@ -12,14 +12,17 @@ namespace App\Models {
      * @property string|null $contact
      * @property string $role
      * @property hashed $password
+     * @property int $branchID
      * @property string $name
      * @property int $id
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\orderbooker_products> $products
      * @property-read int|null $products_count
+     * @property-read \App\Models\branches $branch
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
      * @property-read int|null $notifications_count
      * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|User whereBranchid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
      * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
      * @method static \Illuminate\Database\Eloquent\Builder|User whereContact($value)
@@ -277,6 +280,7 @@ namespace App\Models {
      * @property string|null $category
      * @property string $type
      * @property string $title
+     * @property int $branchID
      * @property int $id
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\transactions> $transactions
      * @property-read int|null $transactions_count
@@ -284,6 +288,7 @@ namespace App\Models {
      * @property-read int|null $sale_count
      * @property-read \App\Models\area $area
      * @method static \Illuminate\Database\Eloquent\Builder|accounts whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|accounts whereBranchid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|accounts whereTitle($value)
      * @method static \Illuminate\Database\Eloquent\Builder|accounts whereType($value)
      * @method static \Illuminate\Database\Eloquent\Builder|accounts whereCategory($value)
@@ -538,11 +543,13 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string $name
+     * @property int $branchID
      * @property int $townID
      * @property int $id
      * @property-read \App\Models\town $town
      * @method static \Illuminate\Database\Eloquent\Builder|area whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder|area whereTownid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|area whereBranchid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|area whereName($value)
      * @method static \Illuminate\Database\Eloquent\Builder|area whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|area whereUpdatedAt($value)
@@ -1028,6 +1035,18 @@ namespace App\Models {
     /**
      * App\Models\branches
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string|null $contact
+     * @property string|null $address
+     * @property string $name
+     * @property int $id
+     * @method static \Illuminate\Database\Eloquent\Builder|branches whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|branches whereName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|branches whereAddress($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|branches whereContact($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|branches whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|branches whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|branches newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|branches newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|branches query()
@@ -4566,6 +4585,7 @@ namespace App\Models {
      * @property date $recdate
      * @property date $orderdate
      * @property int $warehouseID
+     * @property int $branchID
      * @property int $vendorID
      * @property int $id
      * @property-read \App\Models\accounts $vendor
@@ -4573,6 +4593,7 @@ namespace App\Models {
      * @property-read int|null $details_count
      * @method static \Illuminate\Database\Eloquent\Builder|purchase whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase whereVendorid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|purchase whereBranchid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase whereWarehouseid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase whereOrderdate($value)
      * @method static \Illuminate\Database\Eloquent\Builder|purchase whereRecdate($value)
@@ -8427,10 +8448,12 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string|null $contact
      * @property string|null $address
+     * @property int $branchID
      * @property string $name
      * @property int $id
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses whereName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|warehouses whereBranchid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses whereAddress($value)
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses whereContact($value)
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses whereCreatedAt($value)

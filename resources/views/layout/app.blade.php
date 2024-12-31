@@ -67,7 +67,9 @@
                                 <span></span>
                                 <span></span>
                             </span>
+
                         </button>
+                        <h3 class="mt-4">{{ Auth()->user()->branch->name }}</h3>
 
                     </div>
 

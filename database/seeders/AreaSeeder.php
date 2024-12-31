@@ -21,10 +21,10 @@ class AreaSeeder extends Seeder
         town::insert($data);
 
         $data1 = [
-            ['townID' => 1, 'name' => "Area 1"],
-            ['townID' => 1, 'name' => "Area 2"],
-            ['townID' => 2, 'name' => "Area 3"],
-            ['townID' => 2, 'name' => "Area 4"],
+            ['townID' => 1, 'name' => "Area 1", "branchID" => 1],
+            ['townID' => 1, 'name' => "Area 2", "branchID" => 1],
+            ['townID' => 2, 'name' => "Area 3", "branchID" => 1],
+            ['townID' => 2, 'name' => "Area 4", "branchID" => 1],
         ];
         area::insert($data1);
     }

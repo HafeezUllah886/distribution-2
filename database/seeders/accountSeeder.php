@@ -18,7 +18,8 @@ class accountSeeder extends Seeder
                 'title' => "Cash Account",
                 'type' => "Business",
                 'category' => "Cash",
-                'areaID' => 1
+                'areaID' => 1,
+                'branchID' => 1,
             ]
         );
 
@@ -27,7 +28,8 @@ class accountSeeder extends Seeder
                 'title' => "Walk-In Customer",
                 'type' => "Customer",
                 'cashable' => 'no',
-                'areaID' => 1
+                'areaID' => 1,
+                'branchID' => 1,
 
             ]
         );
@@ -37,7 +39,8 @@ class accountSeeder extends Seeder
                 'title' => "Walk-In Vendor",
                 'type' => "Vendor",
                 'cashable' => 'no',
-                'areaID' => 1
+                'areaID' => 1,
+                'branchID' => 1,
             ]
         );
     }

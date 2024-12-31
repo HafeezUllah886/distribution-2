@@ -21,7 +21,9 @@ return new class extends Migration
         Schema::create('areas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('townID')->constrained('towns', 'id');
+            $table->foreignId('branchID')->constrained('branches', 'id');
             $table->string('name');
+
             $table->timestamps();
         });
     }
