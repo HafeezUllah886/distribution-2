@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\area;
+use App\Models\branches;
 use App\Models\town;
 use Illuminate\Http\Request;
 
@@ -16,8 +17,9 @@ class AreaController extends Controller
     {
         $areas = area::all();
         $towns = town::all();
+        $branches = branches::all();
 
-        return view('area.index', compact('areas', 'towns'));
+        return view('area.index', compact('areas', 'towns', 'branches'));
     }
 
     /**
@@ -42,6 +44,7 @@ class AreaController extends Controller
         area::create(
             [
                 'townID' => $request->townID,
+                'branchID' => $request->branchID,
                 'name' => $request->name
             ]
         );
@@ -79,6 +82,7 @@ class AreaController extends Controller
         $area->update(
             [
                 'townID' => $request->townID,
+                'branchID' => $request->branchID,
                 'name' => $request->name,
             ]
         );

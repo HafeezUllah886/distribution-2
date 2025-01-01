@@ -12,6 +12,7 @@
                                    <thead>
                                           <th>#</th>
                                           <th>Name</th>
+                                          <th>Branch</th>
                                           <th>Contact</th>
                                           <th>Balance</th>
                                           <th>Action</th>
@@ -21,6 +22,7 @@
                                                  <tr>
                                                         <td>{{$key+1}}</td>
                                                         <td>{{$user->name}}</td>
+                                                        <td>{{$user->branch->name}}</td>
                                                         <td>{{$user->contact}}</td>
                                                         <td>{{getUserAccountBalance($user->id)}}</td>
                                                         <td>
@@ -88,6 +90,14 @@
                                                                                     <label for="password">Password</label>
                                                                                     <input type="password" name="password" id="password" autocomplete="false" class="form-control">
                                                                              </div>
+                                                                             <div class="form-group mt-2">
+                                                                                <label for="branchID">Branch</label>
+                                                                                    <select name="branchID" id="branchID" class="form-control">
+                                                                                            @foreach ($branches as $branch)
+                                                                                                    <option value="{{$branch->id}}" @selected($branch->id == $user->branchID)>{{$branch->name}}</option>
+                                                                                            @endforeach
+                                                                                    </select>
+                                                                         </div>
                                                                          </div>
                                                                          <div class="modal-footer">
                                                                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
@@ -128,6 +138,15 @@
                                    <label for="password">Password</label>
                                    <input type="password" name="password" required id="password" class="form-control">
                             </div>
+                            <div class="form-group mt-2">
+                                <label for="branchID">Branch</label>
+                                    <select name="branchID" id="branchID" class="form-control">
+                                            @foreach ($branches as $branch)
+                                                    <option value="{{$branch->id}}">{{$branch->name}}</option>
+                                            @endforeach
+                                    </select>
+
+                         </div>
 
                      </div>
                      <div class="modal-footer">

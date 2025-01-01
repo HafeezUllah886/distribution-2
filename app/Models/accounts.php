@@ -47,6 +47,10 @@ class accounts extends Model
 {
     return $this->belongsTo(area::class, 'areaID');
 }
+    public function branch()
+{
+    return $this->belongsTo(branches::class, 'branchID');
+}
 
 
 }

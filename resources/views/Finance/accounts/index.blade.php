@@ -17,6 +17,7 @@
                             @if ($filter == 'Customer')
                                 <th>Area</th>
                             @endif
+                            <th>Branch</th>
                             <th>Status</th>
                             <th>Current Balance</th>
                             <th>Action</th>
@@ -32,6 +33,7 @@
                                     @if ($filter == 'Customer')
                                         <td>{{ $account->area->town->name }} - {{ $account->area->name }}</td>
                                     @endif
+                                    <td>{{ $account->branch->name }}</td>
                                     <td><a href="{{route('account.status', [$account->id])}}" class="badge bg-{{$account->status == "Active" ? "success" : "danger"}}">{{$account->status}}</a></td>
                                     <td>{{ number_format(getAccountBalance($account->id)) }}</td>
                                     <td>

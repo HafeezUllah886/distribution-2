@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\branches;
 use App\Models\User;
 use App\Models\userAccounts;
 use Illuminate\Http\Request;
@@ -20,8 +21,9 @@ class OtherusersController extends Controller
         }
 
         $users = User::where('role', $type)->get();
+        $branches = branches::all();
 
-        return view('users.index', compact('users', 'type'));
+        return view('users.index', compact('users', 'type', 'branches'));
     }
 
     public function store(request $request, $type)
@@ -42,6 +44,7 @@ class OtherusersController extends Controller
         $user = User::create(
             [
                 'name'      => $request->name,
+                'branchID'  => $request->branchID,
                 'contact'   => $request->contact,
                 'role'      => $type,
                 'password'  => Hash::make($request->password),
@@ -50,15 +53,10 @@ class OtherusersController extends Controller
 
         $account = accounts::create(
             [
-                'title' => $user->name,
+                'title'     => $user->name,
+                'branchID'  => $request->branchID,
                 'type'  => $user->role,
-            ]
-        );
-
-        userAccounts::create(
-            [
-                'userID'    => $user->id,
-                'accountID' =>  $account->id
+                'areaID'  => 1,
             ]
         );
         DB::commit();
@@ -91,6 +89,7 @@ class OtherusersController extends Controller
         $user->update(
             [
                 'contact'      => $request->contact,
+                'branchID'      => $request->branchID,
             ]
         );
         if($request->password != "")

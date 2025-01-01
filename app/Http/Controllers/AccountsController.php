@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\accounts;
 use App\Models\area;
+use App\Models\branches;
 use App\Models\customer_area;
 use App\Models\transactions;
 use Illuminate\Http\Request;
@@ -33,7 +34,8 @@ class AccountsController extends Controller
     {
 
         $areas = area::all();
-        return view('Finance.accounts.create', compact('areas'));
+        $branches = branches::all();
+        return view('Finance.accounts.create', compact('areas', 'branches'));
     }
 
     /**
@@ -65,6 +67,7 @@ class AccountsController extends Controller
                             'category' => $request->category,
                             'contact' => $request->contact,
                             'c_type' => $request->c_type,
+                            'branchID'  => $request->branch,
                             'cashable' => "no",
                             'areaID' =>  $request->area,
                         ]
@@ -82,6 +85,7 @@ class AccountsController extends Controller
                                     'type' => $request->type,
                                     'contact' => $request->contact,
                                     'email' => $request->email,
+                                    'branchID'  => $request->branch,
                                     'category' => $request->category,
                                     'areaID' => 1,
                                 ]
@@ -95,6 +99,7 @@ class AccountsController extends Controller
                                     'type' => $request->type,
                                     'contact' => $request->contact,
                                     'email' => $request->email,
+                                    'branchID'  => $request->branch,
                                     'category' => $request->category,
                                     'cashable' => "no",
                                     'areaID' => 1,
@@ -110,6 +115,7 @@ class AccountsController extends Controller
                             'type' => $request->type,
                             'contact' => $request->contact,
                             'email' => $request->email,
+                            'branchID'  => $request->branch,
                             'category' => $request->category,
                             'cashable' => "no",
                             'areaID' => 1,

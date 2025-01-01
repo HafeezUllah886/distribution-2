@@ -13,7 +13,7 @@
                                     <form action="{{route('areas.store')}}" method="post">
                                         @csrf
                                         <div class="row">
-                                            <div class="col-5">
+                                            <div class="col-3">
                                                 <div class="form-group">
                                                     <select name="townID" class="selectize" id="townID">
                                                         @foreach ($towns as $town)
@@ -22,12 +22,21 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-5">
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <select name="branchID" class="selectize" id="townID">
+                                                        @foreach ($branches as $branch)
+                                                            <option value="{{$branch->id}}">{{$branch->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
                                                 <div class="form-group">
                                                     <input type="text" name="name" placeholder="Area Name" required id="name" class="form-control">
                                              </div>
                                             </div>
-                                            <div class="col-2">
+                                            <div class="col-3">
                                                 <button class="btn btn-success w-100">Create Area</button>
                                             </div>
                                         </div>
@@ -50,6 +59,7 @@
                                                               <tr>
                                                                      <td>{{$key+1}}</td>
                                                                      <td>{{$town->name}}</td>
+                                                                     
                                                                      <td>
                                                                             <button type="button" class="btn btn-info " data-bs-toggle="modal" data-bs-target="#edit_{{$town->id}}">Edit</button>
                                                                      </td>
@@ -95,6 +105,7 @@
                                                        <th>#</th>
                                                        <th>Town</th>
                                                        <th>Area</th>
+                                                       <th>Branch</th>
                                                        <th>Action</th>
                                                 </thead>
                                                 <tbody>
@@ -103,6 +114,7 @@
                                                                      <td>{{$key+1}}</td>
                                                                      <td>{{$area->town->name}}</td>
                                                                      <td>{{$area->name}}</td>
+                                                                     <td>{{$area->branch->name}}</td>
                                                                      <td>
                                                                             <button type="button" class="btn btn-info " data-bs-toggle="modal" data-bs-target="#edit1_{{$area->id}}">Edit</button>
                                                                      </td>
@@ -123,6 +135,14 @@
                                                                                                     <select name="townID" class="selectize" id="townID">
                                                                                                         @foreach ($towns as $town)
                                                                                                             <option value="{{$town->id}}" @selected($town->id == $area->townID)>{{$town->name}}</option>
+                                                                                                        @endforeach
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                             <div class="form-group">
+                                                                                                    <label for="branchID">Branch</label>
+                                                                                                    <select name="branchID" class="selectize" id="branchID">
+                                                                                                        @foreach ($branches as $branch)
+                                                                                                            <option value="{{$branch->id}}" @selected($branch->id == $area->branchID)>{{$branch->name}}</option>
                                                                                                         @endforeach
                                                                                                     </select>
                                                                                                 </div>

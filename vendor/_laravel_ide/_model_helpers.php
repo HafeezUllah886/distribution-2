@@ -287,6 +287,7 @@ namespace App\Models {
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\sales> $sale
      * @property-read int|null $sale_count
      * @property-read \App\Models\area $area
+     * @property-read \App\Models\branches $branch
      * @method static \Illuminate\Database\Eloquent\Builder|accounts whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder|accounts whereBranchid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|accounts whereTitle($value)
@@ -547,6 +548,7 @@ namespace App\Models {
      * @property int $townID
      * @property int $id
      * @property-read \App\Models\town $town
+     * @property-read \App\Models\branches $branch
      * @method static \Illuminate\Database\Eloquent\Builder|area whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder|area whereTownid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|area whereBranchid($value)
@@ -8451,6 +8453,7 @@ namespace App\Models {
      * @property int $branchID
      * @property string $name
      * @property int $id
+     * @property-read \App\Models\branches $branch
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses whereName($value)
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses whereBranchid($value)

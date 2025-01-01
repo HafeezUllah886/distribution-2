@@ -16,4 +16,8 @@ class area extends Model
     {
         return $this->belongsTo(town::class, 'townID');
     }
+    public function branch()
+{
+    return $this->belongsTo(branches::class, 'branchID');
+}
 }

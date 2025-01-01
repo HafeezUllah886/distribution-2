@@ -14,6 +14,7 @@
                                           <th>Name</th>
                                           <th>Address</th>
                                           <th>Contact</th>
+                                          <th>Branch</th>
                                           <th>Action</th>
                                    </thead>
                                    <tbody>
@@ -23,6 +24,7 @@
                                                         <td>{{$warehouse->name}}</td>
                                                         <td>{{$warehouse->address}}</td>
                                                         <td>{{$warehouse->contact}}</td>
+                                                        <td>{{$warehouse->branch->name}}</td>
 
                                                         <td>
                                                                <button type="button" class="btn btn-info " data-bs-toggle="modal" data-bs-target="#edit_{{$warehouse->id}}">Edit</button>
@@ -50,6 +52,14 @@
                                                                                 <div class="form-group mt-2">
                                                                                        <label for="contact">Contact</label>
                                                                                        <input type="text" name="contact" value="{{$warehouse->contact}}" id="contact" class="form-control">
+                                                                                </div>
+                                                                                <div class="form-group mt-2">
+                                                                                       <label for="branchID">Branch</label>
+                                                                                           <select name="branchID" id="branchID" class="form-control">
+                                                                                                   @foreach ($branches as $branch)
+                                                                                                           <option value="{{$branch->id}}" {{$branch->id == $warehouse->branchID ? 'selected' : ''}}>{{$branch->name}}</option>
+                                                                                                   @endforeach
+                                                                                           </select>
                                                                                 </div>
                                                                          </div>
                                                                          <div class="modal-footer">
@@ -90,6 +100,15 @@
                             <div class="form-group mt-2">
                                    <label for="contact">Contact</label>
                                    <input type="text" name="contact" id="contact" class="form-control">
+                            </div>
+                            <div class="form-group mt-2">
+                                   <label for="branchID">Branch</label>
+                                       <select name="branchID" id="branchID" class="form-control">
+                                               @foreach ($branches as $branch)
+                                                       <option value="{{$branch->id}}">{{$branch->name}}</option>
+                                               @endforeach
+                                       </select>
+
                             </div>
                      </div>
                      <div class="modal-footer">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\branches;
 use App\Models\warehouses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,8 +15,9 @@ class WarehousesController extends Controller
     public function index()
     {
         $warehouses = warehouses::all();
+        $branches = branches::all();
 
-        return view('warehouses.index', compact('warehouses'));
+        return view('warehouses.index', compact('warehouses', 'branches'));
     }
 
     /**

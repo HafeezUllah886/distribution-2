@@ -36,6 +36,16 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-12">
+                                <div class="form-group mt-2">
+                                    <label for="branck">Branch</label>
+                                    <select name="branch" id="branch" class="form-control">
+                                        @foreach ($branches as $branch)
+                                            <option value="{{$branch->id}}">{{$branch->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-12 mt-2" id="catBox">
                                 <div class="form-group">
                                     <label for="category">Category</label>
