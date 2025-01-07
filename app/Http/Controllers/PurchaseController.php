@@ -81,8 +81,8 @@ class PurchaseController extends Controller
                 $unit = product_units::find($request->unit[$key]);
                 $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
                 $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
-                $price = $request->price[$key] ;
-                $discount = $request->discount[$key] ;
+                $price = $request->price[$key];
+                $discount = $request->discount[$key];
                 $claim = $request->claim[$key];
                 $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
                 $netPrice = ($price - $discount - $discountvalue - $claim);
@@ -133,7 +133,6 @@ class PurchaseController extends Controller
             DB::rollback();
             return back()->with('error', $e->getMessage());
         }
-
     }
 
     /**

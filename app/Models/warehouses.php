@@ -15,4 +15,9 @@ class warehouses extends Model
 {
     return $this->belongsTo(branches::class, 'branchID');
 }
+
+public function scopeCurrentBranch($query)
+{
+    return $query->where('branchID', Auth()->user()->branchID);
+}
 }

@@ -13,24 +13,57 @@ class accounts extends Model
 
     public function scopeBusiness($query)
     {
-        return $query->where('type', 'Business')->where('status', 'Active');
+        if(auth()->user()->role == 'Admin')
+        {
+            return $query->where('type', 'Business')->where('status', 'Active');
+        }
+        else
+        {
+            return $query->where('type', 'Business')->where('status', 'Active')->where('branchID', auth()->user()->branchID);
+        }
+       
     }
 
     public function scopeCustomer($query)
     {
-        return $query->where('type', 'Customer')->where('status', 'Active');
+        if(auth()->user()->role == 'Admin')
+        {
+            return $query->where('type', 'Customer')->where('status', 'Active');
+        }
+        else
+        {
+            return $query->where('type', 'Customer')->where('status', 'Active')->where('branchID', auth()->user()->branchID);
+        }
+       
     }
 
     public function scopeVendor($query)
     {
-        return $query->where('type', 'Vendor')->where('status', 'Active');
+        if(auth()->user()->role == 'Admin')
+        {
+            return $query->where('type', 'Vendor')->where('status', 'Active');
+        }
+        else
+        {
+            return $query->where('type', 'Vendor')->where('status', 'Active')->where('branchID', auth()->user()->branchID);
+        }
+    }
 
+    public function scopeSupplyMen($query)
+    {
+        if(auth()->user()->role == 'Admin')
+        {
+            return $query->where('type', 'Supply Man')->where('status', 'Active');
+        }
+        else
+        {
+            return $query->where('type', 'Supply Man')->where('status', 'Active')->where('branchID', auth()->user()->branchID);
+        }
     }
 
     public function scopeOther($query)
     {
-        return $query->whereNotIn('type', ['Business', 'Customer', 'Vendor']);
-
+        return $query->whereNotIn('type', ['Business', 'Customer', 'Vendor', 'Supply Order']);
     }
 
     public function transactions()

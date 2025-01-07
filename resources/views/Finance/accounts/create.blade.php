@@ -33,6 +33,7 @@
                                         <option value="Business">Business</option>
                                         <option value="Customer">Customer</option>
                                         <option value="Vendor">Vendor</option>
+                                        <option value="Supply Man">Supply Man</option>
                                     </select>
                                 </div>
                             </div>

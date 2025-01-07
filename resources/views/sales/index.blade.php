@@ -24,6 +24,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Sales</h3>
+                    <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create New</button>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -74,13 +75,13 @@
                                                         View
                                                     </button>
                                                 </li>
-                                                <li>
+                                               {{--  <li>
                                                     <button class="dropdown-item" onclick="newWindow('{{route('sale.gatePass', $sale->id)}}')"
                                                         onclick=""><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         Gate Pass
                                                     </button>
-                                                </li>
+                                                </li> --}}
                                                 <li>
                                                     <a class="dropdown-item" onclick="newWindow('{{route('sale.edit', $sale->id)}}')">
                                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
@@ -112,6 +113,33 @@
         </div>
     </div>
     <!-- Default Modals -->
+    <div id="new" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Select Warehouse</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <form action="{{ route('sale.create') }}" method="get">
+                  @csrf
+                         <div class="modal-body">
+                                <div class="form-group">
+                                       <label for="warehouseID">Warehouses</label>
+                                       <select name="warehouseID" id="warehouseID" class="form-control">
+                                        @foreach ($warehouses as $warehouse)
+                                            <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
+                                        @endforeach
+                                       </select>
+                                </div>
+                         </div>
+                         <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Create</button>
+                         </div>
+                  </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 @endsection
 
 @section('page-css')

@@ -85,6 +85,18 @@ function getStock($id){
     return $balance;
 }
 
+function getWarehouseProductStock($id, $warehouse){
+    $stocks  = stock::where('productID', $id)->where('warehouseID', $warehouse)->get();
+    $balance = 0;
+    foreach($stocks as $stock)
+    {
+        $balance += $stock->cr;
+        $balance -= $stock->db;
+    }
+
+    return $balance;
+}
+
 function avgSalePrice($from, $to, $id)
 {
     $sales = sale_details::where('productID', $id);
@@ -92,7 +104,7 @@ function avgSalePrice($from, $to, $id)
     {
         $sales->whereBetween('date', [$from, $to]);
     }
-    $sales_amount = $sales->sum('ti');
+    $sales_amount = $sales->sum('amount');
     $sales_qty = $sales->sum('qty');
 
     if($sales_qty > 0)

@@ -44,6 +44,7 @@
                     <table class="table" id="buttons-datatables">
                         <thead>
                             <th>#</th>
+                            <th>ID</th>
                             <th>Name</th>
                             <th>Brand</th>
                             <th>Category</th>
@@ -56,6 +57,7 @@
                             @foreach ($items as $key => $item)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
+                                    <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->brand->name }}</td>
                                     <td>{{ $item->category->name }}</td>

@@ -23,6 +23,7 @@
     <link href="{{ asset('assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
 
     <link href="{{ asset('assets/libs/toastify/toastify.min.css')}}" rel="stylesheet" type="text/css" />
+    
 
     @yield('page-css')
 
@@ -70,9 +71,7 @@
 
                         </button>
                         <h3 class="mt-4">{{ Auth()->user()->branch->name }}</h3>
-
                     </div>
-
                     <div class="d-flex align-items-center">
 
                         <div class="ms-1 header-item d-none d-sm-flex">
@@ -82,14 +81,12 @@
                                 <i class='bx bx-fullscreen fs-22'></i>
                             </button>
                         </div>
-
                         <div class="ms-1 header-item d-none d-sm-flex">
                             <button type="button"
                                 class="btn btn-icon btn-topbar material-shadow-none btn-ghost-secondary rounded-circle light-dark-mode">
                                 <i class='bx bx-moon fs-22'></i>
                             </button>
                         </div>
-
                         <div class="dropdown ms-sm-3 header-item topbar-user">
                             <button type="button" class="btn material-shadow-none" id="page-header-user-dropdown"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -119,7 +116,11 @@
         </header>
 
         <!-- ========== App Menu ========== -->
-        @include('layout.sidebar')
+        @if (auth()->user()->role == 'Admin')
+            @include('layout.sidebar')
+        @elseif (auth()->user()->role == 'Operator')
+            @include('layout.operator_sidebar')
+        @endif
         <!-- Left Sidebar End -->
         <!-- Vertical Overlay-->
         <div class="vertical-overlay"></div>

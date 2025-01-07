@@ -13,19 +13,25 @@ return new class extends Migration
     {
         Schema::create('sale_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('salesID')->constrained('sales', 'id');
+            $table->foreignId('saleID')->constrained('sales', 'id');
             $table->foreignId('productID')->constrained('products', 'id');
-            $table->float('qty');
+            $table->foreignId('warehouseID')->constrained('warehouses', 'id');
+            $table->foreignId('orderbookerID')->constrained('users', 'id');
             $table->float('price', 10);
-            $table->float('discount');
-            $table->float('ti');
-            $table->float('tp');
-            $table->float('gst');
-            $table->float('gstValue');
-            $table->date('date');
+            $table->float('discount', 10);
+            $table->float('discountp', 10);
+            $table->float('discountvalue', 10);
+            $table->float('qty')->default(0);
+            $table->float('loose')->default(0);
+            $table->float('pc')->default(0);
             $table->float('bonus')->default(0);
-            $table->foreignId('unitID')->constrained('units', 'id');
-            $table->float('unitValue');
+            $table->float('fright', 10);
+            $table->float('labor', 10);
+            $table->float('claim', 10);
+            $table->float('netprice', 10);
+            $table->float('amount');
+            $table->date('date');
+            $table->foreignId('unitID')->constrained('product_units', 'id');
             $table->bigInteger('refID');
             $table->timestamps();
         });

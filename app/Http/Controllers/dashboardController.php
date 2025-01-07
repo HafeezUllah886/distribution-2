@@ -73,7 +73,7 @@ class dashboardController extends Controller
 
 
                     $sales1 = sale_details::where('productID', $product->id)->whereBetween('date', [$first, $last]);
-                    $sales_amount = $sales1->sum('ti');
+                    $sales_amount = $sales1->sum('amount');
                     $sales_qty = $sales1->sum('qty');
 
                     if($sales_qty > 0)
@@ -101,7 +101,7 @@ class dashboardController extends Controller
 
             /// Top five products
             dashboard();
-            $topProducts = products::withSum('saleDetails', 'qty')->withSum('saleDetails', 'ti')
+            $topProducts = products::withSum('saleDetails', 'qty')->withSum('saleDetails', 'amount')
             ->orderByDesc('sale_details_sum_qty')
             ->take(5)
             ->get();
@@ -113,7 +113,7 @@ class dashboardController extends Controller
                 $stock = getStock($product->id);
                 $price = avgSalePrice('all', 'all', $product->id);
 
-                $topProductsArray [] = ['name' => $product->name, 'price' => $price, 'stock' => $stock, 'amount' => $product->sale_details_sum_ti, 'sold' => $product->sale_details_sum_qty];
+                $topProductsArray [] = ['name' => $product->name, 'price' => $price, 'stock' => $stock, 'amount' => $product->sale_details_sum_amount, 'sold' => $product->sale_details_sum_qty];
             }
 
             /// Top Customers

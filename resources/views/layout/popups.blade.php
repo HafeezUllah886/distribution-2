@@ -24,6 +24,11 @@
     <link href="{{ asset('assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
 
     <link href="{{ asset('assets/libs/toastify/toastify.min.css') }}" rel="stylesheet" type="text/css" />
+    <style>
+        input:invalid {
+        border-color: red;  /* Change the border to red for invalid fields */
+        }
+    </style>
     @yield('page-css')
 
 </head>

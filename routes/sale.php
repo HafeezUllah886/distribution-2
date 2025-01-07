@@ -8,13 +8,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
 
-Route::get("sales/getproduct/{id}", [SalesController::class, 'getSignleProduct']);
+Route::get("sales/getproduct/{id}/{warehouse}", [SalesController::class, 'getSignleProduct']);
 
 });
-Route::middleware('auth', adminCheck::class)->group(function () {
+Route::middleware('auth')->group(function () {
 
     Route::resource('sale', SalesController::class);
-
 
     Route::get("sales/delete/{id}", [SalesController::class, 'destroy'])->name('sale.delete')->middleware(confirmPassword::class);
     Route::get("sales/gatepass/{id}", [SalesController::class, 'gatePass'])->name('sale.gatePass');

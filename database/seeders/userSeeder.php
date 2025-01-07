@@ -28,5 +28,12 @@ class userSeeder extends Seeder
             'contact' => "03451231238",
             'branchID' => 1,
         ]);
+        User::create([
+            'name' => "Operator",
+            'password' => Hash::make("admin"),
+            'role' => 'Operator',
+            'contact' => "03451231238",
+            'branchID' => 1,
+        ]);
     }
 }

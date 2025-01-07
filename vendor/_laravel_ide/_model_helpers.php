@@ -274,7 +274,7 @@ namespace App\Models {
      * @property string $status
      * @property string $cashable
      * @property int $areaID
-     * @property string $c_type
+     * @property string|null $c_type
      * @property string|null $email
      * @property string|null $contact
      * @property string|null $category
@@ -304,6 +304,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder|accounts business()
      * @method static \Illuminate\Database\Eloquent\Builder|accounts customer()
      * @method static \Illuminate\Database\Eloquent\Builder|accounts vendor()
+     * @method static \Illuminate\Database\Eloquent\Builder|accounts supplyMen()
      * @method static \Illuminate\Database\Eloquent\Builder|accounts other()
      * @method static \Illuminate\Database\Eloquent\Builder|accounts newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|accounts newQuery()
@@ -5372,36 +5373,48 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property int $refID
-     * @property double $unitValue
      * @property int $unitID
-     * @property double $bonus
      * @property date $date
-     * @property double $gstValue
-     * @property double $gst
-     * @property double $tp
-     * @property double $ti
-     * @property double $discount
-     * @property float $price
+     * @property double $amount
+     * @property float $netprice
+     * @property float $claim
+     * @property float $labor
+     * @property float $fright
+     * @property double $bonus
+     * @property double $pc
+     * @property double $loose
      * @property double $qty
+     * @property float $discountvalue
+     * @property float $discountp
+     * @property float $discount
+     * @property float $price
+     * @property int $orderbookerID
+     * @property int $warehouseID
      * @property int $productID
-     * @property int $salesID
+     * @property int $saleID
      * @property int $id
      * @property-read \App\Models\products $product
      * @property-read \App\Models\units $unit
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereSalesid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereSaleid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereProductid($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereQty($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereWarehouseid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereOrderbookerid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details wherePrice($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereDiscount($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereTi($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereTp($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereGst($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereGstvalue($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereDiscountp($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereDiscountvalue($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereQty($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereLoose($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details wherePc($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereBonus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereFright($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereLabor($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereClaim($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereNetprice($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereAmount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereDate($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereUnitid($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereUnitvalue($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereUpdatedAt($value)
@@ -5900,15 +5913,14 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property int $refID
-     * @property string|null $notes
      * @property double $net
-     * @property double $fright1
-     * @property double $fright
-     * @property double $discount
-     * @property double $whValue
-     * @property double $wh
+     * @property string|null $notes
      * @property date $date
+     * @property date $orderdate
+     * @property int $supplymanID
      * @property int $orderbookerID
+     * @property int $warehouseID
+     * @property int $branchID
      * @property int $customerID
      * @property int $id
      * @property-read \App\Models\accounts $customer
@@ -5919,15 +5931,14 @@ namespace App\Models {
      * @property-read \App\Models\User $orderbooker
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereCustomerid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereBranchid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereWarehouseid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereOrderbookerid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereSupplymanid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereOrderdate($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereDate($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sales whereWh($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sales whereWhvalue($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sales whereDiscount($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sales whereFright($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sales whereFright1($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sales whereNet($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereNet($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereUpdatedAt($value)
@@ -8461,6 +8472,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses whereContact($value)
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|warehouses currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder|warehouses query()

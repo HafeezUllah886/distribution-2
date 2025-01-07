@@ -61,7 +61,7 @@
                                                 <li>
                                                     <a class="dropdown-item" href="{{route('account.edit', $account->id)}}">
                                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
-                                                        Edits
+                                                        Edit
                                                     </a>
                                                 </li>
 

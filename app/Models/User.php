@@ -51,16 +51,38 @@ class User extends Authenticatable
 
     public function scopeOrderbookers($query)
     {
-        return $query->where('role', 'Order Booker');
+        if(Auth()->user()->role == "Admin")
+        {
+            return $query->where('role', 'Order Booker');
+        }
+        else
+        {
+            return $query->where('role', 'Order Booker')->where('branchID', Auth()->user()->branchID);
+        }
     }
 
     public function scopeAccountants($query)
     {
-        return $query->where('role', 'Accountant');
+        if(Auth()->user()->role == "Admin")
+        {
+            return $query->where('role', 'Accountant');
+        }
+        else
+        {
+            return $query->where('role', 'Accountant')->where('branchID', Auth()->user()->branchID);
+        }
+       
     }
     public function scopeOperators($query)
     {
-        return $query->where('role', 'Operator');
+        if(Auth()->user()->role == "Admin")
+        {
+            return $query->where('role', 'Operator');
+        }
+        else
+        {
+            return $query->where('role', 'Operator')->where('branchID', Auth()->user()->branchID);
+        }
     }
 
     public function products()

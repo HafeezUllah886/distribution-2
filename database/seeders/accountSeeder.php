@@ -43,5 +43,15 @@ class accountSeeder extends Seeder
                 'branchID' => 1,
             ]
         );
+
+        accounts::create(
+            [
+                'title' => "Supply Man",
+                'type' => "Supply Man",
+                'cashable' => 'no',
+                'areaID' => 1,
+                'branchID' => 1,
+            ]
+        );
     }
 }
