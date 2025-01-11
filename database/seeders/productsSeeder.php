@@ -15,9 +15,9 @@ class productsSeeder extends Seeder
     public function run(): void
     {
         $data = [
-            ['name' => "Test Product 1", 'nameurdu' => "ٹیسٹ 1", "vendorID" => 3,"pprice" => '1200', "price" => 1640, 'discount' => 30, 'fright' => 10, "labor" => 10, "claim" => 10, 'catID' => 1, 'brandID' => 2],
-            ['name' => "Test Product 2", 'nameurdu' => "ٹیسٹ 2", "vendorID" => 3,"pprice" => '1200', "price" => 1640, 'discount' => 30, 'fright' => 10, "labor" => 10, "claim" => 10, 'catID' => 1, 'brandID' => 1],
-            ['name' => "Test Product 3", 'nameurdu' => "ٹیسٹ 3", "vendorID" => 3,"pprice" => '850', "price" => 1050, 'discount' => 150, 'fright' => 10, "labor" => 10, "claim" => 10, 'catID' => 1, 'brandID' => 2],
+            ['name' => "Test Product 1", 'nameurdu' => "ٹیسٹ 1", "vendorID" => 3,"pprice" => '1200', "price" => 1640, 'discount' => 30, 'fright' => 10, "labor" => 10, "claim" => 10, "dc" => 12, 'catID' => 1, 'brandID' => 2],
+            ['name' => "Test Product 2", 'nameurdu' => "ٹیسٹ 2", "vendorID" => 3,"pprice" => '1200', "price" => 1640, 'discount' => 30, 'fright' => 10, "labor" => 10, "claim" => 10, "dc" => 12, 'catID' => 1, 'brandID' => 1],
+            ['name' => "Test Product 3", 'nameurdu' => "ٹیسٹ 3", "vendorID" => 3,"pprice" => '850', "price" => 1050, 'discount' => 150, 'fright' => 10, "labor" => 10, "claim" => 10, "dc" => 12, 'catID' => 1, 'brandID' => 2],
         ];
         products::insert($data);
 

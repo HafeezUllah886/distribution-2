@@ -9,14 +9,14 @@
                                 <a href="javascript:window.print()" class="btn btn-primary ml-4"><i class="ri-printer-line mr-4"></i> Print</a>
                             </div>
                             <div class="card-header border-bottom-dashed p-4">
-                                @include('layout.header')
+                               {{--  @include('layout.header') --}}
                             </div>
                             <!--end card-header-->
                         </div><!--end col-->
                         <div class="col-lg-12 ">
                             <div class="row">
                                 <div class="col-4"></div>
-                                <div class="col-4 text-center"><h2>SALES TAX INVOICE</h2></div>
+                                <div class="col-4 text-center"><h2>SALES INVOICE</h2></div>
                             </div>
                             <div class="card-body p-4">
                                 <div class="row g-3">
@@ -57,107 +57,80 @@
                                             <tr class="table-active">
                                                 <th scope="col" style="width: 50px;">#</th>
                                                 <th scope="col" class="text-start">Product</th>
-                                                <th scope="col" class="text-end">Unit</th>
+                                                <th scope="col" class="text-start">Unit</th>
                                                 <th scope="col" class="text-end">Qty</th>
+                                                <th scope="col" class="text-end">Loose</th>
                                                 <th scope="col" class="text-end">Bonus</th>
                                                 <th scope="col" class="text-end">Price</th>
-                                                <th scope="col" class="text-end">Discount</th>
-                                                <th scope="col" class="text-end">Tax (Inc)</th>
-                                                <th scope="col" class="text-end">RP</th>
-                                                <th scope="col" class="text-end">GST {{$sale->details[0]->gst}}%</th>
+                                                <th scope="col" class="text-end">Dis-Val</th>
+                                                <th scope="col" class="text-end">Dis-Per</th>
+                                                <th scope="col" class="text-end">Claim</th>
+                                                <th scope="col" class="text-end">Net Price</th>
+                                                <th scope="col" class="text-end">Fright</th>
+                                                <th scope="col" class="text-end">Labor</th>
+                                                <th scope="col" class="text-end">Amount</th>
                                             </tr>
                                         </thead>
                                         <tbody id="products-list">
                                             @php
                                                 $totalQty = 0;
+                                                $totalDiscount = 0;
+                                                $totalDiscountValue = 0;
+                                                $totalFright = 0;
+                                                $totalClaim = 0;
+                                                $totalLabor = 0;
+                                                $totalLoose = 0;
                                                 $totalBonus = 0;
-                                                $discount= 0;
                                             @endphp
                                            @foreach ($sale->details as $key => $product)
                                            @php
-                                                $discount += $product->qty * $product->discount;
-                                               $totalQty += $product->qty / $product->unitValue;
-                                               $totalBonus += $product->bonus;
-                                           @endphp
-                                               <tr class="border-1 border-dark">
-                                                <td class="m-1 p-1 border-1 border-dark">{{$key+1}}</td>
-                                                <td class="text-start m-1 p-1 border-1 border-dark">{{$product->product->name}}</td>
-                                                <td class="text-end m-1 p-1 border-1 border-dark">{{$product->unit->name}}</td>
-                                                <td class="text-end m-1 p-1 border-1 border-dark">{{number_format($product->qty / $product->unitValue)}}</td>
-                                                <td class="text-end m-1 p-1 border-1 border-dark">{{number_format($product->bonus)}}</td>
-                                                <td class="text-end m-1 p-1 border-1 border-dark">{{number_format($product->price, 2)}}</td>
-                                                <td class="text-end m-1 p-1 border-1 border-dark">{{number_format($product->discount, 2)}}</td>
-                                                <td class="text-end m-1 p-1 border-1 border-dark">{{number_format($product->ti, 2)}}</td>
-                                                <td class="text-end m-1 p-1 border-1 border-dark">{{number_format($product->tp, 2)}}</td>
-                                                <td class="text-end m-1 p-1 border-1 border-dark">{{number_format($product->gstValue, 2)}}</td>
+                                           $qty = $product->pc;
+                                           $discount = $product->discount * $qty;
+                                           $discountvalue = $product->discountvalue * $qty;
+                                           $claim = $product->claim * $qty;
+                                           $fright = $product->fright * $qty;
+                                           $labor = $product->labor * $qty;
+                                           $totalQty += $product->qty;
+                                           $totalLoose += $product->loose;
+                                           $totalBonus += $product->bonus;
+                                           $totalDiscount += $discount;
+                                           $totalDiscountValue += $discountvalue;
+                                           $totalClaim += $claim;
+                                           $totalFright += $fright;
+                                           $totalLabor += $labor;
+                                            @endphp
+                                               <tr>
+                                                <td class="p-1 m-1">{{$key+1}}</td>
+                                                <td class="text-start p-1 m-1">{{$product->product->name}}</td>
+                                                <td class="text-start m-1 p-1">{{$product->unit->unit_name}}</td>
+                                                <td class="text-end m-1 p-1">{{number_format($product->qty)}}</td>
+                                                <td class="text-end m-1 p-1">{{number_format($product->loose)}}</td>
+                                                <td class="text-end m-1 p-1">{{number_format($product->bonus)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->price,2)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->discount)}} | {{number_format($discount)}}</td>
+                                                <td class="text-end p-1 m-1">{{$product->discountp}}% | {{number_format($product->discountvalue)}} | {{number_format($discountvalue)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->claim)}} | {{number_format($claim)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->netprice,2)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->fright)}} | {{number_format($fright)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->labor)}} | {{number_format($labor)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->amount,2)}}</td>
                                                </tr>
                                            @endforeach
                                         </tbody>
                                         <tfoot>
-                                            @php
-                                                $totalDisc = $sale->details->sum('discount');
-                                                $totalTi = $sale->details->sum('ti');
-                                                $totalGstVal = $sale->details->sum('gstValue');
-                                                $due = $sale->net - $sale->payments->sum('amount');
-                                                $paid = $sale->payments->sum('amount');
-                                            @endphp
-                                            <tr class="border-1 border-dark">
+                                            <tr>
                                                 <th colspan="3" class="text-end">Total</th>
                                                 <th class="text-end">{{number_format($totalQty)}}</th>
+                                                <th class="text-end">{{number_format($totalLoose)}}</th>
                                                 <th class="text-end">{{number_format($totalBonus)}}</th>
                                                 <th></th>
-                                                <th class="text-end">{{number_format($discount,2)}}</th>
-                                                <th class="text-end">{{number_format($totalTi,2)}}</th>
-                                                <th class="text-end"></th>
-                                                <th class="text-end">{{number_format($totalGstVal,2)}}</th>
-                                            </tr>
-                                            <tr class="m-0 p-0">
-                                                <th colspan="9" class="text-end p-0 m-0">Tax Exclusive</th>
-                                                <th class="text-end p-0 m-0">{{number_format($totalTi - $totalGstVal,2)}}</th>
-                                            </tr>
-                                            <tr class="m-0 p-0">
-                                                <th colspan="9" class="text-end p-0 m-0">Sales Tax</th>
-                                                <th class="text-end p-0 m-0">{{number_format($totalGstVal,2)}}</th>
-                                            </tr>
-                                            <tr class="m-0 p-0">
-                                                <th colspan="9" class="text-end p-0 m-0">Gross</th>
-                                                <th class="text-end p-0 m-0 border-2 border-start-0 border-end-0 border-dark">{{number_format($totalTi,2)}}</th>
-                                            </tr>
-                                            <tr class="m-0 p-0">
-                                                <th colspan="9" class="text-end p-0 m-0">WH Tax {{$sale->wh}}% (+)</th>
-                                                <th class="text-end p-0 m-0">{{number_format($sale->whValue,2)}}</th>
-                                            </tr>
-                                            <tr class="m-0 p-0">
-                                                <th colspan="9" class="text-end p-0 m-0">Discount (-)</th>
-                                                <th class="text-end p-0 m-0 ">{{number_format($sale->discount,2)}}</th>
-                                            </tr>
-                                            <tr class="m-0 p-0">
-                                                <th colspan="9" class="text-end p-0 m-0">Fright (-)</th>
-                                                <th class="text-end p-0 m-0 ">{{number_format($sale->fright,2)}}</th>
-                                            </tr>
-                                            <tr class="m-0 p-0">
-                                                <th colspan="9" class="text-end p-0 m-0">Fright (+)</th>
-                                                <th class="text-end p-0 m-0 ">{{number_format($sale->fright1,2)}}</th>
-                                            </tr>
-                                            <tr class="m-0 p-0">
-                                                <th colspan="9" class="text-end p-0 m-0">Net Bill</th>
-                                                <th class="text-end p-0 m-0 border-2 border-start-0 border-end-0 border-dark">{{number_format($sale->net,2)}}</th>
-                                            </tr>
-                                            <tr class="m-0 p-0">
-                                                <th colspan="9" class="text-end p-0 m-0">Paid</th>
-                                                <th class="text-end p-0 m-0">{{number_format($paid,2)}}</th>
-                                            </tr>
-                                            <tr class="m-0 p-0">
-                                                <th colspan="9" class="text-end p-0 m-0">Due</th>
-                                                <th class="text-end p-0 m-0">{{number_format($due,2)}}</th>
-                                            </tr>
-                                            <tr class="m-0 p-0">
-                                                <th colspan="9" class="text-end p-0 m-0">Previous Balance</th>
-                                                <th class="text-end p-0 m-0">{{number_format(spotBalanceBefore($sale->customerID, $sale->refID),2)}}</th>
-                                            </tr>
-                                            <tr class="m-0 p-0">
-                                                <th colspan="9" class="text-end p-0 m-0">Net Account Balance</th>
-                                                <th class="text-end p-0 m-0">{{number_format(spotBalance($sale->customerID, $sale->refID),2)}}</th>
+                                                <th class="text-end">{{number_format($totalDiscount)}}</th>
+                                                <th class="text-end">{{number_format($totalDiscountValue)}}</th>
+                                                <th class="text-end">{{number_format($totalClaim)}}</th>
+                                                <th></th>
+                                                <th class="text-end">{{number_format($totalFright)}}</th>
+                                                <th class="text-end">{{number_format($totalLabor)}}</th>
+                                                <th class="text-end">{{number_format($sale->details->sum('amount'), 2)}}</th>
                                             </tr>
                                         </tfoot>
                                     </table><!--end table-->
@@ -167,8 +140,8 @@
                                 @if ($sale->notes != "")
                                 <p><strong>Notes: </strong>{{$sale->notes}}</p>
                                 @endif
-                               <p class="text-center urdu"><strong>نوٹ: مال آپ کے آرڈر کے مطابق بھیجا جا رہا ہے۔ مال ایکسپائر یا خراب ہونے کی صورت میں واپس نہیں لیا جائے گا۔ دکاندار سیلزمین کے ساتھ کسی قسم کے ذاتی لین دین کا ذمہ دار خود ہوگا۔</strong></p>
-
+                               {{-- <p class="text-center urdu"><strong>نوٹ: مال آپ کے آرڈر کے مطابق بھیجا جا رہا ہے۔ مال ایکسپائر یا خراب ہونے کی صورت میں واپس نہیں لیا جائے گا۔ دکاندار سیلزمین کے ساتھ کسی قسم کے ذاتی لین دین کا ذمہ دار خود ہوگا۔</strong></p>
+ --}}
                             </div>
                             <!--end card-body-->
                         </div><!--end col-->

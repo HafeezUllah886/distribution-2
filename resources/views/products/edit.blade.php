@@ -96,14 +96,20 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group mt-2">
+                                        <label for="claim">Claim</label>
+                                        <input type="number" step="any" name="claim" required value="{{$product->claim}}" min="0" id="claim" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mt-2">
                                         <label for="labor">Labor Charges</label>
                                         <input type="number" step="any" name="labor" required value="{{$product->labor}}" min="0" id="labor" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group mt-2">
-                                        <label for="claim">Claim</label>
-                                        <input type="number" step="any" name="claim" required value="{{$product->claim}}" min="0" id="claim" class="form-control">
+                                        <label for="dc">Delivery Charges</label>
+                                        <input type="number" step="any" name="dc" required value="{{$product->dc}}" min="0" id="dc" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-6">

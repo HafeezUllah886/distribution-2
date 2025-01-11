@@ -4305,6 +4305,7 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string $status
+     * @property double $dc
      * @property double $claim
      * @property double $labor
      * @property double $fright
@@ -4336,6 +4337,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder|products whereFright($value)
      * @method static \Illuminate\Database\Eloquent\Builder|products whereLabor($value)
      * @method static \Illuminate\Database\Eloquent\Builder|products whereClaim($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereDc($value)
      * @method static \Illuminate\Database\Eloquent\Builder|products whereStatus($value)
      * @method static \Illuminate\Database\Eloquent\Builder|products whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder|products whereUpdatedAt($value)

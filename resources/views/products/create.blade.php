@@ -95,16 +95,24 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group mt-2">
-                                        <label for="labor">Labor Charges</label>
-                                        <input type="number" step="any" name="labor" required value="0" min="0" id="labor" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
                                         <label for="claim">Claim</label>
                                         <input type="number" step="any" name="claim" required value="0" min="0" id="claim" class="form-control">
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mt-2">
+                                        <label for="labor">Labor Charges</label>
+                                        <input type="number" step="any" name="labor" required value="0" min="0" id="labor" class="form-control">
+                                    </div>
+                                </div>
+                               
+                                <div class="col-md-6">
+                                    <div class="form-group mt-2">
+                                        <label for="dc">Delivery Charges</label>
+                                        <input type="number" step="any" name="dc" required value="0" min="0" id="dc" class="form-control">
+                                    </div>
+                                </div>
+                                
                                 <div class="col-md-6">
                                     <div class="form-group mt-2">
                                         <label for="status">Status</label>

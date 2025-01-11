@@ -62,7 +62,7 @@ class ProductsController extends Controller
             ]
         );
 
-        $product = products::create($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim']));
+        $product = products::create($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim', 'dc']));
 
         $units = $request->unit_names;
 
@@ -117,7 +117,7 @@ class ProductsController extends Controller
         );
 
         $product = products::find($id);
-        $product->update($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim']));
+        $product->update($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim', 'dc']));
 
         foreach($product->units as $unit)
         {
