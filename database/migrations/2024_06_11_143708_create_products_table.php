@@ -24,6 +24,8 @@ return new class extends Migration
             $table->float('fright')->default(0);
             $table->float('labor')->default(0);
             $table->float('claim')->default(0);
+            $table->float('sfright')->default(0);
+            $table->float('sclaim')->default(0);
             $table->float('dc')->default(0);
             $table->string('status')->default('Active');
             $table->timestamps();

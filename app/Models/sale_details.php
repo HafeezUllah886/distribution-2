@@ -18,6 +18,6 @@ class sale_details extends Model
 
     public function unit()
     {
-        return $this->belongsTo(units::class, 'unitID');
+        return $this->belongsTo(product_units::class, 'unitID');
     }
 }

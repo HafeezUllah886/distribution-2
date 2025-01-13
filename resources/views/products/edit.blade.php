@@ -63,55 +63,6 @@
                                        </select>
                                     </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="pprice">Purchase Price</label>
-                                        <input type="number" step="any" value="{{$product->pprice}}" name="pprice" required
-                                            value="" min="0" id="pprice"
-                                            class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="price">Sale Price</label>
-                                        <input type="number" step="any" value="{{$product->price}}" name="price" required
-                                            value="" min="0" id="price"
-                                            class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="discount">Discount</label>
-                                        <input type="number" step="any" value="{{$product->discount}}" name="discount" required
-                                            value="0" min="0"
-                                            id="discount" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="fright">Fright</label>
-                                        <input type="number" step="any" name="fright" required value="{{$product->fright}}" min="0" id="fright" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="claim">Claim</label>
-                                        <input type="number" step="any" name="claim" required value="{{$product->claim}}" min="0" id="claim" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="labor">Labor Charges</label>
-                                        <input type="number" step="any" name="labor" required value="{{$product->labor}}" min="0" id="labor" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="dc">Delivery Charges</label>
-                                        <input type="number" step="any" name="dc" required value="{{$product->dc}}" min="0" id="dc" class="form-control">
-                                    </div>
-                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group mt-2">
                                         <label for="status">Status</label>
@@ -121,50 +72,102 @@
                                        </select>
                                     </div>
                                 </div>
-                               <div class="col-12">
-                                <div class="row">
-                                        <div class="col-6">
-                                            <div class="card-header d-flex justify-content-between">
-                                                <h5>Units - Pack Sizes</h5>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-10 ">
-                                                    <select class="selectize" id="unit">
-                                                       @foreach ($units as $unit)
-                                                           <option value="{{$unit->id}}" data-name="{{$unit->name}}" data-value="{{$unit->value}}">{{$unit->name}} - {{$unit->value}}</option>
-                                                       @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-2">
-                                                    <button class="w-100 btn btn-success" type="button" onclick="addUnit()">+</button>
-                                                </div>
-                                            </div>
-                                            <table  class="w-100 table">
-                                                <thead>
-                                                    <th>Unit</th>
-                                                    <th class="text-center">Pack Size</th>
-                                                    <th></th>
-                                                </thead>
-                                                <tbody id="units">
-                                                    @php
-                                                        $ser = 0;
-                                                    @endphp
-                                                    @foreach ($product->units as $unit)
-                                                        @php
-                                                            $ser += 1;
-                                                        @endphp
-                                                        <tr class="p-0" id="row_{{$ser}}">
-                                                        <td width="70%" class="p-0"><input type="text" class="form-control form-control-sm" name="unit_names[]" value="{{$unit->unit_name}}"></td>
-                                                        <td class="p-0"><input type="number" step="any" class="form-control form-control-sm text-center" name="unit_values[]" value="{{$unit->value}}"></td>
-                                                        <td class="p-0"> <span class="btn btn-sm btn-danger" onclick="deleteRow({{$ser}})">X</span></td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
 
-                               </div>
+                                <div class="col-md-6 mt-2">
+                                    <h5>Purchase Values</h5>
+                                    <hr>
+                                    <div class="form-group">
+                                        <label for="pprice">Purchase Price</label>
+                                        <input type="number" step="any" value="{{$product->pprice}}" name="pprice" required
+                                            min="0" id="pprice"
+                                            class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="fright">Fright</label>
+                                        <input type="number" step="any" name="fright" required value="{{$product->fright}}" min="0" id="fright" class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="claim">Claim</label>
+                                        <input type="number" step="any" name="claim" required value="{{$product->claim}}" min="0" id="claim" class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="labor">Labor Charges</label>
+                                        <input type="number" step="any" name="labor" required value="{{$product->labor}}" min="0" id="labor" class="form-control">
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="row">
+                                                <div class="col-12">
+                                                    <div class="card-header d-flex justify-content-between">
+                                                        <h5>Units - Pack Sizes</h5>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-10 ">
+                                                            <select class="selectize" id="unit">
+                                                               @foreach ($units as $unit)
+                                                                   <option value="{{$unit->id}}" data-name="{{$unit->name}}" data-value="{{$unit->value}}">{{$unit->name}} - {{$unit->value}}</option>
+                                                               @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <button class="w-100 btn btn-success" type="button" onclick="addUnit()">+</button>
+                                                        </div>
+                                                    </div>
+                                                    <table  class="w-100 table">
+                                                        <thead>
+                                                            <th>Unit</th>
+                                                            <th class="text-center">Pack Size</th>
+                                                            <th></th>
+                                                        </thead>
+                                                        <tbody id="units">
+                                                            @php
+                                                                $ser = 0;
+                                                            @endphp
+                                                            @foreach ($product->units as $unit)
+                                                                @php
+                                                                    $ser += 1;
+                                                                @endphp
+                                                                <tr class="p-0" id="row_{{$ser}}">
+                                                                <td width="70%" class="p-0"><input type="text" class="form-control form-control-sm" name="unit_names[]" value="{{$unit->unit_name}}"></td>
+                                                                <td class="p-0"><input type="number" step="any" class="form-control form-control-sm text-center" name="unit_values[]" value="{{$unit->value}}"></td>
+                                                                <td class="p-0"> <span class="btn btn-sm btn-danger" onclick="deleteRow({{$ser}})">X</span></td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                        </div>
+        
+                                       </div>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                    <h5>Sale Values</h5>
+                                    <hr>
+                                    <div class="form-group mt-2">
+                                        <label for="price">Sale Price</label>
+                                        <input type="number" step="any" value="{{$product->price}}" name="price" required
+                                             min="0" id="price"
+                                            class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="sfright">Fright</label>
+                                        <input type="number" step="any" name="sfright" required value="{{$product->sfright}}" min="0" id="sfright" class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="sclaim">Claim</label>
+                                        <input type="number" step="any" name="sclaim" required value="{{$product->sclaim}}" min="0" id="sclaim" class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="dc">Delivery Charges</label>
+                                        <input type="number" step="any" name="dc" required value="{{$product->dc}}" min="0" id="dc" class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="discount">Discount</label>
+                                        <input type="number" step="any" value="{{$product->discount}}" name="discount" required
+                                           min="0"
+                                            id="discount" class="form-control">
+                                    </div>
+                                </div>
+                               
 
                             <div class="col-12 mt-3">
                                 <button type="submit" class="btn btn-secondary w-100">Update</button>

@@ -9,7 +9,7 @@
                                 <a href="javascript:window.print()" class="btn btn-primary ml-4"><i class="ri-printer-line mr-4"></i> Print</a>
                             </div>
                             <div class="card-header border-bottom-dashed p-4">
-                               {{--  @include('layout.header') --}}
+                               @include('layout.header')
                             </div>
                             <!--end card-header-->
                         </div><!--end col-->

@@ -1,1 +1,1 @@
-<img src="{{asset('assets/images/header.jpeg')}}" height="100px" class="w-100">
+<img src="{{asset('assets/images/header.jpg')}}" height="100px" class="w-100">

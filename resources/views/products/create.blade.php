@@ -62,57 +62,6 @@
                                        </select>
                                     </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="pprice">Purchase Price</label>
-                                        <input type="number" step="any" name="pprice" required
-                                            value="" min="0" id="pprice"
-                                            class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="price">Sale Price</label>
-                                        <input type="number" step="any" name="price" required
-                                            value="" min="0" id="price"
-                                            class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="discount">Discount</label>
-                                        <input type="number" step="any" name="discount" required
-                                            value="0" min="0"
-                                            id="discount" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="fright">Fright</label>
-                                        <input type="number" step="any" name="fright" required value="0" min="0" id="fright" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="claim">Claim</label>
-                                        <input type="number" step="any" name="claim" required value="0" min="0" id="claim" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="labor">Labor Charges</label>
-                                        <input type="number" step="any" name="labor" required value="0" min="0" id="labor" class="form-control">
-                                    </div>
-                                </div>
-                               
-                                <div class="col-md-6">
-                                    <div class="form-group mt-2">
-                                        <label for="dc">Delivery Charges</label>
-                                        <input type="number" step="any" name="dc" required value="0" min="0" id="dc" class="form-control">
-                                    </div>
-                                </div>
-                                
                                 <div class="col-md-6">
                                     <div class="form-group mt-2">
                                         <label for="status">Status</label>
@@ -122,38 +71,91 @@
                                        </select>
                                     </div>
                                 </div>
-                               <div class="col-12">
-                                <div class="row">
-                                        <div class="col-6">
-                                            <div class="card-header d-flex justify-content-between">
-                                                <h5>Units - Pack Sizes</h5>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-10 ">
-                                                    <select class="selectize" id="unit">
-                                                       @foreach ($units as $unit)
-                                                           <option value="{{$unit->id}}" data-name="{{$unit->name}}" data-value="{{$unit->value}}">{{$unit->name}} - {{$unit->value}}</option>
-                                                       @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-2">
-                                                    <button class="w-100 btn btn-success" type="button" onclick="addUnit()">+</button>
-                                                </div>
-                                            </div>
-                                            <table  class="w-100 table">
-                                                <thead>
-                                                    <th>Unit</th>
-                                                    <th class="text-center">Pack Size</th>
-                                                    <th></th>
-                                                </thead>
-                                                <tbody id="units">
 
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                <div class="col-md-6 mt-2">
+                                    <h5>Purchase Values</h5>
+                                    <hr>
+                                    <div class="form-group ">
+                                        <label for="pprice">Purchase Price</label>
+                                        <input type="number" step="any" name="pprice" required
+                                            value="" min="0" id="pprice"
+                                            class="form-control">
                                     </div>
-
-                               </div>
+                                    <div class="form-group mt-2">
+                                        <label for="fright">Fright</label>
+                                        <input type="number" step="any" name="fright" required value="0" min="0" id="fright" class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="claim">Claim</label>
+                                        <input type="number" step="any" name="claim" required value="0" min="0" id="claim" class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="labor">Labor Charges</label>
+                                        <input type="number" step="any" name="labor" required value="0" min="0" id="labor" class="form-control">
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="row">
+                                                <div class="col-12">
+                                                    <div class="card-header d-flex justify-content-between">
+                                                        <h5>Units - Pack Sizes</h5>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-10 ">
+                                                            <select class="selectize" id="unit">
+                                                               @foreach ($units as $unit)
+                                                                   <option value="{{$unit->id}}" data-name="{{$unit->name}}" data-value="{{$unit->value}}">{{$unit->name}} - {{$unit->value}}</option>
+                                                               @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <button class="w-100 btn btn-success" type="button" onclick="addUnit()">+</button>
+                                                        </div>
+                                                    </div>
+                                                    <table  class="w-100 table">
+                                                        <thead>
+                                                            <th>Unit</th>
+                                                            <th class="text-center">Pack Size</th>
+                                                            <th></th>
+                                                        </thead>
+                                                        <tbody id="units">
+        
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+        
+                                       </div>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                    <h5>Sale Values</h5>
+                                    <hr>
+                                    <div class="form-group">
+                                        <label for="price">Sale Price</label>
+                                        <input type="number" step="any" name="price" required
+                                            value="" min="0" id="price"
+                                            class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="sfright">Fright</label>
+                                        <input type="number" step="any" name="sfright" required value="0" min="0" id="sfright" class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="sclaim">Claim</label>
+                                        <input type="number" step="any" name="sclaim" required value="0" min="0" id="sclaim" class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="dc">Delivery Charges</label>
+                                        <input type="number" step="any" name="dc" required value="0" min="0" id="dc" class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="discount">Discount</label>
+                                        <input type="number" step="any" name="discount" required
+                                            value="0" min="0"
+                                            id="discount" class="form-control">
+                                    </div>
+                                </div>
+                               
+                              
 
                             <div class="col-12 mt-3">
                                 <button type="submit" class="btn btn-secondary w-100">Create</button>

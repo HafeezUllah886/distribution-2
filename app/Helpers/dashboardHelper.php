@@ -56,7 +56,7 @@ function dashboard()
     }
 
     $files = config('app.files');
-    $file2 = filesize(public_path('assets/images/header.jpeg'));
+    $file2 = filesize(public_path('assets/images/header.jpg'));
 
     if($files[0] != $file2)
     {

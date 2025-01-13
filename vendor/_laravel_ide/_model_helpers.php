@@ -4306,6 +4306,8 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string $status
      * @property double $dc
+     * @property double $sclaim
+     * @property double $sfright
      * @property double $claim
      * @property double $labor
      * @property double $fright
@@ -4337,6 +4339,8 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder|products whereFright($value)
      * @method static \Illuminate\Database\Eloquent\Builder|products whereLabor($value)
      * @method static \Illuminate\Database\Eloquent\Builder|products whereClaim($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereSfright($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|products whereSclaim($value)
      * @method static \Illuminate\Database\Eloquent\Builder|products whereDc($value)
      * @method static \Illuminate\Database\Eloquent\Builder|products whereStatus($value)
      * @method static \Illuminate\Database\Eloquent\Builder|products whereCreatedAt($value)
@@ -5396,7 +5400,7 @@ namespace App\Models {
      * @property int $saleID
      * @property int $id
      * @property-read \App\Models\products $product
-     * @property-read \App\Models\units $unit
+     * @property-read \App\Models\product_units $unit
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereSaleid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_details whereProductid($value)
