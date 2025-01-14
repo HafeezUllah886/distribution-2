@@ -65,7 +65,19 @@
                                     </tfoot>
                                 </table>
                             </div>
-                            <div class="col-4">
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="comp">Bilty No.</label>
+                                    <input type="text" name="bilty" id="bilty" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="comp">Transporter</label>
+                                    <input type="text" name="transporter" id="transporter" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2">
                                 <div class="form-group">
                                     <label for="supplymanID">Supply Man</label>
                                     <select name="supplymanID" id="supplymanID" class="form-control">
@@ -75,13 +87,13 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <label for="orderdate">Order Date</label>
                                     <input type="date" name="orderdate" id="orderdate" value="{{ date('Y-m-d') }}" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <label for="orderbooker">Order Booker</label>
                                     <select name="orderbookerID" id="orderbooker" class="form-control">

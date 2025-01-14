@@ -20,6 +20,8 @@ return new class extends Migration
             $table->foreignId('supplymanID')->constrained('accounts', 'id');
             $table->date('orderdate');
             $table->date('date');
+            $table->string("bilty")->nullable();
+            $table->string("transporter")->nullable();
             $table->text('notes')->nullable();
             $table->float('net')->default(0);
             $table->bigInteger('refID');

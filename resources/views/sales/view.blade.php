@@ -20,11 +20,11 @@
                             </div>
                             <div class="card-body p-4">
                                 <div class="row g-3">
-                                    <div class="col-2">
+                                    <div class="col-1">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Inv #</p>
                                         <h5 class="fs-14 mb-0">{{$sale->id}}</h5>
                                     </div>
-                                    <div class="col-5">
+                                    <div class="col-4">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Customer</p>
                                         <h5 class="fs-14 mb-0"> <span class="text-muted">M/S :</span> {{$sale->customer->title}}</h5>
                                         @if ($sale->customerID != 2)
@@ -34,13 +34,19 @@
                                         @endif
 
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-2">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Order Booker</p>
                                         <h5 class="fs-14 mb-0">{{$sale->orderbooker->name}}</h5>
                                     </div>
+                                   
                                     <div class="col-2">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Date</p>
                                         <h5 class="fs-14 mb-0">{{date("d M Y" ,strtotime($sale->date))}}</h5>
+                                    </div>
+                                    <div class="col-3">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Transport</p>
+                                        <h5 class="fs-14 mb-0"><span class="text-muted">Bilty No :</span> {{$sale->bilty ?? "NA"}}</h5>
+                                        <h5 class="fs-14 mb-0"><span class="text-muted">Transporter :</span> {{$sale->transporter ?? "NA"}}</h5>
                                     </div>
                                     <!--end col-->
                                     <!--end col-->
@@ -67,7 +73,6 @@
                                                 <th scope="col" class="text-end">Claim</th>
                                                 <th scope="col" class="text-end">Net Price</th>
                                                 <th scope="col" class="text-end">Fright</th>
-                                                <th scope="col" class="text-end">Labor</th>
                                                 <th scope="col" class="text-end">Amount</th>
                                             </tr>
                                         </thead>
@@ -78,7 +83,6 @@
                                                 $totalDiscountValue = 0;
                                                 $totalFright = 0;
                                                 $totalClaim = 0;
-                                                $totalLabor = 0;
                                                 $totalLoose = 0;
                                                 $totalBonus = 0;
                                             @endphp
@@ -89,7 +93,6 @@
                                            $discountvalue = $product->discountvalue * $qty;
                                            $claim = $product->claim * $qty;
                                            $fright = $product->fright * $qty;
-                                           $labor = $product->labor * $qty;
                                            $totalQty += $product->qty;
                                            $totalLoose += $product->loose;
                                            $totalBonus += $product->bonus;
@@ -97,7 +100,7 @@
                                            $totalDiscountValue += $discountvalue;
                                            $totalClaim += $claim;
                                            $totalFright += $fright;
-                                           $totalLabor += $labor;
+                                           $netAmount = $sale->details->sum('amount');
                                             @endphp
                                                <tr>
                                                 <td class="p-1 m-1">{{$key+1}}</td>
@@ -107,18 +110,17 @@
                                                 <td class="text-end m-1 p-1">{{number_format($product->loose)}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->bonus)}}</td>
                                                 <td class="text-end p-1 m-1">{{number_format($product->price,2)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->discount)}} | {{number_format($discount)}}</td>
-                                                <td class="text-end p-1 m-1">{{$product->discountp}}% | {{number_format($product->discountvalue)}} | {{number_format($discountvalue)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->claim)}} | {{number_format($claim)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->discount)}}</td>
+                                                <td class="text-end p-1 m-1">{{$product->discountp}}% | {{number_format($product->discountvalue)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->claim)}}</td>
                                                 <td class="text-end p-1 m-1">{{number_format($product->netprice,2)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->fright)}} | {{number_format($fright)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->labor)}} | {{number_format($labor)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->fright)}}</td>
                                                 <td class="text-end p-1 m-1">{{number_format($product->amount,2)}}</td>
                                                </tr>
                                            @endforeach
                                         </tbody>
                                         <tfoot>
-                                            <tr>
+                                           {{--  <tr>
                                                 <th colspan="3" class="text-end">Total</th>
                                                 <th class="text-end">{{number_format($totalQty)}}</th>
                                                 <th class="text-end">{{number_format($totalLoose)}}</th>
@@ -129,8 +131,27 @@
                                                 <th class="text-end">{{number_format($totalClaim)}}</th>
                                                 <th></th>
                                                 <th class="text-end">{{number_format($totalFright)}}</th>
-                                                <th class="text-end">{{number_format($totalLabor)}}</th>
-                                                <th class="text-end">{{number_format($sale->details->sum('amount'), 2)}}</th>
+                                                <th class="text-end">{{number_format($netAmount, 2)}}</th>
+                                            </tr> --}}
+                                            <tr>
+                                                <th class="text-end p-1" colspan="12">Gross Amount</th>
+                                                <th class="text-end p-1">{{number_format($netAmount + $totalDiscount + $totalDiscountValue + $totalClaim - $totalFright,2 )}}</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-end p-1" colspan="12">Total Discounts (-)</th>
+                                                <th class="text-end p-1">{{number_format($totalDiscount + $totalDiscountValue,2 )}}</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-end p-1" colspan="12">Total Claim (-)</th>
+                                                <th class="text-end p-1">{{number_format($totalClaim,2 )}}</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-end p-1" colspan="12">Total Fright (+)</th>
+                                                <th class="text-end p-1">{{number_format($totalFright,2 )}}</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-end p-1" colspan="12">Net Payable</th>
+                                                <th class="text-end p-1">{{number_format($netAmount,2 )}}</th>
                                             </tr>
                                         </tfoot>
                                     </table><!--end table-->

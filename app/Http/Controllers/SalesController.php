@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\expenses;
 use App\Models\orders;
 use App\Models\product_units;
 use App\Models\products;
@@ -78,6 +79,8 @@ class SalesController extends Controller
                   'supplymanID'     => $request->supplymanID,
                   'orderdate'       => $request->orderdate,
                   'date'            => $request->date,
+                  'bilty'           => $request->bilty,
+                  'transporter'           => $request->transporter,
                   'notes'           => $request->notes,
                   'refID'           => $ref,
                 ]
@@ -137,6 +140,7 @@ class SalesController extends Controller
             );
 
             createTransaction($request->customerID, $request->date, 0, $net, "Pending Amount of Sale No. $sale->id", $ref);
+           
             createTransaction($request->supplymanID, $request->date, $totalLabor, 0, "Labor Charges of Sale No. $sale->id", $ref);
 
             DB::commit();
