@@ -5921,6 +5921,8 @@ namespace App\Models {
      * @property int $refID
      * @property double $net
      * @property string|null $notes
+     * @property string|null $transporter
+     * @property string|null $bilty
      * @property date $date
      * @property date $orderdate
      * @property int $supplymanID
@@ -5935,6 +5937,7 @@ namespace App\Models {
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\sale_payments> $payments
      * @property-read int|null $payments_count
      * @property-read \App\Models\User $orderbooker
+     * @property-read \App\Models\accounts $supplyman
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereCustomerid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereBranchid($value)
@@ -5943,6 +5946,8 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereSupplymanid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereOrderdate($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereBilty($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sales whereTransporter($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereNotes($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereNet($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sales whereRefid($value)

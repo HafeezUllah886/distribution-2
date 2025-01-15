@@ -66,6 +66,7 @@ class AccountsController extends Controller
                             'type' => $request->type,
                             'category' => $request->category,
                             'contact' => $request->contact,
+                            'address' => $request->address,
                             'c_type' => $request->c_type,
                             'branchID'  => $request->branch,
                             'cashable' => "no",

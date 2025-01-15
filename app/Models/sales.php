@@ -30,4 +30,9 @@ class sales extends Model
     {
         return $this->belongsTo(User::class, 'orderbookerID');
     }
+
+    public function supplyman()
+    {
+        return $this->belongsTo(accounts::class, 'supplymanID');
+    }
 }

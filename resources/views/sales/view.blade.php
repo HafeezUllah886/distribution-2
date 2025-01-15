@@ -29,7 +29,7 @@
                                         <h5 class="fs-14 mb-0"> <span class="text-muted">M/S :</span> {{$sale->customer->title}}</h5>
                                         @if ($sale->customerID != 2)
                                         <h5 class="fs-14 mb-0"> <span class="text-muted">CNIC :</span> {{$sale->customer->cnic ?? "NA"}} | <span class="text-muted">Contact :</span> {{$sale->customer->contact ?? "NA"}}</h5>
-                                        <h5 class="fs-14 mb-0"> <span class="text-muted">Type :</span> {{$sale->customer->c_type}} | NTN #</span> {{$sale->customer->ntn ?? "NA"}} | <span class="text-muted">STRN #</span> {{$sale->customer->strn ?? "NA"}}</h5>
+                                        <h5 class="fs-14 mb-0"> <span class="text-muted">Type :</span> {{$sale->customer->c_type}}</h5>
                                         <h5 class="fs-14 mb-0"> <span class="text-muted">Address :</span> {{$sale->customer->address ?? "NA"}}</h5>
                                         @endif
 
@@ -37,6 +37,8 @@
                                     <div class="col-2">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Order Booker</p>
                                         <h5 class="fs-14 mb-0">{{$sale->orderbooker->name}}</h5>
+                                        <p class="text-muted mt-3 mb-2 text-uppercase fw-semibold">Supply Man</p>
+                                        <h5 class="fs-14 mb-0">{{$sale->supplyman->title}}</h5>
                                     </div>
                                    
                                     <div class="col-2">
@@ -104,17 +106,17 @@
                                             @endphp
                                                <tr>
                                                 <td class="p-1 m-1">{{$key+1}}</td>
-                                                <td class="text-start p-1 m-1">{{$product->product->name}}</td>
+                                                <td class="text-start p-1 m-1">{{$product->product->name}} | {{$product->product->nameurdu}}</td>
                                                 <td class="text-start m-1 p-1">{{$product->unit->unit_name}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->qty)}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->loose)}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->bonus)}}</td>
                                                 <td class="text-end p-1 m-1">{{number_format($product->price,2)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->discount)}}</td>
-                                                <td class="text-end p-1 m-1">{{$product->discountp}}% | {{number_format($product->discountvalue)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->claim)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($discount)}}</td>
+                                                <td class="text-end p-1 m-1">{{$product->discountp}}% | {{number_format($discountvalue)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->claim * $qty)}}</td>
                                                 <td class="text-end p-1 m-1">{{number_format($product->netprice,2)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->fright)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->fright * $qty)}}</td>
                                                 <td class="text-end p-1 m-1">{{number_format($product->amount,2)}}</td>
                                                </tr>
                                            @endforeach

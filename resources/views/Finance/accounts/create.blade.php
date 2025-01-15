@@ -81,6 +81,12 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-6 mt-2 customer">
+                                <div class="form-group ">
+                                    <label for="address">Address</label>
+                                    <input type="text" name="address" id="address" class="form-control">
+                                </div>
+                            </div>
                             <div class="col-6 mt-2" >
                                 <div class="form-group">
                                     <label for="contact">Contact #</label>

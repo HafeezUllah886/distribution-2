@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('type');
             $table->string('category')->nullable();
+            $table->string('address')->nullable();
             $table->string('contact')->nullable();
             $table->string('email')->nullable();
             $table->string('c_type')->nullable()->default('Other');
