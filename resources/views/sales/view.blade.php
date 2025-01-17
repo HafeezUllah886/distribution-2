@@ -28,7 +28,7 @@
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Customer</p>
                                         <h5 class="fs-14 mb-0"> <span class="text-muted">M/S :</span> {{$sale->customer->title}}</h5>
                                         @if ($sale->customerID != 2)
-                                        <h5 class="fs-14 mb-0"> <span class="text-muted">CNIC :</span> {{$sale->customer->cnic ?? "NA"}} | <span class="text-muted">Contact :</span> {{$sale->customer->contact ?? "NA"}}</h5>
+                                        <h5 class="fs-14 mb-0"> <span class="text-muted">Area :</span> {{$sale->customer->area->name ?? "NA"}} | <span class="text-muted">Contact :</span> {{$sale->customer->contact ?? "NA"}}</h5>
                                         <h5 class="fs-14 mb-0"> <span class="text-muted">Type :</span> {{$sale->customer->c_type}}</h5>
                                         <h5 class="fs-14 mb-0"> <span class="text-muted">Address :</span> {{$sale->customer->address ?? "NA"}}</h5>
                                         @endif

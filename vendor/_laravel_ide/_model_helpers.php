@@ -277,6 +277,7 @@ namespace App\Models {
      * @property string|null $c_type
      * @property string|null $email
      * @property string|null $contact
+     * @property string|null $address
      * @property string|null $category
      * @property string $type
      * @property string $title
@@ -293,6 +294,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder|accounts whereTitle($value)
      * @method static \Illuminate\Database\Eloquent\Builder|accounts whereType($value)
      * @method static \Illuminate\Database\Eloquent\Builder|accounts whereCategory($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|accounts whereAddress($value)
      * @method static \Illuminate\Database\Eloquent\Builder|accounts whereContact($value)
      * @method static \Illuminate\Database\Eloquent\Builder|accounts whereEmail($value)
      * @method static \Illuminate\Database\Eloquent\Builder|accounts whereCType($value)

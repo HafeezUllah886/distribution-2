@@ -98,8 +98,9 @@ class SalesController extends Controller
                 $price = $request->price[$key];
                 $discount = $request->discount[$key];
                 $claim = $request->claim[$key];
+                $frieght = $request->fright[$key];
                 $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
-                $netPrice = ($price - $discount - $discountvalue - $claim);
+                $netPrice = ($price - $discount - $discountvalue - $claim) + $frieght;
                 $amount = $netPrice * $pc;
                 $total += $amount;
                 $totalLabor += $request->labor[$key] * $pc;
