@@ -69,7 +69,6 @@ class AccountsController extends Controller
                             'address' => $request->address,
                             'c_type' => $request->c_type,
                             'branchID'  => $request->branch,
-                            'cashable' => "no",
                             'areaID' =>  $request->area,
                         ]
                     );
@@ -78,35 +77,19 @@ class AccountsController extends Controller
                 {
                    if($request->type == "Business")
                    {
-                        if($request->category == "Cash")
-                        {
-                            $account = accounts::create(
-                                [
-                                    'title' => $request->title,
-                                    'type' => $request->type,
-                                    'contact' => $request->contact,
-                                    'email' => $request->email,
-                                    'branchID'  => $request->branch,
-                                    'category' => $request->category,
-                                    'areaID' => 1,
-                                ]
-                            );
-                        }
-                        else
-                        {
-                            $account = accounts::create(
-                                [
-                                    'title' => $request->title,
-                                    'type' => $request->type,
-                                    'contact' => $request->contact,
-                                    'email' => $request->email,
-                                    'branchID'  => $request->branch,
-                                    'category' => $request->category,
-                                    'cashable' => "no",
-                                    'areaID' => 1,
-                                ]
-                            );
-                        }
+                    
+                    $account = accounts::create(
+                        [
+                            'title' => $request->title,
+                            'type' => $request->type,
+                            'contact' => $request->contact,
+                            'email' => $request->email,
+                            'branchID'  => $request->branch,
+                            'category' => $request->category,
+                            'areaID' => 1,
+                        ]
+                    );
+                        
                    }
                    else
                    {
@@ -118,7 +101,6 @@ class AccountsController extends Controller
                             'email' => $request->email,
                             'branchID'  => $request->branch,
                             'category' => $request->category,
-                            'cashable' => "no",
                             'areaID' => 1,
                         ]
                     );

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('role');
             $table->string('contact')->nullable();
             $table->string('status')->default('Active');
+            $table->string('cashable')->default('yes');
             $table->rememberToken();
             $table->timestamps();
         });

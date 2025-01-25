@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('c_type')->nullable()->default('Other');
             $table->foreignId('areaID')->constrained('areas', 'id');
-            $table->string('cashable')->default('yes');
             $table->string('status')->default('Active');
             $table->timestamps();
         });

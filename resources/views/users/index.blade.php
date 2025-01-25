@@ -39,12 +39,14 @@
                                                                                 View Statment
                                                                             </button>
                                                                         </li>
+                                                                        @if($user->cashable == 'yes')
                                                                         <li>
                                                                             <a class="dropdown-item" href="{{route('currency.details', $user->id)}}">
                                                                                 <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                                                 Currency Details
                                                                             </a>
                                                                         </li>
+                                                                        @endif
                                                                           <li>
                                                                               <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit_{{$user->id}}">
                                                                                   <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>

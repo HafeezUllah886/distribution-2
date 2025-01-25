@@ -15,9 +15,9 @@ class accountSeeder extends Seeder
     {
         accounts::create(
             [
-                'title' => "Cash Account",
+                'title' => "Business",
                 'type' => "Business",
-                'category' => "Cash",
+                'category' => "Bank",
                 'areaID' => 1,
                 'branchID' => 1,
             ]
@@ -27,7 +27,6 @@ class accountSeeder extends Seeder
             [
                 'title' => "Walk-In Customer",
                 'type' => "Customer",
-                'cashable' => 'no',
                 'areaID' => 1,
                 'branchID' => 1,
 
@@ -38,7 +37,6 @@ class accountSeeder extends Seeder
             [
                 'title' => "Walk-In Vendor",
                 'type' => "Vendor",
-                'cashable' => 'no',
                 'areaID' => 1,
                 'branchID' => 1,
             ]
@@ -48,7 +46,6 @@ class accountSeeder extends Seeder
             [
                 'title' => "Supply Man",
                 'type' => "Supply Man",
-                'cashable' => 'no',
                 'areaID' => 1,
                 'branchID' => 1,
             ]

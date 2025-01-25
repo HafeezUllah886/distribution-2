@@ -35,8 +35,8 @@ function createUserTransaction($userID, $date, $cr, $db, $notes, $ref){
 
 }
 
-function createCurrencyTransaction($accountID, $currencyID, $currency, $type ,$date, $notes, $ref){
-    foreach($currencyID as $key => $id)
+function createCurrencyTransaction($userID, $currencyID, $currency, $type ,$date, $notes, $ref){
+    foreach($userID as $key => $id)
     {
         if($currency[$key] > 0)
         {
@@ -44,7 +44,7 @@ function createCurrencyTransaction($accountID, $currencyID, $currency, $type ,$d
             {
                 currency_transactions::create(
                     [
-                        'accountID' => $accountID,
+                        'userID' => $userID,
                         'currencyID' => $id,
                         'date' => $date,
                         'cr' => $currency[$key],
@@ -57,7 +57,7 @@ function createCurrencyTransaction($accountID, $currencyID, $currency, $type ,$d
             {
                 currency_transactions::create(
                     [
-                        'accountID' => $accountID,
+                        'userID' => $userID,
                         'currencyID' => $id,
                         'date' => $date,
                         'db' => $currency[$key],
@@ -114,8 +114,8 @@ function getUserAccountBalance($id){
 }
 
 
-function getCurrencyBalance($id, $account){
-    $transactions  = currency_transactions::where('currencyID', $id)->where('accountID', $account);
+function getCurrencyBalance($id, $user){
+    $transactions  = currency_transactions::where('currencyID', $id)->where('userID', $user);
 
     $cr = $transactions->sum('cr');
     $db = $transactions->sum('db');

@@ -50,14 +50,7 @@
                                                         View Statment
                                                     </button>
                                                 </li>
-                                                @if($account->cashable == 'yes')
-                                                <li>
-                                                    <a class="dropdown-item" href="{{route('currency.details', $account->id)}}">
-                                                        <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                        Currency Details
-                                                    </a>
-                                                </li>
-                                                @endif
+                                               
                                                 <li>
                                                     <a class="dropdown-item" href="{{route('account.edit', $account->id)}}">
                                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>

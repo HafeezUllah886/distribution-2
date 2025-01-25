@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\currencymgmt;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CurrencymgmtController extends Controller
@@ -67,11 +68,11 @@ class CurrencymgmtController extends Controller
         //
     }
 
-    public function details($accountID)
+    public function details($userID)
     {
-        $account = accounts::find($accountID);
+        $user = User::find($userID);
         $currencies = currencymgmt::all();
 
-        return view('Finance.currencymgmt.details', compact('account', 'currencies'));
+        return view('Finance.currencymgmt.details', compact('user', 'currencies'));
     }
 }
