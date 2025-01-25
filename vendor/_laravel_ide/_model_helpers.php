@@ -20,6 +20,8 @@ namespace App\Models {
      * @property-read \App\Models\branches $branch
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
      * @property-read int|null $notifications_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+     * @property-read int|null $tokens_count
      * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
      * @method static \Illuminate\Database\Eloquent\Builder|User whereBranchid($value)
@@ -5668,14 +5670,14 @@ namespace App\Models {
      * @property string|null $notes
      * @property double $amount
      * @property date $date
-     * @property int $accountID
+     * @property int $userID
      * @property int $salesID
      * @property int $id
-     * @property-read \App\Models\accounts $account
      * @property-read \App\Models\sales $bill
+     * @property-read \App\Models\User $user
      * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereSalesid($value)
-     * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereAccountid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereUserid($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereDate($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereAmount($value)
      * @method static \Illuminate\Database\Eloquent\Builder|sale_payments whereNotes($value)

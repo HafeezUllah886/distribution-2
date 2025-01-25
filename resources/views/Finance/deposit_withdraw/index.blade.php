@@ -159,8 +159,6 @@
         $(".selectize").selectize();
 
         function updateTotal() {
-            console.warn("Working");
-
             var total = 0;
             $("input[id^='currency_']").each(function() {
                 var inputId = $(this).attr('id');

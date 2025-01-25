@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sale_payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('salesID')->constrained('sales', 'id');
-            $table->foreignId('accountID')->constrained('accounts', 'id');
+            $table->foreignId('userID')->constrained('users', 'id');
             $table->date('date');
             $table->float('amount');
             $table->text('notes')->nullable();

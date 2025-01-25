@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\currencymgmt;
 use App\Models\sale_payments;
 use App\Models\sales;
 use App\Models\transactions;
@@ -20,10 +21,9 @@ class SalePaymentsController extends Controller
         $amount = $sale->net;
         $paid = $sale->payments->sum('amount');
         $due = $amount - $paid;
+        $currencies = currencymgmt::all();
 
-        $accounts = accounts::business()->get();
-
-        return view('sales.payments', compact('sale', 'due', 'accounts'));
+        return view('sales.payments', compact('sale', 'due', 'currencies'));
     }
 
     /**
@@ -46,16 +46,18 @@ class SalePaymentsController extends Controller
             sale_payments::create(
                 [
                     'salesID'       => $sale->id,
-                    'accountID'     => $request->accountID,
                     'date'          => $request->date,
                     'amount'        => $request->amount,
                     'notes'         => $request->notes,
+                    'userID'        => auth()->id(),
                     'refID'         => $ref,
                 ]
             );
 
-            createTransaction($request->accountID, $request->date,$request->amount, 0, "Payment of Inv No. $sale->id", $ref);
             createTransaction($sale->customerID, $request->date,$request->amount, 0, "Payment of Inv No. $sale->id", $ref);
+            createUserTransaction(auth()->id(), $request->date,$request->amount, 0, "Payment of Inv No. $sale->id", $ref);
+            createCurrencyTransaction($request->accountID, $request->currencyID, $request->currency, 'cr', $request->date, "Deposit: ".$request->notes, $ref);
+            createAttachment($request->file('file'), $ref);
 
             DB::commit();
             return back()->with('success', "Payment Saved");

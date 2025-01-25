@@ -23,21 +23,36 @@
                                 @csrf
                                 <input type="hidden" name="salesID" value="{{ $sale->id }}">
                                 <div class="modal-body">
-                                    <div class="form-group">
-                                        <label for="amount">Amount</label>
-                                        <input type="number" name="amount" required step="any" min="1"
-                                            max="{{ $due }}" value="{{ $due }}" id="amount"
-                                            class="form-control">
-                                    </div>
-                                    <div class="form-group mt-2">
-                                        <label for="accountID">Account</label>
-                                        <select name="accountID" id="accountID" required class="selectize">
-                                            <option value="">Select Account</option>
-                                            @foreach ($accounts as $account)
-                                                <option value="{{ $account->id }}"> {{ $account->title }}</option>
+                                    <table class="w-100">
+                                        <thead>
+                                            <th>Currency</th>
+                                            <th>Amount</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($currencies as $currency)
+                                                <tr>
+                                                    <td>{{$currency->title}}</td>
+                                                    <td>
+                                                        <input type="number" class="form-control form-control-sm" data-value="{{$currency->title}}" id="currency_{{$currency->id}}" oninput="updateTotal()" name="currency[]" value="0">
+                                                        <input type="hidden" class="form-control" name="currencyID[]" value="{{$currency->id}}">
+                                                    </td>
+                                                </tr>
                                             @endforeach
-                                        </select>
-                                    </div>
+                                            <tr>
+                                                <td>Total Amount</td>
+                                                <td>
+                                                    <input type="number" class="form-control form-control-sm" readonly id="total" name="amount" value="0">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Attachement</td>
+                                                <td>
+                                                    <input type="file" class="form-control form-control-sm" name="file">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+    
+                                    </table>
                                     <div class="form-group mt-2">
                                         <label for="date">Date</label>
                                         <input type="date" name="date" required value="{{ date('Y-m-d') }}"
@@ -59,7 +74,7 @@
                             <table class="table">
                                 <thead>
                                     <th>Date</th>
-                                    <th>Account</th>
+                                    <th>Received By</th>
                                     <th>Notes</th>
                                     <th class="text-end">Amount</th>
                                     <th>Action</th>
@@ -68,7 +83,7 @@
                                     @foreach ($sale->payments as $payment)
                                         <tr>
                                             <td>{{ date('d M Y', strtotime($payment->date)) }}</td>
-                                            <td>{{ $payment->account->title }}</td>
+                                            <td>{{ $payment->user->name }}</td>
                                             <td>{{ $payment->notes }}</td>
                                             <td class="text-end">{{ number_format($payment->amount) }}</td>
                                             <td class="text-center">
@@ -107,5 +122,17 @@
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
         $(".selectize").selectize();
+
+        function updateTotal() {
+            var total = 0;
+            $("input[id^='currency_']").each(function() {
+                var inputId = $(this).attr('id');
+                var inputVal = $(this).val();
+                var inputValue = $(this).data('value');
+                var value = inputVal * inputValue;
+                total += parseFloat(value);
+            });
+            $("#total").val(total.toFixed(2));
+        }
     </script>
 @endsection
