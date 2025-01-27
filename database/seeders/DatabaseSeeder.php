@@ -16,13 +16,12 @@ class DatabaseSeeder extends Seeder
 
        $this->call(branchesSeeder::class);
        $this->call(AreaSeeder::class);
-       $this->call(userSeeder::class);
        $this->call(units_seeder::class);
        $this->call(brandsSeeder::class);
        $this->call(categorySeeder::class);
-
        $this->call(accountSeeder::class);
        $this->call(productsSeeder::class);
+       $this->call(userSeeder::class);
        $this->call(currencies_seeder::class);
        $this->call(warehouseSeeder::class);
 

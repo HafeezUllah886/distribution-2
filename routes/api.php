@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\api\authController;
+use App\Http\Controllers\api\nonFinanancialInfoController;
+use App\Http\Controllers\Api\SaleApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -10,4 +12,15 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/login', [authController::class, 'login']);
-Route::post('/logout', [authController::class, 'logout'])->middleware('auth:sanctum');;
+
+
+// Sales Routes
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [authController::class, 'logout']);
+
+    Route::post('/orderbookerproducts', [nonFinanancialInfoController::class, 'orderbooker_products']);
+    Route::post('/customers', [nonFinanancialInfoController::class, 'customers']);
+
+    Route::post('/sales', [SaleApiController::class, 'store']);
+});

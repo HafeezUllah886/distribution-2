@@ -65,8 +65,28 @@
                                     <td>{{ $item->price }}</td>
                                     <td>{{ $item->discount }}</td>
                                     <td>
-                                        <a href="{{route('product.edit', $item->id)}}" class="btn btn-info">Edit</a>
-                                    </td>
+                                        <div class="dropdown">
+                                               <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
+                                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                                   <i class="ri-more-fill align-middle"></i>
+                                               </button>
+                                               <ul class="dropdown-menu dropdown-menu-end">
+                                                   <li>
+                                                       <a class="dropdown-item" href="{{route('product.edit', $item->id)}}">
+                                                           <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                           Edit
+                                                       </a>
+                                                   </li>
+                                                   <li>
+                                                       <a class="dropdown-item" href="{{route('dc.show', $item->id)}}">
+                                                           <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                           Delivery Charges
+                                                       </a>
+                                                   </li>
+                                               </ul>
+                                           </div>
+                                 </td>
+                                
                                 </tr>
                             @endforeach
                         </tbody>

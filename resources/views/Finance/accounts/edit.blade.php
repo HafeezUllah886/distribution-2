@@ -68,6 +68,12 @@
                                     <input type="text" name="address" id="address" value="{{ $account->address }}" class="form-control">
                                 </div>
                             </div>
+                            <div class="col-6 mt-2 customer">
+                                <div class="form-group ">
+                                    <label for="limit">Credit Limit</label>
+                                    <input type="number" min="0" name="limit" value="{{$account->credit_limit}}" id="limit" class="form-control">
+                                </div>
+                            </div>
                             @endif
 
                             <div class="col-12 mt-3">

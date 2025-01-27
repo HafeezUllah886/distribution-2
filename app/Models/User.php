@@ -88,7 +88,7 @@ class User extends Authenticatable
 
     public function products()
     {
-        return $this->hasMany(orderbooker_products::class, 'userID');
+        return $this->hasMany(orderbooker_products::class, 'orderbookerID');
     }
 
     public function branch()

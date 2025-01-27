@@ -51,7 +51,6 @@
                                 <div class="form-group">
                                     <label for="category">Category</label>
                                     <select name="category" id="category" class="form-control">
-                                        <option value="Cash">Cash</option>
                                         <option value="Bank">Bank</option>
                                         <option value="Cheque">Cheque</option>
                                     </select>
@@ -85,6 +84,12 @@
                                 <div class="form-group ">
                                     <label for="address">Address</label>
                                     <input type="text" name="address" id="address" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-6 mt-2 customer">
+                                <div class="form-group ">
+                                    <label for="limit">Credit Limit</label>
+                                    <input type="number" min="0" name="limit" id="limit" class="form-control">
                                 </div>
                             </div>
                             <div class="col-6 mt-2" >

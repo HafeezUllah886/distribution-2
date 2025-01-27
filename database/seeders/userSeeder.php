@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\orderbooker_products;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -21,7 +22,7 @@ class userSeeder extends Seeder
             'contact' => "03451231237",
             'branchID' => 1,
         ]);
-        User::create([
+        $orderbooker = User::create([
             'name' => "Order Booker",
             'password' => Hash::make("orderbooker"),
             'role' => 'Order Booker',
@@ -29,6 +30,20 @@ class userSeeder extends Seeder
             'cashable' => 'no',
             'branchID' => 1,
         ]);
+
+        orderbooker_products::create(
+            [
+                'orderbookerID' => $orderbooker->id,
+                'productID' => 1,
+            ]
+        );
+        orderbooker_products::create(
+            [
+                'orderbookerID' => $orderbooker->id,
+                'productID' => 2,
+            ]
+        );
+
         User::create([
             'name' => "Operator",
             'password' => Hash::make("admin"),
@@ -36,5 +51,6 @@ class userSeeder extends Seeder
             'contact' => "03451231238",
             'branchID' => 1,
         ]);
+
     }
 }

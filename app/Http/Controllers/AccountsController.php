@@ -70,6 +70,7 @@ class AccountsController extends Controller
                             'c_type' => $request->c_type,
                             'branchID'  => $request->branch,
                             'areaID' =>  $request->area,
+                            'credit_limit' => $request->limit
                         ]
                     );
                 }
@@ -88,8 +89,7 @@ class AccountsController extends Controller
                             'category' => $request->category,
                             'areaID' => 1,
                         ]
-                    );
-                        
+                    );    
                    }
                    else
                    {
@@ -111,6 +111,7 @@ class AccountsController extends Controller
         }
         catch(\Exception $e)
         {
+            DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
     }
@@ -165,6 +166,7 @@ class AccountsController extends Controller
                 'contact' => $request->contact ?? null,
                 'c_type' => $request->c_type,
                 'areaID' => $request->area ?? 1,
+                'credit_limit' => $request->limit ?? 0
             ]
         );
 

@@ -25,17 +25,17 @@ class accountSeeder extends Seeder
 
         accounts::create(
             [
-                'title' => "Walk-In Customer",
+                'title' => "Test Customer",
                 'type' => "Customer",
                 'areaID' => 1,
                 'branchID' => 1,
-
+                'credit_limit' => 100000,
             ]
         );
 
         accounts::create(
             [
-                'title' => "Walk-In Vendor",
+                'title' => "Test Vendor",
                 'type' => "Vendor",
                 'areaID' => 1,
                 'branchID' => 1,

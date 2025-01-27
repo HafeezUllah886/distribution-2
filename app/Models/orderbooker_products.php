@@ -15,4 +15,9 @@ class orderbooker_products extends Model
     {
         return $this->belongsTo(products::class, 'productID');
     }
+
+    public function orderbooker()
+    {
+        return $this->belongsTo(User::class, 'orderbookerID');
+    }
 }

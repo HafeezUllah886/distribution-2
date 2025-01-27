@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('contact')->nullable();
             $table->string('email')->nullable();
             $table->string('c_type')->nullable()->default('Other');
+            $table->string('credit_limit')->default(0);
             $table->foreignId('areaID')->constrained('areas', 'id');
             $table->string('status')->default('Active');
             $table->timestamps();
