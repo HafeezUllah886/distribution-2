@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customerID')->constrained('accounts', 'id');
             $table->foreignId('orderbookerID')->constrained('users', 'id');
+            $table->foreignId('branchID')->constrained('branches', 'id');
             $table->date('date');
             $table->integer('saleID')->nullable();
-            $table->float('net')->default(0);
             $table->string('status')->default('Pending');
             $table->text('notes')->nullable();
+            $table->bigInteger('refID');
             $table->timestamps();
         });
     }

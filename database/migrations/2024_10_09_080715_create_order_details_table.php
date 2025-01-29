@@ -15,14 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('orderID')->constrained('orders', 'id');
             $table->foreignId('productID')->constrained('products', 'id');
-            $table->float('qty');
+            $table->foreignId('unitID')->constrained('product_units', 'id');
+            $table->float('pack_qty')->default(0);
+            $table->float('loose_qty')->default(0);
+            $table->float('total_pieces')->default(0);
             $table->float('price', 10);
-            $table->float('discount')->default(0);
-            $table->float('amount');
             $table->date('date');
-            $table->foreignId('unitID')->constrained('units', 'id');
-            $table->float('unitValue');
-            $table->float('bonus')->default(0);
+            $table->bigInteger('refID');
             $table->timestamps();
         });
     }

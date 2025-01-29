@@ -12,6 +12,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\product_units;
+use Illuminate\Support\Facades\Validator;
 
 class OrdersController extends Controller
 {
@@ -53,31 +55,18 @@ class OrdersController extends Controller
         try {
             // Validate request
             $validator = Validator::make($request->all(), [
-                'customerID' => 'required|exists:customers,id',
-                'warehouseID' => 'required|exists:warehouses,id',
+                'customerID' => 'required|exists:accounts,id',
                 'date' => 'required|date',
                 'id' => 'required|array',
                 'id.*' => 'exists:products,id',
                 'unit' => 'required|array',
                 'unit.*' => 'exists:product_units,id',
-                'qty' => 'required|array',
-                'qty.*' => 'numeric|min:0',
-                'bonus' => 'required|array',
-                'bonus.*' => 'numeric|min:0',
-                'loose' => 'required|array',
-                'loose.*' => 'numeric|min:0',
+                'pack_qty' => 'required|array',
+                'pack_qty.*' => 'numeric|min:0',
+                'loose_qty' => 'required|array',
+                'loose_qty.*' => 'numeric|min:0',
                 'price' => 'required|array',
                 'price.*' => 'numeric|min:0',
-                'discount' => 'required|array',
-                'discount.*' => 'numeric|min:0',
-                'discountp' => 'required|array',
-                'discountp.*' => 'numeric|min:0',
-                'claim' => 'required|array',
-                'claim.*' => 'numeric|min:0',
-                'fright' => 'required|array',
-                'fright.*' => 'numeric|min:0',
-                'labor' => 'required|array',
-                'labor.*' => 'numeric|min:0',
             ]);
 
             if ($validator->fails()) {
@@ -99,84 +88,44 @@ class OrdersController extends Controller
             
             $ref = getRef();
             
-            // Create sale
-            $sale = sales::create([
+            $order = orders::create([
                 'customerID' => $request->customerID,
-                'branchID' => auth()->user()->branchID,
-                'warehouseID' => $request->warehouseID,
-                'orderbookerID' => $request->orderbookerID,
-                'supplymanID' => $request->supplymanID,
-                'orderdate' => $request->orderdate,
+                'branchID' => $request->user()->branchID,
+                'orderbookerID' => $request->user()->id,
                 'date' => $request->date,
-                'bilty' => $request->bilty,
-                'transporter' => $request->transporter,
                 'notes' => $request->notes,
                 'refID' => $ref,
             ]);
 
-            $total = 0;
-            $totalLabor = 0;
-            $saleDetails = [];
+            $orderDetails = [];
 
             foreach($request->id as $key => $id) {
                 $unit = product_units::find($request->unit[$key]);
-                $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
-                $pc = $request->loose[$key] + ($request->qty[$key] * $unit->value);
-                $price = $request->price[$key];
-                $discount = $request->discount[$key];
-                $claim = $request->claim[$key];
-                $frieght = $request->fright[$key];
-                $discountvalue = $price * $request->discountp[$key] / 100;
-                $netPrice = ($price - $discount - $discountvalue - $claim) + $frieght;
-                $amount = $netPrice * $pc;
-                $total += $amount;
-                $totalLabor += $request->labor[$key] * $pc;
+                $pc = $request->pack_qty[$key] * $unit->value;
 
-                $saleDetail = sale_details::create([
-                    'saleID' => $sale->id,
-                    'warehouseID' => $request->warehouseID,
-                    'orderbookerID' => $request->orderbookerID,
+                $orderDetail = order_details::create([
+                    'orderID' => $order->id,
                     'productID' => $id,
-                    'price' => $price,
-                    'discount' => $discount,
-                    'discountp' => $request->discountp[$key],
-                    'discountvalue' => $discountvalue,
-                    'qty' => $request->qty[$key],
-                    'pc' => $pc,
-                    'loose' => $request->loose[$key],
-                    'netprice' => $netPrice,
-                    'amount' => $amount,
+                    'price' => $request->price[$key],
+                    'pack_qty' => $request->pack_qty[$key],
+                    'loose_qty' => $request->loose_qty[$key],
+                    'total_pieces' => $pc + $request->loose_qty[$key],
                     'date' => $request->date,
-                    'bonus' => $request->bonus[$key],
-                    'labor' => $request->labor[$key],
-                    'fright' => $frieght,
-                    'claim' => $claim,
-                    'unitID' => $unit->id,
+                    'unitID' => $request->unit[$key],
                     'refID' => $ref,
                 ]);
 
-                $saleDetails[] = $saleDetail;
-                createStock($id, 0, $qty, $request->date, "Sold", $ref, $request->warehouseID);
+                $orderDetails[] = $orderDetail;
             }
-
-            // Update sale with total
-            $sale->update(['net' => $total]);
-
-            // Create transactions
-            createTransaction($request->customerID, $request->date, 0, $total, "Pending Amount of Sale No. $sale->id", $ref);
-            createTransaction($request->supplymanID, $request->date, $totalLabor, 0, "Labor Charges of Sale No. $sale->id", $ref);
 
             DB::commit();
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Sale created successfully',
+                'message' => 'Order created successfully',
                 'data' => [
-                    'sale' => $sale,
-                    'sale_details' => $saleDetails,
-                    'total_amount' => $total,
-                    'total_labor' => $totalLabor,
-                    'reference_id' => $ref
+                    'order' => $order,
+                    'order_details' => $orderDetails,
                 ]
             ], 201);
 
@@ -187,7 +136,6 @@ class OrdersController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
-    }
     }
 
     /**
