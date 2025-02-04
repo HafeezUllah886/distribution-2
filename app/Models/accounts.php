@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models; 
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -59,6 +59,11 @@ class accounts extends Model
         {
             return $query->where('type', 'Supply Man')->where('status', 'Active')->where('branchID', auth()->user()->branchID);
         }
+    }
+
+    public function scopeCurrentBranch($query)
+    {
+        return $query->where('branchID', auth()->user()->branchID);
     }
 
     public function scopeOther($query)

@@ -138,6 +138,11 @@ class dashboardController extends Controller
 
             }
 
+            if(auth()->user()->role == "Operator")
+            {
+                return view('dashboard.operator_dashboard');
+            }
+
             if(auth()->user()->role != "Admin")
             {
                 return to_route('orders.index');

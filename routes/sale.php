@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
 
-Route::get("sales/getproduct/{id}/{warehouse}", [SalesController::class, 'getSignleProduct']);
+Route::get("sales/getproduct/{id}/{warehouse}/{area}", [SalesController::class, 'getSignleProduct']);
 
 });
 Route::middleware('auth')->group(function () {

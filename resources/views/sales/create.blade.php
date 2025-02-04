@@ -109,14 +109,12 @@
                                     <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}" class="form-control">
                                 </div>
                             </div>
+                           
                             <div class="col-4 mt-2">
                                 <div class="form-group">
-                                    <label for="customerID">Customer</label>
-                                    <select name="customerID" id="customerID" class="form-control">
-                                        @foreach ($customers as $customer)
-                                            <option value="{{$customer->id}}">{{$customer->title}}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="customer">Customer</label>
+                                    <input type="text" value="{{$customer->title}}" class="form-control" readonly>
+                                    <input type="hidden" name="customerID" value="{{$customer->id}}">
                                 </div>
                             </div>
                             <div class="col-4 mt-2">
@@ -168,6 +166,7 @@
                     getSingleProduct(value);
                     this.clear();
                     this.focus();
+                    
                 }
             },
         });
@@ -175,7 +174,7 @@
         var existingProducts = [];
         function getSingleProduct(id) {
             $.ajax({
-                url: "{{ url('sales/getproduct/') }}/" + id + "/" + {{$warehouse->id}},
+                url: "{{ url('sales/getproduct/') }}/" + id + "/" + {{$warehouse->id}} + "/" + {{$customer->areaID}},
                 method: "GET",
                 success: function(product) {
                     let found = $.grep(existingProducts, function(element) {

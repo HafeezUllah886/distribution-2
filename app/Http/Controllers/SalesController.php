@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\accounts;
 use App\Models\expenses;
 use App\Models\orders;
+use App\Models\product_dc;
 use App\Models\product_units;
 use App\Models\products;
 use App\Models\sale_details;
@@ -34,7 +35,8 @@ class SalesController extends Controller
         $sales = sales::with('payments')->whereBetween("date", [$start, $end])->orderby('id', 'desc')->get();
 
         $warehouses = warehouses::currentBranch()->get();
-        return view('sales.index', compact('sales', 'start', 'end', 'warehouses'));
+        $customers = accounts::customer()->currentBranch()->get();
+        return view('sales.index', compact('sales', 'start', 'end', 'warehouses', 'customers'));
     }
 
     /**
@@ -43,18 +45,20 @@ class SalesController extends Controller
     public function create(request $request)
     {
         $products = products::orderby('name', 'asc')->get();
+        $customer = accounts::find($request->customerID);
         foreach($products as $product)
         {
             $stock = getStock($product->id);
             $product->stock = $stock;
+           
         }
         $units = units::all();
-        $customers = accounts::customer()->get();
+       
         $accounts = accounts::business()->get();
         $orderbookers = User::orderbookers()->get();
         $warehouse = warehouses::find($request->warehouseID);
         $supplymen = accounts::supplyMen()->get();
-        return view('sales.create', compact('products', 'units', 'customers', 'accounts', 'orderbookers', 'warehouse', 'supplymen'));
+        return view('sales.create', compact('products', 'units', 'customer', 'accounts', 'orderbookers', 'warehouse', 'supplymen'));
     }
 
     /**
@@ -320,14 +324,15 @@ class SalesController extends Controller
         }
     }
 
-    public function getSignleProduct($id, $warehouse)
+    public function getSignleProduct($id, $warehouse, $area)
     {
-        
         $product = products::with('units')->find($id);
         $stocks = stock::select(DB::raw('SUM(cr) - SUM(db) AS balance'))
                   ->where('productID', $product->id)
                   ->get();
         $product->stock = getWarehouseProductStock($id, $warehouse);
+        $dc = product_dc::where('productID', $product->id)->where('areaID', $area)->first();
+        $product->dc = $dc->dc ?? 0;
         return $product;
     }
 

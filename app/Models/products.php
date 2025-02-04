@@ -46,4 +46,9 @@ class products extends Model
 
     }
 
+    public function dcs()
+    {
+        return $this->hasMany(product_dc::class, 'productID');
+    }
+
 }
