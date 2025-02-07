@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [authController::class, 'login']);
 
-
 // Sales Routes
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -24,4 +23,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/customers', [nonFinanancialInfoController::class, 'customers']);
 
     Route::post('/order/store', [OrdersController::class, 'store']);
+    Route::get('/getorders', [OrdersController::class, 'index']);
 });

@@ -182,6 +182,11 @@
                     });
                     if (found.length > 0) {
                     } else {
+                        if(product.stock == 0)
+                        {
+                            alert("Stock is not available");
+                            return;
+                        }
                         var id = product.id;
                         var units = product.units;
                         var html = '<tr id="row_' + id + '">';
@@ -194,7 +199,7 @@
                         html += '<td class="no-padding"><div class="input-group"><span class="input-group-text no-padding stock_'+id+'" id="basic-addon2">'+product.stock+'</span><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" max="'+product.stock+'" min="0" required step="any" value="1" class="form-control text-center no-padding" id="qty_' + id + '"> </div></td>';
                         html += '<td class="no-padding"><input type="number" name="loose[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="0" class="form-control text-center no-padding" id="loose_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="bonus[]" min="0" required oninput="updateChanges(' + id + ')" step="any" value="0" class="form-control text-center no-padding" id="bonus_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' + id + ')" required step="any" value="'+product.pprice+'" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
+                        html += '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' + id + ')" required step="any" value="'+product.price+'" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
                         html += '<td class="no-padding"><div class="input-group"><input type="number" name="discount[]" required step="any" value="'+product.discount+'" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discount_' + id + '"><span class="input-group-text no-padding discountText_'+id+'" id="basic-addon2"></span></td>';
                         html += '<td class="no-padding"><div class="input-group"><input type="number" name="discountp[]" required step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discountp_' + id + '"><span class="input-group-text no-padding discountpText_'+id+'" id="basic-addon2"></span></td>';
                         html += '<td class="no-padding"><div class="input-group"><input type="number" name="fright[]" required step="any" oninput="updateChanges(' + id + ')" value="'+product.sfright+'" min="0" class="form-control text-center no-padding" id="fright_' + id + '"> <span class="input-group-text no-padding frightText_'+id+'" id="basic-addon2"></span></div></td>';
@@ -229,7 +234,7 @@
             var totalQty = unit_qty + loose + bonus;
 
             $("#qty_"+id).attr("max", stock_place);
-            $(".stock_"+id).html(stock_place);
+            $(".stock_"+id).html(stock_place.toFixed(0));
 
             if(totalQty > stock)
             {

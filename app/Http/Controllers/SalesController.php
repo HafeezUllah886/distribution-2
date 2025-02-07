@@ -53,12 +53,10 @@ class SalesController extends Controller
            
         }
         $units = units::all();
-       
-        $accounts = accounts::business()->get();
         $orderbookers = User::orderbookers()->get();
         $warehouse = warehouses::find($request->warehouseID);
         $supplymen = accounts::supplyMen()->get();
-        return view('sales.create', compact('products', 'units', 'customer', 'accounts', 'orderbookers', 'warehouse', 'supplymen'));
+        return view('sales.create', compact('products', 'units', 'customer', 'orderbookers', 'warehouse', 'supplymen'));
     }
 
     /**
@@ -179,11 +177,25 @@ class SalesController extends Controller
     public function edit(sales $sale)
     {
         $products = products::orderby('name', 'asc')->get();
+        $customer = accounts::find($sale->customerID);
+        foreach($products as $product)
+        {
+            $stock = getStock($product->id);
+            $product->stock = $stock ;
+        }
+
+        foreach($sale->details as $pro)
+        {
+            $pro->stock = round((getStock($pro->productID) + $pro->pc + $pro->bonus + $pro->loose) / $pro->unit->value);
+            $pro->stock1 = round((getStock($pro->productID) + $pro->pc + $pro->bonus + $pro->loose));
+
+        }
         $units = units::all();
-        $customers = accounts::customer()->get();
-        $accounts = accounts::business()->get();
-        $orderbookers = User::where('role', 'Orderbooker')->get();
-        return view('sales.edit', compact('products', 'units', 'customers', 'accounts', 'sale', 'orderbookers'));
+       
+        $orderbookers = User::orderbookers()->get();
+        $warehouse = warehouses::find($sale->warehouseID);
+        $supplymen = accounts::supplyMen()->get();
+        return view('sales.edit', compact('products', 'units', 'customer', 'sale', 'orderbookers', 'warehouse', 'supplymen'));
     }
 
     /**
@@ -195,99 +207,102 @@ class SalesController extends Controller
         {
             DB::beginTransaction();
             $sale = sales::find($id);
-            foreach($sale->payments as $payment)
+            /* foreach($sale->payments as $payment)
             {
                 transactions::where('refID', $payment->refID)->delete();
                 $payment->delete();
-            }
+            } */
             foreach($sale->details as $product)
             {
                 stock::where('refID', $product->refID)->delete();
                 $product->delete();
             }
-            transactions::where('refID', $sale->refID)->delete();
+           /*  transactions::where('refID', $sale->refID)->delete(); */
             $ref = $sale->refID;
+           
+            if($request->isNotFilled('id'))
+            {
+                throw new Exception('Please Select Atleast One Product');
+            }
+        
+          
             $sale->update(
                 [
-                    'customerID'  => $request->customerID,
-                    'date'        => $request->date,
-                    'notes'       => $request->notes,
-                    'discount'    => $request->discount1,
-                    'fright'      => $request->fright,
-                    'fright1'      => $request->fright1,
-                    'wh'          => $request->whTax,
-                    'orderbookerID'  => $request->orderbookerID,
-                    'refID'       => $ref,
-                  ]
+                  'orderbookerID'   => $request->orderbookerID,
+                  'supplymanID'     => $request->supplymanID,
+                  'orderdate'       => $request->orderdate,
+                  'date'            => $request->date,
+                  'bilty'           => $request->bilty,
+                  'transporter'     => $request->transporter,
+                  'notes'           => $request->notes,
+                ]
             );
 
             $ids = $request->id;
 
             $total = 0;
+            $totalLabor = 0;
             foreach($ids as $key => $id)
             {
-                $unit = units::find($request->unit[$key]);
-                $qty = $request->qty[$key] * $unit->value;
+                $unit = product_units::find($request->unit[$key]);
+                $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
+                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
                 $price = $request->price[$key];
-                $total += $request->ti[$key];
+                $discount = $request->discount[$key];
+                $claim = $request->claim[$key];
+                $frieght = $request->fright[$key];
+                $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
+                $netPrice = ($price - $discount - $discountvalue - $claim) + $frieght;
+                $amount = $netPrice * $pc;
+                $total += $amount;
+                $totalLabor += $request->labor[$key] * $pc;
+
                 sale_details::create(
                     [
-                        'salesID'       => $sale->id,
+                        'saleID'        => $sale->id,
+                        'warehouseID'   => $request->warehouseID,
+                        'orderbookerID' => $request->orderbookerID,
                         'productID'     => $id,
                         'price'         => $price,
-                        'qty'           => $qty,
-                        'discount'      => $request->discount[$key],
-                        'ti'            => $request->ti[$key],
-                        'tp'            => $request->tp[$key],
-                        'gst'           => $request->gst[$key],
-                        'gstValue'      => $request->gstValue[$key],
+                        'discount'      => $discount,
+                        'discountp'     => $request->discountp[$key],
+                        'discountvalue' => $discountvalue,
+                        'qty'           => $request->qty[$key],
+                        'pc'            => $pc,
+                        'loose'         => $request->loose[$key],
+                        'netprice'      => $netPrice,
+                        'amount'        => $amount,
                         'date'          => $request->date,
+                        'bonus'         => $request->bonus[$key],
+                        'labor'         => $request->labor[$key],
+                        'fright'        => $request->fright[$key],
+                        'claim'         => $claim,
                         'unitID'        => $unit->id,
-                        'unitValue'     => $unit->value,
-                        'refID'         => $sale->refID,
+                        'refID'         => $ref,
                     ]
                 );
-                createStock($id,0, $qty, $request->date, "Sold in Inv # $sale->id", $sale->refID);
+                createStock($id, 0, $qty, $request->date, "Sold", $ref, $request->warehouseID);
             }
 
-            $whTax = $total * $request->whTax / 100;
+            $net = $total;
 
-            $net = ($total + $whTax + $request->fright1) - ($request->discount1 + $request->fright);
-            dashboard();
             $sale->update(
                 [
-
-                    'whValue'   => $whTax,
-                    'net'       => $net,
+                    'net' => $net,
                 ]
             );
 
-            if($request->status == 'paid')
-            {
-                sale_payments::create(
-                    [
-                        'salesID'       => $sale->id,
-                        'accountID'     => $request->accountID,
-                        'date'          => $request->date,
-                        'amount'        => $net,
-                        'notes'         => "Full Paid",
-                        'refID'         => $sale->refID,
-                    ]
-                );
-                createTransaction($request->accountID, $request->date, $net, 0, "Payment of Inv No. $sale->id", $sale->refID);
-                createTransaction($request->customerID, $request->date, $net, $net, "Payment of Inv No. $sale->id", $ref);
-            }
-            else
-            {
-                createTransaction($request->customerID, $request->date, 0, $net, "Pending Amount of Inv No. $sale->id", $sale->refID);
-            }
+          /*   createTransaction($request->customerID, $request->date, 0, $net, "Pending Amount of Sale No. $sale->id", $ref);
+           
+            createTransaction($request->supplymanID, $request->date, $totalLabor, 0, "Labor Charges of Sale No. $sale->id", $ref); */
+
             DB::commit();
-            return to_route('sale.index')->with('success', "Sale Updated");
+            return back()->with('success', "Sale Updated");
         }
         catch(\Exception $e)
         {
-            DB::rollBack();
-            return to_route('sale.index')->with('error', $e->getMessage());
+            DB::rollback();
+            return back()->with('error', $e->getMessage());
         }
     }
 

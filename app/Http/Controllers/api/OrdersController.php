@@ -18,22 +18,18 @@ use Illuminate\Support\Facades\Validator;
 class OrdersController extends Controller
 {
 
-
     public function index(Request $request)
     {
-        $start = $request->start ?? now()->toDateString();
-        $end = $request->end ?? now()->toDateString();
-        dashboard();
-        if(Auth()->user()->role == "Admin")
-        {
-            $orders = orders::whereBetween("date", [$start, $end])->orderBy('id', 'desc')->get();
-        }
-        else
-        {
-            $orders = orders::where('orderbookerID', auth()->user()->id)->whereBetween("date", [$start, $end])->orderBy('id', 'desc')->get();
-        }
-
-        return view('orders.index', compact('orders', 'start', 'end'));
+        $from = $request->from ?? now()->toDateString();
+        $to = $request->to ?? now()->toDateString();
+       
+        $orders = orders::with('customer', 'details.product')->where('orderbookerID', $request->user()->id)->whereBetween("date", [$from, $to])->orderBy('id', 'desc')->get();
+      
+        return response()->json([
+            'data' => [
+                'orders' => $orders,
+            ]
+        ], 201);
     }
 
     /**
