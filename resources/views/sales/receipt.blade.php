@@ -11,17 +11,15 @@
                             <div class="card-header border-bottom-dashed p-4">
                                 <div class="d-flex">
                                     <div class="flex-grow-1">
-                                        <img src="{{asset('assets/images/logo.png')}}" style="width:250px;">
+                                        <h1>{{projectNameHeader()}}</h1>
                                         <div class="mt-sm-5 mt-4">
-                                            <div class="row">
+                                           {{--  <div class="row">
                                                 <div class="col-6">
                                                     <h6 class="text-muted text-uppercase fw-semibold">Industrial Area, Sirki Road, Quetta</h6>
                                                     <p class="text-muted mb-1" id="address-details">NTN: 2645388-6</p>
                                                     <p class="text-muted mb-0" id="zip-code"><span>0331-8358638 | </span> jaffarqta92@gmail.com</p>
                                                 </div>
-
-                                            </div>
-
+                                            </div>--}}
                                         </div>
                                     </div>
                                     <div class="flex-shrink-0 mt-sm-0 mt-3">
@@ -49,8 +47,8 @@
                                     <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">Rupees {{numberToWords($payment->amount,2)}} Only</td>
                                 </tr>
                                 <tr>
-                                    <td style="width:20%;" class="p-4 pb-1"><strong>Received In</strong></td>
-                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{$payment->account->title}}</td>
+                                    <td style="width:20%;" class="p-4 pb-1"><strong>Received by</strong></td>
+                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{$payment->user->name}}</td>
                                 </tr>
                                </table>
 

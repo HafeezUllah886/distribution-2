@@ -35,10 +35,10 @@ function createUserTransaction($userID, $date, $cr, $db, $notes, $ref){
 
 }
 
-function createCurrencyTransaction($userID, $currencyID, $currency, $type ,$date, $notes, $ref){
-    foreach($userID as $key => $id)
+function createCurrencyTransaction($userID, $currencyID, $qty, $type ,$date, $notes, $ref){
+    foreach($currencyID as $key => $id)
     {
-        if($currency[$key] > 0)
+        if($qty[$key] > 0)
         {
             if($type == "cr")
             {
@@ -47,7 +47,7 @@ function createCurrencyTransaction($userID, $currencyID, $currency, $type ,$date
                         'userID' => $userID,
                         'currencyID' => $id,
                         'date' => $date,
-                        'cr' => $currency[$key],
+                        'cr' => $qty[$key],
                         'notes' => $notes,
                         'refID' => $ref,
                     ]
@@ -60,7 +60,7 @@ function createCurrencyTransaction($userID, $currencyID, $currency, $type ,$date
                         'userID' => $userID,
                         'currencyID' => $id,
                         'date' => $date,
-                        'db' => $currency[$key],
+                        'db' => $qty[$key],
                         'notes' => $notes,
                         'refID' => $ref,
                     ]

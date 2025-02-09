@@ -26,7 +26,7 @@ class PurchaseController extends Controller
         $start = $request->start ?? now()->toDateString();
         $end = $request->end ?? now()->toDateString();
 
-        $purchases = purchase::whereBetween("recdate", [$start, $end])->orderby('id', 'desc')->get();
+        $purchases = purchase::whereBetween("recdate", [$start, $end])->where('branchID', auth()->user()->branchID)->orderby('id', 'desc')->get();
 
         $vendors = accounts::vendor()->get();
         return view('purchase.index', compact('purchases', 'start', 'end', 'vendors'));

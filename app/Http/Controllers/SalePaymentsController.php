@@ -53,10 +53,9 @@ class SalePaymentsController extends Controller
                     'refID'         => $ref,
                 ]
             );
-
             createTransaction($sale->customerID, $request->date,$request->amount, 0, "Payment of Inv No. $sale->id", $ref);
             createUserTransaction(auth()->id(), $request->date,$request->amount, 0, "Payment of Inv No. $sale->id", $ref);
-            createCurrencyTransaction($request->accountID, $request->currencyID, $request->currency, 'cr', $request->date, "Deposit: ".$request->notes, $ref);
+            createCurrencyTransaction(auth()->id(), $request->currencyID, $request->qty, 'cr', $request->date, "Sale Invoice Payment : ".$request->notes, $ref);
             createAttachment($request->file('file'), $ref);
 
             DB::commit();

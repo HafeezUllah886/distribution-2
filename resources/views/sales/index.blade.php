@@ -43,8 +43,8 @@
                             <th>Customer</th>
                             <th>Date</th>
                             <th>Amount</th>
-                            {{-- <th>Paid</th>
-                            <th>Due</th> --}}
+                            <th>Paid</th>
+                            <th>Due</th> 
                             <th>Action</th>
                         </thead>
                         <tbody>
@@ -59,8 +59,8 @@
                                     <td>{{ $sale->customer->title }}</td>
                                     <td>{{ date('d M Y', strtotime($sale->date)) }}</td>
                                     <td>{{ number_format($amount) }}</td>
-                                   {{--  <td>{{ number_format($paid) }}</td>
-                                    <td>{{ number_format($due) }}</td> --}}
+                                   <td>{{ number_format($paid) }}</td>
+                                    <td>{{ number_format($due) }}</td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-soft-secondary btn-sm dropdown" type="button"

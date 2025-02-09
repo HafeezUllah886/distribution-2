@@ -29,10 +29,10 @@ class SalesController extends Controller
     public function index(Request $request)
     {
 
-        $start = $request->start ?? now()->toDateString();
+        $start = $request->start ?? firstDayOfMonth();
         $end = $request->end ?? now()->toDateString();
 
-        $sales = sales::with('payments')->whereBetween("date", [$start, $end])->orderby('id', 'desc')->get();
+        $sales = sales::with('payments')->whereBetween("date", [$start, $end])->where('branchID', auth()->user()->branchID)->orderby('id', 'desc')->get();
 
         $warehouses = warehouses::currentBranch()->get();
         $customers = accounts::customer()->currentBranch()->get();
@@ -217,7 +217,9 @@ class SalesController extends Controller
                 stock::where('refID', $product->refID)->delete();
                 $product->delete();
             }
-           /*  transactions::where('refID', $sale->refID)->delete(); */
+
+            transactions::where(['accountID' => $sale->customerID, 'refID' => $sale->refID ])->delete(); 
+            transactions::where(['accountID' => $sale->supplymanID, 'refID' => $sale->refID ])->delete(); 
             $ref = $sale->refID;
            
             if($request->isNotFilled('id'))
@@ -225,7 +227,6 @@ class SalesController extends Controller
                 throw new Exception('Please Select Atleast One Product');
             }
         
-          
             $sale->update(
                 [
                   'orderbookerID'   => $request->orderbookerID,
@@ -292,9 +293,9 @@ class SalesController extends Controller
                 ]
             );
 
-          /*   createTransaction($request->customerID, $request->date, 0, $net, "Pending Amount of Sale No. $sale->id", $ref);
+            createTransaction($request->customerID, $request->date, 0, $net, "Pending Amount of Sale No. $sale->id", $ref);
            
-            createTransaction($request->supplymanID, $request->date, $totalLabor, 0, "Labor Charges of Sale No. $sale->id", $ref); */
+           createTransaction($request->supplymanID, $request->date, $totalLabor, 0, "Labor Charges of Sale No. $sale->id", $ref);
 
             DB::commit();
             return back()->with('success', "Sale Updated");

@@ -19,7 +19,7 @@
                                     </ul>
                                 </div>
                             @endif
-                            <form action="{{ route('sale_payment.store') }}" method="post">
+                            <form action="{{ route('sale_payment.store') }}" enctype="multipart/form-data" method="post">
                                 @csrf
                                 <input type="hidden" name="salesID" value="{{ $sale->id }}">
                                 <div class="modal-body">
@@ -33,7 +33,7 @@
                                                 <tr>
                                                     <td>{{$currency->title}}</td>
                                                     <td>
-                                                        <input type="number" class="form-control form-control-sm" data-value="{{$currency->title}}" id="currency_{{$currency->id}}" oninput="updateTotal()" name="currency[]" value="0">
+                                                        <input type="number" class="form-control form-control-sm" data-value="{{$currency->title}}" id="currency_{{$currency->id}}" oninput="updateTotal()" name="qty[]" value="0">
                                                         <input type="hidden" class="form-control" name="currencyID[]" value="{{$currency->id}}">
                                                     </td>
                                                 </tr>
@@ -47,7 +47,7 @@
                                             <tr>
                                                 <td>Attachement</td>
                                                 <td>
-                                                    <input type="file" class="form-control form-control-sm" name="file">
+                                                    <input type="file" class="form-control form-control-sm" required name="file">
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -89,8 +89,11 @@
                                             <td class="text-center">
                                                 <a href="{{ route('salePayment.show', $payment->id) }}"
                                                     class="btn btn-info btn-sm">Print</a>
-                                                <a href="{{ route('salePayment.delete', [$sale->id, $payment->refID]) }}"
-                                                    class="btn btn-danger btn-sm">X</a>
+                                                    @if ($payment->userID == auth()->id())
+                                                    <a href="{{ route('salePayment.delete', [$sale->id, $payment->refID]) }}"
+                                                        class="btn btn-danger btn-sm">X</a>
+                                                    @endif
+                                               
 
                                                 </td>
                                         </tr>
@@ -98,8 +101,16 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th colspan="3" class="text-end">Total</th>
+                                        <th colspan="3" class="text-end">Total Bill</th>
+                                        <th class="text-end">{{ number_format($sale->net) }}</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="3" class="text-end">Total Received</th>
                                         <th class="text-end">{{ number_format($sale->payments->sum('amount')) }}</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="3" class="text-end">Total Balance</th>
+                                        <th class="text-end">{{ number_format($sale->net - $sale->payments->sum('amount')) }}</th>
                                     </tr>
                                 </tfoot>
                             </table>
