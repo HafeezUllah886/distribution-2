@@ -1,189 +1,163 @@
 @extends('layout.app')
 @section('content')
 <div class="row">
-    <div class="col-xl-12">
-        <div class="card crm-widget">
-            <div class="card-body p-0">
-                {{-- <div class="row row-cols-xxl-5 row-cols-md-3 row-cols-1 g-0">
-                    <div class="col">
-                        <div class="py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Purchases</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{totalPurchases()}}">0</span></h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="mt-3 mt-md-0 py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Sales</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{totalSales()}}">0</span></h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="mt-3 mt-md-0 py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Purchase GST</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{totalPurchaseGst()}}">0</span></h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="mt-3 mt-lg-0 py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">Sales GST</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{totalSaleGst()}}">0</span></h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="mt-3 mt-lg-0 py-4 px-3">
-                            <h5 class="text-muted text-uppercase fs-13">My Balance</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 ms-3">
-                                    <h2 class="mb-0 cfs-22"><span class="counter-value" data-target="{{myBalance()}}">0</span></h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-   {{--  <div class="col-xl-12">
-        <div class="card">
-            <div class="card-header border-0 align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Revenue (Monthly)</h4>
-            </div>
-            <div class="card-header p-0 border-0 bg-light-subtle">
-                <div class="row g-0 text-center">
-                    <div class="col-6 col-sm-3">
-                        <div class="p-3 border border-dashed border-start-0">
-                            <h5 class="mb-1"><span class="counter-value" data-target="{{$last_sale}}">0</span></h5>
-                            <p class="text-muted mb-0">Sales</p>
-                        </div>
-                    </div>
-                    <div class="col-6 col-sm-3">
-                        <div class="p-3 border border-dashed border-start-0">
-                            <h5 class="mb-1"><span class="counter-value" data-target="{{$last_expense}}">0</span></h5>
-                            <p class="text-muted mb-0">Expenses</p>
-                        </div>
-                    </div>
-                    <div class="col-6 col-sm-3">
-                        <div class="p-3 border border-dashed border-start-0">
-                            <h5 class="mb-1"><span class="counter-value" data-target="{{$last_profit}}">0</span></h5>
-                            <p class="text-muted mb-0">Profit</p>
-                        </div>
-                    </div>
-                    <div class="col-6 col-sm-3">
-                        <div class="p-3 border border-dashed border-start-0 border-end-0">
-                            <h5 class="mb-1 text-success"><span class="counter-value" data-target="{{$last_profit - $last_expense}}">0</span></h5>
-                            <p class="text-muted mb-0">Net Profit</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-body p-0 pb-2">
-                <div class="w-100">
-                    <div id="customer_impression_charts" data-colors='["--vz-primary", "--vz-success", "--vz-danger"]' data-colors-minimal='["--vz-light", "--vz-primary", "--vz-info"]' data-colors-saas='["--vz-success", "--vz-info", "--vz-danger"]' data-colors-modern='["--vz-warning", "--vz-primary", "--vz-success"]' data-colors-interactive='["--vz-info", "--vz-primary", "--vz-danger"]' data-colors-creative='["--vz-warning", "--vz-primary", "--vz-danger"]' data-colors-corporate='["--vz-light", "--vz-primary", "--vz-secondary"]' data-colors-galaxy='["--vz-secondary", "--vz-primary", "--vz-primary-rgb, 0.50"]' data-colors-classic='["--vz-light", "--vz-primary", "--vz-secondary"]' data-colors-vintage='["--vz-success", "--vz-primary", "--vz-secondary"]' class="apex-charts" dir="ltr"></div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-</div>
-<div class="row">
-   {{--  <div class="col-xl-6">
-        <div class="card">
-            <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Best Selling Products</h4>
-                <div class="flex-shrink-0">
-                </div>
-            </div>
-
+    <div class="col-xl-3 col-md-6">
+        <!-- card -->
+        <div class="card card-animate">
             <div class="card-body">
-                <div class="table-responsive table-card">
-                    <table class="table table-hover table-centered align-middle table-nowrap mb-0">
-                        <tbody>
-                            @foreach ($topProductsArray as $product)
-                            <tr>
-                                <td>
-                                    <div>
-                                        <h5 class="fs-14 my-1">{{$product['name']}}</h5>
-                                        <span class="text-muted">Product</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <h5 class="fs-14 my-1 fw-normal">{{number_format($product['price'])}}</h5>
-                                    <span class="text-muted">Avg Price</span>
-                                </td>
-                                <td>
-                                    <h5 class="fs-14 my-1 fw-normal">{{number_format($product['sold'])}}</h5>
-                                    <span class="text-muted">Sold</span>
-                                </td>
-                                <td>
-                                    <h5 class="fs-14 my-1 fw-normal">{{number_format($product['stock'])}}</h5>
-                                    <span class="text-muted">Stock</span>
-                                </td>
-                                <td>
-                                    <h5 class="fs-14 my-1 fw-normal">{{number_format($product['amount'])}}</h5>
-                                    <span class="text-muted">Amount</span>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Total Orders</p>
+                    </div>
                 </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-6">
-        <div class="card card-height-100">
-            <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Top Customers</h4>
-            </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4"> {{number_format(totalOrders())}} </h4>
+                        <a href="#" class="text-decoration-underline">View All Orders</a>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-info-subtle rounded fs-3">
+                            <i class="bx bx-shopping-bag text-info"></i>
+                        </span>
+                    </div>
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
+    <div class="col-xl-3 col-md-6">
+        <!-- card -->
+        <div class="card card-animate">
             <div class="card-body">
-                <div class="table-responsive table-card">
-                    <table class="table table-centered table-hover align-middle table-nowrap mb-0">
-                        <tbody>
-                           @foreach ($topCustomersArray as $customer)
-                           <tr>
-                            <td>
-                                <div class="">
-                                        <h5 class="fs-14 my-1 fw-medium">{{$customer['name']}}</h5>
-                                        <span class="text-muted">Title</span>
-                                </div>
-                            </td>
-                            <td>
-                                <h5 class="fs-14 my-1 fw-normal">{{number_format($customer['purchases'])}}</h5>
-                                <span class="text-muted">Total Purchase</span>
-                            </td>
-                            <td>
-                                <h5 class="fs-14 my-1 fw-normal">{{number_format($customer['balance'])}}</h5>
-                                <span class="text-muted">Current Balance</span>
-                            </td>
-                        </tr>
-                           @endforeach
-                        </tbody>
-                    </table>
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Pending Orders</p>
+                    </div>
                 </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4"> {{number_format(pendingOrders())}} </h4>
+                        <a href="#" class="text-decoration-underline">View All Orders</a>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-warning-subtle rounded fs-3">
+                            <i class="bx bx-shopping-bag text-warning"></i>
+                        </span>
+                    </div>
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
+    <div class="col-xl-3 col-md-6">
+        <!-- card -->
+        <div class="card card-animate">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Completed Orders</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4"> {{number_format(completedOrders())}} </h4>
+                        <a href="#" class="text-decoration-underline">View All Orders</a>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-success-subtle rounded fs-3">
+                            <i class="bx bx-shopping-bag text-success"></i>
+                        </span>
+                    </div>
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
 
-            </div>
-        </div>
-    </div> --}}
+    <div class="col-xl-3 col-md-6">
+        <!-- card -->
+        <div class="card card-animate">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                     <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Sales (This Month)</p>
+                    </div>
+                    <div class="flex-shrink-0">
+                            @if (calculatePercentageDifference(salesPreviousMonth(),salesThisMonth()) > 0)
+                            <h5 class="text-success fs-14 mb-0">
+                            <i class="ri-arrow-right-up-line fs-13 align-middle"></i> {{(calculatePercentageDifference(salesPreviousMonth(),salesThisMonth()))}}
+                            </h5>
+                            @else
+                            <h5 class="text-danger fs-14 mb-0">
+                            <i class="ri-arrow-right-down-line fs-13 align-middle"></i>  {{(calculatePercentageDifference(salesPreviousMonth(),salesThisMonth()))}}
+                            </h5>
+                            @endif
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{number_format(salesThisMonth())}}</h4>
+                        <a href="{{route('sale.index')}}" class="text-decoration-underline">View sales</a>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-info-subtle rounded fs-3">
+                            <i class="bx bx-shopping-bag text-info"></i>
+                        </span>
+                    </div>
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
+
+    <div class="col-xl-3 col-md-6">
+        <!-- card -->
+        <div class="card card-animate">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Customers</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{CustomersCount()}}</h4>
+                        <a href="#" class="text-decoration-underline">See details</a>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-warning-subtle rounded fs-3">
+                            <i class="bx bx-user-circle text-warning"></i>
+                        </span>
+                    </div>
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
+
+    <div class="col-xl-3 col-md-6">
+        <!-- card -->
+        <div class="card card-animate">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> My Balance</p>
+                    </div>
+                    {{-- <div class="flex-shrink-0">
+                        <h5 class="text-muted fs-14 mb-0">
+                            +0.00 %
+                        </h5>
+                    </div> --}}
+                </div>
+                <div class="d-flex align-items-end justify-content-between mt-4">
+                    <div>
+                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{number_format(getUserAccountBalance(auth()->id()))}}</h4>
+                        <a href="#" class="text-decoration-underline">View Details</a>
+                    </div>
+                    <div class="avatar-sm flex-shrink-0">
+                        <span class="avatar-title bg-primary-subtle rounded fs-3">
+                            <i class="bx bx-wallet text-primary"></i>
+                        </span>
+                    </div>
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
 </div>
 @endsection
 @section('page-css')

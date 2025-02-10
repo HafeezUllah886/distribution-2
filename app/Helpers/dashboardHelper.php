@@ -1,9 +1,11 @@
 <?php
 
 use App\Models\accounts;
+use App\Models\orders;
 use App\Models\purchase;
 use App\Models\purchase_details;
 use App\Models\sale_details;
+use App\Models\sales;
 
 function totalSales()
 {
@@ -69,3 +71,117 @@ function dashboard()
         abort(500, "Connection Failed!");
     }
 }
+
+function totalOrders()
+{
+    $user = auth()->user();
+
+    if($user->role == "Admin")
+    {
+        $orders = orders::count();
+    }
+    else
+    {
+        $orders = orders::CurrentBranch()->count();
+    }
+
+    return $orders;
+}
+
+
+function pendingOrders()
+{
+    $user = auth()->user();
+
+    if($user->role == "Admin")
+    {
+        $orders = orders::pending()->count();
+    }
+    else
+    {
+        $orders = orders::pending()->CurrentBranch()->count();
+    }
+
+    return $orders;
+}
+
+
+function CompletedOrders()
+{
+    $user = auth()->user();
+
+    if($user->role == "Admin")
+    {
+        $orders = orders::completed()->count();
+    }
+    else
+    {
+        $orders = orders::completed()->CurrentBranch()->count();
+    }
+
+    return $orders;
+}
+
+function salesThisMonth()
+{
+    $user = auth()->user();
+    $from = firstDayOfMonth();
+    $to = lastDayOfMonth();
+
+    if($user->role == "Admin")
+    {
+        $sales = sales::whereBetween('date', [$from, $to])->sum('net');
+    }
+    else
+    {
+        $sales = sales::whereBetween('date', [$from, $to])->currentBranch()->sum('net');
+    }
+
+    return $sales;
+}
+
+
+function salesPreviousMonth()
+{
+    $user = auth()->user();
+    $from = firstDayOfPreviousMonth();
+    $to = lastDayOfPreviousMonth();
+
+    if($user->role == "Admin")
+    {
+        $sales = sales::whereBetween('date', [$from, $to])->sum('net');
+    }
+    else
+    {
+        $sales = sales::whereBetween('date', [$from, $to])->currentBranch()->sum('net');
+    }
+
+    return $sales;
+}
+
+function calculatePercentageDifference($oldValue, $newValue)
+{
+    if ($oldValue == 0) {
+        return $newValue > 0 ? 100 : 0;
+    }
+    $percentageDifference = (($newValue - $oldValue) / abs($oldValue)) * 100;
+    return round($percentageDifference, 2);
+}
+
+
+function CustomersCount()
+{
+
+    $user = auth()->user();
+    if($user->role == "Admin")
+    {
+        $customers = accounts::customer()->count();
+    }
+    else
+    {
+        $customers = accounts::customer()->currentBranch()->count();
+    }
+
+    return $customers;
+}
+

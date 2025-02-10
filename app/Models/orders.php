@@ -25,4 +25,19 @@ class orders extends Model
     {
         return $this->belongsTo(User::class, 'orderbookerID');
     }
+
+    public function scopeCurrentBranch($query)
+    {
+        return $query->where('branchID', auth()->user()->branchID);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'Pending');
+    }
+
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', 'Completed');
+    }
 }

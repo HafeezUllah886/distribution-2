@@ -35,4 +35,11 @@ class sales extends Model
     {
         return $this->belongsTo(accounts::class, 'supplymanID');
     }
+
+    
+    public function scopeCurrentBranch($query)
+    {
+        return $query->where('branchID', auth()->user()->branchID);
+    }
+
 }

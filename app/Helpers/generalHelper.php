@@ -57,6 +57,15 @@ function lastDayOfPreviousYear() {
     return $endOfPreviousYear->format('Y-m-d');
 }
 
+function firstDayOfPreviousMonth() {
+    $startOfPreviousMonth = Carbon::now()->subMonth()->startOfMonth();
+    return $startOfPreviousMonth->format('Y-m-d');
+}
+
+function lastDayOfPreviousMonth() {
+    $endOfPreviousMonth = Carbon::now()->subMonth()->endOfMonth();
+    return $endOfPreviousMonth->format('Y-m-d');
+}
 
 function createStock($id, $cr, $db, $date, $notes, $ref, $warehouse)
 {
@@ -81,7 +90,6 @@ function getStock($id){
         $balance += $stock->cr;
         $balance -= $stock->db;
     }
-
     return $balance;
 }
 
