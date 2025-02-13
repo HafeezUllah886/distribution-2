@@ -23,7 +23,7 @@ class OrdersController extends Controller
         $from = $request->from ?? now()->toDateString();
         $to = $request->to ?? now()->toDateString();
        
-        $orders = orders::with('customer', 'details.product')->where('orderbookerID', $request->user()->id)->whereBetween("date", [$from, $to])->orderBy('id', 'desc')->get();
+        $orders = orders::with('customer', 'details.product', 'details.unit')->where('orderbookerID', $request->user()->id)->whereBetween("date", [$from, $to])->orderBy('id', 'desc')->get();
       
         return response()->json([
             'data' => [

@@ -22,7 +22,7 @@
                                                  <tr>
                                                         <td>{{$key+1}}</td>
                                                         <td>{{$area->name}}</td>
-                                                        <td><input type="number" name="value[]" id="value" value="{{$area->dc}}" class="form-control"></td>
+                                                        <td><input type="number" name="value[]" id="value" step="any" value="{{$area->dc}}" class="form-control"></td>
                                                         <input type="hidden" name="areaID[]" value="{{$area->id}}">
                                                  </tr>
                                           @endforeach

@@ -47,7 +47,7 @@
                                             <tr>
                                                 <td>Attachement</td>
                                                 <td>
-                                                    <input type="file" class="form-control form-control-sm" required name="file">
+                                                    <input type="file" class="form-control form-control-sm" name="file">
                                                 </td>
                                             </tr>
                                         </tbody>
