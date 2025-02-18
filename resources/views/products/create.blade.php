@@ -143,15 +143,23 @@
                                         <label for="sclaim">Claim</label>
                                         <input type="number" step="any" name="sclaim" required value="0" min="0" id="sclaim" class="form-control">
                                     </div>
-                                    <div class="form-group mt-2">
-                                        <label for="dc">Delivery Charges</label>
-                                        <input type="number" step="any" name="dc" required value="0" min="0" id="dc" class="form-control">
-                                    </div>
-                                    <div class="form-group mt-2">
-                                        <label for="discount">Discount</label>
-                                        <input type="number" step="any" name="discount" required
-                                            value="0" min="0"
-                                            id="discount" class="form-control">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group mt-2">
+                                                <label for="discount">Discount</label>
+                                                <input type="number" step="any" name="discount" required
+                                                    value="0" min="0"
+                                                    id="discount" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group mt-2">
+                                                <label for="discountp">Discount %</label>
+                                                <input type="number" step="any" name="discountp" required
+                                                    value="0" min="0"
+                                                    id="discountp" class="form-control">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                

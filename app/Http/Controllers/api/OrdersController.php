@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\product_dc;
 use App\Models\product_units;
 use Illuminate\Support\Facades\Validator;
 
@@ -81,37 +82,68 @@ class OrdersController extends Controller
             }
 
             DB::beginTransaction();
-            
-            $ref = getRef();
-            
+
+            $customer = accounts::find($request->customerID);
             $order = orders::create([
                 'customerID' => $request->customerID,
                 'branchID' => $request->user()->branchID,
                 'orderbookerID' => $request->user()->id,
                 'date' => $request->date,
                 'notes' => $request->notes,
-                'refID' => $ref,
             ]);
 
             $orderDetails = [];
-
+            $net = 0;
             foreach($request->id as $key => $id) {
                 $unit = product_units::find($request->unit[$key]);
                 $pc = $request->pack_qty[$key] * $unit->value;
 
+                $product = products::find($id);
+                $qty = $pc + $request->loose_qty[$key];
+
+                $price = $product->price;
+                $discount = $product->discount;
+                $discountp = $product->discountp;
+                $discountpValue = $discountp * $price / 100;
+                $fright = $product->sfright;
+                $claim = $product->sclaim;
+                $dc = product_dc::where('productID', $product->id)->where('areaID', $customer->areaID)->first();
+                $labor = $dc->dc ?? 0;
+
+                $amount = (($price - $discount - $discountpValue - $claim) + $fright) * $qty;
+                $net += $amount;
+            
                 $orderDetail = order_details::create([
                     'orderID' => $order->id,
                     'productID' => $id,
-                    'price' => $request->price[$key],
-                    'pack_qty' => $request->pack_qty[$key],
-                    'loose_qty' => $request->loose_qty[$key],
-                    'total_pieces' => $pc + $request->loose_qty[$key],
+                    'orderbookerID' => $request->user()->id,
+                    'price' => $price,
+                    'discount' => $discount,
+                    'discountp' => $discountp,
+                    'discountvalue' => $discountpValue,
+                    'qty' => $request->pack_qty[$key],
+                    'loose' => $request->loose_qty[$key],
+                    'pc' => $qty,
+                    'fright' => $fright,
+                    'labor' => $labor,
+                    'claim' => $claim,
+                    'netprice' => $price - $discount - $discountpValue - $claim + $fright,
+                    'amount' => $amount,
                     'date' => $request->date,
-                    'unitID' => $request->unit[$key],
-                    'refID' => $ref,
+                    'unitID' => $request->unit[$key]
                 ]);
 
                 $orderDetails[] = $orderDetail;
+            }
+
+            $order->update([
+                'net' => $net,
+            ]);
+            if($net > $customer->credit_limit) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Customer credit limit exceeded'
+                ], 422);
             }
 
             DB::commit();

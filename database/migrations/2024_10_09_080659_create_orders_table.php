@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customerID')->constrained('accounts', 'id');
-            $table->foreignId('orderbookerID')->constrained('users', 'id');
             $table->foreignId('branchID')->constrained('branches', 'id');
+            $table->foreignId('orderbookerID')->constrained('users', 'id');
             $table->date('date');
+            $table->float('net')->default(0);
             $table->integer('saleID')->nullable();
             $table->string('status')->default('Pending');
             $table->text('notes')->nullable();
-            $table->bigInteger('refID');
             $table->timestamps();
         });
     }
