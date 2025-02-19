@@ -50,7 +50,7 @@
                                                                           <li>
                                                                               <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit_{{$user->id}}">
                                                                                   <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
-                                                                                  Edits
+                                                                                  Edit
                                                                               </a>
                                                                           </li>
                                                                           @if ($type == "Order Booker")

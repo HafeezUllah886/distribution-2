@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\product_dc;
 use App\Models\product_units;
 use App\Models\products;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -31,5 +32,22 @@ class productsSeeder extends Seeder
         ];
 
         product_units::insert($data1);
+
+        $data2 = [
+            ['productID' => 1, 'areaID' => 1, 'dc' => 1],
+            ['productID' => 1, 'areaID' => 2, 'dc' => 2],
+            ['productID' => 1, 'areaID' => 3, 'dc' => 3],
+            ['productID' => 1, 'areaID' => 4, 'dc' => 4],
+            ['productID' => 2, 'areaID' => 1, 'dc' => 1],
+            ['productID' => 2, 'areaID' => 2, 'dc' => 2],
+            ['productID' => 2, 'areaID' => 3, 'dc' => 3],
+            ['productID' => 2, 'areaID' => 4, 'dc' => 4],
+            ['productID' => 3, 'areaID' => 1, 'dc' => 1],
+            ['productID' => 3, 'areaID' => 2, 'dc' => 2],
+            ['productID' => 3, 'areaID' => 3, 'dc' => 3],
+            ['productID' => 3, 'areaID' => 4, 'dc' => 4],
+        ];
+
+        product_dc::insert($data2);
     }
 }

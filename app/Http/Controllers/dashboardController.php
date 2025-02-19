@@ -17,8 +17,6 @@ class dashboardController extends Controller
 {
     public function index()
     {
-
-
         $months = [];
 
         for ($i = 0; $i < 12; $i++) {
@@ -141,6 +139,11 @@ class dashboardController extends Controller
             if(auth()->user()->role == "Operator")
             {
                 return view('dashboard.operator_dashboard');
+            }
+            
+            if(auth()->user()->role == "Branch Admin")
+            {
+                return view('dashboard.branchadmin_dashboard');
             }
 
             if(auth()->user()->role != "Admin")

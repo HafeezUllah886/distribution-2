@@ -213,6 +213,11 @@
                                     data-key="t-form-select">
                                    Accountants </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('otherusers.index', ['Branch Admin']) }}" class="nav-link"
+                                    data-key="t-form-select">
+                                   Branch Admins </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

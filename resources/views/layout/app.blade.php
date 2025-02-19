@@ -120,6 +120,8 @@
             @include('layout.sidebar')
         @elseif (auth()->user()->role == 'Operator')
             @include('layout.operator_sidebar')
+        @elseif (auth()->user()->role == 'Branch Admin')
+            @include('layout.branch_admin_sidebar')
         @endif
         <!-- Left Sidebar End -->
         <!-- Vertical Overlay-->

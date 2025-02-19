@@ -14,7 +14,7 @@ class OtherusersController extends Controller
 {
     public function index($type)
     {
-        $checks = ['Order Booker','Operator', 'Accountant'];
+        $checks = ['Order Booker','Operator', 'Accountant', 'Branch Admin'];
         if(!in_array($type, $checks))
         {
             return back()->with('error', 'Invalid Request');

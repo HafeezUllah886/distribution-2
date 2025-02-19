@@ -46,8 +46,16 @@ class userSeeder extends Seeder
 
         User::create([
             'name' => "Operator",
-            'password' => Hash::make("admin"),
+            'password' => Hash::make("operator"),
             'role' => 'Operator',
+            'contact' => "03451231238",
+            'branchID' => 1,
+        ]);
+
+        User::create([
+            'name' => "Branch Admin",
+            'password' => Hash::make("admin"),
+            'role' => 'Branch Admin',
             'contact' => "03451231238",
             'branchID' => 1,
         ]);
