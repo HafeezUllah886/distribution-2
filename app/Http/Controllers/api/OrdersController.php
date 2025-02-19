@@ -24,7 +24,49 @@ class OrdersController extends Controller
         $from = $request->from ?? now()->toDateString();
         $to = $request->to ?? now()->toDateString();
        
-        $orders = orders::with('customer', 'details.product', 'details.unit')->where('orderbookerID', $request->user()->id)->whereBetween("date", [$from, $to])->orderBy('id', 'desc')->get();
+        $data = orders::with('customer.area', 'details.product', 'details.unit')->where('orderbookerID', $request->user()->id)->whereBetween("date", [$from, $to])->orderBy('id', 'desc')->get();
+
+        $orders = [];
+
+        foreach ($data as $order) {
+
+            $orderProducts = [];
+
+            // Loop through order details to get products
+            foreach ($order->details as $product) {
+                $orderProducts[] = [
+                    'product_id' => $product->productID,
+                    'product_name' => $product->product->name,
+                    'product_name_urdu' => $product->product->nameurdu,
+                    'unit_id' => $product->unitID, 
+                    'unit_name' => $product->unit->unit_name,
+                    'unit_value' => $product->unit->value, 
+                    'pack_qty' => $product->qty,
+                    'loose_qty' => $product->loose,
+                    'total_pieces' => $product->pc,
+                    'price' => $product->price,
+                    'discount' => $product->discount,
+                    'discount_percentage' => $product->discountp,
+                    'discount_percentage_value' => $product->discountvalue,
+                    'fright' => $product->fright,
+                    'delivery_charges' => $product->labor,
+                    'claim' => $product->claim,
+                    'net_price' => $product->netprice,
+                    'amount' => $product->amount,
+                ];
+            }
+
+            $orders[] = [
+                'order_id' => $order->id,
+                'date' => $order->date,
+                'net' => $order->net,
+                'status' => $order->status,
+                'notes' => $order->notes,
+                'branch' => $order->branch->name,
+                'customer' => ['title' => $order->customer->title, 'area' => $order->customer->area->name, 'contact' => $order->customer->contact, 'email' => $order->customer->email, 'credit_limit' => $order->customer->credit_limit],
+                'products' => $orderProducts
+            ];
+        }
       
         return response()->json([
             'data' => [
@@ -116,7 +158,6 @@ class OrdersController extends Controller
                 $orderDetail = order_details::create([
                     'orderID' => $order->id,
                     'productID' => $id,
-                    'orderbookerID' => $request->user()->id,
                     'price' => $price,
                     'discount' => $discount,
                     'discountp' => $discountp,

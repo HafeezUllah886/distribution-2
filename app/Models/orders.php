@@ -21,6 +21,11 @@ class orders extends Model
         return $this->hasMany(order_details::class, 'orderID');
     }
 
+    public function branch()
+    {
+        return $this->belongsTo(branches::class, 'branchID');
+    }
+
     public function orderbooker()
     {
         return $this->belongsTo(User::class, 'orderbookerID');
