@@ -7,13 +7,13 @@
                     <div class="col-md-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">From</span>
-                            <input type="date" class="form-control" placeholder="Username" name="start" value="{{$start}}" aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="date" class="form-control" placeholder="Username" name="start" value="{{$from}}" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">To</span>
-                            <input type="date" class="form-control" placeholder="Username" name="end" value="{{$end}}" aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="date" class="form-control" placeholder="Username" name="end" value="{{$to}}" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -24,7 +24,6 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Orders</h3>
-                    <a onclick="newWindowMobile('{{ route('orders.create') }}')" class="btn btn-primary" >Create New</a>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -64,37 +63,23 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <button class="dropdown-item" onclick="newWindow('{{route('orders.show', $order->id)}}')"
+                                                    {{-- <button class="dropdown-item" onclick="newWindow('{{route('orders.show', $order->id)}}')"
                                                         onclick=""><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         View
-                                                    </button>
+                                                    </button> --}}
                                                 </li>
                                                 @if ($order->status == "Pending")
                                                 @if (auth()->user()->role == "Admin")
-                                                <li>
+                                                {{-- <li>
                                                     <button class="dropdown-item" onclick="newWindow('{{route('order.sale', $order->id)}}')"
                                                         onclick=""><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         Finalize Order
                                                     </button>
-                                                </li>
+                                                </li> --}}
                                                 @endif
-                                               @if (auth()->user()->role == "Admin" || $order->orderbookerID == Auth::id())
-                                               <li>
-                                                <a class="dropdown-item" onclick="newWindowMobile('{{route('orders.edit', $order->id)}}')">
-                                                    <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
-                                                    Edit
-                                                </a>
-                                                </li>
-                                                <li>
-                                                <a class="dropdown-item text-danger" href="{{route('order.delete', $order->id)}}">
-                                                    <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
-                                                    Delete
-                                                </a>
-                                                </li>
-                                               @endif
-
+                                             
                                                 @endif
 
                                             </ul>

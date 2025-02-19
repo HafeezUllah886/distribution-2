@@ -89,11 +89,11 @@
                     </div>
                 </li>
               
-               {{--  <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('orders.index', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()])}}">
+               <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('Branch.orders', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()])}}">
                         <i class="ri-shopping-cart-fill"></i><span data-key="t-apps">Orders</span>
                     </a>
-                </li> --}}
+                </li>
     
                
             </ul>
