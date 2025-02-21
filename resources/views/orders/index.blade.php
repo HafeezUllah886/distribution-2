@@ -53,7 +53,7 @@
                                     <td>{{ $order->orderbooker->name }}</td>
                                     <td>{{ $order->customer->title }}</td>
                                     <td>{{ date('d M Y', strtotime($order->date)) }}</td>
-                                    <td>{{ $order->details->sum('amount') }}</td>
+                                    <td>{{ number_format($order->details->sum('amount'), 2) }}</td>
                                     <td>{{ $order->status }}</td>
                                     <td>
                                         <div class="dropdown">
@@ -62,24 +62,31 @@
                                                 <i class="ri-more-fill align-middle"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    {{-- <button class="dropdown-item" onclick="newWindow('{{route('orders.show', $order->id)}}')"
+                                               <li>
+                                                    <button class="dropdown-item" onclick="newWindow('{{route('Branch.orders.show', $order->id)}}')"
                                                         onclick=""><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         View
-                                                    </button> --}}
+                                                    </button>
+                                                </li> 
+                                                @if ($order->status != "Finalized")
+                                                <li>
+                                                    <button class="dropdown-item" onclick="newWindow('{{route('Branch.orders.edit', $order->id)}}')"
+                                                        onclick=""><i
+                                                            class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        Edit
+                                                    </button>
                                                 </li>
-                                                @if ($order->status == "Pending")
-                                                @if (auth()->user()->role == "Admin")
-                                                {{-- <li>
-                                                    <button class="dropdown-item" onclick="newWindow('{{route('order.sale', $order->id)}}')"
+                                                @endif
+                                               
+                                                @if ($order->status == "Approved" && auth()->user()->role == 'Operator')
+                                                <li>
+                                                    <button class="dropdown-item" onclick="newWindow('{{route('Branch.orders.finalize', $order->id)}}')"
                                                         onclick=""><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         Finalize Order
                                                     </button>
-                                                </li> --}}
-                                                @endif
-                                             
+                                                </li>
                                                 @endif
 
                                             </ul>

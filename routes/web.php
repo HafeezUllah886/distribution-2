@@ -23,9 +23,7 @@ require __DIR__ . '/otherusers.php';
 require __DIR__ . '/setups.php';
 
 Route::middleware('auth')->group(function () {
-
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard');
-
 
 });
 

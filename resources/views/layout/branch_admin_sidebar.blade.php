@@ -94,8 +94,32 @@
                         <i class="ri-shopping-cart-fill"></i><span data-key="t-apps">Orders</span>
                     </a>
                 </li>
-    
-               
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#products" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarApps">
+                        <i class="ri-apps-2-line"></i> <span data-key="t-apps">Products</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="products">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ url('products/index/') }}/all/all" class="nav-link" data-key="t-chat">Products
+                                    List </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('brands.index') }}" class="nav-link" data-key="t-chat"> Brands </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('categories.index') }}" class="nav-link" data-key="t-chat"> Categories </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('units.index') }}" class="nav-link" data-key="t-chat"> Units </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('product.show', 'all') }}" class="nav-link" data-key="t-chat"> Price List </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

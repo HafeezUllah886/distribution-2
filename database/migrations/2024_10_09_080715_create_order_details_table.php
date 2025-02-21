@@ -21,6 +21,7 @@ return new class extends Migration
             $table->float('discountvalue', 10);
             $table->float('qty')->default(0);
             $table->float('loose')->default(0);
+            $table->float('bonus')->default(0);
             $table->float('pc')->default(0);
             $table->float('fright', 10);
             $table->float('labor', 10);

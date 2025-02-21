@@ -43,6 +43,7 @@ class OrdersController extends Controller
                     'unit_value' => $product->unit->value, 
                     'pack_qty' => $product->qty,
                     'loose_qty' => $product->loose,
+                    'bonus_qty' => $product->bonus,
                     'total_pieces' => $product->pc,
                     'price' => $product->price,
                     'discount' => $product->discount,
