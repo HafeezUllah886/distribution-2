@@ -106,6 +106,23 @@ function pendingOrders()
 }
 
 
+function approvedOrders()
+{
+    $user = auth()->user();
+
+    if($user->role == "Admin")
+    {
+        $orders = orders::approved()->count();
+    }
+    else
+    {
+        $orders = orders::approved()->CurrentBranch()->count();
+    }
+
+    return $orders;
+}
+
+
 function CompletedOrders()
 {
     $user = auth()->user();

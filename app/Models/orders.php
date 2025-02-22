@@ -41,6 +41,11 @@ class orders extends Model
         return $query->where('status', 'Pending');
     }
 
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'Approved');
+    }
+
     public function scopeCompleted($query)
     {
         return $query->where('status', 'Completed');

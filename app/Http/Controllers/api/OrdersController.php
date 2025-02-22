@@ -182,6 +182,8 @@ class OrdersController extends Controller
                 'net' => $net,
             ]);
             if($net > $customer->credit_limit) {
+                $order->delete(); 
+                DB::rollback();
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Customer credit limit exceeded'
@@ -206,25 +208,6 @@ class OrdersController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(orders $order)
-    {
-        return view('orders.view',compact('order'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(orders $order)
-    {
-        $products = products::all();
-        $customers = accounts::Customer()->get();
-        $units = units::all();
-        return view('orders.edit', compact('products', 'customers', 'units', 'order'));
     }
 
     /**
@@ -299,43 +282,46 @@ class OrdersController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
+        
         try
         {
+            $this->validateOrder($request->order_id, $request->user()->id);
             DB::beginTransaction();
-            $order = orders::find($id);
-
-            foreach($order->details as $product)
-            {
-                $product->delete();
-            }
+            $order = orders::find($request->order_id);
+            $order->details()->delete();
             $order->delete();
             DB::commit();
-            session()->forget('confirmed_password');
-            return to_route('orders.index')->with('success', "Order Deleted");
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Order deleted successfully',
+            ], 201);
         }
         catch(\Exception $e)
         {
             DB::rollBack();
-            session()->forget('confirmed_password');
-            return to_route('orders.index')->with('error', $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 500);
         }
     }
 
-    public function sale($id)
+    private function validateOrder($id, $orderbooker)
     {
-        $products = products::orderby('name', 'asc')->get();
-        foreach($products as $product)
-        {
-            $stock = getStock($product->id);
-            $product->stock = $stock;
+        $order = orders::findOrFail($id);
+
+        if (in_array($order->status, ["Finalized", "Approved"])) {
+            throw new Exception('Order cannot be deleted');
         }
-        $units = units::all();
-        $customers = accounts::customer()->get();
-        $accounts = accounts::business()->get();
-        $orderbookers = User::where('role', 'Orderbooker')->get();
-        $order = orders::find($id);
-        return view('orders.sale', compact('products', 'units', 'customers', 'accounts', 'orderbookers', 'order'));
+    
+        if ($order->orderbookerID != $orderbooker) {
+            throw new Exception('This order does not belong to you');
+        }
+
+        return true;  
     }
+
+    
 }

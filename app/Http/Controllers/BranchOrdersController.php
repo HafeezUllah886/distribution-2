@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\accounts;
 use App\Models\order_details;
 use App\Models\orders;
 use App\Models\product_dc;
 use App\Models\product_units;
 use App\Models\products;
+use App\Models\sale_details;
+use App\Models\sales;
+use App\Models\User;
+use App\Models\warehouses;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -18,10 +24,19 @@ class BranchOrdersController extends Controller
     {
         $from = $request->start ?? firstDayOfMonth();
         $to = $request->end ?? now()->toDateString();
+        $status = $request->status ?? "All";
        
-        $orders = orders::with('customer.area', 'details.product', 'details.unit', 'orderbooker')->currentBranch()->whereBetween("date", [$from, $to])->orderBy('id', 'desc')->get();
+        $orders = orders::with('customer.area', 'details.product', 'details.unit', 'orderbooker')->currentBranch()->whereBetween("date", [$from, $to])->orderBy('id', 'desc');
 
-        return view('orders.index', compact('orders', 'from', 'to'));
+        if($status != "All")
+        {
+            $orders->where('status', $status);
+        }
+        $orders = $orders->get();
+
+        $warehouses = warehouses::all();
+
+        return view('orders.index', compact('orders', 'from', 'to', 'status', 'warehouses'));
     }
 
     public function show($id)
@@ -34,6 +49,7 @@ class BranchOrdersController extends Controller
     {
         $this->validateOrder($id);
         $products = products::all();
+    
 
         $order = orders::with('customer', 'details.product', 'details.unit')->findOrFail($id);
 
@@ -137,6 +153,125 @@ class BranchOrdersController extends Controller
         return redirect()->route('Branch.orders')->with('success', 'Order updated');
     }
 
+    public function finalize($orderID, $warehouseID)
+    {
+        $this->validateOrder($orderID);
+        $order = orders::with('details.product', 'details.unit')->findOrFail($orderID);
+        $customer = accounts::find($order->customerID);
+
+        foreach($order->details as $pro)
+        {
+            $pro->stock = getWarehouseProductStock($pro->productID, $warehouseID);
+
+        }
+       
+        $orderbooker = User::find($order->orderbookerID);
+        $warehouse = warehouses::find($warehouseID);
+        $supplymen = accounts::supplyMen()->get();
+        
+        return view('orders.finalize', compact('order', 'customer', 'orderbooker', 'warehouse', 'supplymen'));
+    }
+
+    public function storesale(request $request)
+    {
+        try
+        {
+            if($request->isNotFilled('id'))
+            {
+                throw new Exception('Please Select Atleast One Product');
+            }
+            DB::beginTransaction();
+            $ref = getRef();
+            $sale = sales::create(
+                [
+                  'customerID'      => $request->customerID,
+                  'branchID'        => Auth()->user()->branchID,
+                  'warehouseID'     => $request->warehouseID,
+                  'orderbookerID'   => $request->orderbookerID,
+                  'supplymanID'     => $request->supplymanID,
+                  'orderdate'       => $request->orderdate,
+                  'date'            => $request->date,
+                  'bilty'           => $request->bilty,
+                  'transporter'     => $request->transporter,
+                  'notes'           => $request->notes,
+                  'refID'           => $ref,
+                ]
+            );
+
+            $ids = $request->id;
+
+            $total = 0;
+            $totalLabor = 0;
+            foreach($ids as $key => $id)
+            {
+                $unit = product_units::find($request->unit[$key]);
+                $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
+                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                $price = $request->price[$key];
+                $discount = $request->discount[$key];
+                $claim = $request->claim[$key];
+                $frieght = $request->fright[$key];
+                $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
+                $netPrice = ($price - $discount - $discountvalue - $claim) + $frieght;
+                $amount = $netPrice * $pc;
+                $total += $amount;
+                $totalLabor += $request->labor[$key] * $pc;
+
+                sale_details::create(
+                    [
+                        'saleID'        => $sale->id,
+                        'warehouseID'   => $request->warehouseID,
+                        'orderbookerID' => $request->orderbookerID,
+                        'productID'     => $id,
+                        'price'         => $price,
+                        'discount'      => $discount,
+                        'discountp'     => $request->discountp[$key],
+                        'discountvalue' => $discountvalue,
+                        'qty'           => $request->qty[$key],
+                        'pc'            => $pc,
+                        'loose'         => $request->loose[$key],
+                        'netprice'      => $netPrice,
+                        'amount'        => $amount,
+                        'date'          => $request->date,
+                        'bonus'         => $request->bonus[$key],
+                        'labor'         => $request->labor[$key],
+                        'fright'        => $request->fright[$key],
+                        'claim'         => $claim,
+                        'unitID'        => $unit->id,
+                        'refID'         => $ref,
+                    ]
+                );
+                createStock($id, 0, $qty, $request->date, "Sold", $ref, $request->warehouseID);
+            }
+
+            $net = $total;
+
+            $sale->update(
+                [
+                    'net' => $net,
+                ]
+            );
+
+            $order = orders::find($request->orderID);
+            $order->update([
+                'status' => 'Finalized',
+                'saleID' => $sale->id,
+            ]);
+
+            createTransaction($request->customerID, $request->date, 0, $net, "Pending Amount of Sale No. $sale->id", $ref);
+           
+            createTransaction($request->supplymanID, $request->date, $totalLabor, 0, "Labor Charges of Sale No. $sale->id", $ref);
+
+            DB::commit();
+            return to_route('Branch.orders')->with('success', "Sale Created");
+        }
+        catch(\Exception $e)
+        {
+            DB::rollback();
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
     public function getSignleProduct($id, $area)
     {
         $product = products::with('units')->find($id);
@@ -151,12 +286,12 @@ class BranchOrdersController extends Controller
 
         if($order->status == "Finalized")
         {
-            return redirect()->route('orders.index')->with('error', 'Order cannot be edited');
+            return redirect()->route('Branch.orders')->with('error', 'Order cannot be edited');
         }
 
         if($order->branchID != Auth()->user()->branchID)
         {
-            return redirect()->route('orders.index')->with('error', 'Order does not belong to current branch');
+            return redirect()->route('Branch.orders')->with('error', 'Order does not belong to current branch');
         }
 
         return true;

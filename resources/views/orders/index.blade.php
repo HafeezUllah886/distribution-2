@@ -4,16 +4,27 @@
         <div class="col-12">
             <form>
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">From</span>
                             <input type="date" class="form-control" placeholder="Username" name="start" value="{{$from}}" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">To</span>
                             <input type="date" class="form-control" placeholder="Username" name="end" value="{{$to}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Status</span>
+                            <select class="form-control" name="status" aria-label="Username" aria-describedby="basic-addon1">
+                                <option value="All">All</option>
+                                <option value="Pending" @selected($status == 'Pending')>Pending</option>
+                                <option value="Approved" @selected($status == 'Approved')>Approved</option>
+                                <option value="Finalized" @selected($status == 'Finalized')>Finalized</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -81,7 +92,7 @@
                                                
                                                 @if ($order->status == "Approved" && auth()->user()->role == 'Operator')
                                                 <li>
-                                                    <button class="dropdown-item" onclick="newWindow('{{route('Branch.orders.finalize', $order->id)}}')"
+                                                    <button class="dropdown-item" onclick="finalizeOrder('{{$order->id}}')"
                                                         onclick=""><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         Finalize Order
@@ -100,6 +111,34 @@
             </div>
         </div>
     </div>
+    <div id="finalizeOrderModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Finalize Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <form method="get" target="" id="form">
+                  @csrf
+                  <input type="hidden" name="orderID" id="orderID">
+                         <div class="modal-body">
+                           <div class="form-group">
+                            <label for="">Select Warehouse</label>
+                            <select name="warehouseID" id="warehouseID" class="form-control">
+                                @foreach ($warehouses as $warehouse)
+                                    <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
+                                @endforeach
+                            </select>
+                           </div>
+                         </div>
+                         <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <button type="button" id="finalizeBtn" class="btn btn-primary">Proceed</button>
+                         </div>
+                  </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <!-- Default Modals -->
 @endsection
 
@@ -122,4 +161,20 @@
     <script src="{{ asset('assets/libs/datatable/jszip.min.js')}}"></script>
 
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
+    <script>
+        function finalizeOrder(order)
+        {
+            $("#orderID").val(order);
+            $("#finalizeOrderModal").modal('show');
+        }
+
+        $("#finalizeBtn").on("click", function (){      
+            var orderID = $("#orderID").val();
+            var warehouseID = $("#warehouseID").find(':selected').val();
+            var url = "{{ route('Branch.orders.finalize', ['id' => ':orderID', 'warehouseID' => ':warehouseID']) }}"
+        .replace(':orderID', orderID)
+        .replace(':warehouseID', warehouseID);
+            window.open(url, "_blank", "width=1000,height=800");
+        });
+    </script>
 @endsection

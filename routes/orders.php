@@ -15,7 +15,8 @@ Route::middleware(['auth', BranchAdmin_OperatorCheck::class])->group(function ()
     Route::post('Branch/orders/update/{id}', [BranchOrdersController::class, 'update'])->name('Branch.orders.update');
    
     Route::get('Branch/orders/show/{id}', [BranchOrdersController::class, 'show'])->name('Branch.orders.show');
-    Route::get('Branch/orders/finalize/{id}', [BranchOrdersController::class, 'finalize'])->name('Branch.orders.finalize');
+    Route::get('Branch/orders/finalize/{id}/{warehouseID}', [BranchOrdersController::class, 'finalize'])->name('Branch.orders.finalize');
+    Route::post('Branch/orders/finalize', [BranchOrdersController::class, 'storesale'])->name('Branch.orders.sale');
 
     Route::get("branchorders/getproduct/{id}/{area}", [BranchOrdersController::class, 'getSignleProduct']);
 
