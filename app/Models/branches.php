@@ -11,4 +11,5 @@ class branches extends Model
     use HasFactory;
 
     protected $guarded = [];
+
 }

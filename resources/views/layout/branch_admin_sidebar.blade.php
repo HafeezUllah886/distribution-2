@@ -95,6 +95,48 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="#stock" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarApps">
+                        <i class="ri-stack-line"></i><span data-key="t-apps">Stocks</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="stock">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('product_stock.index') }}" class="nav-link" data-key="t-chat">Products Stock</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('stockTransfers.index') }}" class="nav-link" data-key="t-chat">Stock Transfer</a>
+                            </li>
+                            {{-- <li class="nav-item">
+                                <a href="{{ route('stockAdjustments.index') }}" class="nav-link" data-key="t-chat">Stock Adjustment</a>
+                            </li> --}}
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarFinance" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarFinance">
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Finance</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarFinance">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('account.create') }}" class="nav-link"
+                                    data-key="t-basic-elements">Create Account</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('accountsList', 'Customer') }}" class="nav-link"
+                                    data-key="t-checkboxs-radios">Customer Accounts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('accountsList', 'Vendor') }}" class="nav-link"
+                                    data-key="t-pickers">
+                                    Vendor Accounts </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#products" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-apps-2-line"></i> <span data-key="t-apps">Products</span>
@@ -114,8 +156,22 @@
                             <li class="nav-item">
                                 <a href="{{ route('units.index') }}" class="nav-link" data-key="t-chat"> Units </a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="{{ route('product.show', 'all') }}" class="nav-link" data-key="t-chat"> Price List </a>
+                            </li> --}}
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#areas" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarApps">
+                        <i class="ri-apps-2-line"></i> <span data-key="t-apps">Areas</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="areas">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('areas.index') }}" class="nav-link" data-key="t-chat">Areas
+                                    List </a>
                             </li>
                         </ul>
                     </div>

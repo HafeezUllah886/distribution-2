@@ -8,17 +8,23 @@ use App\Models\branches;
 use App\Models\customer_area;
 use App\Models\transactions;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 class AccountsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index($filter)
     {
-        $accounts = accounts::where('type', $filter)->orderBy('title', 'asc')->get();
+        if(Auth()->user()->role == "Admin")
+        {
+            $accounts = accounts::where('type', $filter)->orderBy('title', 'asc')->get();
+        }
+        else
+        {
+            $accounts = accounts::where('type', $filter)->where('branchID', Auth()->user()->branchID)->orderBy('title', 'asc')->get();
+        }
         if($filter == "Other")
         {
             $accounts = accounts::Other()->get();
@@ -33,8 +39,17 @@ class AccountsController extends Controller
     public function create()
     {
 
-        $areas = area::all();
-        $branches = branches::all();
+        if(Auth()->user()->role == "Admin")
+        {
+            $branches = branches::all();
+            $areas = area::all();
+        }
+        else
+        {
+            $branches = branches::where('id', Auth()->user()->branchID)->get();
+            $areas = area::where('branchID', Auth()->user()->branchID)->get();
+        }
+
         return view('Finance.accounts.create', compact('areas', 'branches'));
     }
 

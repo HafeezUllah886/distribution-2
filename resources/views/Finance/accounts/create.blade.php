@@ -29,11 +29,14 @@
                             <div class="col-12">
                                 <div class="form-group mt-2">
                                     <label for="type">Type</label>
-                                    <select name="type" id="type" class="form-control">
-                                        <option value="Business">Business</option>
+                                    <select name="type" id="type" class="form-control" onchange="checkType()">
                                         <option value="Customer">Customer</option>
                                         <option value="Vendor">Vendor</option>
+                                        @if(Auth::user()->role == "Admin" || Auth::user()->role == "Accountant")
+                                        <option value="Business">Business</option>
                                         <option value="Supply Man">Supply Man</option>
+                                        @endif
+                                        
                                     </select>
                                 </div>
                             </div>
@@ -126,7 +129,8 @@
     <script>
         $(".customer").hide();
         $(".selectize").selectize();
-        $("#type").on("change",  function (){
+       
+    function checkType(){
             var type = $("#type").find(":selected").val();
 
             if(type === "Business")
@@ -146,6 +150,7 @@
             {
                 $(".customer").hide();
             }
-        });
+        }
+        checkType();
     </script>
 @endsection

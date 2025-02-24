@@ -15,9 +15,18 @@ class AreaController extends Controller
      */
     public function index()
     {
-        $areas = area::all();
+        
         $towns = town::all();
-        $branches = branches::all();
+        if(Auth()->user()->role == "Admin")
+        {
+            $branches = branches::all();
+            $areas = area::all();
+        }
+        else
+        {
+            $branches = branches::where('id', Auth()->user()->branchID)->get();
+            $areas = area::where('branchID', Auth()->user()->branchID)->get();
+        }
 
         return view('area.index', compact('areas', 'towns', 'branches'));
     }

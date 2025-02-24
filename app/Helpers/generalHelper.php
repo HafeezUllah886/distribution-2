@@ -83,12 +83,19 @@ function createStock($id, $cr, $db, $date, $notes, $ref, $warehouse)
 }
 
 function getStock($id){
-    $stocks  = stock::where('productID', $id)->get();
+    if(Auth()->user()->role == "admin"){
+        $stocks  = stock::where('productID', $id)->get();
+    }
+    else{
+        $warehouses = DB::table('warehouses')->where('branchID', auth()->user()->branchID)->distinct()->pluck('id')->toArray();
+        $stocks  = stock::where('productID', $id)->whereIn('warehouseID', $warehouses)->get();
+    }
+
     $balance = 0;
     foreach($stocks as $stock)
     {
-        $balance += $stock->cr;
-        $balance -= $stock->db;
+    $balance += $stock->cr;
+    $balance -= $stock->db;
     }
     return $balance;
 }
