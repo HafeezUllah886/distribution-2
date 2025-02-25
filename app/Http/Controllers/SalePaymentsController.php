@@ -53,7 +53,7 @@ class SalePaymentsController extends Controller
                     'refID'         => $ref,
                 ]
             );
-            createTransaction($sale->customerID, $request->date,$request->amount, 0, "Payment of Inv No. $sale->id", $ref);
+            createTransaction($sale->customerID, $request->date,0, $request->amount, "Payment of Inv No. $sale->id", $ref);
             createUserTransaction(auth()->id(), $request->date,$request->amount, 0, "Payment of Inv No. $sale->id", $ref);
             createCurrencyTransaction(auth()->id(), $request->currencyID, $request->qty, 'cr', $request->date, "Sale Invoice Payment : ".$request->notes, $ref);
             if($request->has('file')){

@@ -13,7 +13,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('otherusers/update/{id}', [OtherusersController::class, 'update'])->name('otherusers.update');
     Route::get('otherusers/status/{id}', [OtherusersController::class, 'status'])->name('otherusers.status');
 
-    Route::resource('/userAccounts', UserAccountsController::class);
     Route::resource('/orderbookerproducts', OrderbookerProductsController::class);
     Route::get("orderbookerproduct/delete/{id}", [OrderbookerProductsController::class, 'destroy'])->name('orderbookerproduct.delete')->middleware([confirmPassword::class]);
+
+    Route::get('self/statement', [OtherusersController::class, 'self_statement'])->name('otherusers.self_statement');
 });

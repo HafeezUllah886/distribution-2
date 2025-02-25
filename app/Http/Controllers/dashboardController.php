@@ -146,9 +146,9 @@ class dashboardController extends Controller
                 return view('dashboard.branchadmin_dashboard');
             }
 
-            if(auth()->user()->role != "Admin")
+            if(auth()->user()->role == "Accountant")
             {
-                return to_route('orders.index');
+                return view('dashboard.accountant_dashboard');
             }
 
         return view('dashboard.index', compact('sales', 'monthNames', 'expenses', 'profits', 'last_sale', 'last_expense', 'last_profit', 'topProductsArray', 'topCustomersArray'));

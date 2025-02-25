@@ -4,7 +4,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3>Payment Receiving</h3>
+                    <h3>Customer Payment Receiving</h3>
                     <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create
                         New</button>
                 </div>
@@ -35,8 +35,8 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $tran->refID }}</td>
-                                    <td>{{ $tran->fromAccount->title }}</td>
-                                    <td>{{ $tran->receivedBy->name }}</td>
+                                    <td>{{ $tran->customer->title }}</td>
+                                    <td>{{ $tran->user->name }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->date)) }}</td>
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
@@ -48,14 +48,14 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <button class="dropdown-item" onclick="newWindow('{{route('receivings.show', $tran->id)}}')"
+                                                    <button class="dropdown-item" onclick="newWindow('{{route('customer_payments.show', $tran->id)}}')"
                                                         onclick=""><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         View
                                                     </button>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item text-danger" href="{{route('receiving.delete', $tran->refID)}}">
+                                                    <a class="dropdown-item text-danger" href="{{route('customer_payments.delete', $tran->refID)}}">
                                                         <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
                                                         Delete
                                                     </a>
@@ -75,37 +75,58 @@
 
     <div id="new" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
         style="display: none;">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="myModalLabel">Create Receipt</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
-                <form action="{{ route('receivings.store') }}" method="post">
+                <form action="{{ route('customer_payments.store') }}" enctype="multipart/form-data" method="post">
                     @csrf
                     <div class="modal-body">
-                        <div class="form-group mt-2">
-                            <label for="fromID">From (Balance: <span id="accountBalance">0</span>)</label>
-                            <select name="fromID" id="fromID" onchange="getBalance()" required class="selectize">
+                        <div class="row">
+                            <div class="col-6">
+                                <table class="w-100">
+                                    <thead>
+                                        <th>Currency</th>
+                                        <th>Amount</th>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($currencies as $currency)
+                                            <tr>
+                                                <td>{{$currency->title}}</td>
+                                                <td>
+                                                    <input type="number" class="form-control form-control-sm" data-value="{{$currency->value}}" id="currency_{{$currency->id}}" oninput="updateTotal()" name="qty[]" value="0">
+                                                    <input type="hidden" class="form-control" name="currencyID[]" value="{{$currency->id}}">
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        <tr>
+                                            <td>Total Amount</td>
+                                            <td>
+                                                <input type="number" class="form-control form-control-sm" readonly id="total" name="total" value="0">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Attachement</td>
+                                            <td>
+                                                <input type="file" class="form-control form-control-sm" name="file">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group mt-2">
+                                    <label for="fromID">From (Balance: <span id="accountBalance">0</span>)</label>
+                            <select name="customerID" id="fromID" onchange="getBalance()" required class="selectize">
                                 <option value=""></option>
-                                @foreach ($froms as $from)
-                                    <option value="{{ $from->id }}">{{ $from->title }}</option>
+                                @foreach ($customers as $customer)
+                                    <option value="{{ $customer->id }}">{{ $customer->title }}</option>
                                 @endforeach
                             </select>
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="account">Account</label>
-                            <select name="accountID" id="account" required class="selectize">
-                                <option value=""></option>
-                                @foreach ($accounts as $account)
-                                    <option value="{{ $account->id }}">{{ $account->title }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="amount">Amount</label>
-                            <input type="number" step="any" name="amount" required id="amount"
-                                class="form-control">
                         </div>
                         <div class="form-group mt-2">
                             <label for="date">Date</label>
@@ -177,4 +198,19 @@
             });
         }
     </script>
+
+<script>
+  
+    function updateTotal() {
+        var total = 0;
+        $("input[id^='currency_']").each(function() {
+            var inputId = $(this).attr('id');
+            var inputVal = $(this).val();
+            var inputValue = $(this).data('value');
+            var value = inputVal * inputValue;
+            total += parseFloat(value);
+        });
+        $("#total").val(total.toFixed(2));
+    }
+</script>
 @endsection

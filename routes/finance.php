@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\CurrencymgmtController;
+use App\Http\Controllers\CustomerPaymentsController;
 use App\Http\Controllers\DepositWithdrawController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\PaymentReceivingController;
@@ -29,9 +30,8 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::resource('expenses', ExpensesController::class);
     Route::get('expense/delete/{ref}', [ExpensesController::class, 'delete'])->name('expense.delete')->middleware(confirmPassword::class);
 
-    Route::resource('receivings', PaymentReceivingController::class);
-    Route::get('receiving/delete/{ref}', [PaymentReceivingController::class, 'delete'])->name('receiving.delete')->middleware(confirmPassword::class);
-    Route::get('receiving/pdf/{id}', [PaymentReceivingController::class, 'pdf'])->name('receiving.pdf');
+    Route::resource('customer_payments', CustomerPaymentsController::class);
+    Route::get('customer_payments/delete/{ref}', [CustomerPaymentsController::class, 'delete'])->name('customer_payments.delete')->middleware(confirmPassword::class);
 
     Route::get('currency/details/{id}', [CurrencymgmtController::class, 'details'])->name('currency.details');
 
@@ -48,5 +48,7 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
 
         return response()->file(public_path($attachment->path));
     })->name('viewAttachment');
+
+    Route::get('self/statement', [AccountsController::class, 'statement'])->name('accounts.statement');
 });
 

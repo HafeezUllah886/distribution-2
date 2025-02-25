@@ -40,9 +40,8 @@ class PurchaseController extends Controller
         $products = products::active()->vendor($request->vendorID)->orderby('name', 'asc')->get();
         $units = units::all();
         $vendor = $request->vendorID;
-        $warehouses = warehouses::all();
-        $accounts = accounts::business()->get();
-        return view('purchase.create', compact('products', 'units', 'vendor', 'accounts', 'warehouses'));
+        $warehouses = warehouses::currentBranch()->get();
+        return view('purchase.create', compact('products', 'units', 'vendor', 'warehouses'));
     }
 
     /**

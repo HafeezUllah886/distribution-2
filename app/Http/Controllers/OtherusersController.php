@@ -6,6 +6,7 @@ use App\Models\accounts;
 use App\Models\branches;
 use App\Models\User;
 use App\Models\userAccounts;
+use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -71,9 +72,24 @@ class OtherusersController extends Controller
 
     }
 
-    public function show()
+    public function self_statement(request $request)
     {
+        $user = Auth()->user();
+        $from = $request->from;
+        $to = $request->to;
+        
+        $transactions = users_transactions::where('userID', $user->id)->whereBetween('date', [$from, $to])->get();
 
+        $pre_cr = users_transactions::where('userID', $user->id)->whereDate('date', '<', $from)->sum('cr');
+        $pre_db = users_transactions::where('userID', $user->id)->whereDate('date', '<', $from)->sum('db');
+        $pre_balance = $pre_cr - $pre_db;
+
+        $cur_cr = users_transactions::where('userID', $user->id)->sum('cr');
+        $cur_db = users_transactions::where('userID', $user->id)->sum('db');
+
+        $cur_balance = $cur_cr - $cur_db;
+
+        return view('users.self_statment', compact('transactions', 'pre_balance', 'cur_balance', 'from', 'to'));
     }
 
     public function update(request $request, $id)

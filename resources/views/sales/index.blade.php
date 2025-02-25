@@ -24,7 +24,9 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Sales</h3>
-                    <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create New</button>
+                    @if(auth()->user()->role == 'Operator')
+                        <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create New</button>
+                    @endif
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -82,24 +84,28 @@
                                                         Gate Pass
                                                     </button>
                                                 </li> --}}
+                                                @if(auth()->user()->role == 'Operator')
                                                 <li>
                                                     <a class="dropdown-item" onclick="newWindow('{{route('sale.edit', $sale->id)}}')">
                                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                         Edit
                                                     </a>
                                                 </li>
+                                                @endif
                                                <li>
                                                     <a class="dropdown-item" onclick="newWindow('{{route('salePayment.index', $sale->id)}}')">
                                                         <i class="ri-money-dollar-circle-fill align-bottom me-2 text-muted"></i>
                                                         Payments
                                                     </a>
                                                 </li>
+                                                @if(auth()->user()->role == 'Operator')
                                                 <li>
                                                     <a class="dropdown-item text-danger" href="{{route('sale.delete', $sale->id)}}">
                                                         <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
                                                         Delete
                                                     </a>
                                                 </li>
+                                                @endif
                                             </ul>
                                         </div>
                                     </td>

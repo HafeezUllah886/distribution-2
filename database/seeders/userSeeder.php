@@ -60,5 +60,13 @@ class userSeeder extends Seeder
             'branchID' => 1,
         ]);
 
+        User::create([
+            'name' => "Accountant",
+            'password' => Hash::make("accountant"),
+            'role' => 'Accountant',
+            'contact' => "03451231238",
+            'branchID' => 1,
+        ]);
+
     }
 }
