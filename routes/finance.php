@@ -8,6 +8,7 @@ use App\Http\Controllers\DepositWithdrawController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\PaymentReceivingController;
 use App\Http\Controllers\profileController;
+use App\Http\Controllers\StaffPaymentsController;
 use App\Http\Controllers\TransferController;
 use App\Http\Middleware\Admin_BranchAdmin_AccountantCheck;
 use App\Http\Middleware\adminCheck;
@@ -35,6 +36,9 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
 
     Route::get('currency/details/{id}', [CurrencymgmtController::class, 'details'])->name('currency.details');
 
+    Route::resource('staff_payments', StaffPaymentsController::class);
+    Route::get('staff_payments/delete/{ref}', [StaffPaymentsController::class, 'delete'])->name('staff_payments.delete')->middleware(confirmPassword::class);
+
     Route::get('/accountbalance/{id}', function ($id) {
         // Call your Laravel helper function here
         $result = getAccountBalance($id);
@@ -49,6 +53,5 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
         return response()->file(public_path($attachment->path));
     })->name('viewAttachment');
 
-    Route::get('self/statement', [AccountsController::class, 'statement'])->name('accounts.statement');
 });
 

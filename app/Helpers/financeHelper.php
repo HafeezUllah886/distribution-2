@@ -145,3 +145,17 @@ function spotBalance($id, $ref)
     $db = transactions::where('accountID', $id)->where('refID', '<=', $ref)->sum('db');
     return $balance = $cr - $db;
 }
+
+function spotUserBalanceBefore($id, $ref)
+{
+    $cr = users_transactions::where('userID', $id)->where('refID', '<', $ref)->sum('cr');
+    $db = users_transactions::where('userID', $id)->where('refID', '<', $ref)->sum('db');
+    return $balance = $cr - $db;
+}
+
+function spotUserBalance($id, $ref)
+{
+    $cr = users_transactions::where('userID', $id)->where('refID', '<=', $ref)->sum('cr');
+    $db = users_transactions::where('userID', $id)->where('refID', '<=', $ref)->sum('db');
+    return $balance = $cr - $db;
+}

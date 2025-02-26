@@ -8,6 +8,7 @@ use App\Models\accounts;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\transactions;
+use App\Models\users_transactions;
 use Database\Seeders\currencies_seeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -107,6 +108,7 @@ class CustomerPaymentsController extends Controller
             DB::beginTransaction();
             customerPayments::where('refID', $ref)->delete();
             transactions::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
             currency_transactions::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');

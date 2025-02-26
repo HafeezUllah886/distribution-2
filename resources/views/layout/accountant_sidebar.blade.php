@@ -112,6 +112,10 @@
                                 <a href="{{ route('customer_payments.index') }}" class="nav-link"
                                     data-key="t-input-masks">Customer Payments</a>
                             </li> 
+                           <li class="nav-item">
+                                <a href="{{ route('staff_payments.index') }}" class="nav-link"
+                                    data-key="t-input-masks">Staff Payments</a>
+                            </li> 
                             <li class="nav-item">
                                 <a href="{{ route('transfers.index') }}" class="nav-link"
                                     data-key="t-advanced">Transfer</a>

@@ -17,4 +17,10 @@ Route::middleware('auth')->group(function () {
     Route::get("orderbookerproduct/delete/{id}", [OrderbookerProductsController::class, 'destroy'])->name('orderbookerproduct.delete')->middleware([confirmPassword::class]);
 
     Route::get('self/statement', [OtherusersController::class, 'self_statement'])->name('otherusers.self_statement');
+
+    Route::get('/userbalance/{id}', function ($id) {
+        $result = getUserAccountBalance($id);
+
+        return response()->json(['data' => $result]);
+    });
 });

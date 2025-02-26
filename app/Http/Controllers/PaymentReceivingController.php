@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\accounts;
 use App\Models\paymentReceiving;
 use App\Models\transactions;
+use App\Models\users_transactions;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -104,6 +105,7 @@ class PaymentReceivingController extends Controller
         {
             DB::beginTransaction();
             paymentReceiving::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
             transactions::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');
