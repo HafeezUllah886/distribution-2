@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountsAdjustmentController;
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\CurrencymgmtController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\DepositWithdrawController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\PaymentReceivingController;
 use App\Http\Controllers\profileController;
+use App\Http\Controllers\StaffAmountAdjustmentController;
 use App\Http\Controllers\StaffPaymentsController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\VendorPaymentsController;
@@ -42,6 +44,12 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
 
     Route::resource('staff_payments', StaffPaymentsController::class);
     Route::get('staff_payments/delete/{ref}', [StaffPaymentsController::class, 'delete'])->name('staff_payments.delete')->middleware(confirmPassword::class);
+
+    Route::resource('accounts_adjustments', AccountsAdjustmentController::class);
+    Route::get('accounts_adjustments/delete/{ref}', [AccountsAdjustmentController::class, 'delete'])->name('accounts_adjustments.delete')->middleware(confirmPassword::class);
+
+    Route::resource('staff_amounts_adjustments', StaffAmountAdjustmentController::class);
+    Route::get('staff_amounts_adjustments/delete/{ref}', [StaffAmountAdjustmentController::class, 'delete'])->name('staff_amounts_adjustments.delete')->middleware(confirmPassword::class);
 
     Route::get('/accountbalance/{id}', function ($id) {
         // Call your Laravel helper function here

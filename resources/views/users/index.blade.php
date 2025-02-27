@@ -5,7 +5,9 @@
               <div class="card">
                      <div class="card-header d-flex justify-content-between">
                             <h3>{{$type}}s</h3>
+                            @if(Auth()->user()->role == 'Admin' || Auth()->user()->role == 'Branch Admin')
                             <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create New</button>
+                            @endif
                      </div>
                      <div class="card-body">
                             <table class="table">

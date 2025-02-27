@@ -128,6 +128,14 @@
                                 <a href="{{ route('expenses.index') }}" class="nav-link" data-key="t-range-slider">
                                     Expenses</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('accounts_adjustments.index') }}" class="nav-link"
+                                    data-key="t-input-masks">Accounts Adjustment</a>
+                            </li> 
+                            <li class="nav-item">
+                                <a href="{{ route('staff_amounts_adjustments.index') }}" class="nav-link"
+                                    data-key="t-input-masks">Staff Amount Adjustment</a>
+                            </li> 
                         </ul>
                     </div>
                 </li>  

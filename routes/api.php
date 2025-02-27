@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 })->middleware('auth:sanctum'); */
 
-
 Route::post('/login', [authController::class, 'login']);
 
 // Sales Routes
