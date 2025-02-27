@@ -21,7 +21,7 @@ class OtherusersController extends Controller
             return back()->with('error', 'Invalid Request');
         }
 
-        $users = User::where('role', $type)->get();
+        $users = User::currentBranch()->where('role', $type)->get();
         $branches = branches::all();
 
         return view('users.index', compact('users', 'type', 'branches'));

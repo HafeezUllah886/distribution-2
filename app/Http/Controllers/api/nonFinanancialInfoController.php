@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\orderbooker_customers;
 use App\Models\orderbooker_products;
 use Illuminate\Http\Request;
 
@@ -37,7 +38,9 @@ class nonFinanancialInfoController extends Controller
 
     public function customers(Request $request)
     {
-        $customers = accounts::customer()->where('branchID', $request->user()->branchID)->select('id', 'branchID', 'title', 'address', 'contact', 'email', 'c_type', 'credit_limit', 'areaID', 'status')->get();
+        $orderbooker_customers = orderbooker_customers::where('orderbookerID', $request->user()->id)->get();
+
+        $customers = accounts::customer()->whereIn('id', $orderbooker_customers->pluck('customerID'))->select('id', 'branchID', 'title', 'address', 'contact', 'email', 'c_type', 'credit_limit', 'areaID', 'status')->get();
 
         foreach($customers as $customer)
         {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderbookerCustomersController;
 use App\Http\Controllers\OrderbookerProductsController;
 use App\Http\Controllers\OtherusersController;
 use App\Http\Controllers\UserAccountsController;
@@ -13,8 +14,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('otherusers/update/{id}', [OtherusersController::class, 'update'])->name('otherusers.update');
     Route::get('otherusers/status/{id}', [OtherusersController::class, 'status'])->name('otherusers.status');
 
-    Route::resource('/orderbookerproducts', OrderbookerProductsController::class);
-    Route::get("orderbookerproduct/delete/{id}", [OrderbookerProductsController::class, 'destroy'])->name('orderbookerproduct.delete')->middleware([confirmPassword::class]);
+        Route::resource('/orderbookerproducts', OrderbookerProductsController::class);
+        Route::get("orderbookerproduct/delete/{id}", [OrderbookerProductsController::class, 'destroy'])->name('orderbookerproduct.delete')->middleware([confirmPassword::class]);
+
+        Route::resource('/orderbookercustomers', OrderbookerCustomersController::class);
+        Route::get("orderbookercustomer/delete/{id}", [OrderbookerCustomersController::class, 'destroy'])->name('orderbookercustomer.delete')->middleware([confirmPassword::class]);
 
     Route::get('self/statement', [OtherusersController::class, 'self_statement'])->name('otherusers.self_statement');
     Route::get('user/statement/{id}/{from}/{to}', [OtherusersController::class, 'statement'])->name('otheruser.statement');

@@ -98,6 +98,13 @@ class User extends Authenticatable
 
     public function scopeCurrentBranch($query)
     {
-        return $query->where('branchID', auth()->user()->branchID);
+        if(Auth()->user()->role == "Admin")
+        {
+            return $query;
+        }
+        else
+        {
+            return $query->where('branchID', auth()->user()->branchID);
+        }
     }
 }

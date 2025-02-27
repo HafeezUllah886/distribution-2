@@ -106,9 +106,7 @@ class StaffAmountAdjustmentController extends Controller
     {
         //
     }
-
     
-
     public function delete($ref)
     {
         try

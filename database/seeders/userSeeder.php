@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\orderbooker_customers;
 use App\Models\orderbooker_products;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -41,6 +42,12 @@ class userSeeder extends Seeder
             [
                 'orderbookerID' => $orderbooker->id,
                 'productID' => 2,
+            ]
+        );
+        orderbooker_customers::create(
+            [
+                'orderbookerID' => $orderbooker->id,
+                'customerID' => 2,
             ]
         );
 

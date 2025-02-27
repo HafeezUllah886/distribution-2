@@ -63,6 +63,12 @@
                                                                                     Assigned Products
                                                                                 </a>
                                                                             </li>
+                                                                            <li>
+                                                                                <a class="dropdown-item" href="{{route('orderbookercustomers.index')}}/{{$user->id}}">
+                                                                                    <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                                                    Assigned Customers
+                                                                                </a>
+                                                                            </li>
                                                                           @endif
 
                                                                           <li>
