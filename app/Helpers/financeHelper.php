@@ -125,6 +125,7 @@ function getCurrencyBalance($id, $user){
 }
 
 
+
 function numberToWords($number)
 {
     $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);

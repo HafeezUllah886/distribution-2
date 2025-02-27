@@ -11,8 +11,14 @@ class expenses extends Model
 
     protected $guarded = [];
 
-    public function account()
+    public function user()
     {
-        return $this->belongsTo(accounts::class, 'accountID');
+        return $this->belongsTo(User::class, 'userID');
     }
+
+    public function scopeCurrentBranch($query)
+    {
+        return $query->where('branchID', auth()->user()->branchID);
+    }
+
 }

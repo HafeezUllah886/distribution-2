@@ -18,4 +18,9 @@ class transfer extends Model
     {
         return $this->belongsTo(accounts::class, 'to');
     }
+
+    public function scopeCurrentBranch($query)
+    {
+        return $query->where('branchID', auth()->user()->branchID);
+    }
 }

@@ -113,6 +113,10 @@
                                     data-key="t-input-masks">Customer Payments</a>
                             </li> 
                            <li class="nav-item">
+                                <a href="{{ route('vendor_payments.index') }}" class="nav-link"
+                                    data-key="t-input-masks">Vendor Payments</a>
+                            </li> 
+                           <li class="nav-item">
                                 <a href="{{ route('staff_payments.index') }}" class="nav-link"
                                     data-key="t-input-masks">Staff Payments</a>
                             </li> 
@@ -127,6 +131,31 @@
                         </ul>
                     </div>
                 </li>  
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarOtherUsers" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarOtherUsers">
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Other Users</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarOtherUsers">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('otherusers.index', ['Order Booker']) }}" class="nav-link"
+                                    data-key="t-form-select">
+                                   Order Bookers </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('otherusers.index', ['Operator']) }}" class="nav-link"
+                                    data-key="t-form-select">
+                                   Operators </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('otherusers.index', ['Branch Admin']) }}" class="nav-link"
+                                    data-key="t-form-select">
+                                   Branch Admins </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

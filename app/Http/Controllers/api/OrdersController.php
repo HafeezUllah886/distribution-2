@@ -213,70 +213,125 @@ class OrdersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, orders $order)
+    public function update(Request $request)
     {
-        try
-        {
-            if($request->isNotFilled('id'))
-            {
-                throw new Exception('Please Select Atleast One Product');
+        try {
+            // Validate request
+            $validator = Validator::make($request->all(), [
+                'date' => 'required|date',
+                'id' => 'required|array',
+                'id.*' => 'exists:products,id',
+                'unit' => 'required|array',
+                'unit.*' => 'exists:product_units,id',
+                'pack_qty' => 'required|array',
+                'pack_qty.*' => 'numeric|min:0',
+                'loose_qty' => 'required|array',
+                'loose_qty.*' => 'numeric|min:0',
+                'price' => 'required|array',
+                'price.*' => 'numeric|min:0',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                ], 422);
             }
+
+            if(count($request->id) == 0) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Please select at least one product'
+                ], 422);
+            }
+
             DB::beginTransaction();
-            foreach($order->details as $product)
-            {
-                $product->delete();
-            }
-            $order->update(
-                [
-                  'customerID'  => $request->customerID,
-                  'date'        => $request->date,
-                  'notes'       => $request->notes,
-                ]
-            );
+            $order = orders::findorFail($request->orderID);
 
-            $ids = $request->id;
+            $this->validateOrder($request->orderID, $request->user()->id);
 
-            $total = 0;
-            foreach($ids as $key => $id)
-            {
-                $unit = units::find($request->unit[$key]);
+            $order->details()->delete();
+
+            $customer = accounts::find($order->customerID);
+            $order->update([
+                'date' => $request->date,
+                'notes' => $request->notes,
+            ]);
+
+            $orderDetails = [];
+            $net = 0;
+            foreach($request->id as $key => $id) {
+                $unit = product_units::find($request->unit[$key]);
+                $pc = $request->pack_qty[$key] * $unit->value;
+
                 $product = products::find($id);
-                $qty = $request->qty[$key] * $unit->value;
-                $price = $product->price - $request->discount[$key];
-                $amount = $qty * $price;
-                $total += $amount;
-                order_details::create(
-                    [
-                        'orderID'       => $order->id,
-                        'productID'     => $id,
-                        'price'         => $product->price,
-                        'qty'           => $qty,
-                        'discount'      => $request->discount[$key],
-                        'bonus'         => $request->bonus[$key],
-                        'amount'        => $amount,
-                        'date'          => $request->date,
-                        'unitID'        => $unit->id,
-                        'unitValue'     => $unit->value,
-                    ]
-                );
+                $qty = $pc + $request->loose_qty[$key];
+
+                $price = $product->price;
+                $discount = $product->discount;
+                $discountp = $product->discountp;
+                $discountpValue = $discountp * $price / 100;
+                $fright = $product->sfright;
+                $claim = $product->sclaim;
+                $dc = product_dc::where('productID', $product->id)->where('areaID', $customer->areaID)->first();
+                $labor = $dc->dc ?? 0;
+
+                $amount = (($price - $discount - $discountpValue - $claim) + $fright) * $qty;
+                $net += $amount;
+            
+                $orderDetail = order_details::create([
+                    'orderID' => $order->id,
+                    'productID' => $id,
+                    'price' => $price,
+                    'discount' => $discount,
+                    'discountp' => $discountp,
+                    'discountvalue' => $discountpValue,
+                    'qty' => $request->pack_qty[$key],
+                    'loose' => $request->loose_qty[$key],
+                    'pc' => $qty,
+                    'fright' => $fright,
+                    'labor' => $labor,
+                    'claim' => $claim,
+                    'netprice' => $price - $discount - $discountpValue - $claim + $fright,
+                    'amount' => $amount,
+                    'date' => $request->date,
+                    'unitID' => $request->unit[$key]
+                ]);
+
+                $orderDetails[] = $orderDetail;
             }
 
-            $order->update(
-                [
-                    'net' => $total,
+            $order->update([
+                'net' => $net,
+            ]);
+            if($net > $customer->credit_limit) {
+                $order->delete(); 
+                DB::rollback();
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Customer credit limit exceeded'
+                ], 422);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Order Updated successfully',
+                'data' => [
+                    'order' => $order,
+                    'order_details' => $orderDetails,
                 ]
-            );
+            ], 201);
 
-           DB::commit();
-            return to_route('orders.show', $order->id)->with('success', "Order Update");
-
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             DB::rollback();
-            return back()->with('error', $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
         }
-
     }
 
     /**
@@ -313,7 +368,7 @@ class OrdersController extends Controller
         $order = orders::findOrFail($id);
 
         if (in_array($order->status, ["Finalized", "Approved"])) {
-            throw new Exception('Order cannot be deleted');
+            throw new Exception('Order Already Approved / Finalized');
         }
     
         if ($order->orderbookerID != $orderbooker) {

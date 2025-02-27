@@ -16,10 +16,9 @@ class ExpensesController extends Controller
      */
     public function index()
     {
-        $expenses = expenses::orderby('id', 'desc')->get();
-        $accounts = accounts::business()->get();
+        $expenses = expenses::currentBranch()->orderby('id', 'desc')->get();
         $currencies = currencymgmt::all();
-        return view('Finance.expense.index', compact('expenses', 'accounts','currencies'));
+        return view('Finance.expense.index', compact('expenses', 'currencies'));
     }
 
     /**
@@ -41,17 +40,17 @@ class ExpensesController extends Controller
             $ref = getRef();
             expenses::create(
                 [
-                    'accountID' => $request->accountID,
+                    'userID' => auth()->user()->id,
                     'amount' => $request->total,
+                    'branchID' => auth()->user()->branchID,
                     'date' => $request->date,
                     'notes' => $request->notes,
                     'refID' => $ref,
                 ]
             );
-            createTransaction($request->accountID, $request->date, 0, $request->total, "Expense - ".$request->notes, $ref);
-            createCurrencyTransaction($request->accountID, $request->currencyID, $request->currency, 'db', $request->date, "Expense: ".$request->notes, $ref);
+            createUserTransaction(auth()->user()->id, $request->date, 0, $request->total, "Expense - ".$request->notes, $ref);
+            createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->currency, 'db', $request->date, "Expense: ".$request->notes, $ref);
 
-            createAttachment($request->file('file'), $ref);
             DB::commit();
             return back()->with('success', 'Expense Saved');
         }

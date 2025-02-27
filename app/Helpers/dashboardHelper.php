@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\accounts;
+use App\Models\currency_transactions;
+use App\Models\currencymgmt;
 use App\Models\orders;
 use App\Models\purchase;
 use App\Models\purchase_details;
@@ -202,3 +204,20 @@ function CustomersCount()
     return $customers;
 }
 
+function myCurrency($user){
+    $currencies = currencymgmt::all();
+    
+    $total = 0;
+    foreach($currencies as $currency)
+    {
+        $transactions  = currency_transactions::where('currencyID', $currency->id)->where('userID', $user);
+
+        $cr = $transactions->sum('cr');
+        $db = $transactions->sum('db');
+        $balance = $cr - $db;
+        $total += $balance;
+
+       
+    }
+    return $total;
+}

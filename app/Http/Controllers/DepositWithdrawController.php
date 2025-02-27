@@ -17,8 +17,8 @@ class DepositWithdrawController extends Controller
      */
     public function index()
     {
-        $trans = deposit_withdraw::orderBy('id', 'desc')->get();
-        $accounts = accounts::orderby('type', 'asc')->orderby('title', 'asc')->get();
+        $trans = deposit_withdraw::currentBranch()->orderBy('id', 'desc')->get();
+        $accounts = accounts::business()->currentBranch()->get();
         $currencies = currencymgmt::all();
 
         return view('Finance.deposit_withdraw.index', compact('trans', 'accounts', 'currencies'));
@@ -38,15 +38,17 @@ class DepositWithdrawController extends Controller
     public function store(Request $request)
     {
         try
-        {
-            $request->validate([
+        { 
+            /* $request->validate([
                 'file' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            ]);
+            ]); */
             DB::beginTransaction();
             $ref = getRef();
             deposit_withdraw::create(
                 [
                     'accountID' => $request->accountID,
+                    'userID' => auth()->user()->id,
+                    'branchID' => auth()->user()->branchID,
                     'date' => $request->date,
                     'type' => $request->type,
                     'amount' => $request->total,
@@ -55,20 +57,28 @@ class DepositWithdrawController extends Controller
                 ]
             );
 
+            $account = accounts::find($request->accountID);
+            $user = auth()->user()->name;
+
             if($request->type == 'Deposit')
             {
-                createTransaction($request->accountID, $request->date, $request->total, 0, "Deposit: ".$request->notes, $ref);
-                createCurrencyTransaction($request->accountID, $request->currencyID, $request->currency, 'cr', $request->date, "Deposit: ".$request->notes, $ref);
+                createTransaction($request->accountID, $request->date, $request->total, 0, "Deposit by $user: ".$request->notes, $ref);
+
+                createUserTransaction(auth()->id(), $request->date, 0, $request->total, "Bank Deposit to $account->title : ".$request->notes, $ref);
+                createCurrencyTransaction(auth()->id(), $request->currencyID, $request->currency, 'db', $request->date, "Bank Deposit to $account->title : ".$request->notes, $ref);
             }
             else
             {
-                createTransaction($request->accountID, $request->date, 0, $request->total, "Withdraw: ".$request->notes, $ref);
-                createCurrencyTransaction($request->accountID, $request->currencyID, $request->currency, 'db', $request->date, "Withdraw: ".$request->notes, $ref);
+                createTransaction($request->accountID, $request->date, 0, $request->total, "Withdraw by $user: ".$request->notes, $ref);
+                createUserTransaction(auth()->id(), $request->date, $request->total, 0, "Withdraw from $account->title : ".$request->notes, $ref);
+                createCurrencyTransaction(auth()->id(), $request->currencyID, $request->currency, 'cr', $request->date, "Withdraw from $account->title : ".$request->notes, $ref);
+            }
+            if($request->has('file'))
+            {
+                createAttachment($request->file('file'), $ref);
             }
 
-            createAttachment($request->file('file'), $ref);
-
-            DB::commit();
+           DB::commit();
             return back()->with('success', "Transaction Created");
         }
         catch(\Exception $e)
@@ -76,7 +86,7 @@ class DepositWithdrawController extends Controller
             DB::rollBack();
 
             return back()->with('error', $e->getMessage());
-        }
+        } 
     }
 
     /**

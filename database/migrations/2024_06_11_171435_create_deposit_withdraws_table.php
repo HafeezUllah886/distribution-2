@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('deposit_withdraws', function (Blueprint $table) {
             $table->id();
             $table->foreignId('accountID')->constrained('accounts', 'id');
+            $table->foreignId('userID')->constrained('users', 'id');
+            $table->foreignId('branchID')->constrained('branches', 'id');
             $table->float('amount');
             $table->date('date');
             $table->text('notes')->nullable();

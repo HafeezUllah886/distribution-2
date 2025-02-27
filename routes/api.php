@@ -25,4 +25,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/order/store', [OrdersController::class, 'store']);
     Route::get('/getorders', [OrdersController::class, 'index']);
     Route::get('/order/delete', [OrdersController::class, 'destroy']);
+    Route::post('/order/update', [OrdersController::class, 'update']);
+
 });

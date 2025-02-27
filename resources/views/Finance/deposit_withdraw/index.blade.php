@@ -97,7 +97,7 @@
                                             <tr>
                                                 <td>{{$currency->title}}</td>
                                                 <td>
-                                                    <input type="number" class="form-control form-control-sm" data-value="{{$currency->title}}" id="currency_{{$currency->id}}" oninput="updateTotal()" name="currency[]" value="0">
+                                                    <input type="number" class="form-control form-control-sm" data-value="{{$currency->value}}" id="currency_{{$currency->id}}" oninput="updateTotal()" name="currency[]" value="0">
                                                     <input type="hidden" class="form-control" name="currencyID[]" value="{{$currency->id}}">
                                                 </td>
                                             </tr>

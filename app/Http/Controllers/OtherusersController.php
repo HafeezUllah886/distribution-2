@@ -92,6 +92,24 @@ class OtherusersController extends Controller
         return view('users.self_statment', compact('transactions', 'pre_balance', 'cur_balance', 'from', 'to'));
     }
 
+    public function statement($id, $from, $to)
+    {
+        $user = User::find($id);
+
+        $transactions = users_transactions::where('userID', $id)->whereBetween('date', [$from, $to])->get();
+
+        $pre_cr = users_transactions::where('userID', $id)->whereDate('date', '<', $from)->sum('cr');
+        $pre_db = users_transactions::where('userID', $id)->whereDate('date', '<', $from)->sum('db');
+        $pre_balance = $pre_cr - $pre_db;
+
+        $cur_cr = users_transactions::where('userID', $id)->sum('cr');
+        $cur_db = users_transactions::where('userID', $id)->sum('db');
+
+        $cur_balance = $cur_cr - $cur_db;
+
+        return view('users.statment', compact('user', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to'));
+    }
+
     public function update(request $request, $id)
     {
 

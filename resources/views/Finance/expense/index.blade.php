@@ -23,7 +23,7 @@
                         <thead>
                             <th>#</th>
                             <th>Ref #</th>
-                            <th>Account</th>
+                            <th>Expensed By</th>
                             <th>Date</th>
                             <th>Notes</th>
                             <th>Amount</th>
@@ -34,7 +34,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $tran->refID }}</td>
-                                    <td>{{ $tran->account->title }}</td>
+                                    <td>{{ $tran->user->name }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->date)) }}</td>
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
@@ -66,15 +66,6 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group mt-2">
-                                    <label for="account">Account</label>
-                                    <select name="accountID" id="account" required class="selectize">
-                                        <option value=""></option>
-                                        @foreach ($accounts as $account)
-                                            <option value="{{ $account->id }}">{{ $account->title }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group mt-2">
                                     <label for="date">Date</label>
                                     <input type="date" name="date" required id="date" value="{{ date('Y-m-d') }}"
                                         class="form-control">
@@ -95,7 +86,7 @@
                                                 <tr>
                                                     <td>{{$currency->title}}</td>
                                                     <td>
-                                                        <input type="number" class="form-control form-control-sm" data-value="{{$currency->title}}" id="currency_{{$currency->id}}" oninput="updateTotal()" name="currency[]" value="0">
+                                                        <input type="number" class="form-control form-control-sm" data-value="{{$currency->value}}" id="currency_{{$currency->id}}" oninput="updateTotal()" name="currency[]" value="0">
                                                         <input type="hidden" class="form-control" name="currencyID[]" value="{{$currency->id}}">
                                                     </td>
                                                 </tr>

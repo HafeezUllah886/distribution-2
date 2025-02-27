@@ -10,6 +10,7 @@ use App\Http\Controllers\PaymentReceivingController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\StaffPaymentsController;
 use App\Http\Controllers\TransferController;
+use App\Http\Controllers\VendorPaymentsController;
 use App\Http\Middleware\Admin_BranchAdmin_AccountantCheck;
 use App\Http\Middleware\adminCheck;
 use App\Http\Middleware\confirmPassword;
@@ -34,6 +35,9 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::resource('customer_payments', CustomerPaymentsController::class);
     Route::get('customer_payments/delete/{ref}', [CustomerPaymentsController::class, 'delete'])->name('customer_payments.delete')->middleware(confirmPassword::class);
 
+    Route::resource('vendor_payments', VendorPaymentsController::class);
+    Route::get('vendor_payments/delete/{ref}', [VendorPaymentsController::class, 'delete'])->name('vendor_payments.delete')->middleware(confirmPassword::class);
+
     Route::get('currency/details/{id}', [CurrencymgmtController::class, 'details'])->name('currency.details');
 
     Route::resource('staff_payments', StaffPaymentsController::class);
@@ -49,6 +53,10 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::get("/attachment/{ref}", function($ref)
     {
         $attachment = attachment::where("refID", $ref)->first();
+        if(!$attachment)
+        {
+            return redirect()->back()->with('error', "No Attachement Found");
+        }
 
         return response()->file(public_path($attachment->path));
     })->name('viewAttachment');

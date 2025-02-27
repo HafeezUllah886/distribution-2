@@ -47,6 +47,7 @@
                                                                             </a>
                                                                         </li>
                                                                         @endif
+                                                                        @if(auth()->user()->role == 'Branch Admin')
                                                                           <li>
                                                                               <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit_{{$user->id}}">
                                                                                   <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
@@ -68,7 +69,7 @@
                                                                                   {{$user->status == "Blocked" ? "Active" : "Block"}}
                                                                               </a>
                                                                           </li>
-
+                                                                          @endif
                                                                       </ul>
                                                                   </div>
                                                         </td>
@@ -222,7 +223,7 @@
             var accountID = $("#accountID").val();
             var from = $("#from").val();
             var to = $("#to").val();
-            var url = "{{ route('accountStatement', ['id' => ':accountID', 'from' => ':from', 'to' => ':to']) }}"
+            var url = "{{ route('otheruser.statement', ['id' => ':accountID', 'from' => ':from', 'to' => ':to']) }}"
         .replace(':accountID', accountID)
         .replace(':from', from)
         .replace(':to', to);

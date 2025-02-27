@@ -17,10 +17,9 @@ class TransferController extends Controller
      */
     public function index()
     {
-        $transfers = transfer::orderby('id', 'desc')->get();
-        $accounts = accounts::all();
-        $currencies = currencymgmt::all();
-        return view('Finance.transfer.index', compact('transfers', 'accounts', 'currencies'));
+        $transfers = transfer::orderby('id', 'desc')->currentBranch()->get();
+        $accounts = accounts::business()->currentBranch()->get();
+        return view('Finance.transfer.index', compact('transfers', 'accounts'));
     }
 
     /**
@@ -53,8 +52,10 @@ class TransferController extends Controller
                 [
                     'from' => $request->from,
                     'to' => $request->to,
+                    'userID' => auth()->id(),
+                    'branchID' => auth()->user()->branchID,
                     'date' => $request->date,
-                    'amount' => $request->total,
+                    'amount' => $request->amount,
                     'notes' => $request->notes,
                     'refID' => $ref,
                 ]
@@ -62,13 +63,9 @@ class TransferController extends Controller
             $fromAccount = $transfer->fromAccount->title;
             $toAccount = $transfer->toAccount->title;
 
-            createTransaction($request->from,$request->date, 0, $request->total, "Transfered to $toAccount :" .$request->notes, $ref);
-            createTransaction($request->to, $request->date, $request->total, 0, "Transfered from $fromAccount :" .$request->notes, $ref);
+            createTransaction($request->from,$request->date, 0, $request->amount, "Transfered to $toAccount :" .$request->notes, $ref);
+            createTransaction($request->to, $request->date, $request->amount, 0, "Transfered from $fromAccount :" .$request->notes, $ref);
 
-            createCurrencyTransaction($request->from, $request->currencyID, $request->currency, 'db', $request->date, "Transfered to $toAccount :".$request->notes, $ref);
-            createCurrencyTransaction($request->to, $request->currencyID, $request->currency, 'cr', $request->date, "Transfered from $fromAccount :".$request->notes, $ref);
-
-            createAttachment($request->file('file'), $ref);
             DB::commit();
             return back()->with('success', "Transfered Successfully");
         }
