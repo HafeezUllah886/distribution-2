@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\authController;
+use App\Http\Controllers\api\customerPaymentsReceivingContoller;
 use App\Http\Controllers\api\nonFinanancialInfoController;
 use App\Http\Controllers\api\OrdersController;
 use App\Http\Controllers\Api\SaleApiController;
@@ -25,5 +26,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getorders', [OrdersController::class, 'index']);
     Route::get('/order/delete', [OrdersController::class, 'destroy']);
     Route::post('/order/update', [OrdersController::class, 'update']);
+
+    Route::post('/payment/receiving', [customerPaymentsReceivingContoller::class, 'paymentReceiving']);
+    Route::get('/pendinginvoices', [customerPaymentsReceivingContoller::class, 'pendingInvoices']);
 
 });

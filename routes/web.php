@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\adminDashboardController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\brandsController;
 use App\Http\Controllers\CategoriesController;
@@ -24,6 +25,7 @@ require __DIR__ . '/setups.php';
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard');
+    Route::get('/admin/{branch?}/{from?}/{to?}', [adminDashboardController::class, 'index'])->name('admin.dashboard');
 
 });
 
