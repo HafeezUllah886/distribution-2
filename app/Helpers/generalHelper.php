@@ -100,6 +100,21 @@ function getStock($id){
     return $balance;
 }
 
+function getBranchProductStock($id, $branch){
+    
+        $warehouses = DB::table('warehouses')->where('branchID', $branch)->distinct()->pluck('id')->toArray();
+        $stocks  = stock::where('productID', $id)->whereIn('warehouseID', $warehouses)->get();
+    
+
+    $balance = 0;
+    foreach($stocks as $stock)
+    {
+    $balance += $stock->cr;
+    $balance -= $stock->db;
+    }
+    return $balance;
+}
+
 function getWarehouseProductStock($id, $warehouse){
     $stocks  = stock::where('productID', $id)->where('warehouseID', $warehouse)->get();
     $balance = 0;

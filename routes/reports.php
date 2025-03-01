@@ -1,17 +1,18 @@
 <?php
 
+use App\Http\Controllers\reports\BranchStockReportController;
 use App\Http\Controllers\reports\profitController;
 use App\Http\Controllers\reports;
 use App\Http\Controllers\reports\balanceSheetReport;
-use App\Http\Controllers\reports\comparisonReportController;
 use App\Http\Controllers\reports\dailycashbookController;
 use App\Http\Controllers\reports\loadsheetController;
 use App\Http\Controllers\reports\productSummaryReport;
-use App\Http\Controllers\reports\purchaseGstReportController;
+
 use App\Http\Controllers\reports\purchaseReportController;
-use App\Http\Controllers\reports\salesGstReportController;
-use App\Http\Controllers\reports\salesManReportController;
+
 use App\Http\Controllers\reports\salesReportController;
+use App\Http\Controllers\reports\TopCustomersReportController;
+use App\Http\Controllers\reports\WarehouseStockReportController;
 use App\Http\Middleware\adminCheck;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,12 @@ Route::middleware('auth', adminCheck::class)->group(function () {
     Route::get('/reports/balanceSheet', [balanceSheetReport::class, 'index'])->name('reportBalanceSheet');
     Route::get('/reports/balanceSheet/{type}/{from}/{to}', [balanceSheetReport::class, 'data'])->name('reportBalanceSheetData');
 
-    Route::get('/reports/comparison', [comparisonReportController::class, 'index'])->name('reportComparison');
-    Route::get('/reports/comparison/{from1}/{to1}/{from2}/{to2}/{customer}', [comparisonReportController::class, 'data'])->name('reportComparisonData');
+    Route::get('/reports/warehousestockreport', [WarehouseStockReportController::class, 'index'])->name('reportWarehouseStock');
+    Route::get('/reports/warehousestockreport/{warehouse}', [WarehouseStockReportController::class, 'data'])->name('reportWarehouseStockData');
+
+    Route::get('/reports/branchstockreport', [BranchStockReportController::class, 'index'])->name('reportBranchStock');
+    Route::get('/reports/branchstockreport/{branch}', [BranchStockReportController::class, 'data'])->name('reportBranchStockData');
+
+    Route::get('/reports/topcustomersreport', [TopCustomersReportController::class, 'index'])->name('reportTopCustomers');
+    Route::get('/reports/topcustomersreport/{branch}', [TopCustomersReportController::class, 'data'])->name('reportTopCustomersData');
 });

@@ -269,6 +269,18 @@
                                 <a href="{{ route('reportPurchases') }}" class="nav-link"
                                     data-key="t-basic-elements">Purchases Report</a>
                             </li>
+                           <li class="nav-item">
+                                <a href="{{ route('reportWarehouseStock') }}" class="nav-link"
+                                    data-key="t-basic-elements">Warehouse Stock Report</a>
+                            </li>
+                           <li class="nav-item">
+                                <a href="{{ route('reportBranchStock') }}" class="nav-link"
+                                    data-key="t-basic-elements">Branch Stock Report</a>
+                            </li>
+                           <li class="nav-item">
+                                <a href="{{ route('reportTopCustomers') }}" class="nav-link"
+                                    data-key="t-basic-elements">Top Customers Report</a>
+                            </li>
                             {{-- <li class="nav-item">
                                 <a href="{{ route('reportComparison') }}" class="nav-link"
                                     data-key="t-basic-elements">Comparison Report</a>
