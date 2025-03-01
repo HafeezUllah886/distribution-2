@@ -18,7 +18,7 @@ class AccountsAdjustmentController extends Controller
     {
         $accountsAdjustments = accountsAdjustment::currentBranch()->get();
         $accounts = accounts::currentBranch()->get();
-        return view('finance.accounts_adjustments.index', compact('accountsAdjustments', 'accounts'));
+        return view('Finance.accounts_adjustments.index', compact('accountsAdjustments', 'accounts'));
     }
 
     /**

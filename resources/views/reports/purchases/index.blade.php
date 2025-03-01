@@ -16,6 +16,17 @@
                                 <input type="date" name="to" id="to" value="{{lastDayOfMonth()}}" class="form-control">
                     </div>
                     <div class="form-group mt-2">
+                        <label for="branch">Branch</label>
+                        <select name="branch" id="branch" class="form-control">
+                            @if(auth()->user()->role == "Admin")
+                            <option value="All">All</option>
+                            @endif
+                            @foreach ($branches as $branch)
+                                <option value="{{$branch->id}}">{{$branch->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
                         <button class="btn btn-success w-100" id="viewBtn">View Report</button>
                     </div>
                 </div>
@@ -32,9 +43,11 @@
         $("#viewBtn").on("click", function (){
             var from = $("#from").val();
             var to = $("#to").val();
-            var url = "{{ route('reportPurchasesData', ['from' => ':from', 'to' => ':to']) }}"
+            var branch = $("#branch").find(":selected").val();
+            var url = "{{ route('reportPurchasesData', ['from' => ':from', 'to' => ':to', 'branch' => ':branch']) }}"
         .replace(':from', from)
-        .replace(':to', to);
+        .replace(':to', to)
+        .replace(':branch', branch);
             window.open(url, "_blank", "width=1000,height=800");
         });
     </script>

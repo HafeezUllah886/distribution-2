@@ -31,6 +31,10 @@
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">To</p>
                                         <h5 class="fs-14 mb-0">{{ date('d M Y', strtotime($to)) }}</h5>
                                     </div>
+                                    <div class="col-lg-3 col-6">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Branch</p>
+                                        <h5 class="fs-14 mb-0">{{ $branch }}</h5>
+                                    </div>
                                     <!--end col-->
                                     <!--end col-->
                                     <div class="col-lg-3 col-6">
@@ -51,39 +55,52 @@
                                         <thead>
                                             <tr class="table-active">
                                                 <th scope="col" style="width: 50px;">#</th>
-                                               
+                                                <th scope="col" class="text-start">Branch</th>
                                                 <th scope="col" class="text-start">Customer Name</th>
                                                 <th scope="col" class="text-start">Order Booker</th>
+                                                <th scope="col" class="text-start">Supplyman</th>
                                                 <th scope="col">Date</th>
-                                                <th scope="col">Discount</th>
-                                                <th scope="col">Fright (-)</th>
-                                                <th scope="col">Fright (+)</th>
                                                 <th scope="col">Amount</th>
+                                                <th scope="col">Paid</th>
+                                                <th scope="col">Due</th>
                                             </tr>
                                         </thead>
-                                        <tbody >
+                                        <tbody>
+                                            @php
+                                                $totalAmount = 0;
+                                                $totalPaid = 0;
+                                                $totalDue = 0;
+                                            @endphp
                                         @foreach ($sales as $key => $item)
+                                            @php
+                                                $amount = $item->net;
+                                                $paid = $item->paid();
+                                                $due = $item->due();
+
+                                                $totalAmount += $amount;
+                                                $totalPaid += $paid;
+                                                $totalDue += $due;
+                                            @endphp
                                             <tr>
                                                 <td>{{ $item->id}}</td>
-                                               
+                                                <td class="text-start">{{ $item->branch->name}}</td>
                                                 <td class="text-start">{{ $item->customer->title }}</td>
                                                 <td class="text-start">{{ $item->orderbooker->name }}</td>
+                                                <td class="text-start">{{ $item->supplyman->title }}</td>
                                                 <td>{{ date("d M Y", strtotime($item->date))}}</td>
-                                                <td class="text-end">{{ number_format($item->discount, 2) }}</td>
-                                                <td class="text-end">{{ number_format($item->fright, 2) }}</td>
-                                                <td class="text-end">{{ number_format($item->fright1, 2) }}</td>
-                                                <td class="text-end">{{ number_format($item->net, 2) }}</td>
+                                                <td class="text-end">{{ number_format($amount, 2) }}</td>
+                                                <td class="text-end">{{ number_format($paid, 2) }}</td>
+                                                <td class="text-end">{{ number_format($due, 2) }}</td>
                                             </tr>
                                         @endforeach
                                         </tbody>
                                         <tfoot>
-                                            <tr>
-                                                <th colspan="4" class="text-end">Total</th>
-                                                <th class="text-end">{{number_format($sales->sum('discount'), 2)}}</th>
-                                                <th class="text-end">{{number_format($sales->sum('fright'), 2)}}</th>
-                                                <th class="text-end">{{number_format($sales->sum('fright1'), 2)}}</th>
-                                                <th class="text-end">{{number_format($sales->sum('net'), 2)}}</th>
-                                            </tr>
+                                        <tr>
+                                                <th colspan="6" class="text-end">Total</th>
+                                                <th class="text-end">{{number_format($totalAmount, 2)}}</th>
+                                                <th class="text-end">{{number_format($totalPaid, 2)}}</th>
+                                                <th class="text-end">{{number_format($totalDue, 2)}}</th>
+                                            </tr> 
                                         </tfoot>
                                     </table><!--end table-->
                                 </div>

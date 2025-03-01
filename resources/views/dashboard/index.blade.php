@@ -39,7 +39,7 @@
                 <div class="d-flex align-items-end justify-content-between mt-4">
                     <div>
                         <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{number_format($sales, 0)}}</h4>
-                        <a class="text-decoration-underline" data-bs-toggle="modal" data-bs-target="#viewStatmentModal">View Details</a>
+                        <a class="text-decoration-underline" href="{{ route('reportSalesData', [$from, $to, $branch1]) }}">View Details</a>
                     </div>
                     <div class="avatar-sm flex-shrink-0">
                         <span class="avatar-title bg-info-subtle rounded fs-3">
@@ -62,7 +62,7 @@
                 <div class="d-flex align-items-end justify-content-between mt-4">
                     <div>
                         <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{number_format($purchases, 0)}}</h4>
-                        <a class="text-decoration-underline" data-bs-toggle="modal" data-bs-target="#viewStatmentModal">View Details</a>
+                        <a class="text-decoration-underline" href="{{ route('reportPurchasesData', [$from, $to, $branch1]) }}">View Details</a>
                     </div>
                     <div class="avatar-sm flex-shrink-0">
                         <span class="avatar-title bg-danger-subtle rounded fs-3">

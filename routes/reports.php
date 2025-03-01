@@ -23,20 +23,14 @@ Route::middleware('auth', adminCheck::class)->group(function () {
     Route::get('/reports/loadsheet', [loadsheetController::class, 'index'])->name('reportLoadsheet');
     Route::get('/reports/loadsheet/{id}/{date}', [loadsheetController::class, 'data'])->name('reportLoadsheetData');
 
-    Route::get('/reports/salesGst', [salesGstReportController::class, 'index'])->name('reportSalesGst');
-    Route::get('/reports/salesGstData/{from}/{to}', [salesGstReportController::class, 'data'])->name('reportSalesGstData');
-
-    Route::get('/reports/purchasesGst', [purchaseGstReportController::class, 'index'])->name('reportPurchasesGst');
-    Route::get('/reports/purchasesGstData/{from}/{to}', [purchaseGstReportController::class, 'data'])->name('reportPurchasesGstData');
-
     Route::get('/reports/productSummary', [productSummaryReport::class, 'index'])->name('reportProductSummary');
     Route::get('/reports/productSummaryData/{from}/{to}', [productSummaryReport::class, 'data'])->name('reportProductSummaryData');
 
     Route::get('/reports/sales', [salesReportController::class, 'index'])->name('reportSales');
-    Route::get('/reports/salesData/{from}/{to}/{type}', [salesReportController::class, 'data'])->name('reportSalesData');
+    Route::get('/reports/salesData/{from}/{to}/{branch}', [salesReportController::class, 'data'])->name('reportSalesData');
 
     Route::get('/reports/purchases', [purchaseReportController::class, 'index'])->name('reportPurchases');
-    Route::get('/reports/purchasesData/{from}/{to}', [purchaseReportController::class, 'data'])->name('reportPurchasesData');
+    Route::get('/reports/purchasesData/{from}/{to}/{branch}', [purchaseReportController::class, 'data'])->name('reportPurchasesData');
 
     Route::get('/reports/dailycashbook', [dailycashbookController::class, 'index'])->name('reportCashbook');
     Route::get('/reports/dailycashbook/{date}', [dailycashbookController::class, 'details'])->name('reportCashbookData');

@@ -61,30 +61,7 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
-               {{--  <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sales" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarApps">
-                        <i class="ri-shopping-cart-fill"></i><span data-key="t-apps">Sale</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="sales">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a onclick="newWindow('{{ route('sale.create') }}')" class="nav-link"
-                                    data-key="t-chat">Create Sale</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('sale.index', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()]) }}" class="nav-link" data-key="t-chat"> Sales History</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li> --}}
-                
-
-               {{--  <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('orders.index', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()])}}">
-                        <i class="ri-shopping-cart-fill"></i><span data-key="t-apps">Orders</span>
-                    </a>
-                </li> --}}
+              
                 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#purchase" data-bs-toggle="collapse" role="button"
@@ -264,14 +241,14 @@
                     </div>
                 </li>
 
-                {{-- <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarReports" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarReports">
                         <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Reports</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarReports">
                         <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
+                           {{--  <li class="nav-item">
                                 <a href="{{ route('reportProfit') }}" class="nav-link"
                                     data-key="t-basic-elements">Profit / Loss</a>
                             </li>
@@ -279,27 +256,20 @@
                                 <a href="{{ route('reportLoadsheet') }}" class="nav-link"
                                     data-key="t-basic-elements">Load Sheet</a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ route('reportSalesGst') }}" class="nav-link"
-                                    data-key="t-basic-elements">Sales GST</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('reportPurchasesGst') }}" class="nav-link"
-                                    data-key="t-basic-elements">Purchases GST</a>
-                            </li>
+                            
                             <li class="nav-item">
                                 <a onclick="newWindow('{{ route('reportProductSummary') }}')" class="nav-link"
                                     data-key="t-basic-elements">Products Summary</a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item">
                                 <a href="{{ route('reportSales') }}" class="nav-link"
                                     data-key="t-basic-elements">Sales Report</a>
                             </li>
-                            <li class="nav-item">
+                           <li class="nav-item">
                                 <a href="{{ route('reportPurchases') }}" class="nav-link"
                                     data-key="t-basic-elements">Purchases Report</a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="{{ route('reportComparison') }}" class="nav-link"
                                     data-key="t-basic-elements">Comparison Report</a>
                             </li>
@@ -310,16 +280,10 @@
                             <li class="nav-item">
                                 <a href="{{ route('reportBalanceSheet') }}" class="nav-link"
                                     data-key="t-basic-elements">Balance Sheet</a>
-                            </li>
+                            </li>  --}}
                         </ul>
                     </div>
-                </li> --}}
-
-                {{-- <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('targets.index') }}" >
-                        <i class="ri-apps-2-line"></i> <span data-key="t-apps">Targets</span>
-                    </a>
-                </li> --}}
+                </li> 
               
             </ul>
         </div>

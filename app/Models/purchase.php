@@ -19,4 +19,8 @@ class purchase extends Model
     {
         return $this->hasMany(purchase_details::class, 'purchaseID');
     }
+    public function branch()
+    {
+        return $this->belongsTo(branches::class, 'branchID');
+    }
 }

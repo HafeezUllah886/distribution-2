@@ -36,10 +36,24 @@ class sales extends Model
         return $this->belongsTo(accounts::class, 'supplymanID');
     }
 
-    
+    public function scopePaid()
+    {
+        return $this->payments()->sum('amount');
+    }
+
+    public function scopeDue()
+    {
+        return $this->net - $this->scopePaid();
+    }
+
     public function scopeCurrentBranch($query)
     {
         return $query->where('branchID', auth()->user()->branchID);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(branches::class, 'branchID');
     }
 
 }

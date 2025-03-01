@@ -16,15 +16,14 @@
                                 <input type="date" name="to" id="to" value="{{lastDayOfMonth()}}" class="form-control">
                     </div>
                     <div class="form-group mt-2">
-                        <label for="c_type">Customer Category</label>
-                        <select name="c_type" id="c_type" class="form-control">
+                        <label for="branch">Branch</label>
+                        <select name="branch" id="branch" class="form-control">
+                            @if(auth()->user()->role == "Admin")
                             <option value="All">All</option>
-                            <option value="Distributor">Distributor</option>
-                            <option value="Retailer">Retailer</option>
-                            <option value="Wholeseller">Wholeseller</option>
-                            <option value="Super Mart">Super Mart</option>
-                            <option value="Sub Dealer">Sub Dealer</option>
-                            <option value="Other">Other</option>
+                            @endif
+                            @foreach ($branches as $branch)
+                                <option value="{{$branch->id}}">{{$branch->name}}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-group mt-2">
@@ -44,11 +43,11 @@
         $("#viewBtn").on("click", function (){
             var from = $("#from").val();
             var to = $("#to").val();
-            var type = $("#c_type").find(":selected").val();
-            var url = "{{ route('reportSalesData', ['from' => ':from', 'to' => ':to', 'type' => ':type']) }}"
+            var branch = $("#branch").find(":selected").val();
+            var url = "{{ route('reportSalesData', ['from' => ':from', 'to' => ':to', 'branch' => ':branch']) }}"
         .replace(':from', from)
         .replace(':to', to)
-        .replace(':type', type);
+        .replace(':branch', branch);
             window.open(url, "_blank", "width=1000,height=800");
         });
     </script>

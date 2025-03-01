@@ -21,7 +21,7 @@ class StaffAmountAdjustmentController extends Controller
         $staffAdjustments = staffAmountAdjustment::currentBranch()->get();
         $staffs = User::currentBranch()->get();
         $currencies = currencymgmt::all();
-        return view('finance.staff_amount_adjustments.index', compact('staffAdjustments', 'staffs', 'currencies'));
+        return view('Finance.staff_amount_adjustments.index', compact('staffAdjustments', 'staffs', 'currencies'));
     }
 
     /**
