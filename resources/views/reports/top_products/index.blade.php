@@ -4,17 +4,10 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3>View Profit / Lost Report</h3>
+                    <h3>View Top Selling Products</h3>
                 </div>
                 <div class="card-body">
-                    <div class="form-group mt-2">
-                        <label for="from">From</label>
-                        <input type="date" name="from" id="from" value="{{firstDayOfMonth()}}" class="form-control">
-                    </div>
-                    <div class="form-group mt-2">
-                        <label for="to">To</label>
-                                <input type="date" name="to" id="to" value="{{lastDayOfMonth()}}" class="form-control">
-                    </div>
+                   
                     <div class="form-group mt-2">
                         <label for="branch">Branch</label>
                         <select name="branch" id="branch" class="form-control">
@@ -40,14 +33,10 @@
 
     <script>
 
-        $("#viewBtn").on("click", function (){
-            var from = $("#from").val();
-            var to = $("#to").val();
-            var branch = $("#branch").val();
-            var url = "{{ route('reportProfitData', ['from' => ':from', 'to' => ':to', 'branch' => ':branch']) }}"
-        .replace(':from', from)
-        .replace(':to', to)
-        .replace(':branch', branch);
+        $("#viewBtn").on("click", function(){
+            var branch = $("#branch").find(":selected").val();
+            var url = "{{ route('reportTopSellingProductsData', ['branch' => ':branch']) }}"
+            .replace(':branch', branch);
             window.open(url, "_blank", "width=1000,height=800");
         });
     </script>

@@ -11,6 +11,11 @@ class sale_details extends Model
 
     protected $guarded = [];
 
+    public function sale()
+    {
+        return $this->belongsTo(sales::class, 'saleID');
+    }
+
     public function product()
     {
         return $this->belongsTo(products::class, 'productID');

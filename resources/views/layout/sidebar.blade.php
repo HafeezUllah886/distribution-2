@@ -248,19 +248,20 @@
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarReports">
                         <ul class="nav nav-sm flex-column">
-                           {{--  <li class="nav-item">
+                           <li class="nav-item">
                                 <a href="{{ route('reportProfit') }}" class="nav-link"
                                     data-key="t-basic-elements">Profit / Loss</a>
                             </li>
+                            {{--  
                             <li class="nav-item">
                                 <a href="{{ route('reportLoadsheet') }}" class="nav-link"
                                     data-key="t-basic-elements">Load Sheet</a>
                             </li>
-                            
+                            --}}
                             <li class="nav-item">
-                                <a onclick="newWindow('{{ route('reportProductSummary') }}')" class="nav-link"
+                                <a href="{{ route('reportProductSummary') }}" class="nav-link"
                                     data-key="t-basic-elements">Products Summary</a>
-                            </li> --}}
+                            </li> 
                             <li class="nav-item">
                                 <a href="{{ route('reportSales') }}" class="nav-link"
                                     data-key="t-basic-elements">Sales Report</a>
@@ -281,10 +282,11 @@
                                 <a href="{{ route('reportTopCustomers') }}" class="nav-link"
                                     data-key="t-basic-elements">Top Customers Report</a>
                             </li>
-                            {{-- <li class="nav-item">
-                                <a href="{{ route('reportComparison') }}" class="nav-link"
-                                    data-key="t-basic-elements">Comparison Report</a>
+                           <li class="nav-item">
+                                <a href="{{ route('reportTopSellingProducts') }}" class="nav-link"
+                                    data-key="t-basic-elements">Top Selling Products</a>
                             </li>
+                            {{-- 
                             <li class="nav-item">
                                 <a href="{{ route('reportCashbook') }}" class="nav-link"
                                     data-key="t-basic-elements">Daily Cash Book</a>

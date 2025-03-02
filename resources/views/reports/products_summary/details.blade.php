@@ -14,7 +14,7 @@
                                         <h1>{{projectNameHeader()}}</h1>
                                     </div>
                                     <div class="flex-shrink-0 mt-sm-0 mt-3">
-                                        <h3>Comparison Report</h3>
+                                        <h3>Products Summary Report</h3>
                                     </div>
                                 </div>
                             </div>
@@ -24,21 +24,18 @@
                             <div class="card-body p-4">
                                 <div class="row g-3">
                                     <div class="col-lg-3 col-6">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Year One</p>
-                                        <h5 class="fs-14 mb-0">{{ date('d M Y', strtotime($from1)) }}</h5>
-                                        <h5 class="fs-14 mb-0">{{ date('d M Y', strtotime($to1)) }}</h5>
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">From</p>
+                                        <h5 class="fs-14 mb-0">{{ date('d M Y', strtotime($from)) }}</h5>
                                     </div>
                                     <div class="col-lg-3 col-6">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Year Two</p>
-                                        <h5 class="fs-14 mb-0">{{ date('d M Y', strtotime($from2)) }}</h5>
-                                        <h5 class="fs-14 mb-0">{{ date('d M Y', strtotime($to2)) }}</h5>
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">To</p>
+                                        <h5 class="fs-14 mb-0">{{ date('d M Y', strtotime($to)) }}</h5>
                                     </div>
-                                    <!--end col-->
-                                    <!--end col-->
                                     <div class="col-lg-3 col-6">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Customer</p>
-                                        <h5 class="fs-14 mb-0"><span id="total-amount">{{ $customer->title }}</span></h5>
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Branch</p>
+                                        <h5 class="fs-14 mb-0">{{ $branch }}</h5>
                                     </div>
+                                   
                                     <div class="col-lg-3 col-6">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Printed On</p>
                                         <h5 class="fs-14 mb-0"><span id="total-amount">{{ date("d M Y") }}</span></h5>
@@ -56,30 +53,32 @@
                                     <table class="table table-borderless text-center table-nowrap align-middle mb-0">
                                         <thead>
                                             <tr class="table-active">
+                                                <th scope="col" style="width: 50px;">#</th>
                                                 <th scope="col" class="text-start">Product</th>
-                                                <th scope="col" class="text-start">Unit</th>
-                                                <th scope="col" class="text-end">Year One</th>
-                                                <th scope="col" class="text-end">Year Two</th>
-                                                <th scope="col" class="text-end">Growth</th>
+                                                <th scope="col" class="text-end">Unit</th>
+                                                <th scope="col" class="text-end">P-Price</th>
+                                                <th scope="col" class="text-end">S-Price</th>
+                                                <th scope="col" class="text-end">Sold</th>
+                                                <th scope="col" class="text-end">Profit</th>
+                                                <th scope="col" class="text-end">Stock</th>
+                                                <th scope="col" class="text-end">Amount</th>
                                             </tr>
                                         </thead>
-                                        <tbody >
-                                        @foreach ($products as $key => $product)
-                                        <tr>
-                                            <td class="text-start">{{$product->name}}</td>
-                                            <td class="text-start">{{$product->unit->name}}</td>
-                                            <td class="text-end">{{number_format($product->sold1)}}</td>
-                                            <td class="text-end">{{number_format($product->sold2)}}</td>
-                                            <td class="text-end">{{number_format($product->growth,2)}}%</td>
-                                        </tr>
+                                        <tbody>
+                                        @foreach ($topProductsArray as $key => $product)
+                                            <tr>
+                                                <td>{{ $key+1}}</td>
+                                                <td class="text-start">{{ $product['name']}}</td>
+                                                <td class="text-end">{{ $product['unit']}}</td>
+                                                <td class="text-end">{{ number_format($product['pprice'],2) }}</td>
+                                                <td class="text-end">{{ number_format($product['price'],2)}}</td>
+                                                <td class="text-end">{{packInfo($product['unitValue'], $product['unit'], $product['sold'])}} </td>
+                                                <td class="text-end">{{ number_format($product['profit'],2) }}</td>
+                                                <td class="text-end">{{packInfo($product['unitValue'], $product['unit'], $product['stock'])}} </td>
+                                                <td class="text-end">{{ number_format($product['amount'],2) }}</td>
+                                            </tr>
                                         @endforeach
                                         </tbody>
-                                        <tfoot>
-                                            <th class="text-end" colspan="2">Total</th>
-                                            <td class="text-end">{{number_format($products->sum('sold1'))}}</td>
-                                            <td class="text-end">{{number_format($products->sum('sold2'))}}</td>
-                                            <td class="text-end">{{number_format(calculateGrowthPercentage($products->sum('sold1'), $products->sum('sold2')),2)}}%</td>
-                                        </tfoot>
                                     </table><!--end table-->
                                 </div>
 

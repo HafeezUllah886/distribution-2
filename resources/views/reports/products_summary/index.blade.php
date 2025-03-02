@@ -4,7 +4,7 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3>View Profit / Lost Report</h3>
+                    <h3>View Products Summery Report</h3>
                 </div>
                 <div class="card-body">
                     <div class="form-group mt-2">
@@ -43,8 +43,8 @@
         $("#viewBtn").on("click", function (){
             var from = $("#from").val();
             var to = $("#to").val();
-            var branch = $("#branch").val();
-            var url = "{{ route('reportProfitData', ['from' => ':from', 'to' => ':to', 'branch' => ':branch']) }}"
+            var branch = $("#branch").find(":selected").val();
+            var url = "{{ route('reportProductSummaryData', ['from' => ':from', 'to' => ':to', 'branch' => ':branch']) }}"
         .replace(':from', from)
         .replace(':to', to)
         .replace(':branch', branch);

@@ -2,9 +2,11 @@
 
 use App\Models\material_stock;
 use App\Models\products;
+use App\Models\purchase;
 use App\Models\purchase_details;
 use App\Models\ref;
 use App\Models\sale_details;
+use App\Models\sales;
 use App\Models\stock;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -105,7 +107,6 @@ function getBranchProductStock($id, $branch){
         $warehouses = DB::table('warehouses')->where('branchID', $branch)->distinct()->pluck('id')->toArray();
         $stocks  = stock::where('productID', $id)->whereIn('warehouseID', $warehouses)->get();
     
-
     $balance = 0;
     foreach($stocks as $stock)
     {
@@ -127,11 +128,20 @@ function getWarehouseProductStock($id, $warehouse){
     return $balance;
 }
 
-function avgSalePrice($from, $to, $id)
+
+function avgSalePrice($from, $to, $branch, $id)
 {
-    $sales = sale_details::where('productID', $id);
-    if($from != 'all' && $to != 'all')
+    if($branch == "all")
     {
+    $sales = sale_details::where('productID', $id);
+    }
+    else
+    {
+        $saleIDs = sales::where('branchID', $branch)->pluck('id')->toArray();
+        $sales = sale_details::where('productID', $id)->whereIn('saleID', $saleIDs);
+    }
+    if($from != 'all' && $to != 'all')
+    {   
         $sales->whereBetween('date', [$from, $to]);
     }
     $sales_amount = $sales->sum('amount');
@@ -149,9 +159,17 @@ function avgSalePrice($from, $to, $id)
     return $sale_price;
 }
 
-function avgPurchasePrice($from, $to, $id)
+function avgPurchasePrice($from, $to, $branch, $id)
 {
+    if($branch == "all")
+    {
     $purchases = purchase_details::where('productID', $id);
+    }
+    else
+    {
+        $purchaseIDs = purchase::where('branchID', $branch)->pluck('id')->toArray();
+        $purchases = purchase_details::where('productID', $id)->whereIn('purchaseID', $purchaseIDs);
+    }
     if($from != 'all' && $to != 'all')
     {
         $purchases->whereBetween('date', [$from, $to]);
@@ -187,7 +205,7 @@ function stockValue()
 function productStockValue($id)
 {
     $stock = getStock($id);
-    $price = avgPurchasePrice('all', 'all', $id);
+    $price = avgPurchasePrice('all', 'all','all', $id);
     dashboard();
     return $price * $stock;
 }
@@ -195,7 +213,7 @@ function productStockValue($id)
 function productStockValues($id)
 {
     $stock = getStock($id);
-    $price = avgSalePrice('all', 'all', $id);
+    $price = avgSalePrice('all', 'all', 'all', $id);
     dashboard();
     return $price * $stock;
 }
