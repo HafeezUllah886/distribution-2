@@ -14,7 +14,7 @@
                                         <h1>{{projectNameHeader()}}</h1>
                                     </div>
                                     <div class="flex-shrink-0 mt-sm-0 mt-3">
-                                        <h3>Top Customers Report</h3>
+                                        <h3>Top Orderbookers Report</h3>
                                     </div>
                                 </div>
                             </div>
@@ -48,29 +48,27 @@
                                             <tr class="table-active">
                                                 <th scope="col" style="width: 50px;">#</th>
                                                 <th scope="col" class="text-start">Branch</th>
-                                                <th scope="col" class="text-start">Customer</th>
-                                                <th scope="col" class="text-start">Area</th>
+                                                <th scope="col" class="text-start">Orderbooker</th>
                                                 <th scope="col" class="text-start">Sales</th>
-                                                <th scope="col">Balance</th>
+                                                <th scope="col" class="text-start">Customers Balance</th>
+                                                <th scope="col" class="text-start">Self Balance</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @php
                                                 $ser = 0;
                                             @endphp
-                                        @foreach ($customers as $key => $customer)
+                                        @foreach ($orderbookers as $key => $orderbooker)
                                             @php
                                                 $ser++
                                             @endphp
                                             <tr>
                                                 <td>{{ $ser}}</td>
-                                                <td class="text-start">{{ $customer->branch->name}}</td>
-                                                <td class="text-start">{{ $customer->title}}</td>
-                                                <td class="text-start">{{ $customer->branch->name}}</td>
-                                                <td class="text-start">{{ $customer->title}}</td>
-                                                <td class="text-start">{{ $customer->area->name}}</td>
-                                                <td class="text-end">{{ number_format($customer->sales,2) }}</td>
-                                                <td class="text-end">{{ number_format($customer->balance,2) }}</td>
+                                                <td class="text-start">{{ $orderbooker->branch->name}}</td>
+                                                <td class="text-start">{{ $orderbooker->name}}</td>
+                                                <td class="text-end">{{ number_format($orderbooker->sales,2) }}</td>
+                                                <td class="text-end">{{ number_format($orderbooker->customer_balance,2) }}</td>
+                                                <td class="text-end">{{ number_format($orderbooker->balance,2) }}</td>
                                             </tr>
                                         @endforeach
                                         </tbody>

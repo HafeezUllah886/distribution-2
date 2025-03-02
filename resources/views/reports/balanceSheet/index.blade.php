@@ -16,6 +16,17 @@
                         </select>
                     </div>
                     <div class="form-group mt-2">
+                        <label for="branch">Branch</label>
+                        <select name="branch" id="branch" class="form-control">
+                            @if(auth()->user()->role == "Admin")
+                            <option value="All">All</option>
+                            @endif
+                            @foreach ($branches as $branch)
+                                <option value="{{$branch->id}}">{{$branch->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
                         <label for="from">From</label>
                         <input type="date" name="from" id="from" value="{{firstDayOfMonth()}}" class="form-control">
                     </div>
@@ -40,10 +51,12 @@
             var from = $("#from").val();
             var to = $("#to").val();
             var type = $("#type").find(':selected').val();
-            var url = "{{ route('reportBalanceSheetData', ['from' => ':from', 'to' => ':to', 'type' => ':type']) }}"
+            var branch = $("#branch").find(':selected').val();
+            var url = "{{ route('reportBalanceSheetData', ['from' => ':from', 'to' => ':to', 'type' => ':type', 'branch' => ':branch']) }}"
         .replace(':from', from)
         .replace(':to', to)
-        .replace(':type', type);
+        .replace(':type', type)
+        .replace(':branch', branch);
             window.open(url, "_blank", "width=1000,height=800");
         });
     </script>

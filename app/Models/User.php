@@ -107,4 +107,9 @@ class User extends Authenticatable
             return $query->where('branchID', auth()->user()->branchID);
         }
     }
+
+    public function sales()
+    {
+        return $this->hasMany(sales::class, 'orderbookerID');
+    }
 }

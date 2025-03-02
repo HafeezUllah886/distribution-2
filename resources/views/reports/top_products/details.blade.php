@@ -56,9 +56,15 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $ser = 0;
+                                            @endphp
                                         @foreach ($topProductsArray as $key => $product)
+                                            @php
+                                                $ser++;
+                                            @endphp
                                             <tr>
-                                                <td>{{ $key+1}}</td>
+                                                <td>{{ $ser}}</td>
                                                 <td class="text-start">{{ $product['name']}}</td>
                                                 <td class="text-end">{{ number_format($product['price'],2)}}</td>
                                                 <td class="text-end">{{ packInfo($product['unit_value'], $product['unit_name'], $product['stock'])}}</td>

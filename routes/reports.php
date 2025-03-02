@@ -6,6 +6,7 @@ use App\Http\Controllers\reports;
 use App\Http\Controllers\reports\balanceSheetReport;
 use App\Http\Controllers\reports\dailycashbookController;
 use App\Http\Controllers\reports\loadsheetController;
+use App\Http\Controllers\reports\OrderbookerPerformanceReportController;
 use App\Http\Controllers\reports\ProductsSummaryReportController;
 
 use App\Http\Controllers\reports\purchaseReportController;
@@ -38,7 +39,7 @@ Route::middleware('auth', adminCheck::class)->group(function () {
     Route::get('/reports/dailycashbook/{date}', [dailycashbookController::class, 'details'])->name('reportCashbookData');
 
     Route::get('/reports/balanceSheet', [balanceSheetReport::class, 'index'])->name('reportBalanceSheet');
-    Route::get('/reports/balanceSheet/{type}/{from}/{to}', [balanceSheetReport::class, 'data'])->name('reportBalanceSheetData');
+    Route::get('/reports/balanceSheet/{type}/{from}/{to}/{branch}', [balanceSheetReport::class, 'data'])->name('reportBalanceSheetData');
 
     Route::get('/reports/warehousestockreport', [WarehouseStockReportController::class, 'index'])->name('reportWarehouseStock');
     Route::get('/reports/warehousestockreport/{warehouse}', [WarehouseStockReportController::class, 'data'])->name('reportWarehouseStockData');
@@ -48,6 +49,9 @@ Route::middleware('auth', adminCheck::class)->group(function () {
 
     Route::get('/reports/topcustomersreport', [TopCustomersReportController::class, 'index'])->name('reportTopCustomers');
     Route::get('/reports/topcustomersreport/{branch}', [TopCustomersReportController::class, 'data'])->name('reportTopCustomersData');
+
+    Route::get('/reports/toporderbookersreport', [OrderbookerPerformanceReportController::class, 'index'])->name('reportTopOrderbookers');
+    Route::get('/reports/toporderbookersreport/{branch}', [OrderbookerPerformanceReportController::class, 'data'])->name('reportTopOrderbookersData');
 
     Route::get('/reports/topsellingproductsreport', [TopSellingProductsReportController::class, 'index'])->name('reportTopSellingProducts');
     Route::get('/reports/topsellingproductsreport/{branch}', [TopSellingProductsReportController::class, 'data'])->name('reportTopSellingProductsData');

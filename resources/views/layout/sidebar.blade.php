@@ -286,15 +286,15 @@
                                 <a href="{{ route('reportTopSellingProducts') }}" class="nav-link"
                                     data-key="t-basic-elements">Top Selling Products</a>
                             </li>
-                            {{-- 
-                            <li class="nav-item">
-                                <a href="{{ route('reportCashbook') }}" class="nav-link"
-                                    data-key="t-basic-elements">Daily Cash Book</a>
+                           <li class="nav-item">
+                                <a href="{{ route('reportTopOrderbookers') }}" class="nav-link"
+                                    data-key="t-basic-elements">Top Orderbookers</a>
                             </li>
+                            
                             <li class="nav-item">
                                 <a href="{{ route('reportBalanceSheet') }}" class="nav-link"
                                     data-key="t-basic-elements">Balance Sheet</a>
-                            </li>  --}}
+                            </li>
                         </ul>
                     </div>
                 </li> 

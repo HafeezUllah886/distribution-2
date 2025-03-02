@@ -24,7 +24,8 @@
                             <div class="card-body p-4">
                                 <div class="row g-3">
                                     <div class="col-lg-3 col-6">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Accounts Type</p>
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Branch / Type</p>
+                                        <h5 class="fs-14 mb-0">{{ $branch }}</h5>
                                         <h5 class="fs-14 mb-0">{{ $type }}</h5>
                                     </div>
                                     <!--end col-->

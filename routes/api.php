@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\authController;
 use App\Http\Controllers\api\customerPaymentsReceivingContoller;
+use App\Http\Controllers\api\locationTrackingAPIController;
 use App\Http\Controllers\api\nonFinanancialInfoController;
 use App\Http\Controllers\api\OrdersController;
 use App\Http\Controllers\Api\SaleApiController;
@@ -29,5 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/payment/receiving', [customerPaymentsReceivingContoller::class, 'paymentReceiving']);
     Route::get('/pendinginvoices', [customerPaymentsReceivingContoller::class, 'pendingInvoices']);
+    Route::post('/invoicespayment', [customerPaymentsReceivingContoller::class, 'invoicesPayment']);
+
+    Route::post('/storelocation', [locationTrackingAPIController::class, 'storeLocation']);
 
 });

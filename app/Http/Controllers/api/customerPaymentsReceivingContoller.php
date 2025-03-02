@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\customerPayments;
 use App\Models\orderbooker_customers;
+use App\Models\sale_payments;
 use App\Models\sales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -111,7 +112,6 @@ class customerPaymentsReceivingContoller extends Controller
                     'due' => $invoice->net - $payment
                 ];
             }
-           
         }
         return response()->json([
             'status' => 'success',
@@ -122,14 +122,62 @@ class customerPaymentsReceivingContoller extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function invoicesPayment(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'customerID' => 'required|exists:accounts,id',
+            'saleIDs' => 'required|array',
+            'saleIDs.*' => 'exists:sales,id',
+            'amount' => 'required|array',
+            'amount.*' => 'numeric|min:0',
+            'date' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        try{
+            DB::beginTransaction();
+            $data = [];
+            foreach($request->saleIDs as $key => $saleID)
+            {
+                $ref = getRef();
+                $sale = sales::find($saleID);
+                $data[] = sale_payments::create([
+                    'salesID' => $saleID,
+                    'date' => $request->date,
+                    'amount' => $request->amount[$key],
+                    'notes' => $request->notes,
+                    'userID' => auth()->id(),
+                    'refID' => $ref
+                ]);
+
+                createTransaction($sale->customerID, $request->date,0, $request->amount[$key], "Payment of Inv No. $sale->id", $ref);
+                createUserTransaction(auth()->id(), $request->date,$request->amount[$key], 0, "Payment of Inv No. $sale->id", $ref);
+            }
+            DB::commit();
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $data
+                ], 200);
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
-     */
+     */ 
     public function update(Request $request, string $id)
     {
         //
