@@ -31,12 +31,14 @@ class BranchStockReportController extends Controller
             if($branch == "All")
             {
                 $product->stock = getStock($product->id);
+                $purchase_price = avgPurchasePrice('all', 'all', 'all', $product->id);
             }
             else
             {
                 $product->stock = getBranchProductStock($product->id, $branch);
+                $purchase_price = avgPurchasePrice('all', 'all', $branch, $product->id);
             }
-            $purchase_price = avgPurchasePrice('all', 'all', $product->id);
+           
             $product->stock_value = $product->stock * $purchase_price;
         }
 

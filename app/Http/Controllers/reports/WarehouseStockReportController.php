@@ -30,12 +30,16 @@ class WarehouseStockReportController extends Controller
             if($warehouse == "All")
             {
                 $product->stock = getStock($product->id);
+                $purchase_price = avgPurchasePrice('all', 'all', 'all',$product->id);
             }
             else
             {
+                
                 $product->stock = getWarehouseProductStock($product->id, $warehouse);
+                $warehouse1 = warehouses::find($warehouse);
+                $purchase_price = avgPurchasePrice('all', 'all',$warehouse1->branchID ,$product->id);
             }
-            $purchase_price = avgPurchasePrice('all', 'all', $product->id);
+            
             $product->stock_value = $product->stock * $purchase_price;
         }
 
