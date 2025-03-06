@@ -17,7 +17,7 @@ class WarehouseStockReportController extends Controller
         }
         else
         {
-            $warehouses = warehouses::where('branchID', auth()->user()->branchID)->get();
+            $warehouses = warehouses::where('id', auth()->user()->branchID)->get();
         }
         return view('reports.warehouse_stock.index', compact('warehouses'));
     }  

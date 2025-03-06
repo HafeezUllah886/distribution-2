@@ -18,7 +18,7 @@ use App\Http\Controllers\reports\WarehouseStockReportController;
 use App\Http\Middleware\adminCheck;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth', adminCheck::class)->group(function () {
+Route::middleware('auth')->group(function () {
 
     Route::get('/reports/profit', [profitController::class, 'index'])->name('reportProfit');
     Route::get('/reports/profitData/{from}/{to}/{branch}', [profitController::class, 'data'])->name('reportProfitData');

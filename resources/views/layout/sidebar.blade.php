@@ -252,12 +252,6 @@
                                 <a href="{{ route('reportProfit') }}" class="nav-link"
                                     data-key="t-basic-elements">Profit / Loss</a>
                             </li>
-                            {{--  
-                            <li class="nav-item">
-                                <a href="{{ route('reportLoadsheet') }}" class="nav-link"
-                                    data-key="t-basic-elements">Load Sheet</a>
-                            </li>
-                            --}}
                             <li class="nav-item">
                                 <a href="{{ route('reportProductSummary') }}" class="nav-link"
                                     data-key="t-basic-elements">Products Summary</a>

@@ -126,6 +126,48 @@
                         </ul>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarReports" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarReports">
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Reports</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarReports">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('reportProductSummary') }}" class="nav-link"
+                                    data-key="t-basic-elements">Products Summary</a>
+                            </li> 
+                            <li class="nav-item">
+                                <a href="{{ route('reportSales') }}" class="nav-link"
+                                    data-key="t-basic-elements">Sales Report</a>
+                            </li>
+                           <li class="nav-item">
+                                <a href="{{ route('reportPurchases') }}" class="nav-link"
+                                    data-key="t-basic-elements">Purchases Report</a>
+                            </li>
+                           <li class="nav-item">
+                                <a href="{{ route('reportWarehouseStock') }}" class="nav-link"
+                                    data-key="t-basic-elements">Warehouse Stock Report</a>
+                            </li>
+                           <li class="nav-item">
+                                <a href="{{ route('reportBranchStock') }}" class="nav-link"
+                                    data-key="t-basic-elements">Branch Stock Report</a>
+                            </li>
+                           <li class="nav-item">
+                                <a href="{{ route('reportTopCustomers') }}" class="nav-link"
+                                    data-key="t-basic-elements">Top Customers Report</a>
+                            </li>
+                           <li class="nav-item">
+                                <a href="{{ route('reportTopSellingProducts') }}" class="nav-link"
+                                    data-key="t-basic-elements">Top Selling Products</a>
+                            </li>
+                           <li class="nav-item">
+                                <a href="{{ route('reportTopOrderbookers') }}" class="nav-link"
+                                    data-key="t-basic-elements">Top Orderbookers</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li> 
     
                
             </ul>

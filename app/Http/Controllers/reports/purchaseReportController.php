@@ -17,7 +17,7 @@ class purchaseReportController extends Controller
         }
         else
         {
-            $branches = branches::where('branchID', auth()->user()->branchID)->get();
+            $branches = branches::where('id', auth()->user()->branchID)->get();
         }
         return view('reports.purchases.index', compact('branches'));
     }
