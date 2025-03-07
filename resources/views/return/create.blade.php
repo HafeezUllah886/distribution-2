@@ -23,7 +23,7 @@
                                     <select name="product" class="selectize" id="product">
                                         <option value="0"></option>
                                         @foreach ($products as $product)
-                                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                                            <option value="{{ $product->productID }}">{{ $product->product->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -49,7 +49,7 @@
                                     </tfoot>
                                 </table>
                             </div>
-                            <div class="col-3">
+                            <div class="col-2">
                                 <div class="form-group">
                                     <label for="date">Date</label>
                                     <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}" class="form-control">
@@ -62,7 +62,14 @@
                                     <input type="hidden" name="customerID" value="{{$customer->id}}">
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="orderbooker">Order Booker</label>
+                                    <input type="text" value="{{$orderbooker->name}}" class="form-control" readonly>
+                                    <input type="hidden" name="orderbookerID" value="{{$orderbooker->id}}">
+                                </div>
+                            </div>
+                            <div class="col-2">
                                 <div class="form-group">
                                     <label for="warehouseID">Warehouse</label>
                                     <select name="warehouseID" class="selectize1" required id="warehouseID">

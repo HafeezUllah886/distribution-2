@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BranchOrdersController;
+use App\Http\Controllers\OrderReminderController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Middleware\adminCheck;
 use App\Http\Middleware\BranchAdmin_OperatorCheck;
@@ -19,5 +20,9 @@ Route::middleware(['auth', BranchAdmin_OperatorCheck::class])->group(function ()
     Route::post('Branch/orders/finalize', [BranchOrdersController::class, 'storesale'])->name('Branch.orders.sale');
 
     Route::get("branchorders/getproduct/{id}/{area}", [BranchOrdersController::class, 'getSignleProduct']);
+
+    Route::get("reminder/store/{id}", [OrderReminderController::class, 'storeReminder']);
+    Route::get("reminder/update", [OrderReminderController::class, 'update'])->name('reminder.update');
+    Route::get("reminder", [OrderReminderController::class, 'index'])->name('reminder');
 
 });

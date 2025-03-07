@@ -6,6 +6,7 @@ use App\Models\returns;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\orderbooker_customers;
+use App\Models\orderbooker_products;
 use App\Models\product_units;
 use App\Models\products;
 use App\Models\returnsDetails;
@@ -13,6 +14,7 @@ use App\Models\sale_payments;
 use App\Models\sales;
 use App\Models\stock;
 use App\Models\transactions;
+use App\Models\User;
 use App\Models\warehouses;
 use Exception;
 use Illuminate\Http\Request;
@@ -30,8 +32,9 @@ class ReturnsController extends Controller
 
         $returns = returns::whereBetween('date', [$start, $end])->get();
         $customers = accounts::customer()->currentBranch()->get();
+        $orderbookers = User::orderbookers()->currentBranch()->get();
 
-        return view('return.index', compact('returns', 'start', 'end', 'customers'));
+        return view('return.index', compact('returns', 'start', 'end', 'customers', 'orderbookers'));
     }
 
     /**
@@ -40,13 +43,13 @@ class ReturnsController extends Controller
     public function create(request $request)
     {
         $warehouses = warehouses::currentBranch()->get();
-        $customers = accounts::customer()->currentBranch()->get();
-        $products = products::currentBranch()->get();
+        $products = orderbooker_products::where('orderbookerID', $request->orderbookerID)->get();
         $customer = accounts::find($request->customerID);
+        $orderbooker = User::find($request->orderbookerID);
 
-        $pendingInvoices = sales::where('customerID', $request->customerID)->unpaidOrPartiallyPaid()->get();
+        $pendingInvoices = sales::where('customerID', $request->customerID)->where('orderbookerID', $request->orderbookerID)->unpaidOrPartiallyPaid()->get();
 
-        return view('return.create', compact('warehouses', 'products', 'customer', 'pendingInvoices'));
+        return view('return.create', compact('warehouses', 'products', 'customer', 'pendingInvoices', 'orderbooker'));
     }
 
     /**
@@ -62,13 +65,12 @@ class ReturnsController extends Controller
             }
             DB::beginTransaction();
             $ref = getRef();
-            $orderbooker = orderbooker_customers::where('customerID', $request->customerID)->first();
             $return = returns::create(
                 [
                   'customerID'      => $request->customerID,
                   'branchID'        => Auth()->user()->branchID,
                   'warehouseID'     => $request->warehouseID,
-                  'orderbookerID'   => $orderbooker->orderbookerID,
+                  'orderbookerID'   => $request->orderbookerID,
                   'date'            => $request->date,
                   'notes'           => $request->notes,
                   'refID'           => $ref,
@@ -91,7 +93,7 @@ class ReturnsController extends Controller
                     [
                         'returnID'        => $return->id,
                         'warehouseID'   => $request->warehouseID,
-                        'orderbookerID' => $orderbooker->orderbookerID,
+                        'orderbookerID' => $request->orderbookerID,
                         'productID'     => $id,
                         'price'         => $price,
                         'qty'           => $request->qty[$key],

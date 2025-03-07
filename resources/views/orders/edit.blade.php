@@ -78,7 +78,10 @@
                                             <td class="no-padding"><div class="input-group"><input type="number" name="labor[]" readonly required step="any" oninput="updateChanges({{ $id }})" value="{{ $product->labor }}" min="0" class="form-control text-center no-padding" id="labor_{{ $id }}"> <span class="input-group-text no-padding laborText_{{ $id }}" id="basic-addon2"></span></div></td>
                                             <td class="no-padding"><div class="input-group"><input type="number" name="claim[]" readonly required step="any" oninput="updateChanges({{ $id }})" value="{{$product->claim}}" min="0" class="form-control text-center no-padding" id="claim_{{ $id }}"> <span class="input-group-text no-padding claimText_{{ $id }}" id="basic-addon2"></span></div></td>
                                             <td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_{{ $id }}"></td>
-                                            <td class="no-padding"> <span class="btn btn-sm btn-danger" onclick="deleteRow({{ $id }})">X</span> </td>
+                                            <td class="no-padding"> 
+                                                <span class="btn btn-sm btn-info" onclick="reminder({{ $id }})"><i class="ri-calendar-check-line"></i></span> 
+                                                <span class="btn btn-sm btn-danger" onclick="deleteRow({{ $id }})">X</span> 
+                                            </td>
                                             <input type="hidden" name="id[]" value="{{ $id }}">
                                             <input type="hidden" name="frightValue[]" id="frightValue_{{ $id }}">
                                             <input type="hidden" name="laborValue[]" id="laborValue_{{ $id }}">
@@ -332,6 +335,41 @@
         @foreach ($order->details as $product)
         updateChanges({{$product->productID}});
         @endforeach
+
+        function reminder(id) {
+            $.ajax({
+                url: "{{ url('reminder/store/') }}/" + id,
+                method: "GET",
+                success: function(msg) {
+                    if(msg.msg == 'exists') {
+                        Toastify({
+                            text: "Order Reminder Already Exists",
+                            className: "error",
+                            close: true,
+                            gravity: "top", // `top` or `bottom`
+                            position: "center", // `left`, `center` or `right`
+                            stopOnFocus: true, // Prevents dismissing of toast on hover
+                            style: {
+                                background: "linear-gradient(to right, #FF5733, #E70000)",
+                            }
+                            }).showToast();
+                    }
+                    if(msg.msg == 'created') {
+                        Toastify({
+                        text: "Order Reminder Created",
+                        className: "success",
+                        close: true,
+                        gravity: "top", // `top` or `bottom`
+                        position: "center", // `left`, `center` or `right`
+                        stopOnFocus: true, // Prevents dismissing of toast on hover
+                        style: {
+                            background: "linear-gradient(to right, #01CB3E, #96c93d)",
+                        }
+                        }).showToast();
+                    }
+                }
+            });
+        }
 
     </script>
 @endsection
