@@ -68,7 +68,7 @@
                                         </tbody>
                                         <tfoot>
                                         <tr>
-                                                <th colspan="3" class="text-end">Total</th>
+                                                <th colspan="5" class="text-end">Total</th>
                                                 <th class="text-end">{{number_format($products->sum('stock_value'), 2)}}</th>
                                             </tr> 
                                         </tfoot>
