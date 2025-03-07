@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <form action="{{ route('sale_payment.store') }}" enctype="multipart/form-data" id="paymentForm" onsubmit="validateForm(event)" method="post">
+                <form action="{{ route('bulk_payment.store') }}" enctype="multipart/form-data" id="paymentForm" onsubmit="validateForm(event)" method="post">
                 <div class="card-header row">
                     <div class="col-6"><h3> Create Invoice Payments </h3></div>
                     <div class="col-6 d-flex flex-row-reverse"><a href="{{route('dashboard')}}" class="btn btn-danger">Close</a></div>
@@ -92,6 +92,7 @@
                                     <tr>
                                         <td colspan="5" class="text-end">Net Amount</td>
                                         <td><input type="number" id="netAmount" value="0" class="form-control form-control-sm"></td>
+                                        <input type="hidden" name="customerID" value="{{ $_GET['customerID'] }}">
                                     </tr>
                                 </tfoot>
                             </table>
@@ -148,7 +149,7 @@
                 document.getElementById('paymentForm').submit();
             } else {
                 // Display an alert
-                alert('Total does not match Net Amount. Please check your values.');
+                alert('Currencies Total does not match Invoices Net Amount. Please check your values.');
             }
         }
     </script>

@@ -152,7 +152,7 @@ class customerPaymentsReceivingContoller extends Controller
                     'date' => $request->date,
                     'amount' => $request->amount[$key],
                     'notes' => $request->notes,
-                    'userID' => auth()->id(),
+                    'userID' => $request->user()->id,
                     'refID' => $ref
                 ]);
 

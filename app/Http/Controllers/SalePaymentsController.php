@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\sale_payments;
 use App\Models\sales;
@@ -103,6 +104,7 @@ class SalePaymentsController extends Controller
             DB::beginTransaction();
             sale_payments::where('refID', $ref)->delete();
             transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');
             return redirect()->route('salePayment.index', $id)->with('success', "Sale Payment Deleted");
