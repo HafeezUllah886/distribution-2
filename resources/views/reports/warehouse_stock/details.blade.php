@@ -48,6 +48,8 @@
                                             <tr class="table-active">
                                                 <th scope="col" style="width: 50px;">#</th>
                                                 <th scope="col" class="text-start">Product</th>
+                                                <th scope="col" class="text-start">Unit</th>
+                                                <th scope="col" class="text-start">Pack Size</th>
                                                 <th scope="col">Stock</th>
                                                 <th scope="col">Stock Value</th>
                                             </tr>
@@ -57,6 +59,8 @@
                                             <tr>
                                                 <td>{{ $key+1}}</td>
                                                 <td class="text-start">{{ $product->name}}</td>
+                                                <td class="text-start">{{ $product->units[0]->unit_name}}</td>
+                                                <td class="text-start">{{ $product->units[0]->value}}</td>
                                                 <td class="text-end">{{ packInfo($product->units[0]->value, $product->units[0]->unit_name ,$product->stock )}}</td>
                                                 <td class="text-end">{{ number_format($product->stock_value,2) }}</td>
                                             </tr>
