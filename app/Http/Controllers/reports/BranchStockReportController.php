@@ -25,7 +25,7 @@ class BranchStockReportController extends Controller
 
     public function data($branch)
     {
-        $products = products::all();
+        $products = products::currentBranch()->get();
         foreach($products as $product)
         {
             if($branch == "All")

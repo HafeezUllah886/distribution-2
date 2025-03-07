@@ -44,7 +44,7 @@ class SalesController extends Controller
      */
     public function create(request $request)
     {
-        $products = products::orderby('name', 'asc')->get();
+        $products = products::currentBranch()->orderby('name', 'asc')->get();
         $customer = accounts::find($request->customerID);
         foreach($products as $product)
         {

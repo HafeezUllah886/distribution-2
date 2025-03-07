@@ -24,7 +24,7 @@ class WarehouseStockReportController extends Controller
 
     public function data($warehouse)
     {
-        $products = products::all();
+        $products = products::currentBranch()->get();
         foreach($products as $product)
         {
             if($warehouse == "All")
@@ -34,7 +34,6 @@ class WarehouseStockReportController extends Controller
             }
             else
             {
-                
                 $product->stock = getWarehouseProductStock($product->id, $warehouse);
                 $warehouse1 = warehouses::find($warehouse);
                 $purchase_price = avgPurchasePrice('all', 'all',$warehouse1->branchID ,$product->id);

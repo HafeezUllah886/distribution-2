@@ -17,7 +17,7 @@ class ProductsController extends Controller
      */
     public function index($s_cat , $s_brand)
     {
-        $products = products::query();
+        $products = products::currentBranch();
 
         if ($s_cat != 'all') {
             $products->where('catID', $s_cat);
