@@ -17,7 +17,7 @@ class StockAdjustmentController extends Controller
     public function index()
     {
         $adjustments = stockAdjustment::orderBy('id', 'desc')->get();
-        $products = products::all();
+        $products = products::currentBranch()->get();
         $units = units::all();
 
         return view('stock.adjustment.index', compact('adjustments', 'products', 'units'));

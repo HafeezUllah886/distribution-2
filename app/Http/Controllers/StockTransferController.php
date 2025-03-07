@@ -20,11 +20,8 @@ class StockTransferController extends Controller
     public function index()
     {
         $stockTransfers = StockTransfer::with('details')->where('branchID', auth()->user()->branchID)->get();
-        if(auth()->user()->role == 'admin'){
-            $warehouses = warehouses::all();
-        }else{
-            $warehouses = warehouses::where('branchID', auth()->user()->branchID)->get();
-        }
+        $warehouses = warehouses::currentBranch()->get();
+       
         return view('stock.transfer.index', compact('stockTransfers', 'warehouses'));
     }
 
@@ -38,7 +35,7 @@ class StockTransferController extends Controller
         }
             $warehouseFrom = warehouses::find($request->fromWarehouse);
             $warehouseTo = warehouses::find($request->toWarehouse);
-            $products = products::all();
+            $products = products::currentBranch()->get();
             foreach($products as $product){
                $product->stock = getWarehouseProductStock($product->id, $warehouseFrom->id);
             }

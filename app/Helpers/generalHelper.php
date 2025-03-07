@@ -145,7 +145,7 @@ function avgSalePrice($from, $to, $branch, $id)
         $sales->whereBetween('date', [$from, $to]);
     }
     $sales_amount = $sales->sum('amount');
-    $sales_qty = $sales->sum('qty');
+    $sales_qty = $sales->sum('pc');
 
     if($sales_qty > 0)
     {
@@ -175,7 +175,7 @@ function avgPurchasePrice($from, $to, $branch, $id)
         $purchases->whereBetween('date', [$from, $to]);
     }
     $purchase_amount = $purchases->sum('amount');
-    $purchase_qty = $purchases->sum('qty');
+    $purchase_qty = $purchases->sum('pc');
 
     if($purchase_qty > 0)
     {

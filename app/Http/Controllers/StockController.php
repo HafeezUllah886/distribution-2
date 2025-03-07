@@ -16,9 +16,9 @@ class StockController extends Controller
      */
     public function index()
     {
-        $products = products::all();
+        $products = products::currentBranch()->get();
         $units = units::all();
-        $warehouses = warehouses::all();
+        $warehouses = warehouses::currentBranch()->get();
         return view('stock.index', compact('products', 'units', 'warehouses'));
     }
 
