@@ -61,6 +61,18 @@ class accounts extends Model
         }
     }
 
+    public function scopeUnloader($query)
+    {
+        if(auth()->user()->role == 'Admin')
+        {
+            return $query->where('type', 'Unloader')->where('status', 'Active');
+        }
+        else
+        {
+            return $query->where('type', 'Unloader')->where('status', 'Active')->where('branchID', auth()->user()->branchID);
+        }
+    }
+
     public function scopeCurrentBranch($query)
     {
         return $query->where('branchID', auth()->user()->branchID);

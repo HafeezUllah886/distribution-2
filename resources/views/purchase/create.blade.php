@@ -106,6 +106,16 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-4 mt-2">
+                                <div class="form-group">
+                                    <label for="unloaderID">Unloader</label>
+                                    <select name="unloaderID" id="unloaderID" class="form-control">
+                                        @foreach ($unloaders as $unloader)
+                                            <option value="{{$unloader->id}}">{{$unloader->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-12 mt-2">
                                 <div class="form-group">
                                     <label for="notes">Notes</label>

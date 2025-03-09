@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stock_adjustments', function (Blueprint $table) {
+        Schema::create('obsolete_stocks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('productID')->constrained('products', 'id');
             $table->foreignId('warehouseID')->constrained('warehouses', 'id');
@@ -19,9 +19,11 @@ return new class extends Migration
             $table->float('qty')->nullable();
             $table->float('loose')->nullable();
             $table->float('pc');
+            $table->float('price');
+            $table->float('amount');
             $table->foreignId('unitID')->constrained('product_units', 'id');
             $table->float('unitValue');
-            $table->string("type");
+            $table->string("reason");
             $table->text('notes')->nullable();
             $table->date('date');
             $table->bigInteger('refID');
@@ -34,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stock_adjustments');
+        Schema::dropIfExists('obsolete_stocks');
     }
 };

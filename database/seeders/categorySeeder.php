@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\categories;
+use App\Models\expense_categories;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -19,5 +20,13 @@ class categorySeeder extends Seeder
         ];
 
         categories::insert($cats);
+
+
+        $expenseCats = [
+            ['name' => 'Expense Category 1'],
+            ['name' => 'Expense Category 2'],
+        ];
+
+        expense_categories::insert($expenseCats);
     }
 }

@@ -50,5 +50,14 @@ class accountSeeder extends Seeder
                 'branchID' => 1,
             ]
         );
+
+        accounts::create(
+            [
+                'title' => "Unloader",
+                'type' => "Unloader",
+                'areaID' => 1,
+                'branchID' => 1,
+            ]
+        );
     }
 }

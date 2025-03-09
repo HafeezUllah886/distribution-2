@@ -33,7 +33,6 @@ class customerPaymentsReceivingContoller extends Controller
             ], 422);
         }
 
-
         try{ 
             DB::beginTransaction();
             $ref = getRef();
@@ -98,20 +97,18 @@ class customerPaymentsReceivingContoller extends Controller
             ], 404);
         }
         
-        $invoices = sales::with('payments')->where('customerID', $request->customerID)->get();
+        $invoices = sales::with('payments')->where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->unpaidOrPartiallyPaid()->get();
         $data = [];
         foreach($invoices as $invoice)
         {
             $payment = $invoice->payments->sum('amount');
-            if($payment < $invoice->net)
-            {
-                $data[] = [
-                    'salesID' => $invoice->id,
-                    'total_bill' => $invoice->net,
-                    'paid' => $payment,
-                    'due' => $invoice->net - $payment
-                ];
-            }
+            
+            $data[] = [
+                'salesID' => $invoice->id,
+                'total_bill' => $invoice->net,
+                'paid' => $payment,
+                'due' => $invoice->net - $payment
+            ];
         }
         return response()->json([
             'status' => 'success',

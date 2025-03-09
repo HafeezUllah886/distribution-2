@@ -2,11 +2,44 @@
 @section('content')
     <div class="row">
         <div class="col-12">
+            <form>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">From</span>
+                            <input type="date" class="form-control" placeholder="Username" name="start" value="{{$from}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">To</span>
+                            <input type="date" class="form-control" placeholder="Username" name="end" value="{{$to}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Category</span>
+                            <select class="form-control" name="category" aria-label="Username" aria-describedby="basic-addon1">
+                                <option value="All">All</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}" @selected($category->id == $categoryID)>{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                       <input type="submit" value="Filter" class="btn btn-success w-100">
+                    </div>
+                </div>
+            </form>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Expenses</h3>
+                    <div>
+                        <a type="button" class="btn btn-info" href="{{ route('expense_categories.index') }}">Expense Categories</a>
                     <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create
                         New</button>
+                    </div>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -24,6 +57,7 @@
                             <th>#</th>
                             <th>Ref #</th>
                             <th>Expensed By</th>
+                            <th>Category</th>
                             <th>Date</th>
                             <th>Notes</th>
                             <th>Amount</th>
@@ -35,6 +69,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $tran->refID }}</td>
                                     <td>{{ $tran->user->name }}</td>
+                                    <td>{{ $tran->category->name }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->date)) }}</td>
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
@@ -65,6 +100,15 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-6">
+                                <div class="form-group mt-2">
+                                    <label for="category">Category</label>
+                                    <select name="category" required id="category" class="form-control">
+                                        <option value="">Select Category</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="form-group mt-2">
                                     <label for="date">Date</label>
                                     <input type="date" name="date" required id="date" value="{{ date('Y-m-d') }}"

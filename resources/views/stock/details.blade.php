@@ -79,7 +79,7 @@
                                                 <td>{{ $key+1 }}</td>
                                                 <td>{{ $stock->refID }}</td>
                                                 <td>{{ date('d M Y', strtotime($stock->date)) }}</td>
-                                                <td class="text-start">{{ $stock->notes }}</td>
+                                                <td class="text-start">{!! $stock->notes !!}</td>
                                                 <td class="text-end">{{packInfo($unit->value, $unit->unit_name, $stock->cr)}} </td>
                                                 <td class="text-end">{{packInfo($unit->value, $unit->unit_name, $stock->db)}} </td>
                                                 <td class="text-end">{{packInfo($unit->value, $unit->unit_name, $balance)}} </td>

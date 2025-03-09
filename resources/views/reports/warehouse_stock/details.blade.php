@@ -61,7 +61,7 @@
                                                 <td class="text-start">{{ $product->name}}</td>
                                                 <td class="text-start">{{ $product->units[0]->unit_name}}</td>
                                                 <td class="text-start">{{ $product->units[0]->value}}</td>
-                                                <td class="text-end">{{ packInfo($product->units[0]->value, $product->units[0]->unit_name ,$product->stock )}}</td>
+                                                <td class="text-end">{{ number_format($product->stock / $product->units[0]->value,2)}}</td>
                                                 <td class="text-end">{{ number_format($product->stock_value,2) }}</td>
                                             </tr>
                                         @endforeach

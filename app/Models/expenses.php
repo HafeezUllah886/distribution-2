@@ -21,4 +21,9 @@ class expenses extends Model
         return $query->where('branchID', auth()->user()->branchID);
     }
 
+    public function category()
+    {
+        return $this->belongsTo(expense_categories::class, 'categoryID');
+    }
+
 }

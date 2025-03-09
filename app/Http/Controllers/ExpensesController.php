@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\accounts;
 use App\Models\currencymgmt;
+use App\Models\expense_categories;
 use App\Models\expenses;
 use App\Models\transactions;
 use Illuminate\Http\Request;
@@ -14,11 +15,22 @@ class ExpensesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $expenses = expenses::currentBranch()->orderby('id', 'desc')->get();
+        $from = $request->start ?? date('Y-m-d');
+        $to = $request->end ?? date('Y-m-d');
+        $categoryID = $request->category ?? "All";
+        if($categoryID == "All")
+        {
+            $expenses = expenses::currentBranch()->whereBetween('date', [$from, $to])->orderby('id', 'desc')->get();
+        }
+        else
+        {
+            $expenses = expenses::currentBranch()->whereBetween('date', [$from, $to])->where('categoryID', $categoryID)->orderby('id', 'desc')->get();
+        }
         $currencies = currencymgmt::all();
-        return view('Finance.expense.index', compact('expenses', 'currencies'));
+        $categories = expense_categories::all();
+        return view('Finance.expense.index', compact('expenses', 'currencies', 'categories', 'from', 'to', 'categoryID'));
     }
 
     /**
@@ -43,6 +55,7 @@ class ExpensesController extends Controller
                     'userID' => auth()->user()->id,
                     'amount' => $request->total,
                     'branchID' => auth()->user()->branchID,
+                    'categoryID' => $request->category,
                     'date' => $request->date,
                     'notes' => $request->notes,
                     'refID' => $ref,

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\product_units;
 use App\Models\products;
 use App\Models\stock;
 use App\Models\stockAdjustment;
 use App\Models\units;
+use App\Models\warehouses;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,11 +19,8 @@ class StockAdjustmentController extends Controller
      */
     public function index()
     {
-        $adjustments = stockAdjustment::orderBy('id', 'desc')->get();
-        $products = products::currentBranch()->get();
-        $units = units::all();
-
-        return view('stock.adjustment.index', compact('adjustments', 'products', 'units'));
+        $adjustments = stockAdjustment::currentBranch()->orderBy('id', 'desc')->get();
+        return view('stock.adjustment.index', compact('adjustments'));
     }
 
     /**
@@ -28,7 +28,10 @@ class StockAdjustmentController extends Controller
      */
     public function create()
     {
-        //
+        $products = products::currentBranch()->get();
+        $units = units::all();
+        $warehouses = warehouses::currentBranch()->get();
+        return view('stock.adjustment.create', compact('products', 'units', 'warehouses'));
     }
 
     /**
@@ -37,43 +40,56 @@ class StockAdjustmentController extends Controller
     public function store(Request $request)
     {
 
-        try
+       try
         {
+            if($request->isNotFilled('id'))
+            {
+                throw new Exception('Please Select Atleast One Product');
+            } 
             DB::beginTransaction();
-            $ref = getRef();
-            $unit = units::find($request->unitID);
-            $qty = $request->qty * $unit->value;
-            stockAdjustment::create(
-                [
-                    'productID' => $request->productID,
-                    'unitID'    => $request->unitID,
-                    'unitValue' => $unit->value,
-                    'date'      => $request->date,
-                    'type'      => $request->type,
-                    'qty'       => $request->qty,
-                    'notes'     => $request->notes,
-                    'refID'     => $ref
-                ]
-            );
+            foreach($request->id as $key => $id)
+            {
+                $unit = product_units::find($request->unit[$key]);
+                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                $ref = getRef();
 
-            if($request->type == 'Stock-In')
-            {
-               createStock($request->productID, $qty, 0, $request->date, "Stock-In: $request->notes", $ref);
-            }
-            else
-            {
-                createStock($request->productID, 0, $qty, $request->date, "Stock-Out: $request->notes", $ref);
-            }
+                stockAdjustment::create(
+                    [
+                        'productID'       => $id,
+                        'branchID'        => Auth()->user()->branchID,
+                        'warehouseID'     => $request->warehouseID,
+                        'unitID'          => $request->unit[$key],
+                        'unitValue'       => $unit->value,
+                        'pc'              => $pc,
+                        'qty'             => $request->qty[$key],
+                        'loose'           => $request->loose[$key],
+                        'type'            => $request->type,
+                        'date'            => $request->date,
+                        'notes'           => $request->notes[$key],
+                        'refID'           => $ref,
+                    ]
+                );
+
+                $notes = $request->notes[$key];
+
+                if($request->type == 'Stock-In')
+                {
+                    createStock($id, $pc, 0, $request->date, "Stock Adj - In | $notes", $ref, $request->warehouseID);
+                }
+                else
+                {
+                    createStock($id, 0, $pc, $request->date, "Stock Adj - Out | $notes", $ref, $request->warehouseID);
+                }
+            }       
 
             DB::commit();
             return back()->with('success', "Stock Adjustment Created");
         }
         catch(\Exception $e)
         {
-            DB::rollBack();
-
+            DB::rollback();
             return back()->with('error', $e->getMessage());
-        }
+        } 
     }
 
     /**

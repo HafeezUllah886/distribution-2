@@ -18,6 +18,14 @@
                             </select>
                         </div>
                         <div class="form-group mt-2">
+                            <label for="orderbooker">Order Booker</label>
+                            <select name="orderbookerID" id="orderbooker" class="selectize1">
+                                @foreach ($orderBookers as $orderbooker)
+                                    <option value="{{$orderbooker->id}}">{{$orderbooker->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mt-2">
                             <button type="submit" class="btn btn-success w-100" id="viewBtn">Proceed</button>
                         </div>
                     </div>

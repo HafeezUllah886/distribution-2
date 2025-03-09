@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('vendorID')->constrained('accounts', 'id');
             $table->foreignId('branchID')->constrained('branches', 'id');
             $table->foreignId('warehouseID')->constrained('warehouses', 'id');
+            $table->foreignId('unloaderID')->constrained('accounts', 'id');
             $table->date('orderdate');
             $table->date('recdate');
             $table->string("inv")->nullable();

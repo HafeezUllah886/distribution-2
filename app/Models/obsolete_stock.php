@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class stockAdjustment extends Model
+class obsolete_stock extends Model
 {
+
     use HasFactory;
+
     protected $guarded = [];
 
     public function product()

@@ -87,9 +87,7 @@
                             <li class="nav-item">
                                 <a href="{{ route('product_stock.index') }}" class="nav-link" data-key="t-chat">Products Stock</a>
                             </li>
-                            {{-- <li class="nav-item">
-                                <a href="{{ route('stockAdjustments.index') }}" class="nav-link" data-key="t-chat">Stock Adjustment</a>
-                            </li> --}}
+                           
                         </ul>
                     </div>
                 </li>

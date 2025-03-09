@@ -4,8 +4,8 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3>Stock Adjustments</h3>
-                    <a href="{{route('stockAdjustments.create')}}" class="btn btn-primary">Create New</a>
+                    <h3>Obsolete Stock</h3>
+                    <a href="{{route('obsolete.create')}}" class="btn btn-primary">Create New</a>
                 </div>
                 <div class="card-body">
                     <table class="table" id="buttons-datatables">
@@ -15,28 +15,22 @@
                             <th>Product</th>
                             <th>Warehouse</th>
                             <th>Date</th>
-                            <th>Unit</th>
-                            <th>Qty</th>
-                            <th>Loose</th>
-                            <th>Type</th>
+                            <th>Reason</th>
                             <th>Notes</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
-                            @foreach ($adjustments as $key => $item)
+                            @foreach ($obsoletes as $key => $item)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $item->refID }}</td>
                                     <td>{{ $item->product->name }}</td>
                                     <td>{{ $item->warehouse->name }}</td>
                                     <td>{{ date('d M Y', strtotime($item->date)) }}</td>
-                                    <td>{{ $item->unit->name }}</td>
-                                    <td>{{ number_format($item->qty) }}</td>
-                                    <td>{{ number_format($item->loose) }}</td>
-                                    <td>{{ $item->type }}</td>
+                                    <td>{{ $item->reason }}</td>
                                     <td>{{ $item->notes }}</td>
                                     <td>
-                                        <a href="{{ route('stockAdjustment.delete', $item->refID) }}"
+                                        <a href="{{ route('obsolete.delete', $item->refID) }}"
                                             class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>

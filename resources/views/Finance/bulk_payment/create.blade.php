@@ -83,7 +83,7 @@
                                             <td>{{ number_format($invoice->net, 2) }}</td>
                                             <td>{{ number_format($invoice->paid(), 2) }}</td>
                                             <td>{{ number_format($invoice->due(), 2) }}</td>
-                                            <td><input type="number" id="amount_{{ $invoice->id }}" name="amount[]" oninput="updateNet()" class="form-control form-control-sm" value="0" min="0" max="{{ $invoice->due() }}"></td>
+                                            <td><input type="number" id="amount_{{ $invoice->id }}" name="invamount[]" oninput="updateNet()" step="any" class="form-control form-control-sm" value="0" min="0" max="{{ $invoice->due() }}"></td>
                                             <input type="hidden" name="invoiceID[]" value="{{ $invoice->id }}">
                                         </tr>
                                     @endforeach
@@ -124,6 +124,7 @@
                 total += parseFloat(value);
             });
             $("#total").val(total.toFixed(2));
+            divideAmount();
         }
 
         function updateNet() {
@@ -151,6 +152,26 @@
                 // Display an alert
                 alert('Currencies Total does not match Invoices Net Amount. Please check your values.');
             }
+        }
+
+        function divideAmount() {
+            var amount = parseFloat($("#total").val());
+            $("input[id^='amount_']").each(function() {
+                var inputId = $(this).attr('id');
+                var inputVal = $(this).val();
+                var inpputMax = $(this).attr('max');
+                if(amount > inpputMax) {
+                    $(this).val(parseFloat(inpputMax).toFixed(2));
+                    amount -= inpputMax;
+                }
+                else
+                {
+                    $(this).val(parseFloat(amount).toFixed(2));
+                    amount = 0;
+                }
+            });
+            updateNet();
+          
         }
     </script>
 @endsection

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ObsoleteStockController;
 use App\Http\Controllers\StockAdjustmentController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\StockTransferController;
@@ -15,10 +16,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('stockAdjustments', StockAdjustmentController::class);
     Route::get('stockAdjustment/delete/{ref}', [StockAdjustmentController::class, 'destroy'])->name('stockAdjustment.delete')->middleware(confirmPassword::class);
 
-   
+    Route::resource('obsolete', ObsoleteStockController::class);
+    Route::get('obsolete/delete/{ref}', [ObsoleteStockController::class, 'destroy'])->name('obsolete.delete')->middleware(confirmPassword::class);
+
     Route::get('stockTransfers/delete/{ref}', [StockTransferController::class, 'destroy'])->name('stockTransfers.delete')->middleware(confirmPassword::class);
     Route::resource('stockTransfers', StockTransferController::class);
-   
 
     Route::get("getproduct/{id}/{warehouse}", function($id, $warehouse){
         $product = products::with('units')->find($id);

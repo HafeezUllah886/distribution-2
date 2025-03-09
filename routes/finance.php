@@ -7,6 +7,7 @@ use App\Http\Controllers\BulkInvoicePaymentsReceivingController;
 use App\Http\Controllers\CurrencymgmtController;
 use App\Http\Controllers\CustomerPaymentsController;
 use App\Http\Controllers\DepositWithdrawController;
+use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\PaymentReceivingController;
 use App\Http\Controllers\profileController;
@@ -34,6 +35,8 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
 
     Route::resource('expenses', ExpensesController::class);
     Route::get('expense/delete/{ref}', [ExpensesController::class, 'delete'])->name('expense.delete')->middleware(confirmPassword::class);
+
+    Route::resource('expense_categories', ExpenseCategoriesController::class);
 
     Route::resource('customer_payments', CustomerPaymentsController::class);
     Route::get('customer_payments/delete/{ref}', [CustomerPaymentsController::class, 'delete'])->name('customer_payments.delete')->middleware(confirmPassword::class);

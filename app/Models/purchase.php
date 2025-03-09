@@ -23,4 +23,9 @@ class purchase extends Model
     {
         return $this->belongsTo(branches::class, 'branchID');
     }
+
+    public function unloader()
+    {
+        return $this->belongsTo(accounts::class, 'unloaderID');
+    }
 }

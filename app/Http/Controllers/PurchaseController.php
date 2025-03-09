@@ -41,7 +41,8 @@ class PurchaseController extends Controller
         $units = units::all();
         $vendor = $request->vendorID;
         $warehouses = warehouses::currentBranch()->get();
-        return view('purchase.create', compact('products', 'units', 'vendor', 'warehouses'));
+        $unloaders = accounts::unloader()->get();
+        return view('purchase.create', compact('products', 'units', 'vendor', 'warehouses', 'unloaders'));
     }
 
     /**
@@ -62,6 +63,7 @@ class PurchaseController extends Controller
                   'vendorID'        => $request->vendorID,
                   'branchID'        => Auth()->user()->branchID,
                   'warehouseID'     => $request->warehouseID,
+                  'unloaderID'      => $request->unloaderID,
                   'orderdate'       => $request->orderdate,
                   'recdate'         => $request->recdate,
                   'notes'           => $request->notes,
@@ -75,6 +77,7 @@ class PurchaseController extends Controller
             $ids = $request->id;
 
             $total = 0;
+            $totalLabor = 0;
             foreach($ids as $key => $id)
             {
                 $unit = product_units::find($request->unit[$key]);
@@ -87,6 +90,7 @@ class PurchaseController extends Controller
                 $netPrice = ($price - $discount - $discountvalue - $claim);
                 $amount = $netPrice * $pc;
                 $total += $amount;
+                $totalLabor += $request->labor[$key] * $pc;
 
                 purchase_details::create(
                     [
@@ -124,6 +128,7 @@ class PurchaseController extends Controller
 
             createTransaction($request->vendorID, $request->recdate, 0, $net, "Pending Amount of Purchase No. $purchase->id", $ref);
 
+            createTransaction($request->unloaderID, $request->recdate, $totalLabor, 0, "Labor Charges of Purchase No. $purchase->id", $ref);
             DB::commit();
             return back()->with('success', "Purchase Created");
         }
@@ -151,7 +156,8 @@ class PurchaseController extends Controller
         $units = units::all();
         $accounts = accounts::business()->get();
         $warehouses = warehouses::all();
-        return view('purchase.edit', compact('products', 'units', 'accounts', 'purchase', 'warehouses'));
+        $unloaders = accounts::unloader()->get();
+        return view('purchase.edit', compact('products', 'units', 'accounts', 'purchase', 'warehouses', 'unloaders'));
     }
 
     /**
@@ -189,6 +195,7 @@ class PurchaseController extends Controller
             $ids = $request->id;
 
             $total = 0;
+            $totalLabor = 0;
             foreach($ids as $key => $id)
             {
                 $unit = product_units::find($request->unit[$key]);
@@ -201,6 +208,7 @@ class PurchaseController extends Controller
                 $netPrice = ($price - $discount - $discountvalue - $claim);
                 $amount = $netPrice * $pc;
                 $total += $amount;
+                $totalLabor += $request->labor[$key] * $pc;
 
                 purchase_details::create(
                     [
@@ -238,6 +246,7 @@ class PurchaseController extends Controller
 
             createTransaction($request->vendorID, $request->recdate, 0, $net, "Pending Amount of Purchase No. $purchase->id", $ref);
 
+            createTransaction($request->unloaderID, $request->recdate, $totalLabor, 0, "Labor Charges of Purchase No. $purchase->id", $ref);
             DB::commit();
             return back()->with('success', "Purchase Updated");
         }
