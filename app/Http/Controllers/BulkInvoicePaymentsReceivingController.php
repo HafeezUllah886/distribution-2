@@ -21,7 +21,7 @@ class BulkInvoicePaymentsReceivingController extends Controller
         $customers = accounts::customer()->currentBranch()->get();
         $orderBookers = User::orderbookers()->currentBranch()->get();
 
-        return view('finance.bulk_payment.index', compact('customers', 'orderBookers'));
+        return view('Finance.bulk_payment.index', compact('customers', 'orderBookers'));
     }
 
     /**
@@ -32,7 +32,7 @@ class BulkInvoicePaymentsReceivingController extends Controller
         $invoices = sales::where('customerID', $request->customerID)->where('orderbookerID', $request->orderbookerID)->unpaidOrPartiallyPaid()->get();
         $currencies = currencymgmt::all();
 
-        return view('finance.bulk_payment.create', compact('invoices', 'currencies'));
+        return view('Finance.bulk_payment.create', compact('invoices', 'currencies'))
     }
 
     /**
