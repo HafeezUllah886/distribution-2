@@ -32,7 +32,7 @@ class BulkInvoicePaymentsReceivingController extends Controller
         $invoices = sales::where('customerID', $request->customerID)->where('orderbookerID', $request->orderbookerID)->unpaidOrPartiallyPaid()->get();
         $currencies = currencymgmt::all();
 
-        return view('Finance.bulk_payment.create', compact('invoices', 'currencies'))
+        return view('Finance.bulk_payment.create', compact('invoices', 'currencies'));
     }
 
     /**
