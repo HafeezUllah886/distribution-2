@@ -49,6 +49,7 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::get('labor_payments/delete/{ref}', [LaborPaymentsController::class, 'delete'])->name('labor_payments.delete')->middleware(confirmPassword::class);
 
     Route::get('currency/details/{id}', [CurrencymgmtController::class, 'details'])->name('currency.details');
+    Route::get('currency/statement/{id}/{user}/{from}/{to}', [CurrencymgmtController::class, 'show'])->name('currency.statement');
 
     Route::resource('staff_payments', StaffPaymentsController::class);
     Route::get('staff_payments/delete/{ref}', [StaffPaymentsController::class, 'delete'])->name('staff_payments.delete')->middleware(confirmPassword::class);

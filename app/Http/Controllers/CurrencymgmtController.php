@@ -26,18 +26,18 @@ class CurrencymgmtController extends Controller
         $currency = currencymgmt::find($id);
         $user = User::find($user);
 
-        $transactions = currency_transactions::where(['currencyID' => $id, 'user_id' => $user->id])->whereBetween('date', [$from, $to])->get();
+        $transactions = currency_transactions::where(['currencyID' => $id, 'userID' => $user->id])->whereBetween('date', [$from, $to])->get();
 
-        $pre_cr = currency_transactions::where(['currencyID' => $id, 'user_id' => $user->id])->whereDate('date', '<', $from)->sum('cr');
-        $pre_db = currency_transactions::where(['currencyID' => $id, 'user_id' => $user->id])->whereDate('date', '<', $from)->sum('db');
+        $pre_cr = currency_transactions::where(['currencyID' => $id, 'userID' => $user->id])->whereDate('date', '<', $from)->sum('cr');
+        $pre_db = currency_transactions::where(['currencyID' => $id, 'userID' => $user->id])->whereDate('date', '<', $from)->sum('db');
         $pre_balance = $pre_cr - $pre_db;
 
-        $cur_cr = currency_transactions::where(['currencyID' => $id, 'user_id' => $user->id])->sum('cr');
-        $cur_db = currency_transactions::where(['currencyID' => $id, 'user_id' => $user->id])->sum('db');
+        $cur_cr = currency_transactions::where(['currencyID' => $id, 'userID' => $user->id])->sum('cr');
+        $cur_db = currency_transactions::where(['currencyID' => $id, 'userID' => $user->id])->sum('db');
 
         $cur_balance = $cur_cr - $cur_db;
 
-        return view('Finance.currencymgmt.statment', compact('currency', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to'));
+        return view('Finance.currencymgmt.statment', compact('currency', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to', 'user'));
     }
 
 
