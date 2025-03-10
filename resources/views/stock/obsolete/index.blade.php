@@ -30,10 +30,105 @@
                                     <td>{{ $item->reason }}</td>
                                     <td>{{ $item->notes }}</td>
                                     <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#view_{{$item->id}}">View</button>
                                         <a href="{{ route('obsolete.delete', $item->refID) }}"
                                             class="btn btn-danger">Delete</a>
                                     </td>
                                 </tr>
+                                <div id="view_{{$item->id}}" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="myModalLabel">View Details</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <h6>Product</h6>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <h6>{{ $item->product->name }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <h6>Unit</h6>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <h6>{{ $item->unit->unit_name }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <h6>Quantity</h6>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <h6>{{ $item->qty }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <h6>Loose</h6>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <h6>{{ $item->loose }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <h6>Price</h6>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <h6>{{ $item->price }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <h6>Amount</h6>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <h6>{{ $item->amount }}</h6>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <h6>Warehouse</h6>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <h6>{{ $item->warehouse->name }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <h6>Date</h6>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <h6>{{ date('d M Y', strtotime($item->date)) }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <h6>Reason</h6>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <h6>{{ $item->reason }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <h6>Notes</h6>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <h6>{{ $item->notes }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
                             @endforeach
                         </tbody>
                     </table>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\currencymgmt;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\currency_transactions;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -20,53 +21,26 @@ class CurrencymgmtController extends Controller
         return view('Finance.currencymgmt.index', compact('currencies'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show($id,$user, $from, $to)
     {
-        //
+        $currency = currencymgmt::find($id);
+        $user = User::find($user);
+
+        $transactions = currency_transactions::where(['currencyID' => $id, 'user_id' => $user->id])->whereBetween('date', [$from, $to])->get();
+
+        $pre_cr = currency_transactions::where(['currencyID' => $id, 'user_id' => $user->id])->whereDate('date', '<', $from)->sum('cr');
+        $pre_db = currency_transactions::where(['currencyID' => $id, 'user_id' => $user->id])->whereDate('date', '<', $from)->sum('db');
+        $pre_balance = $pre_cr - $pre_db;
+
+        $cur_cr = currency_transactions::where(['currencyID' => $id, 'user_id' => $user->id])->sum('cr');
+        $cur_db = currency_transactions::where(['currencyID' => $id, 'user_id' => $user->id])->sum('db');
+
+        $cur_balance = $cur_cr - $cur_db;
+
+        return view('Finance.currencymgmt.statment', compact('currency', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(currencymgmt $currencymgmt)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(currencymgmt $currencymgmt)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, currencymgmt $currencymgmt)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(currencymgmt $currencymgmt)
-    {
-        //
-    }
 
     public function details($userID)
     {

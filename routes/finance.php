@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomerPaymentsController;
 use App\Http\Controllers\DepositWithdrawController;
 use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpensesController;
+use App\Http\Controllers\LaborPaymentsController;
 use App\Http\Controllers\PaymentReceivingController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\StaffAmountAdjustmentController;
@@ -43,6 +44,9 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
 
     Route::resource('vendor_payments', VendorPaymentsController::class);
     Route::get('vendor_payments/delete/{ref}', [VendorPaymentsController::class, 'delete'])->name('vendor_payments.delete')->middleware(confirmPassword::class);
+
+    Route::resource('labor_payments', LaborPaymentsController::class);
+    Route::get('labor_payments/delete/{ref}', [LaborPaymentsController::class, 'delete'])->name('labor_payments.delete')->middleware(confirmPassword::class);
 
     Route::get('currency/details/{id}', [CurrencymgmtController::class, 'details'])->name('currency.details');
 

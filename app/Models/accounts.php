@@ -49,6 +49,18 @@ class accounts extends Model
         }
     }
 
+    public function scopeLabor($query)
+    {
+        if(auth()->user()->role == 'Admin')
+        {
+            return $query->whereIn('type', ['Labor', 'Supply Man', 'Unloader'])->where('status', 'Active');
+        }
+        else
+        {
+            return $query->whereIn('type', ['Labor', 'Supply Man', 'Unloader'])->where('status', 'Active')->where('branchID', auth()->user()->branchID);
+        }
+    }
+
     public function scopeSupplyMen($query)
     {
         if(auth()->user()->role == 'Admin')
