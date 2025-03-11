@@ -26,4 +26,14 @@ class order_details extends Model
         return $this->belongsTo(orders::class, 'orderID');
     }
 
+    public function scopeDelivered()
+    {
+        return order_delivery::where('orderID', $this->orderID)->where('productID', $this->productID)->sum('pc');
+    }
+
+    public function scopeRemaining()
+    {
+        return $this->pc - $this->scopeDelivered();
+    }
+
 }

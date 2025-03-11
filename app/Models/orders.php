@@ -50,4 +50,9 @@ class orders extends Model
     {
         return $query->where('status', 'Completed');
     }
+
+    public function delivered_items()
+    {
+        return $this->hasMany(order_delivery::class, 'orderID');
+    }
 }

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string("transporter")->nullable();
             $table->text('notes')->nullable();
             $table->float('net')->default(0);
+            $table->boolean('edit')->default(true);
             $table->bigInteger('refID');
             $table->timestamps();
         });

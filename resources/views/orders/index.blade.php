@@ -80,7 +80,7 @@
                                                         View
                                                     </button>
                                                 </li> 
-                                                @if ($order->status != "Finalized")
+                                                @if ((auth()->user()->role == "Branch Admin" && $order->status != "Completed") || (auth()->user()->role== "Operator" && $order->status != "Under Process"))
                                                 <li>
                                                     <button class="dropdown-item" onclick="newWindow('{{route('Branch.orders.edit', $order->id)}}')"
                                                         onclick=""><i
@@ -90,12 +90,12 @@
                                                 </li>
                                                 @endif
                                                
-                                                @if ($order->status == "Approved" && auth()->user()->role == 'Operator')
+                                                @if (($order->status == "Approved" && auth()->user()->role == 'Operator') || ($order->status == "Under Process" && auth()->user()->role == 'Operator'))
                                                 <li>
-                                                    <button class="dropdown-item" onclick="finalizeOrder('{{$order->id}}')"
+                                                    <button class="dropdown-item" onclick="deliver('{{$order->id}}')"
                                                         onclick=""><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                        Finalize Order
+                                                        Deliver Order
                                                     </button>
                                                 </li>
                                                 @endif
@@ -111,11 +111,11 @@
             </div>
         </div>
     </div>
-    <div id="finalizeOrderModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div id="deliverOrderModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">Finalize Order</h5>
+                    <h5 class="modal-title" id="myModalLabel">Deliver Order</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <form method="get" target="" id="form">
@@ -133,7 +133,7 @@
                          </div>
                          <div class="modal-footer">
                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                <button type="button" id="finalizeBtn" class="btn btn-primary">Proceed</button>
+                                <button type="button" id="deliverBtn" class="btn btn-primary">Proceed</button>
                          </div>
                   </form>
             </div><!-- /.modal-content -->
@@ -162,18 +162,16 @@
 
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
     <script>
-        function finalizeOrder(order)
+        function deliver(order)
         {
             $("#orderID").val(order);
-            $("#finalizeOrderModal").modal('show');
+            $("#deliverOrderModal").modal('show');
         }
 
-        $("#finalizeBtn").on("click", function (){      
+        $("#deliverBtn").on("click", function (){      
             var orderID = $("#orderID").val();
             var warehouseID = $("#warehouseID").find(':selected').val();
-            var url = "{{ route('Branch.orders.finalize', ['id' => ':orderID', 'warehouseID' => ':warehouseID']) }}"
-        .replace(':orderID', orderID)
-        .replace(':warehouseID', warehouseID);
+            var url = "{{ url('orderdelivery/create/')}}/" + orderID + "/" + warehouseID;
             window.open(url, "_blank", "width=1000,height=800");
         });
     </script>

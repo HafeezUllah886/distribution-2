@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\accounts;
 use App\Models\expenses;
+use App\Models\order_delivery;
 use App\Models\orders;
 use App\Models\product_dc;
 use App\Models\product_units;
@@ -327,6 +328,7 @@ class SalesController extends Controller
                 $product->delete();
             }
             transactions::where('refID', $sale->refID)->delete();
+            order_delivery::where('refID', $sale->refID)->delete();
             $sale->delete();
             DB::commit();
             session()->forget('confirmed_password');

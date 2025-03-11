@@ -84,7 +84,7 @@
                                                         Gate Pass
                                                     </button>
                                                 </li> --}}
-                                                @if(auth()->user()->role == 'Operator')
+                                                @if(auth()->user()->role == 'Operator' && $sale->edit)
                                                 <li>
                                                     <a class="dropdown-item" onclick="newWindow('{{route('sale.edit', $sale->id)}}')">
                                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>

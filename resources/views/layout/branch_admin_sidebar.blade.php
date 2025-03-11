@@ -95,11 +95,6 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('reminder', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()])}}">
-                        <i class="ri-calendar-check-line"></i><span data-key="t-apps">Order Reminders</span>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link menu-link" href="#stock" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-stack-line"></i><span data-key="t-apps">Stocks</span>

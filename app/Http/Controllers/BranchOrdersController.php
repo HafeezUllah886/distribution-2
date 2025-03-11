@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\order_delivery;
 use App\Models\order_details;
 use App\Models\orders;
 use App\Models\product_dc;
@@ -178,7 +179,7 @@ class BranchOrdersController extends Controller
         {
             if($request->isNotFilled('id'))
             {
-                throw new Exception('Please Select Atleast One Product');
+                throw new Exception('Nothing to Deliver');
             }
             DB::beginTransaction();
             $ref = getRef();
@@ -194,6 +195,7 @@ class BranchOrdersController extends Controller
                   'bilty'           => $request->bilty,
                   'transporter'     => $request->transporter,
                   'notes'           => $request->notes,
+                  'edit'            => false,
                   'refID'           => $ref,
                 ]
             );
@@ -206,17 +208,18 @@ class BranchOrdersController extends Controller
             {
                 $unit = product_units::find($request->unit[$key]);
                 $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
-                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
-                $price = $request->price[$key];
-                $discount = $request->discount[$key];
-                $claim = $request->claim[$key];
-                $frieght = $request->fright[$key];
-                $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
-                $netPrice = ($price - $discount - $discountvalue - $claim) + $frieght;
-                $amount = $netPrice * $pc;
-                $total += $amount;
-                $totalLabor += $request->labor[$key] * $pc;
-
+                if($qty > 0)
+                {
+                    $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                    $price = $request->price[$key];
+                    $discount = $request->discount[$key];
+                    $claim = $request->claim[$key];
+                    $frieght = $request->fright[$key];
+                    $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
+                    $netPrice = ($price - $discount - $discountvalue - $claim) + $frieght;
+                    $amount = $netPrice * $pc;
+                    $total += $amount;
+                    $totalLabor += $request->labor[$key] * $pc;
                 sale_details::create(
                     [
                         'saleID'        => $sale->id,
@@ -242,6 +245,21 @@ class BranchOrdersController extends Controller
                     ]
                 );
                 createStock($id, 0, $qty, $request->date, "Sold", $ref, $request->warehouseID);
+
+                order_delivery::create(
+                    [
+                        'orderID'       => $request->orderID,
+                        'salesID'       => $sale->id,
+                        'productID'     => $id,
+                        'warehouseID'   => $request->warehouseID,
+                        'qty'           => $request->qty[$key],
+                        'pc'            => $pc,
+                        'loose'         => $request->loose[$key],
+                        'unitID'        => $unit->id,
+                        'refID'         => $ref,
+                    ]
+                );
+            }
             }
 
             $net = $total;
@@ -254,7 +272,7 @@ class BranchOrdersController extends Controller
 
             $order = orders::find($request->orderID);
             $order->update([
-                'status' => 'Finalized',
+                'status' => 'Under Process',
                 'saleID' => $sale->id,
             ]);
 

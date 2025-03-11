@@ -78,8 +78,7 @@
                                             <td class="no-padding"><div class="input-group"><input type="number" name="labor[]" readonly required step="any" oninput="updateChanges({{ $id }})" value="{{ $product->labor }}" min="0" class="form-control text-center no-padding" id="labor_{{ $id }}"> <span class="input-group-text no-padding laborText_{{ $id }}" id="basic-addon2"></span></div></td>
                                             <td class="no-padding"><div class="input-group"><input type="number" name="claim[]" readonly required step="any" oninput="updateChanges({{ $id }})" value="{{$product->claim}}" min="0" class="form-control text-center no-padding" id="claim_{{ $id }}"> <span class="input-group-text no-padding claimText_{{ $id }}" id="basic-addon2"></span></div></td>
                                             <td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_{{ $id }}"></td>
-                                            <td class="no-padding"> 
-                                                <span class="btn btn-sm btn-info" onclick="reminder({{ $id }})"><i class="ri-calendar-check-line"></i></span> 
+                                            <td class="no-padding">  
                                                 <span class="btn btn-sm btn-danger" onclick="deleteRow({{ $id }})">X</span> 
                                             </td>
                                             <input type="hidden" name="id[]" value="{{ $id }}">

@@ -14,10 +14,7 @@
                             <!--end card-header-->
                         </div><!--end col-->
                         <div class="col-lg-12 ">
-                            <div class="row">
-                                <div class="col-4"></div>
-                                <div class="col-4 text-center"><h2>ORDER</h2></div>
-                            </div>
+                            <div class="w-100 text-center"><h2>ORDER</h2></div>
                             <div class="card-body p-4">
                                 <div class="row g-3">
                                     <div class="col-1">
@@ -119,19 +116,7 @@
                                            @endforeach
                                         </tbody>
                                         <tfoot>
-                                           {{--  <tr>
-                                                <th colspan="3" class="text-end">Total</th>
-                                                <th class="text-end">{{number_format($totalQty)}}</th>
-                                                <th class="text-end">{{number_format($totalLoose)}}</th>
-                                                <th class="text-end">{{number_format($totalBonus)}}</th>
-                                                <th></th>
-                                                <th class="text-end">{{number_format($totalDiscount)}}</th>
-                                                <th class="text-end">{{number_format($totalDiscountValue)}}</th>
-                                                <th class="text-end">{{number_format($totalClaim)}}</th>
-                                                <th></th>
-                                                <th class="text-end">{{number_format($totalFright)}}</th>
-                                                <th class="text-end">{{number_format($netAmount, 2)}}</th>
-                                            </tr> --}}
+                                          
                                             <tr>
                                                 <th class="text-end p-1" colspan="12">Gross Amount</th>
                                                 <th class="text-end p-1">{{number_format($netAmount + $totalDiscount + $totalDiscountValue + $totalClaim - $totalFright,2 )}}</th>
@@ -155,6 +140,32 @@
                                         </tfoot>
                                     </table><!--end table-->
                                 </div>
+                                <div class="w-100 text-center"><h2>DELIVERY STATUS</h2></div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <table class="table">
+                                            <thead>
+                                                <th class="m-1 p-1">#</th>
+                                                <th class="m-1 p-1">Product</th>
+                                                <th class="m-1 p-1">Total Order Qty</th>
+                                                <th class="m-1 p-1">Delivered Qty</th>
+                                                <th class="m-1 p-1">Remainaing Qty</th>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($order->details as $key => $product)
+                                                    <tr>
+                                                        <td class="m-1 p-1">{{$key+1}}</td>
+                                                        <td class="m-1 p-1">{{$product->product->name}}</td>
+                                                        <td class="m-1 p-1">{{ packInfo($product->unit->value, $product->unit->unit_name, $product->pc) }}</td>
+                                                        <td class="m-1 p-1">{{ packInfo($product->unit->value, $product->unit->unit_name, $product->delivered()) }}</td>
+                                                        <td class="m-1 p-1">{{ packInfo($product->unit->value, $product->unit->unit_name, $product->remaining()) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="card-footer">
                                 @if ($order->notes != "")
