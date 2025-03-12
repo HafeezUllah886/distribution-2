@@ -328,8 +328,10 @@ class SalesController extends Controller
                 $product->delete();
             }
             transactions::where('refID', $sale->refID)->delete();
-            order_delivery::where('refID', $sale->refID)->delete();
+           
+            $order = order_delivery::where('refID', $sale->refID)->get();
             $sale->delete();
+
             DB::commit();
             session()->forget('confirmed_password');
             return to_route('sale.index')->with('success', "Sale Deleted");

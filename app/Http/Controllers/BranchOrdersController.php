@@ -145,6 +145,7 @@ class BranchOrdersController extends Controller
                 'status' => 'Pending',
             ]);
            }
+           $this->checkCompletion($order->id);
             DB::commit();
         }catch(\Exception $e){
             DB::rollBack();
@@ -280,6 +281,8 @@ class BranchOrdersController extends Controller
            
             createTransaction($request->supplymanID, $request->date, $totalLabor, 0, "Labor Charges of Sale No. $sale->id", $ref);
 
+            $this->checkCompletion($order->id);
+
             DB::commit();
             return to_route('Branch.orders')->with('success', "Sale Created");
         }
@@ -302,7 +305,7 @@ class BranchOrdersController extends Controller
     {
         $order = orders::findOrFail($id);
 
-        if($order->status == "Finalized")
+        if($order->status == "Completed")
         {
             return redirect()->route('Branch.orders')->with('error', 'Order cannot be edited');
         }
@@ -315,4 +318,20 @@ class BranchOrdersController extends Controller
         return true;
     }
 
+    public function checkCompletion($orderID)
+    {
+        $order = orders::findOrFail($orderID);
+        if($order->status != "Completed")
+        {
+            $order_pc = $order->details->sum('pc');
+            $delivered_pc = $order->delivered_items->sum('pc');
+
+            if($order_pc == $delivered_pc)
+            {
+                $order->status = "Completed";
+                $order->save();
+            }
+        }
+        
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\material_stock;
+use App\Models\orders;
 use App\Models\products;
 use App\Models\purchase;
 use App\Models\purchase_details;
@@ -259,3 +260,5 @@ function projectNameShort()
 {
     return "GS";
 }
+
+
