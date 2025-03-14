@@ -16,10 +16,19 @@ class ObsoleteStockController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(request $request)
     {
-        $obsoletes = obsolete_stock::currentBranch()->orderBy('id', 'desc')->get();
-        return view('stock.obsolete.index', compact('obsoletes'));
+        $from = $request->start ?? firstDayOfMonth();
+        $to = $request->end ?? now()->toDateString();
+        $reason = $request->reason ?? "All";
+        $obsoletes = obsolete_stock::currentBranch()->whereBetween("date", [$from, $to])->orderBy('id', 'desc');
+        if($reason != "All")
+        {
+            $obsoletes->where('reason', $reason);
+        }
+        $obsoletes = $obsoletes->get();
+        
+        return view('stock.obsolete.index', compact('obsoletes', 'from', 'to', 'reason'));
     }
 
     /**

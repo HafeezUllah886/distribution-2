@@ -25,6 +25,10 @@ Authorization: Bearer <token>
 | amount | array | Yes | Array of payment amounts corresponding to each saleID |
 | date | date | Yes | Date of payment (YYYY-MM-DD format) |
 | notes | string | No | Additional notes for the payment |
+| payment_method | string | Yes | Payment method (cash, cheque, bank) |
+| cheque_no | string | Yes | Cheque number (required if payment_method is cheque) |
+| cheque_date | date | Yes | Cheque date (required if payment_method is cheque) |
+| file | file | No | Optional file attachment (Only JPG, PNG, JPEG) |
 
 ### Example Request Body
 

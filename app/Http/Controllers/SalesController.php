@@ -329,7 +329,20 @@ class SalesController extends Controller
             }
             transactions::where('refID', $sale->refID)->delete();
            
-            $order = order_delivery::where('refID', $sale->refID)->get();
+            $order = order_delivery::where('refID', $sale->refID)->first();
+            if($order)
+            {
+                $order_id = $order->orderID;
+
+                $order_status = orders::find($order_id);
+                $order_status->update(
+                    [
+                        'status' => 'Under Process',
+                    ]
+                );
+
+                order_delivery::where('refID', $sale->refID)->delete();
+            }
             $sale->delete();
 
             DB::commit();

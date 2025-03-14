@@ -23,7 +23,8 @@
                                 <option value="All">All</option>
                                 <option value="Pending" @selected($status == 'Pending')>Pending</option>
                                 <option value="Approved" @selected($status == 'Approved')>Approved</option>
-                                <option value="Finalized" @selected($status == 'Finalized')>Finalized</option>
+                                <option value="Under Process" @selected($status == 'Under Process')>Under Process</option>
+                                <option value="Completed" @selected($status == 'Completed')>Completed</option>
                             </select>
                         </div>
                     </div>

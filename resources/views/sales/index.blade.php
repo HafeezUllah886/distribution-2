@@ -42,6 +42,7 @@
                     <table class="table" id="buttons-datatables">
                         <thead>
                             <th>#</th>
+                            <th>Inv No.</th>
                             <th>Customer</th>
                             <th>Date</th>
                             <th>Amount</th>
@@ -58,6 +59,7 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
+                                    <td>{{ $sale->id }}</td>
                                     <td>{{ $sale->customer->title }}</td>
                                     <td>{{ date('d M Y', strtotime($sale->date)) }}</td>
                                     <td>{{ number_format($amount) }}</td>

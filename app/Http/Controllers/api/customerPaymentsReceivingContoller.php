@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\customerPayments;
 use App\Models\orderbooker_customers;
+use App\Models\orderbookerPaymentsReceiving;
 use App\Models\sale_payments;
 use App\Models\sales;
 use Illuminate\Http\Request;
@@ -128,6 +129,10 @@ class customerPaymentsReceivingContoller extends Controller
             'amount' => 'required|array',
             'amount.*' => 'numeric|min:0',
             'date' => 'required|date',
+            'payment_method' => 'required|string',
+            'cheque_no' => 'required_if:payment_method,cheque|string',
+            'cheque_date' => 'required_if:payment_method,cheque|date',
+            'file' => 'nullable|file|mimes:jpg,png,jpeg',
         ]);
 
         if ($validator->fails()) {
@@ -140,8 +145,10 @@ class customerPaymentsReceivingContoller extends Controller
         try{
             DB::beginTransaction();
             $data = [];
+            $total_amount = 0;
             foreach($request->saleIDs as $key => $saleID)
             {
+                $total_amount += $request->amount[$key];
                 $ref = getRef();
                 $sale = sales::find($saleID);
                 $data[] = sale_payments::create([
@@ -156,6 +163,24 @@ class customerPaymentsReceivingContoller extends Controller
                 createTransaction($sale->customerID, $request->date,0, $request->amount[$key], "Payment of Inv No. $sale->id", $ref);
                 createUserTransaction(auth()->id(), $request->date,$request->amount[$key], 0, "Payment of Inv No. $sale->id", $ref);
             }
+
+            orderbookerPaymentsReceiving::create([
+                'orderbookerID' => $request->user()->id,
+                'date' => $request->date,
+                'amount' => $total_amount,
+                'notes' => $request->notes,
+                'payment_method' => $request->payment_method,
+                'cheque_no' => $request->cheque_no,
+                'cheque_date' => $request->cheque_date,
+                'bank_name' => $request->bank_name,
+                'refID' => $ref
+            ]);
+
+            if($request->has('file'))
+            {
+                createAttachment($request->file('file'), $ref);
+            }
+
             DB::commit();
                 return response()->json([
                     'status' => 'success',

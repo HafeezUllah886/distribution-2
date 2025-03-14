@@ -2,6 +2,38 @@
 @section('content')
     <div class="row">
         <div class="col-12">
+            <form>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">From</span>
+                            <input type="date" class="form-control" placeholder="Username" name="start" value="{{$from}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">To</span>
+                            <input type="date" class="form-control" placeholder="Username" name="end" value="{{$to}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Reason</span>
+                            <select class="form-control" name="reason" aria-label="Username" aria-describedby="basic-addon1">
+                                <option value="All">All</option>
+                                <option value="Expired" @selected($reason == 'Expired')>Expired</option>
+                                <option value="Damaged" @selected($reason == 'Damaged')>Damaged</option>
+                                <option value="Lost" @selected($reason == 'Lost')>Lost</option>
+                                <option value="Pilfered" @selected($reason == 'Pilfered')>Pilfered</option>
+                                <option value="Others" @selected($reason == 'Others')>Others</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                       <input type="submit" value="Filter" class="btn btn-success w-100">
+                    </div>
+                </div>
+            </form>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Obsolete Stock</h3>
@@ -16,6 +48,7 @@
                             <th>Warehouse</th>
                             <th>Date</th>
                             <th>Reason</th>
+                            <th>Amount</th>
                             <th>Notes</th>
                             <th>Action</th>
                         </thead>
@@ -28,6 +61,7 @@
                                     <td>{{ $item->warehouse->name }}</td>
                                     <td>{{ date('d M Y', strtotime($item->date)) }}</td>
                                     <td>{{ $item->reason }}</td>
+                                    <td>{{ $item->amount }}</td>
                                     <td>{{ $item->notes }}</td>
                                     <td>
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#view_{{$item->id}}">View</button>
@@ -131,6 +165,15 @@
                                 </div><!-- /.modal -->
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="6" class="text-end">Total</th>
+                                <th class="text-end" id="totalAmount">{{number_format($obsoletes->sum('amount'), 2)}}</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
