@@ -6,6 +6,7 @@ use App\Http\Controllers\api\locationTrackingAPIController;
 use App\Http\Controllers\api\nonFinanancialInfoController;
 use App\Http\Controllers\api\OrdersController;
 use App\Http\Controllers\Api\SaleApiController;
+use App\Http\Controllers\OrderbookerBalanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,5 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/invoicespayment', [customerPaymentsReceivingContoller::class, 'invoicesPayment']);
 
     Route::post('/storelocation', [locationTrackingAPIController::class, 'storeLocation']);
+
+    Route::get('/balance', [OrderbookerBalanceController::class, 'balance']);
+    Route::get('/account_statement', [OrderbookerBalanceController::class, 'account_statement']);
 
 });
