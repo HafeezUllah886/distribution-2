@@ -6,7 +6,7 @@ use App\Http\Controllers\api\locationTrackingAPIController;
 use App\Http\Controllers\api\nonFinanancialInfoController;
 use App\Http\Controllers\api\OrdersController;
 use App\Http\Controllers\Api\SaleApiController;
-use App\Http\Controllers\OrderbookerBalanceController;
+use App\Http\Controllers\Api\OrderbookerBalanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
