@@ -156,7 +156,7 @@
                                 </div>
                             </div>
                             <div class="col-12 mt-2">
-                                <button type="submit" class="btn btn-primary w-100">Finalize Order</button>
+                                <button type="submit" class="btn btn-primary w-100">Create Sale</button>
                             </div>
                         </div>
                     </form>

@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\order_delivery;
 use App\Models\product_dc;
 use App\Models\product_units;
 use Illuminate\Support\Facades\Validator;
@@ -376,6 +377,49 @@ class OrdersController extends Controller
         }
 
         return true;  
+    }
+
+
+    public function stock(Request $request)
+    {
+        $user = $request->user();
+        $product = products::find($request->productID);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Stock retrieved successfully',
+            'data' => [
+                'stock' => packInfo($product->units[0]->value, $product->units[0]->unit_name, getBranchProductStock($request->productID, $user->branchID)),
+            ]
+        ], 200);
+    }
+
+    public function pendingQty(Request $request)
+    {
+        $user = $request->user();
+        $product = products::find($request->productID);
+        $customer = accounts::find($request->customerID);
+
+        $orders = orders::where('customerID', $customer->id)
+            ->where('status', '!=', 'Completed')
+            ->pluck('id')->toArray();
+
+        $orderQty = order_details::whereIn('orderID', $orders)
+            ->where('productID', $product->id)
+            ->sum('pc');
+
+            $deliveredQty = order_delivery::whereIn('orderID', $orders)
+                ->where('productID', $product->id)
+                ->sum('pc');
+
+                $pendingQty = $orderQty - $deliveredQty;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Pending quantity retrieved successfully',
+            'data' => [
+                'pending_qty' => packInfo($product->units[0]->value, $product->units[0]->unit_name, $pendingQty),
+            ]
+        ], 200);
     }
 
     

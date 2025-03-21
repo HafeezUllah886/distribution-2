@@ -28,6 +28,7 @@ Authorization: Bearer <token>
 | payment_method | string | Yes | Payment method (cash, cheque, bank) |
 | cheque_no | string | Yes | Cheque number (required if payment_method is cheque) |
 | cheque_date | date | Yes | Cheque date (required if payment_method is cheque) |
+| bank_name | string | Yes | Bank name (required if payment_method is bank) |
 | file | file | No | Optional file attachment (Only JPG, PNG, JPEG) |
 
 ### Example Request Body
