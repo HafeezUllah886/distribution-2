@@ -45,6 +45,7 @@ class nonFinanancialInfoController extends Controller
         foreach($customers as $customer)
         {
             $customer->curren_balance = getAccountBalance($customer->id);
+            $customer->area = $customer->area->name;
         }
 
         return [
