@@ -183,7 +183,6 @@ class OrdersController extends Controller
                 'net' => $net,
             ]);
             if($net > $customer->credit_limit) {
-                $order->delete(); 
                 DB::rollback();
                 return response()->json([
                     'status' => 'error',
