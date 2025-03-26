@@ -11,7 +11,12 @@ class OrderbookerBalanceController extends Controller
 {
     public function balance(request $request)
     {
-        return getUserAccountBalance($request->user()->id);
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'balance' => getUserAccountBalance($request->user()->id),
+            ]
+        ], 200);
     }
 
     public function account_statement(request $request)
@@ -29,7 +34,7 @@ class OrderbookerBalanceController extends Controller
             ], 422);
         }
         
-        $user = $request->user()->id;
+        $user = $request->user();
         $from = $request->from;
         $to = $request->to;
         
