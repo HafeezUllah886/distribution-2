@@ -17,7 +17,7 @@ class StaffPaymentsController extends Controller
     public function index()
     {
         $receivings = staffPayments::where('receivedBy', auth()->user()->id)->orderBy('id', 'desc')->get();
-        $users = User::where('branchID', auth()->user()->branchID)->where('id', '!=', auth()->user()->id)->get();
+        $users = User::where('branchID', auth()->user()->branchID)->whereNotIn('role', ['Admin', 'Order Booker'])->where('id', '!=', auth()->user()->id)->get();
         $currencies = currencymgmt::all();
         return view('Finance.staff_payments.index', compact('receivings', 'users', 'currencies'));
     }
