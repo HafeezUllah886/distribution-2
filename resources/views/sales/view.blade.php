@@ -122,7 +122,7 @@
                                            @endforeach
                                         </tbody>
                                         <tfoot>
-                                           {{--  <tr>
+                                           <tr>
                                                 <th colspan="3" class="text-end">Total</th>
                                                 <th class="text-end">{{number_format($totalQty)}}</th>
                                                 <th class="text-end">{{number_format($totalLoose)}}</th>
@@ -134,7 +134,7 @@
                                                 <th></th>
                                                 <th class="text-end">{{number_format($totalFright)}}</th>
                                                 <th class="text-end">{{number_format($netAmount, 2)}}</th>
-                                            </tr> --}}
+                                            </tr> 
                                             <tr>
                                                 <th class="text-end p-1" colspan="12">Gross Amount</th>
                                                 <th class="text-end p-1">{{number_format($netAmount + $totalDiscount + $totalDiscountValue + $totalClaim - $totalFright,2 )}}</th>

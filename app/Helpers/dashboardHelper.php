@@ -8,6 +8,7 @@ use App\Models\purchase;
 use App\Models\purchase_details;
 use App\Models\sale_details;
 use App\Models\sales;
+use Illuminate\Support\Facades\DB;
 
 function totalSales()
 {

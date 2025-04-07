@@ -96,8 +96,8 @@ return [
     ],
 
     'databases' => [
+        'gs',
         'u788011464_gs',
-        'distribution2',
         'test',
     ],
 

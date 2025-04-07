@@ -184,10 +184,6 @@
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarReports">
                         <ul class="nav nav-sm flex-column">
-                           <li class="nav-item">
-                                <a href="{{ route('reportProfit') }}" class="nav-link"
-                                    data-key="t-basic-elements">Profit / Loss</a>
-                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('reportSales') }}" class="nav-link"
                                     data-key="t-basic-elements">Sales Report</a>
