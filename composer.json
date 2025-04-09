@@ -28,7 +28,8 @@
         "files": [
             "app/Helpers/financeHelper.php",
             "app/Helpers/generalHelper.php",
-            "app/Helpers/dashboardHelper.php"
+            "app/Helpers/dashboardHelper.php",
+            "app/Helpers/stockHelper.php"
         ]
     },
     "autoload-dev": {

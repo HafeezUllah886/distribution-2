@@ -8269,6 +8269,7 @@ namespace App\Models {
      * @property int $refID
      * @property int $unitID
      * @property string $date
+     * @property float $price_amount
      * @property float $amount
      * @property mixed $netprice
      * @property mixed $claim
@@ -8305,6 +8306,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_details>|purchase_details whereClaim($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_details>|purchase_details whereNetprice($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_details>|purchase_details whereAmount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase_details>|purchase_details wherePriceAmount($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_details>|purchase_details whereDate($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_details>|purchase_details whereUnitid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_details>|purchase_details whereRefid($value)
@@ -9327,6 +9329,7 @@ namespace App\Models {
      * @property int $refID
      * @property int $unitID
      * @property string $date
+     * @property float $price_amount
      * @property float $amount
      * @property mixed $netprice
      * @property mixed $claim
@@ -9366,6 +9369,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<sale_details>|sale_details whereClaim($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sale_details>|sale_details whereNetprice($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sale_details>|sale_details whereAmount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<sale_details>|sale_details wherePriceAmount($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sale_details>|sale_details whereDate($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sale_details>|sale_details whereUnitid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sale_details>|sale_details whereRefid($value)

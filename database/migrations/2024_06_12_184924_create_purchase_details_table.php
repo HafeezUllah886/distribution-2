@@ -29,6 +29,7 @@ return new class extends Migration
             $table->float('claim', 10);
             $table->float('netprice', 10);
             $table->float('amount');
+            $table->float('price_amount');
             $table->date('date');
             $table->foreignId('unitID')->constrained('product_units', 'id');
             $table->bigInteger('refID');

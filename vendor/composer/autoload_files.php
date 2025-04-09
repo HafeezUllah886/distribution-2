@@ -42,4 +42,5 @@ return array(
     '7498241608be0ac518217fcf943f828c' => $baseDir . '/app/Helpers/financeHelper.php',
     'd0105e631019fdfd0c6174d207691764' => $baseDir . '/app/Helpers/generalHelper.php',
     '80e8e733b7d96c492ed6b985a9fbab33' => $baseDir . '/app/Helpers/dashboardHelper.php',
+    'e518fff8b4e519af6e89881f29b4eb97' => $baseDir . '/app/Helpers/stockHelper.php',
 );

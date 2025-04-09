@@ -89,6 +89,7 @@ class PurchaseController extends Controller
                 $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
                 $netPrice = ($price - $discount - $discountvalue - $claim);
                 $amount = $netPrice * $pc;
+                $price_amount = $price * $pc;
                 $total += $amount;
                 $totalLabor += $request->labor[$key] * $pc;
 
@@ -106,6 +107,7 @@ class PurchaseController extends Controller
                         'loose'         => $request->loose[$key],
                         'netprice'      => $netPrice,
                         'amount'        => $amount,
+                        'price_amount'  => $price_amount,
                         'date'          => $request->recdate,
                         'bonus'         => $request->bonus[$key],
                         'labor'         => $request->labor[$key],
@@ -207,6 +209,7 @@ class PurchaseController extends Controller
                 $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
                 $netPrice = ($price - $discount - $discountvalue - $claim);
                 $amount = $netPrice * $pc;
+                $price_amount = $price * $pc;
                 $total += $amount;
                 $totalLabor += $request->labor[$key] * $pc;
 
@@ -224,6 +227,7 @@ class PurchaseController extends Controller
                         'loose'         => $request->loose[$key],
                         'netprice'      => $netPrice,
                         'amount'        => $amount,
+                        'price_amount'  => $price_amount,
                         'date'          => $request->recdate,
                         'bonus'         => $request->bonus[$key],
                         'labor'         => $request->labor[$key],

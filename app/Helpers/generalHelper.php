@@ -1,14 +1,10 @@
 <?php
 
-use App\Models\material_stock;
-use App\Models\orders;
-use App\Models\products;
 use App\Models\purchase;
 use App\Models\purchase_details;
 use App\Models\ref;
 use App\Models\sale_details;
 use App\Models\sales;
-use App\Models\stock;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -68,65 +64,6 @@ function firstDayOfPreviousMonth() {
 function lastDayOfPreviousMonth() {
     $endOfPreviousMonth = Carbon::now()->subMonth()->endOfMonth();
     return $endOfPreviousMonth->format('Y-m-d');
-}
-
-function createStock($id, $cr, $db, $date, $notes, $ref, $warehouse)
-{
-    stock::create(
-        [
-            'productID'     => $id,
-            'cr'            => $cr,
-            'db'            => $db,
-            'date'          => $date,
-            'notes'         => $notes,
-            'refID'         => $ref,
-            'warehouseID'   => $warehouse
-        ]
-    );
-}
-
-function getStock($id){
-    if(Auth()->user()->role == "admin"){
-        $stocks  = stock::where('productID', $id)->get();
-    }
-    else{
-        $warehouses = DB::table('warehouses')->where('branchID', auth()->user()->branchID)->distinct()->pluck('id')->toArray();
-        $stocks  = stock::where('productID', $id)->whereIn('warehouseID', $warehouses)->get();
-    }
-
-    $balance = 0;
-    foreach($stocks as $stock)
-    {
-    $balance += $stock->cr;
-    $balance -= $stock->db;
-    }
-    return $balance;
-}
-
-function getBranchProductStock($id, $branch){
-    
-        $warehouses = DB::table('warehouses')->where('branchID', $branch)->distinct()->pluck('id')->toArray();
-        $stocks  = stock::where('productID', $id)->whereIn('warehouseID', $warehouses)->get();
-    
-    $balance = 0;
-    foreach($stocks as $stock)
-    {
-    $balance += $stock->cr;
-    $balance -= $stock->db;
-    }
-    return $balance;
-}
-
-function getWarehouseProductStock($id, $warehouse){
-    $stocks  = stock::where('productID', $id)->where('warehouseID', $warehouse)->get();
-    $balance = 0;
-    foreach($stocks as $stock)
-    {
-        $balance += $stock->cr;
-        $balance -= $stock->db;
-    }
-
-    return $balance;
 }
 
 
@@ -190,61 +127,154 @@ function avgPurchasePrice($from, $to, $branch, $id)
     return $purchase_price;
 }
 
-function stockValue()
-{
-    $products = products::all();
-
-    $value = 0;
-    foreach($products as $product)
-    {
-        $value += productStockValue($product->id);
-    }
-
-    return $value;
-}
-
-function productStockValue($id)
-{
-    $stock = getStock($id);
-    $price = avgPurchasePrice('all', 'all','all', $id);
-    dashboard();
-    return $price * $stock;
-}
-
-function productStockValues($id)
-{
-    $stock = getStock($id);
-    $price = avgSalePrice('all', 'all', 'all', $id);
-    dashboard();
-    return $price * $stock;
-}
-
-
-function packInfo($size, $name, $qty)
- {
-    $packs = intdiv($qty, $size);
-    $remains = $qty - ($packs*$size);
-    if($packs == 0 && $remains == 0)
-    {
-        return "0 Pcs";
-    }
-    if($packs == 0)
-    {
-        return "$remains Pcs";
-    }
-    if($remains == 0)
-    {
-        return "$packs $name";
-    }
-    return "$packs $name, $remains Pcs";
- }
-
 function calculateGrowthPercentage($oldValue, $newValue) {
     if ($oldValue == 0) {
         return $newValue > 0 ? 100 : 0; // 100% growth if starting from 0 to any positive number
     }
     $growthPercentage = (($newValue - $oldValue) / $oldValue) * 100;
     return $growthPercentage;
+}
+
+function avg_purchase_price_warehouse_wise($id, $warehouse)
+{
+    $purchases = purchase_details::where('productID', $id)
+        ->where('warehouseID', $warehouse)
+        ->latest()
+        ->take(10)
+        ->get();
+
+    $purchase_amount = $purchases->sum('price_amount');
+    $purchase_qty = $purchases->sum('pc');
+
+    if($purchase_qty > 0)
+    {
+        $purchase_price = $purchase_amount / $purchase_qty;
+    }
+    else
+    {
+        $purchase_price = 0;
+    }
+    return $purchase_price;
+}
+function avg_sale_price_warehouse_wise($id, $warehouse)
+{
+    $sales = sale_details::where('productID', $id)
+        ->where('warehouseID', $warehouse)
+        ->latest()
+        ->take(20)
+        ->get();
+
+    $sale_amount = $sales->sum('price_amount');
+    $sale_qty = $sales->sum('pc');
+
+    if($sale_qty > 0)
+    {
+        $sale_price = $sale_amount / $sale_qty;
+    }
+    else
+    {
+        $sale_price = 0;
+    }
+    return $sale_price;
+}
+
+function avg_cost_warehouse_wise($id, $warehouse)
+{
+    $purchases = purchase_details::where('productID', $id)
+        ->where('warehouseID', $warehouse)
+        ->latest()
+        ->take(10)
+        ->get();
+
+    $purchase_amount = $purchases->sum('amount');
+    $purchase_qty = $purchases->sum('pc');
+
+    if($purchase_qty > 0)
+    {
+        $purchase_price = $purchase_amount / $purchase_qty;
+    }
+    else
+    {
+        $purchase_price = 0;
+    }
+    return $purchase_price;
+}
+
+function avg_purchase_price_branch_wise($id, $branch)
+{
+
+    $purchase = purchase::where('branchID', $branch)
+        ->latest()
+        ->take(10)
+        ->pluck('id')->toArray();
+
+    $purchases = purchase_details::where('productID', $id)
+        ->whereIn('purchaseID', $purchase)
+        ->get();
+
+    $purchase_amount = $purchases->sum('price_amount');
+    $purchase_qty = $purchases->sum('pc');
+
+    if($purchase_qty > 0)
+    {
+        $purchase_price = $purchase_amount / $purchase_qty;
+    }
+    else
+    {
+        $purchase_price = 0;
+    }
+    return $purchase_price;
+}
+
+function avg_sale_price_branch_wise($id, $branch)
+{
+
+    $sale = sales::where('branchID', $branch)
+        ->latest()
+        ->take(20)
+        ->pluck('id')->toArray();
+
+    $sales = sale_details::where('productID', $id)
+        ->whereIn('saleID', $sale)
+        ->get();
+
+    $sale_amount = $sales->sum('price_amount');
+    $sale_qty = $sales->sum('pc');
+
+    if($sale_qty > 0)
+    {
+        $sale_price = $sale_amount / $sale_qty;
+    }
+    else
+    {
+        $sale_price = 0;
+    }
+    return $sale_price;
+}
+
+function avg_cost_branch_wise($id, $branch)
+{
+    $purchase = purchase::where('branchID', $branch)
+        ->latest()
+        ->take(10)
+        ->pluck('id')->toArray();
+
+    $purchases = purchase_details::where('productID', $id)
+        ->whereIn('purchaseID', $purchase)
+        ->get();
+
+    $purchase_amount = $purchases->sum('amount');
+    $purchase_qty = $purchases->sum('pc');
+
+    if($purchase_qty > 0)
+    {
+        $purchase_price = $purchase_amount / $purchase_qty;
+    }
+    else
+    {
+        $purchase_price = 0;
+    }
+    return $purchase_price;
 }
 
 function projectNameAuth()

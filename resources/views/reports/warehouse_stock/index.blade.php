@@ -7,16 +7,20 @@
                     <h3>View Warehouse Stock Report</h3>
                 </div>
                 <div class="card-body">
-                   
                     <div class="form-group mt-2">
                         <label for="warehouse">Warehouse</label>
                         <select name="warehouse" id="warehouse" class="form-control">
-                            @if(auth()->user()->role == "Admin")
-                            <option value="All">All</option>
-                            @endif
                             @foreach ($warehouses as $warehouse)
                                 <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="warehouse">Stock Value</label>
+                        <select name="warehouse" id="value" class="form-control">
+                            <option value="Purchase Wise">Purchase Wise</option>
+                            <option value="Sale Wise">Sale Wise</option>
+                            <option value="Cost Wise">Cost Wise</option>
                         </select>
                     </div>
                     <div class="form-group mt-2">
@@ -26,8 +30,6 @@
             </div>
         </div>
     </div>
-
-
 @endsection
 @section('page-js')
 
@@ -35,8 +37,10 @@
 
         $("#viewBtn").on("click", function(){
             var warehouse = $("#warehouse").find(":selected").val();
-            var url = "{{ route('reportWarehouseStockData', ['warehouse' => ':warehouse']) }}"
-            .replace(':warehouse', warehouse);
+            var value = $("#value").find(":selected").val();
+            var url = "{{ route('reportWarehouseStockData', ['warehouse' => ':warehouse', 'value' => ':value']) }}"
+            .replace(':warehouse', warehouse)
+            .replace(':value', value);
             window.open(url, "_blank", "width=1000,height=800");
         });
     </script>
