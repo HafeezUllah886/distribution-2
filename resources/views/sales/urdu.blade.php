@@ -2,7 +2,7 @@
 @section('content')
         <div class="row justify-content-center">
             <div class="col-xxl-9">
-                <div class="card" id="demo">
+                <div class="card" id="demo" dir="rtl">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="hstack gap-2 justify-content-end d-print-none p-2 mt-4">
@@ -14,19 +14,15 @@
                             <!--end card-header-->
                         </div><!--end col-->
                         <div class="col-lg-12 ">
-                            <div class="row">
-                                <div class="col-4"></div>
-                                <div class="col-4 text-center"><h2>SALES INVOICE</h2></div>
-                            </div>
                             <div class="card-body p-4">
                                 <div class="row g-3">
                                     <div class="col-1">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Inv #</p>
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold urdu">بل نمبر</p>
                                         <h5 class="fs-14 mb-0">{{$sale->id}}</h5>
                                     </div>
                                     <div class="col-4">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Customer</p>
-                                        <h5 class="fs-14 mb-0"> <span class="text-muted">M/S :</span> {{$sale->customer->title}}</h5>
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold urdu">بنام</p>
+                                        <h5 class="fs-14 mb-0 "> <span class="text-muted">M/S :</span> <span class="urdu">{{$sale->customer->title}}</span></h5>
                                         @if ($sale->customerID != 2)
                                         <h5 class="fs-14 mb-0"> <span class="text-muted">Area :</span> {{$sale->customer->area->name ?? "NA"}} | <span class="text-muted">Contact :</span> {{$sale->customer->contact ?? "NA"}}</h5>
                                         <h5 class="fs-14 mb-0"> <span class="text-muted">Type :</span> {{$sale->customer->c_type}}</h5>
@@ -35,20 +31,20 @@
 
                                     </div>
                                     <div class="col-2">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Order Booker</p>
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold urdu">آرڈر بکر</p>
                                         <h5 class="fs-14 mb-0">{{$sale->orderbooker->name}}</h5>
-                                        <p class="text-muted mt-3 mb-2 text-uppercase fw-semibold">Supply Man</p>
+                                        <p class="text-muted mt-3 mb-2 text-uppercase fw-semibold urdu">سپلائی مین</p>
                                         <h5 class="fs-14 mb-0">{{$sale->supplyman->title}}</h5>
                                     </div>
                                    
                                     <div class="col-2">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Date</p>
-                                        <h5 class="fs-14 mb-0">{{date("d M Y" ,strtotime($sale->date))}}</h5>
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold urdu">تاریخ</p>
+                                        <h5 class="fs-14 mb-0 text-end" dir="ltr">{{date("d M Y" ,strtotime($sale->date))}}</h5>
                                     </div>
                                     <div class="col-3">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Transport</p>
-                                        <h5 class="fs-14 mb-0"><span class="text-muted">Bilty No :</span> {{$sale->bilty ?? "NA"}}</h5>
-                                        <h5 class="fs-14 mb-0"><span class="text-muted">Transporter :</span> {{$sale->transporter ?? "NA"}}</h5>
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold urdu">ٹرانسپورٹ</p>
+                                        <h5 class="fs-14 mb-0"><span class="text-muted urdu">بلٹی نمبر :</span> {{$sale->bilty ?? "NA"}}</h5>
+                                        <h5 class="fs-14 mb-0"><span class="text-muted urdu">ٹرانسپورٹر :</span> {{$sale->transporter ?? "NA"}}</h5>
                                     </div>
                                     <!--end col-->
                                     <!--end col-->
@@ -59,23 +55,23 @@
                         </div><!--end col-->
                         <div class="col-lg-12">
                             <div class="card-body p-4">
-                                <div class="table-responsive">
+                                <div >
                                     <table class="table table-borderless text-center table-nowrap align-middle mb-0">
                                         <thead>
                                             <tr class="table-active">
                                                 <th scope="col" style="width: 50px;">#</th>
-                                                <th scope="col" class="text-start">Product</th>
-                                                <th scope="col" class="text-start">Unit</th>
-                                                <th scope="col" class="text-end">Qty</th>
-                                                <th scope="col" class="text-end">Loose</th>
-                                                <th scope="col" class="text-end">Bonus</th>
-                                                <th scope="col" class="text-end">Price</th>
-                                                <th scope="col" class="text-end">Dis-Val</th>
-                                                <th scope="col" class="text-end">Dis-Per</th>
-                                                <th scope="col" class="text-end">Claim</th>
-                                                <th scope="col" class="text-end">Net Price</th>
-                                                <th scope="col" class="text-end">Fright</th>
-                                                <th scope="col" class="text-end">Amount</th>
+                                                <th scope="col" class="text-end urdu">تفصیل</th>
+                                                <th scope="col" class="text-end urdu">یونٹ</th>
+                                                <th scope="col" class="text-end urdu">تعداد</th>
+                                                <th scope="col" class="text-end urdu">کھلہ مال</th>
+                                                <th scope="col" class="text-end urdu">بونس</th>
+                                                <th scope="col" class="text-end urdu">نرخ</th>
+                                                <th scope="col" class="text-end urdu">رعایت(رقم)</th>
+                                                <th scope="col" class="text-end urdu">رعایت(%)</th>
+                                                <th scope="col" class="text-end urdu">کلیم</th>
+                                                <th scope="col" class="text-end urdu">خالص قیمت</th>
+                                                <th scope="col" class="text-end urdu">فریٹ</th>
+                                                <th scope="col" class="text-end urdu">رقم</th>
                                             </tr>
                                         </thead>
                                         <tbody id="products-list">
@@ -106,8 +102,8 @@
                                             @endphp
                                                <tr>
                                                 <td class="p-1 m-1">{{$key+1}}</td>
-                                                <td class="text-start p-1 m-1">{{$product->product->name}}</td>
-                                                <td class="text-start m-1 p-1">{{$product->unit->unit_name}}</td>
+                                                <td class="text-end p-1 m-1 urdu">{{$product->product->nameurdu}}</td>
+                                                <td class="text-end m-1 p-1">{{$product->unit->unit_name}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->qty)}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->loose)}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->bonus)}}</td>
@@ -123,7 +119,7 @@
                                         </tbody>
                                         <tfoot>
                                            <tr>
-                                                <th colspan="3" class="text-end">Total</th>
+                                                <th colspan="3" class="text-start urdu">ٹوٹل</th>
                                                 <th class="text-end">{{number_format($totalQty)}}</th>
                                                 <th class="text-end">{{number_format($totalLoose)}}</th>
                                                 <th class="text-end">{{number_format($totalBonus)}}</th>
@@ -136,23 +132,23 @@
                                                 <th class="text-end">{{number_format($netAmount, 2)}}</th>
                                             </tr> 
                                             <tr>
-                                                <th class="text-end p-1" colspan="12">Gross Amount</th>
+                                                <th class="text-start p-1 urdu" colspan="12">مجموعی رقم</th>
                                                 <th class="text-end p-1">{{number_format($netAmount + $totalDiscount + $totalDiscountValue + $totalClaim - $totalFright,2 )}}</th>
                                             </tr>
                                             <tr>
-                                                <th class="text-end p-1" colspan="12">Total Discounts (-)</th>
+                                                <th class="text-start p-1 urdu" colspan="12">کل ڈسکاؤنٹ</th>
                                                 <th class="text-end p-1">{{number_format($totalDiscount + $totalDiscountValue,2 )}}</th>
                                             </tr>
                                             <tr>
-                                                <th class="text-end p-1" colspan="12">Total Claim (-)</th>
+                                                <th class="text-start p-1 urdu" colspan="12">ٹوٹل کلیم</th>
                                                 <th class="text-end p-1">{{number_format($totalClaim,2 )}}</th>
                                             </tr>
                                             <tr>
-                                                <th class="text-end p-1" colspan="12">Total Fright (+)</th>
+                                                <th class="text-start p-1 urdu" colspan="12">ٹوٹل فریٹ</th>
                                                 <th class="text-end p-1">{{number_format($totalFright,2 )}}</th>
                                             </tr>
                                             <tr>
-                                                <th class="text-end p-1" colspan="12">Net Payable</th>
+                                                <th class="text-start p-1 urdu" colspan="12">خالص رقم</th>
                                                 <th class="text-end p-1">{{number_format($netAmount,2 )}}</th>
                                             </tr>
                                         </tfoot>
@@ -161,7 +157,7 @@
                             </div>
                             <div class="card-footer">
                                 @if ($sale->notes != "")
-                                <p><strong>Notes: </strong>{{$sale->notes}}</p>
+                                <p class="urdu"><strong>نوٹس: </strong>{{$sale->notes}}</p>
                                 @endif
                                {{-- <p class="text-center urdu"><strong>نوٹ: مال آپ کے آرڈر کے مطابق بھیجا جا رہا ہے۔ مال ایکسپائر یا خراب ہونے کی صورت میں واپس نہیں لیا جائے گا۔ دکاندار سیلزمین کے ساتھ کسی قسم کے ذاتی لین دین کا ذمہ دار خود ہوگا۔</strong></p>
  --}}
@@ -188,7 +184,7 @@
 <link href='https://fonts.googleapis.com/css?family=Noto Nastaliq Urdu' rel='stylesheet'>
 <style>
     .urdu {
-        font-family: 'Noto Nastaliq Urdu';font-size: 12px;
+        font-family: 'Noto Nastaliq Urdu';font-size: 14px;
     }
     </style>
 @endsection

@@ -116,6 +116,19 @@
                                            @endforeach
                                         </tbody>
                                         <tfoot>
+                                            <tr>
+                                                <th colspan="3" class="text-end">Total</th>
+                                                <th class="text-end">{{number_format($totalQty)}}</th>
+                                                <th class="text-end">{{number_format($totalLoose)}}</th>
+                                                <th class="text-end">{{number_format($totalBonus)}}</th>
+                                                <th></th>
+                                                <th class="text-end">{{number_format($totalDiscount)}}</th>
+                                                <th class="text-end">{{number_format($totalDiscountValue)}}</th>
+                                                <th class="text-end">{{number_format($totalClaim)}}</th>
+                                                <th></th>
+                                                <th class="text-end">{{number_format($totalFright)}}</th>
+                                                <th class="text-end">{{number_format($netAmount, 2)}}</th>
+                                            </tr> 
                                           
                                             <tr>
                                                 <th class="text-end p-1" colspan="12">Gross Amount</th>

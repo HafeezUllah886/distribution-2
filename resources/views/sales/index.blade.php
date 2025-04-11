@@ -78,6 +78,11 @@
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         View
                                                     </button>
+                                                    <button class="dropdown-item" onclick="newWindow('{{route('sale.showUrdu', $sale->id)}}')"
+                                                        onclick=""><i
+                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        View (URDU)
+                                                    </button>
                                                 </li>
                                                {{--  <li>
                                                     <button class="dropdown-item" onclick="newWindow('{{route('sale.gatePass', $sale->id)}}')"

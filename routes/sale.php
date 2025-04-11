@@ -14,6 +14,7 @@ Route::get("sales/getproduct/{id}/{warehouse}/{area}", [SalesController::class, 
 Route::middleware('auth')->group(function () {
 
     Route::resource('sale', SalesController::class);
+    Route::get("sale/{id}/urdu", [SalesController::class, 'showUrdu'])->name('sale.showUrdu');
 
     Route::get("sales/delete/{id}", [SalesController::class, 'destroy'])->name('sale.delete')->middleware(confirmPassword::class);
     Route::get("sales/gatepass/{id}", [SalesController::class, 'gatePass'])->name('sale.gatePass');

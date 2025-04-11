@@ -55,17 +55,22 @@
                                                 <th scope="col" class="text-start">Product</th>
                                                 <th scope="col" class="text-start">Unit</th>
                                                 <th scope="col" class="text-start">Pack Size</th>
+                                                <th scope="col" class="text-start">Unit Value</th>
                                                 <th scope="col">Stock</th>
                                                 <th scope="col">Stock Value</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                         @foreach ($products as $key => $product)
+                                        @php
+                                            $unit_value = $product->stock_value / ($product->stock / $product->units[0]->value);
+                                        @endphp
                                             <tr>
                                                 <td>{{ $key+1}}</td>
                                                 <td class="text-start">{{ $product->name}}</td>
                                                 <td class="text-start">{{ $product->units[0]->unit_name}}</td>
                                                 <td class="text-start">{{ $product->units[0]->value}}</td>
+                                                <td class="text-start">{{ number_format($unit_value,2)}}</td>
                                                 <td class="text-end">{{ number_format($product->stock / $product->units[0]->value,2)}}</td>
                                                 <td class="text-end">{{ number_format($product->stock_value,2) }}</td>
                                             </tr>
@@ -73,7 +78,7 @@
                                         </tbody>
                                         <tfoot>
                                         <tr>
-                                                <th colspan="5" class="text-end">Total</th>
+                                                <th colspan="6" class="text-end">Total</th>
                                                 <th class="text-end">{{number_format($products->sum('stock_value'), 2)}}</th>
                                             </tr> 
                                         </tfoot>

@@ -168,6 +168,13 @@ class SalesController extends Controller
         return view('sales.view', compact('sale', 'balance'));
     }
 
+    public function showUrdu($id)
+    {
+        $sale = sales::findOrFail($id);
+        $balance = spotBalance($sale->customerID, $sale->refID);
+        return view('sales.urdu', compact('sale', 'balance'));
+    }
+
     public function gatePass($id)
     {
         $sale = sales::find($id);
