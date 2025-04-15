@@ -18,9 +18,11 @@
                     <div class="form-group mt-2">
                         <label for="warehouse">Stock Value</label>
                         <select name="warehouse" id="value" class="form-control">
-                            <option value="Purchase Wise">Purchase Wise</option>
+                            @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Branch Admin')
+                                <option value="Purchase Wise">Purchase Wise</option>
+                                <option value="Cost Wise">Cost Wise</option>
+                            @endif
                             <option value="Sale Wise">Sale Wise</option>
-                            <option value="Cost Wise">Cost Wise</option>
                         </select>
                     </div>
                     <div class="form-group mt-2">
