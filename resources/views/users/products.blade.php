@@ -12,9 +12,19 @@
                                     <form action="{{route('orderbookerproducts.store')}}" method="post">
                                         @csrf
                                         <div class="row">
-                                            <div class="col-10">
+                                            <div class="col-5">
                                                 <div class="form-group">
-                                                    <select name="productID" class="selectize" id="townID">
+                                                    <select name="productID" class="selectize" id="vendor">
+                                                        <option value="All">All</option>
+                                                        @foreach ($vendors as $ven)
+                                                            <option value="{{$ven->id}}" @selected($ven->id == $vendor)>{{$ven->title}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-5">
+                                                <div class="form-group">
+                                                    <select name="productID" class="selectize" id="product">
                                                         @foreach ($products as $product)
                                                             <option value="{{$product->id}}">{{$product->name}}</option>
                                                         @endforeach
@@ -73,6 +83,21 @@
 <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
 <script>
     $(".selectize").selectize();
+
+    $("#vendor").on('change', function (){
+        var vendor = $(this).find(":selected").val();
+        var orderbooker = "{{$orderbooker->id}}";
+
+        if(vendor == ''){
+           return false;
+        }
+        
+        var url = "{{ route('orderbookerproduct.show', [':orderbooker', ':vendor']) }}"
+        .replace(':orderbooker', orderbooker)
+        .replace(':vendor', vendor);
+
+        window.open(url, "_self");
+    });
 </script>
 @endsection
 

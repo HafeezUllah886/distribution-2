@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\orderbooker_products;
 use App\Http\Controllers\Controller;
+use App\Models\accounts;
 use App\Models\products;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -46,12 +47,22 @@ class OrderbookerProductsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($orderbooker)
+    public function show($orderbooker, $vendor = "All")
     {
-        $products = products::all();
+        if($vendor == "All")
+        {
+            $products = products::all();
+        }
+        else
+        {
+            $products = products::where('vendorID', $vendor)->get();
+        }
+
+        $vendors = accounts::vendor()->get();
+        
         $orderbooker_products = orderbooker_products::where('orderbookerID', $orderbooker)->get();
         $orderbooker = User::find($orderbooker);
-        return view('users.products', compact('orderbooker_products', 'products', 'orderbooker'));
+        return view('users.products', compact('orderbooker_products', 'products', 'orderbooker', 'vendors', 'vendor'));
     }
 
     /**
@@ -79,7 +90,7 @@ class OrderbookerProductsController extends Controller
         $orderbooker = $orderbooker_products->orderbookerID;
         $orderbooker_products->delete();
         session()->forget('confirmed_password');
-        return to_route('orderbookerproducts.show', $orderbooker)->with('success', 'Product removed successfully');
+        return to_route('orderbookerproducts.show', [$orderbooker, 'All'])->with('success', 'Product removed successfully');
     }
 
 }

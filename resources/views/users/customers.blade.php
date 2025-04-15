@@ -12,9 +12,19 @@
                                     <form action="{{route('orderbookercustomers.store')}}" method="post">
                                         @csrf
                                         <div class="row">
-                                            <div class="col-10">
+                                            <div class="col-5">
                                                 <div class="form-group">
-                                                    <select name="customerID" class="selectize" id="townID">
+                                                    <select name="area" class="selectize" id="area">
+                                                        <option value="All">All</option>
+                                                        @foreach ($areas as $ar)
+                                                            <option value="{{$ar->id}}" @selected($ar->id == $area)>{{$ar->name}} | {{$ar->town->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-5">
+                                                <div class="form-group">
+                                                    <select name="customerID" class="selectize" id="customer">
                                                         @foreach ($customers as $customer)
                                                             <option value="{{$customer->id}}">{{$customer->title}}</option>
                                                         @endforeach
@@ -46,7 +56,7 @@
                                                                      <td>{{$key+1}}</td>
                                                                      <td>{{$customer->customer->title}}</td>
                                                                      <td>
-                                                                            <a href="{{ route('orderbookercustomers.destroy', $customer->id) }}" class="btn btn-danger" >Remove</a>
+                                                                            <a href="{{ route('orderbookercustomer.delete', $customer->id) }}" class="btn btn-danger" >Remove</a>
                                                                      </td>
                                                               </tr>
                                                        @endforeach
@@ -73,6 +83,21 @@
 <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
 <script>
     $(".selectize").selectize();
+
+    $("#area").on('change', function (){
+        var area = $(this).find(":selected").val();
+        var orderbooker = "{{$orderbooker->id}}";
+
+        if(area == ''){
+           return false;
+        }
+        
+        var url = "{{ route('orderbookercustomer.show', [':orderbooker', ':area']) }}"
+        .replace(':orderbooker', orderbooker)
+        .replace(':area', area);
+
+        window.open(url, "_self");
+    });
 </script>
 @endsection
 

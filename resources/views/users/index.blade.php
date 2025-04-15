@@ -58,13 +58,13 @@
                                                                           </li>
                                                                           @if ($type == "Order Booker")
                                                                             <li>
-                                                                                <a class="dropdown-item" href="{{route('orderbookerproducts.index')}}/{{$user->id}}">
+                                                                                <a class="dropdown-item" href="{{route('orderbookerproduct.show', [$user->id, 'All'])}}">
                                                                                     <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                                                     Assigned Products
                                                                                 </a>
                                                                             </li>
                                                                             <li>
-                                                                                <a class="dropdown-item" href="{{route('orderbookercustomers.index')}}/{{$user->id}}">
+                                                                                <a class="dropdown-item" href="{{route('orderbookercustomer.show', [$user->id, 'All'])}}">
                                                                                     <i class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                                                     Assigned Customers
                                                                                 </a>

@@ -16,9 +16,11 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('/orderbookerproducts', OrderbookerProductsController::class);
         Route::get("orderbookerproduct/delete/{id}", [OrderbookerProductsController::class, 'destroy'])->name('orderbookerproduct.delete')->middleware([confirmPassword::class]);
+        Route::get("orderbookerproduct/show/{id}/{vendor?}", [OrderbookerProductsController::class, 'show'])->name('orderbookerproduct.show');
 
         Route::resource('/orderbookercustomers', OrderbookerCustomersController::class);
         Route::get("orderbookercustomer/delete/{id}", [OrderbookerCustomersController::class, 'destroy'])->name('orderbookercustomer.delete')->middleware([confirmPassword::class]);
+        Route::get("orderbookercustomer/show/{id}/{area?}", [OrderbookerCustomersController::class, 'show'])->name('orderbookercustomer.show');
 
     Route::get('self/statement', [OtherusersController::class, 'self_statement'])->name('otherusers.self_statement');
     Route::get('user/statement/{id}/{from}/{to}', [OtherusersController::class, 'statement'])->name('otheruser.statement');

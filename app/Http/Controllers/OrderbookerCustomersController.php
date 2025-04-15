@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\area;
 use App\Models\orderbooker_customers;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -47,12 +48,25 @@ class OrderbookerCustomersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($orderbooker)
+    public function show($orderbooker, $area = "All")
     {
-        $customers = accounts::customer()->currentBranch()->get();
+
         $orderbooker_customers = orderbooker_customers::where('orderbookerID', $orderbooker)->get();
+        $ids = $orderbooker_customers->pluck('customerID')->toArray();
+        if($area == "All")
+        {
+            $customers = accounts::customer()->currentBranch()->whereNotIn('id', $ids)->get();
+        }
+        else
+        {
+            $customers = accounts::customer()->currentBranch()->where('areaID', $area)->whereNotIn('id', $ids)->get();
+        }
+
+        $areas = area::with('town')->currentBranch()->get();
+        
+        
         $orderbooker = User::find($orderbooker);
-        return view('users.customers', compact('orderbooker_customers', 'customers', 'orderbooker'));
+        return view('users.customers', compact('orderbooker_customers', 'customers', 'orderbooker', 'areas', 'area'));
     }
 
     /**

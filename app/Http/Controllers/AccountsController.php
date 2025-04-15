@@ -60,11 +60,15 @@ class AccountsController extends Controller
     {
         $request->validate(
             [
-                'title' => 'required|unique:accounts,title'
+                'title' => 'required|unique:accounts,title',
+                'limit' => 'required_if:type,Customer',
+                'area' => 'required_if:type,Customer',
             ],
             [
                 'title.required' => "Please Enter Account Title",
-                'title.unique'  => "Account with this title already exists"
+                'title.unique'  => "Account with this title already exists",
+                'limit' => "Credit Limites are required for Customer",
+                'area' => "Area is required for Customer",
             ]
         );
 

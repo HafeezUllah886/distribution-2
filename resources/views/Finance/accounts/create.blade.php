@@ -32,12 +32,11 @@
                                     <select name="type" id="type" class="form-control" onchange="checkType()">
                                         <option value="Customer">Customer</option>
                                         <option value="Vendor">Vendor</option>
-                                        @if(Auth::user()->role == "Admin" || Auth::user()->role == "Accountant")
+                                        @if(Auth::user()->role == "Admin" || Auth::user()->role == "Accountant" || Auth::user()->role == "Branch Admin")
                                         <option value="Business">Business</option>
                                         <option value="Supply Man">Supply Man</option>
                                         <option value="Unloader">Unloader</option>
                                         @endif
-                                        
                                     </select>
                                 </div>
                             </div>
@@ -93,7 +92,7 @@
                             <div class="col-6 mt-2 customer">
                                 <div class="form-group ">
                                     <label for="limit">Credit Limit</label>
-                                    <input type="number" min="0" required name="limit" id="limit" class="form-control">
+                                    <input type="number" min="0" name="limit" id="limit" class="form-control">
                                 </div>
                             </div>
                             <div class="col-6 mt-2" >

@@ -20,4 +20,9 @@ class area extends Model
 {
     return $this->belongsTo(branches::class, 'branchID');
 }
+
+public function scopeCurrentBranch($query)
+    {
+        return $query->where('branchID', auth()->user()->branchID);
+    }
 }
