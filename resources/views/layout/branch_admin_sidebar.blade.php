@@ -136,6 +136,16 @@
                                     data-key="t-pickers">
                                     Vendor Accounts </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('accountsList', 'Supply Man') }}" class="nav-link"
+                                    data-key="t-pickers">
+                                    Supply Man Accounts </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('accountsList', 'Unloader') }}" class="nav-link"
+                                    data-key="t-pickers">
+                                    Unloader Accounts </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

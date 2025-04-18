@@ -16,9 +16,17 @@
                         </select>
                     </div>
                     <div class="form-group mt-2">
+                        <label for="vendor">Vendors</label>
+                        <select name="vendor[]" id="vendor" class="selectize" multiple>
+                            @foreach ($vendors as $vendor)
+                                <option value="{{$vendor->id}}">{{$vendor->title}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
                         <label for="warehouse">Stock Value</label>
                         <select name="warehouse" id="value" class="form-control">
-                            @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Branch Admin')
+                            @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Branch Admin' || auth()->user()->role == 'Accountant')
                                 <option value="Purchase Wise">Purchase Wise</option>
                                 <option value="Cost Wise">Cost Wise</option>
                             @endif
@@ -33,16 +41,29 @@
         </div>
     </div>
 @endsection
-@section('page-js')
+@section('page-css')
+    <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
+@endsection
 
+@section('page-js')
+<script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
+        $(".selectize").selectize({
+            plugins: ['remove_button'],
+            maxItems: null,
+            create: false,
+            placeholder: 'Select vendors...'
+        });
 
         $("#viewBtn").on("click", function(){
             var warehouse = $("#warehouse").find(":selected").val();
             var value = $("#value").find(":selected").val();
-            var url = "{{ route('reportWarehouseStockData', ['warehouse' => ':warehouse', 'value' => ':value']) }}"
-            .replace(':warehouse', warehouse)
-            .replace(':value', value);
+            var vendors = $("#vendor").val() || [];
+            var vendorsStr = vendors.join(',');
+            var url = "{{ route('reportWarehouseStockData', ['warehouse' => ':warehouse', 'value' => ':value', 'vendors' => ':vendors']) }}"
+                .replace(':warehouse', warehouse)
+                .replace(':value', value)
+                .replace(':vendors', vendorsStr);
             window.open(url, "_blank", "width=1000,height=800");
         });
     </script>

@@ -49,18 +49,20 @@ class OrderbookerProductsController extends Controller
      */
     public function show($orderbooker, $vendor = "All")
     {
+        $orderbooker_products = orderbooker_products::where('orderbookerID', $orderbooker)->get();
+        $product = $orderbooker_products->pluck('productID')->toArray();
         if($vendor == "All")
         {
-            $products = products::all();
+            $products = products::whereNotIn('id', $product)->get();
         }
         else
         {
-            $products = products::where('vendorID', $vendor)->get();
+            $products = products::where('vendorID', $vendor)->whereNotIn('id', $product)->get();
         }
 
         $vendors = accounts::vendor()->get();
         
-        $orderbooker_products = orderbooker_products::where('orderbookerID', $orderbooker)->get();
+        
         $orderbooker = User::find($orderbooker);
         return view('users.products', compact('orderbooker_products', 'products', 'orderbooker', 'vendors', 'vendor'));
     }

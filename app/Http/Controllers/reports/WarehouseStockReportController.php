@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\reports;
 
 use App\Http\Controllers\Controller;
+use App\Models\accounts;
 use App\Models\products;
 use App\Models\warehouses;
 use Illuminate\Http\Request;
@@ -16,12 +17,16 @@ class WarehouseStockReportController extends Controller
         } else {
             $warehouses = warehouses::where('id', auth()->user()->branchID)->get();
         }
-        return view('reports.warehouse_stock.index', compact('warehouses'));
+
+        $vendors = accounts::vendor()->currentBranch()->get();
+        return view('reports.warehouse_stock.index', compact('warehouses', 'vendors'));
     }
 
-    public function data($warehouse, $value)
+    public function data($warehouse, $value, $vendor)
     {
-        $products = products::currentBranch()->get();
+
+        
+        $products = products::currentBranch()->where('vendorID', $vendor)->get();
         foreach ($products as $product) {
 
             $product->stock = getWarehouseProductStock($product->id, $warehouse);

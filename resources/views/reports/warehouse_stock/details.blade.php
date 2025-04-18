@@ -61,9 +61,14 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $totalQty = 0;
+                                            @endphp
                                         @foreach ($products as $key => $product)
                                         @php
                                         $unit_value = $product->stock_value / ($product->stock / $product->units[0]->value);
+                                        $qty = $product->stock / $product->units[0]->value;
+                                        $totalQty += $qty;
                                     @endphp
                                             <tr>
                                                 <td>{{ $key+1}}</td>
@@ -71,14 +76,15 @@
                                                 <td class="text-start">{{ $product->units[0]->unit_name}}</td>
                                                 <td class="text-start">{{ $product->units[0]->value}}</td>
                                                 <td class="text-end">{{ number_format($unit_value,2)}}</td>
-                                                <td class="text-end">{{ number_format($product->stock / $product->units[0]->value,2)}}</td>
+                                                <td class="text-end">{{ number_format($qty,2)}}</td>
                                                 <td class="text-end">{{ number_format($product->stock_value,2) }}</td>
                                             </tr>
                                         @endforeach
                                         </tbody>
                                         <tfoot>
                                         <tr>
-                                                <th colspan="6" class="text-end">Total</th>
+                                                <th colspan="5" class="text-end">Total</th>
+                                                <th class="text-end">{{number_format($totalQty, 2)}}</th>
                                                 <th class="text-end">{{number_format($products->sum('stock_value'), 2)}}</th>
                                             </tr> 
                                         </tfoot>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\reports;
 
 use App\Http\Controllers\Controller;
+use App\Models\accounts;
 use App\Models\branches;
 use App\Models\products;
 use App\Models\warehouses;
@@ -20,12 +21,13 @@ class BranchStockReportController extends Controller
         {
             $branches = branches::where('id', auth()->user()->branchID)->get();
         }
-        return view('reports.branch_stock.index', compact('branches'));
+        $vendors = accounts::vendor()->currentBranch()->get();
+        return view('reports.branch_stock.index', compact('branches', 'vendors'));
     }  
 
-    public function data($branch, $value)
+    public function data($branch, $value, $vendor)
     {
-        $products = products::currentBranch()->get();
+        $products = products::currentBranch()->where('vendorID', $vendor)->get();
         foreach($products as $product)
         {
             
