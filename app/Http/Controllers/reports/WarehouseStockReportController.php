@@ -24,31 +24,34 @@ class WarehouseStockReportController extends Controller
 
     public function data($warehouse, $value, $vendor)
     {
+        $vendorIds = array_map('intval', explode(',', $vendor));
 
-        
-        $products = products::currentBranch()->where('vendorID', $vendor)->get();
-        foreach ($products as $product) {
+        $vendors = accounts::with('vendor_products')->whereIn('id', $vendorIds)->get();
+        foreach($vendors as $vendor)
+        {
+            $products = products::currentBranch()->where('vendorID', $vendor)->get();
+            foreach ($vendor->vendor_products as $product) {
 
-            $product->stock = getWarehouseProductStock($product->id, $warehouse);
-            $warehouse1 = warehouses::find($warehouse);
+                $product->stock = getWarehouseProductStock($product->id, $warehouse);
+                $warehouse1 = warehouses::find($warehouse);
 
-            if($value == 'Purchase Wise')
-            {
-                $product->stock_value =  warehouse_product_stock_value_purchase_wise($product->id, $warehouse);
-            }
-            elseif($value == 'Sale Wise')
-            {
-                $product->stock_value =  warehouse_product_stock_value_sale_wise($product->id, $warehouse);
-            }
-            else
-            {
-                $product->stock_value =  warehouse_product_stock_value_cost_wise($product->id, $warehouse);
+                if($value == 'Purchase Wise')
+                {
+                    $product->stock_value =  warehouse_product_stock_value_purchase_wise($product->id, $warehouse);
+                }
+                elseif($value == 'Sale Wise')
+                {
+                    $product->stock_value =  warehouse_product_stock_value_sale_wise($product->id, $warehouse);
+                }
+                else
+                {
+                    $product->stock_value =  warehouse_product_stock_value_cost_wise($product->id, $warehouse);
+                }
             }
         }
+        
         $warehouse = warehouses::find($warehouse);
         $warehouse = $warehouse->name;
-
-
-        return view('reports.warehouse_stock.details', compact('warehouse', 'products', 'value'));
+        return view('reports.warehouse_stock.details', compact('warehouse', 'vendors', 'value'));
     }
 }

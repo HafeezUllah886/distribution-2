@@ -27,30 +27,33 @@ class BranchStockReportController extends Controller
 
     public function data($branch, $value, $vendor)
     {
-        $products = products::currentBranch()->where('vendorID', $vendor)->get();
-        foreach($products as $product)
+        $vendorIds = array_map('intval', explode(',', $vendor));
+        $vendors = accounts::with('vendor_products')->whereIn('id', $vendorIds)->get();
+        foreach($vendors as $vendor)
         {
-            
+            foreach($vendor->vendor_products as $product)
+            {
                 $product->stock = getBranchProductStock($product->id, $branch);
 
                 if($value == 'Purchase Wise')
-        {
-            $product->stock_value =  branch_product_stock_value_purchase_wise($product->id, $branch);
-        }
-        elseif($value == 'Sale Wise')
-        {
-            $product->stock_value =  branch_product_stock_value_sale_wise($product->id, $branch);
-        }
-        else
-        {
-            $product->stock_value =  branch_product_stock_value_cost_wise($product->id, $branch);
+                {
+                    $product->stock_value =  branch_product_stock_value_purchase_wise($product->id, $branch);
+                }
+                elseif($value == 'Sale Wise')
+                {
+                    $product->stock_value =  branch_product_stock_value_sale_wise($product->id, $branch);
+                }
+                else
+                {
+                    $product->stock_value =  branch_product_stock_value_cost_wise($product->id, $branch);
+                }
             }
         }
-
+        
         $branch = branches::find($branch);
         $branch = $branch->name;
 
 
-        return view('reports.branch_stock.details', compact('branch', 'products', 'value'));
+        return view('reports.branch_stock.details', compact('branch', 'value', 'vendors'));
     }
 }

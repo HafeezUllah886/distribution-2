@@ -65,4 +65,9 @@ class products extends Model
        
     }
 
+    public function vendor()
+    {
+        return $this->belongsTo(accounts::class, 'vendorID');
+    }
+
 }

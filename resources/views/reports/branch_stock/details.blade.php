@@ -48,7 +48,7 @@
                         <div class="col-lg-12">
                             <div class="card-body p-4">
                                 <div class="table-responsive">
-                                    <table class="table table-borderless text-center table-nowrap align-middle mb-0">
+                                    <table class="table table-bordered text-center table-nowrap align-middle mb-0">
                                         <thead>
                                             <tr class="table-active">
                                                 <th scope="col" style="width: 50px;">#</th>
@@ -61,30 +61,66 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach ($products as $key => $product)
-                                        @php
-                                            $unit_value = $product->stock_value / ($product->stock / $product->units[0]->value);
-                                        @endphp
+                                            @php
+                                                $totalQty = 0;
+                                                $totalAmount = 0;
+                                            @endphp
+                                            @foreach ($vendors as $key => $vendor)
+                                            @php
+                                                $amount = $vendor->vendor_products->sum('stock_value');
+
+                                                $totalAmount += $amount;
+                                            @endphp
                                             <tr>
-                                                <td>{{ $key+1}}</td>
-                                                <td class="text-start">{{ $product->name}}</td>
-                                                <td class="text-start">{{ $product->units[0]->unit_name}}</td>
-                                                <td class="text-start">{{ $product->units[0]->value}}</td>
-                                                <td class="text-start">{{ number_format($unit_value,2)}}</td>
-                                                <td class="text-end">{{ number_format($product->stock / $product->units[0]->value,2)}}</td>
-                                                <td class="text-end">{{ number_format($product->stock_value,2) }}</td>
+                                                <td colspan="7">
+                                                    <h4 class="fs-14 mb-0 text-start">{{ $vendor->title }}</h4>
+                                                </td>
                                             </tr>
-                                        @endforeach
+                                            @php
+                                                $tQty = 0;
+                                            @endphp
+                                                @foreach ($vendor->vendor_products as $key => $product)
+
+                                                @php
+                                                $qty = $product->stock / $product->units[0]->value;
+                                                $totalQty += $qty;
+                                                $tQty += $qty;
+                                                if($product->stock > 0)
+                                                {
+                                                    $unit_value = $product->stock_value / ($product->stock / $product->units[0]->value);
+                                                }
+                                                else
+                                                {
+                                                    $unit_value = 0;
+                                                }
+                                                @endphp
+                                                    <tr>
+                                                        <td class="p-1 m-0">{{ $key+1}}</td>
+                                                        <td class="text-start p-1 m-0">{{ $product->name}}</td>
+                                                        <td class="text-start p-1 m-0">{{ $product->units[0]->unit_name}}</td>
+                                                        <td class="text-start p-1 m-0">{{ $product->units[0]->value}}</td>
+                                                        <td class="text-start p-1 m-0">{{ number_format($unit_value,2)}}</td>
+                                                        <td class="text-end p-1 m-0">{{ number_format($qty,2)}}</td>
+                                                        <td class="text-end p-1 m-0">{{ number_format($product->stock_value,2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                                <tr>
+                                                    <td colspan="5" class="text-end p-1 m-0">Total</td>
+                                                    <td class="text-end p-1 m-0">{{ number_format($tQty,2) }}</td>
+                                                    <td class="text-end p-1 m-0">{{ number_format($amount,2) }}</td>
+                                                </tr>
+                                            @endforeach
+                                            
                                         </tbody>
                                         <tfoot>
-                                        <tr>
-                                                <th colspan="6" class="text-end">Total</th>
-                                                <th class="text-end">{{number_format($products->sum('stock_value'), 2)}}</th>
-                                            </tr> 
+                                            <tr>
+                                                <th colspan="5" class="text-end p-1 m-0">Grand Total</th>
+                                                <th class="text-end p-1 m-0">{{ number_format($totalQty,2) }}</th>
+                                                <th class="text-end p-1 m-0">{{ number_format($totalAmount,2) }}</th>
+                                            </tr>
                                         </tfoot>
                                     </table><!--end table-->
                                 </div>
-
                             </div>
                             <!--end card-body-->
                         </div><!--end col-->

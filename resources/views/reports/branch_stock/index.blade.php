@@ -40,8 +40,6 @@
             </div>
         </div>
     </div>
-
-
 @endsection
 
 @section('page-css')
@@ -57,8 +55,6 @@
         create: false,
         placeholder: 'Select vendors...'
     });
-
-
         $("#viewBtn").on("click", function(){
             var branch = $("#branch").find(":selected").val();
             var value = $("#value").find(":selected").val();

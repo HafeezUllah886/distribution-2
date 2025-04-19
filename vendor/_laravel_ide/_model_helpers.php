@@ -815,6 +815,8 @@ namespace App\Models {
      * @property-read int|null $sale_count
      * @property-read \App\Models\area $area
      * @property-read \App\Models\branches $branch
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\products> $vendor_products
+     * @property-read int|null $vendor_products_count
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts whereBranchid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts whereTitle($value)
@@ -7737,6 +7739,7 @@ namespace App\Models {
      * @property-read int|null $units_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\product_dc> $dcs
      * @property-read int|null $dcs_count
+     * @property-read \App\Models\accounts $vendor
      * @method static \Illuminate\Database\Eloquent\Builder<products>|products whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<products>|products whereName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<products>|products whereNameurdu($value)
