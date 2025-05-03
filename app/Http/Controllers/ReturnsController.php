@@ -30,11 +30,20 @@ class ReturnsController extends Controller
         $start = $request->start ?? firstDayOfMonth();
         $end = $request->end ?? now()->toDateString();
 
-        $returns = returns::whereBetween('date', [$start, $end])->get();
+        $bookerID = $request->orderbookerID ?? null;
+
+        if($bookerID == null)
+        {
+            $returns = returns::whereBetween('date', [$start, $end])->get();
+        }
+        else
+        {
+            $returns = returns::whereBetween('date', [$start, $end])->where('orderbookerID', $bookerID)->get();
+        }
         $customers = accounts::customer()->currentBranch()->get();
         $orderbookers = User::orderbookers()->currentBranch()->get();
 
-        return view('return.index', compact('returns', 'start', 'end', 'customers', 'orderbookers'));
+        return view('return.index', compact('returns', 'start', 'end', 'customers', 'orderbookers', 'bookerID'));
     }
 
     /**

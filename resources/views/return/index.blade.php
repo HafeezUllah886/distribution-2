@@ -4,16 +4,27 @@
         <div class="col-12">
             <form>
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">From</span>
                             <input type="date" class="form-control" placeholder="Username" name="start" value="{{$start}}" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">To</span>
                             <input type="date" class="form-control" placeholder="Username" name="end" value="{{$end}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Orderbooker</span>
+                            <select name="orderbookerID" id="orderbookerID" class="form-control">
+                                <option value="">All</option>
+                                @foreach ($orderbookers as $orderbooker)
+                                    <option value="{{$orderbooker->id}}" @selected($orderbooker->id == $bookerID)>{{$orderbooker->name}}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -69,7 +80,7 @@
                                                     </button>
                                                 </li>
                                               
-                                                @if(auth()->user()->role == 'Operator')
+                                                @if(auth()->user()->role == 'Operator' || auth()->user()->role == 'Branch Admin')
                                                 <li>
                                                     <a class="dropdown-item text-danger" href="{{route('return.delete', $return->id)}}">
                                                         <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>

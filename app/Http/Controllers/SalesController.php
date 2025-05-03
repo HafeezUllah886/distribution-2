@@ -33,11 +33,24 @@ class SalesController extends Controller
         $start = $request->start ?? firstDayOfMonth();
         $end = $request->end ?? now()->toDateString();
 
-        $sales = sales::with('payments')->whereBetween("date", [$start, $end])->where('branchID', auth()->user()->branchID)->orderby('id', 'desc')->get();
+        $bookerID = $request->orderbookerID ?? null;
+
+        if($bookerID == null)
+        {
+            $sales = sales::with('payments')->whereBetween("date", [$start, $end])->where('branchID', auth()->user()->branchID)->orderby('id', 'desc')->get();
+        }
+        else
+        {
+            $sales = sales::with('payments')->whereBetween("date", [$start, $end])->where('branchID', auth()->user()->branchID)->where('orderbookerID', $bookerID)->orderby('id', 'desc')->get();
+        }
+
+       
 
         $warehouses = warehouses::currentBranch()->get();
         $customers = accounts::customer()->currentBranch()->get();
-        return view('sales.index', compact('sales', 'start', 'end', 'warehouses', 'customers'));
+
+        $orderbookers = User::orderbookers()->currentBranch()->get();
+        return view('sales.index', compact('sales', 'start', 'end', 'warehouses', 'customers', 'orderbookers', 'bookerID'));
     }
 
     /**

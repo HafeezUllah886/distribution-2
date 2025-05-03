@@ -95,6 +95,19 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="#return" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarApps">
+                        <i class="ri-shopping-cart-fill"></i><span data-key="t-apps">Sale Return</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="return">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('return.index', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()]) }}" class="nav-link" data-key="t-chat"> Sales Return History</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li> 
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#stock" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-stack-line"></i><span data-key="t-apps">Stocks</span>
