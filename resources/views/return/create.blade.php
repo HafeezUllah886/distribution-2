@@ -83,7 +83,7 @@
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="pendingInvoice">Pending Invoice</label>
-                                    <select name="pendingInvoice" class="selectize1" required id="pending">
+                                    <select name="pendingInvoice" class="selectize1" readonly id="pending">
                                         @foreach ($pendingInvoices as $pendingInvoice)
                                             <option value="{{ $pendingInvoice->id }}" data-due="{{$pendingInvoice->due()}}">{{ $pendingInvoice->id }} | {{date('d M Y', strtotime($pendingInvoice->date))}} | {{number_format($pendingInvoice->due())}}</option>
                                         @endforeach

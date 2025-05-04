@@ -11,6 +11,10 @@ class returns extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'invoices' => 'array',
+    ];
+
     public function details()
     {
         return $this->hasMany(returnsDetails::class, 'returnID');

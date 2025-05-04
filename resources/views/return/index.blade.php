@@ -56,6 +56,7 @@
                             <th>Customer</th>
                             <th>Date</th>
                             <th>Amount</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
@@ -65,6 +66,13 @@
                                     <td>{{ $return->customer->title }}</td>
                                     <td>{{ date('d M Y', strtotime($return->date)) }}</td>
                                     <td>{{ number_format($return->net) }}</td>
+                                    <td>
+                                        @if($return->status == 0)
+                                        <span class="badge bg-danger">Pending</span>
+                                        @else
+                                        <span class="badge bg-success">Approved</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
@@ -79,7 +87,15 @@
                                                         View
                                                     </button>
                                                 </li>
-                                              
+                                               @if($return->status == 0 && auth()->user()->role == 'Branch Admin')
+                                                <li>
+                                                    <button class="dropdown-item" onclick="newWindow('{{route('return.edit', $return->id)}}')"
+                                                        onclick=""><i
+                                                            class="ri-edit-2-fill align-bottom me-2 text-muted"></i>
+                                                        Approve
+                                                    </button>
+                                                </li>
+                                                @endif
                                                 @if(auth()->user()->role == 'Operator' || auth()->user()->role == 'Branch Admin')
                                                 <li>
                                                     <a class="dropdown-item text-danger" href="{{route('return.delete', $return->id)}}">

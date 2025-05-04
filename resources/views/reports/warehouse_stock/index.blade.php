@@ -46,7 +46,7 @@
 @endsection
 
 @section('page-js')
-<script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
         $(".selectize").selectize({
             plugins: ['remove_button'],

@@ -5,9 +5,7 @@ namespace App\Http\Controllers\reports;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\branches;
-use App\Models\products;
-use App\Models\warehouses;
-use Illuminate\Http\Request;
+
 
 class BranchStockReportController extends Controller
 {

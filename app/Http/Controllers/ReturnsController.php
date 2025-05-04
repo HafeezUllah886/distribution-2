@@ -34,11 +34,11 @@ class ReturnsController extends Controller
 
         if($bookerID == null)
         {
-            $returns = returns::whereBetween('date', [$start, $end])->get();
+            $returns = returns::whereBetween('date', [$start, $end])->orderBy('date', 'desc')->get();
         }
         else
         {
-            $returns = returns::whereBetween('date', [$start, $end])->where('orderbookerID', $bookerID)->get();
+            $returns = returns::whereBetween('date', [$start, $end])->where('orderbookerID', $bookerID)->orderBy('date', 'desc')->get();
         }
         $customers = accounts::customer()->currentBranch()->get();
         $orderbookers = User::orderbookers()->currentBranch()->get();
@@ -81,6 +81,7 @@ class ReturnsController extends Controller
                   'warehouseID'     => $request->warehouseID,
                   'orderbookerID'   => $request->orderbookerID,
                   'date'            => $request->date,
+                  'invoices'        => $request->pendingInvoice,
                   'notes'           => $request->notes,
                   'refID'           => $ref,
                 ]
@@ -125,7 +126,7 @@ class ReturnsController extends Controller
                 ]
             );
 
-            $sale = sales::find($request->pendingInvoice);
+           /*  $sale = sales::find($request->pendingInvoice);
             sale_payments::create(
                 [
                     'salesID'       => $sale->id,
@@ -137,7 +138,7 @@ class ReturnsController extends Controller
                 ]
             );
 
-            createTransaction($request->customerID, $request->date, 0, $net, "Amount of Return No. $return->id", $ref);
+            createTransaction($request->customerID, $request->date, 0, $net, "Amount of Return No. $return->id", $ref); */
            
             DB::commit();
             return back()->with('success', "Return Created");
@@ -160,17 +161,150 @@ class ReturnsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(returns $returns)
+    public function edit($id)
     {
-        //
+        $return = returns::find($id);
+        $warehouses = warehouses::currentBranch()->get();
+        $products = orderbooker_products::where('orderbookerID', $return->orderbookerID)->get();
+        $customer = accounts::find($return->customerID);
+        $orderbooker = User::find($return->orderbookerID);
+
+        $pendingInvoices = sales::where('customerID', $return->customerID)->where('orderbookerID', $return->orderbookerID)->unpaidOrPartiallyPaid()->get();
+
+        return view('return.edit', compact('warehouses', 'products', 'customer', 'pendingInvoices', 'orderbooker', 'return'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, returns $returns)
+    public function update(Request $request, $id)
     {
-        //
+        try
+        {
+            if($request->isNotFilled('id'))
+            {
+                throw new Exception('Please Select Atleast One Product');
+            }
+            DB::beginTransaction();
+            $return = returns::find($id);
+            
+            transactions::where('refID', $return->refID)->delete();
+                
+            foreach($return->details as $product)
+            {
+                stock::where('refID', $product->refID)->delete();
+                $product->delete();
+            }
+            sale_payments::where('refID', $return->refID)->delete();
+            $return->update(
+                [
+                  'customerID'      => $request->customerID,
+                  'warehouseID'     => $request->warehouseID,
+                  'date'            => $request->date,
+                  'invoices'        => $request->pendingInvoice,
+                  'notes'           => $request->notes,
+                  'status'          => 1,
+                ]
+            );
+
+            $ids = $request->id;
+
+            $ref = $return->refID;
+
+            $total = 0;
+            foreach($ids as $key => $id)
+            {
+                $unit = product_units::find($request->unit[$key]);
+                $qty = ($request->qty[$key] * $unit->value) + $request->loose[$key];
+                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                $price = $request->price[$key];
+                $amount = $price * $pc;
+                $total += $amount;
+
+                returnsDetails::create(
+                    [
+                        'returnID'        => $return->id,
+                        'warehouseID'   => $request->warehouseID,
+                        'orderbookerID' => $request->orderbookerID,
+                        'productID'     => $id,
+                        'price'         => $price,
+                        'qty'           => $request->qty[$key],
+                        'pc'            => $pc,
+                        'loose'         => $request->loose[$key],
+                        'amount'        => $amount,
+                        'date'          => $request->date,
+                        'unitID'        => $unit->id,
+                        'refID'         => $ref,
+                    ]
+                );
+                createStock($id, $qty, 0, $request->date, "Returned", $ref, $request->warehouseID);
+            }
+
+            $net = $total;
+
+            $return->update(
+                [
+                    'net' => $net,
+                ]
+            );
+
+
+
+            foreach($request->pendingInvoice as $index => $invoice)
+            {
+                $sale = sales::find($invoice);
+                $isLast = $index === array_key_last($request->pendingInvoice);
+                if($isLast)
+                {
+                    if($sale->due() < $net)
+                    {
+                        throw new Exception('Amount Exceeds');
+                    }
+                    sale_payments::create(
+                        [
+                            'salesID'       => $invoice,
+                            'date'          => $request->date,
+                            'amount'        => $net,
+                            'notes'         => "Return Amount Adjusted Return No. $return->id",
+                            'userID'        => auth()->id(),
+                            'refID'         => $ref,
+                        ]
+                    );
+                    createTransaction($request->customerID, $request->date, 0, $net, "Amount of Return No. $return->id", $ref);
+                }
+                else
+                {
+                    $amount = $sale->due();
+                    $net -= $amount;
+                   if($net <= 0)
+                   {
+                    break;
+                   }
+                   sale_payments::create(
+                    [
+                        'salesID'       => $invoice,
+                        'date'          => $request->date,
+                        'amount'        => $amount,
+                        'notes'         => "Return Amount Adjusted Return No. $return->id",
+                        'userID'        => auth()->id(),
+                        'refID'         => $ref,
+                    ]
+                );
+                createTransaction($request->customerID, $request->date, 0, $amount, "Amount of Return No. $return->id", $ref);
+                }
+               
+            }
+            
+            DB::commit();
+            session()->forget('confirmed_password');
+            return to_route('return.index')->with('success', "Return Approved");
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+            return to_route('return.index')->with('error', $e->getMessage());
+        }
     }
 
     /**

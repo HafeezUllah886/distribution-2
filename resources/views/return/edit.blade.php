@@ -1,5 +1,10 @@
 @extends('layout.popups')
 @section('content')
+<script>
+    var existingProducts = [];
+
+   
+</script>
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card" id="demo">
@@ -7,15 +12,16 @@
                     <div class="col-12">
                         <div class="card-header">
                             <div class="row">
-                                <div class="col-6"><h3> Create Return </h3></div>
+                                <div class="col-6"><h3> Approve Return </h3></div>
                                 <div class="col-6 d-flex flex-row-reverse"><a href="{{route('return.index')}}" class="btn btn-danger">Close</a></div>
                             </div>
                         </div>
                     </div>
                 </div><!--end row-->
                 <div class="card-body">
-                    <form action="{{ route('return.store') }}" method="post">
+                    <form action="{{ route('return.update', $return->id) }}" method="post">
                         @csrf
+                        @method('PUT')
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
@@ -39,7 +45,24 @@
                                         <th class="text-center">Amount</th>
                                         <th></th>
                                     </thead>
-                                    <tbody id="products_list"></tbody>
+                                    <tbody id="products_list">
+                                        @foreach ($return->details as $detail)
+                                            <tr id="row_{{ $detail->productID }}">
+                                                <td class="no-padding">{{ $detail->product->name }}</td>
+                                                <td class="no-padding"><select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges({{ $detail->productID }})" id="unit_{{ $detail->productID }}">
+                                                    @foreach ($detail->product->units as $unit)
+                                                        <option data-unit="{{ $unit->value }}" value="{{ $unit->id }}">{{ $unit->unit_name }}</option>
+                                                    @endforeach
+                                                </select></td>
+                                                <td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges({{ $detail->productID }})" max="{{ $detail->product->stock }}" min="0" required step="any" value="{{ $detail->qty }}" class="form-control text-center no-padding" id="qty_{{ $detail->productID }}"></td>
+                                                <td class="no-padding"><input type="number" name="loose[]" oninput="updateChanges({{ $detail->productID }})" min="0" required step="any" value="{{ $detail->loose }}" class="form-control text-center no-padding" id="loose_{{ $detail->productID }}"></td>
+                                                <td class="no-padding"><input type="number" name="price[]" oninput="updateChanges({{ $detail->productID }})" required step="any" value="{{ $detail->price }}" min="1" class="form-control text-center no-padding" id="price_{{ $detail->productID }}"></td>
+                                                <td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="{{ $detail->amount }}" class="form-control text-center no-padding" id="amount_{{ $detail->productID }}"></td>
+                                                <td class="no-padding"><span class="btn btn-sm btn-danger" onclick="deleteRow({{ $detail->productID }})">X</span></td>
+                                                <td class="no-padding"><input type="hidden" name="id[]" value="{{ $detail->productID }}"></td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
                                     <tfoot>
                                         <tr>
                                             <th colspan="5" class="text-end">Total</th>
@@ -52,7 +75,7 @@
                             <div class="col-2">
                                 <div class="form-group">
                                     <label for="date">Date</label>
-                                    <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}" class="form-control">
+                                    <input type="date" name="date" id="date" value="{{ date('Y-m-d', strtotime($return->date)) }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-3">
@@ -73,9 +96,8 @@
                                 <div class="form-group">
                                     <label for="warehouseID">Warehouse</label>
                                     <select name="warehouseID" class="selectize1" required id="warehouseID">
-                                        <option value="0"></option>
                                         @foreach ($warehouses as $warehouse)
-                                            <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                                            <option value="{{ $warehouse->id }}" {{ $warehouse->id == $return->warehouseID ? 'selected' : '' }}>{{ $warehouse->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -83,7 +105,7 @@
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="pendingInvoice">Pending Invoice</label>
-                                    <select name="pendingInvoice" class="selectize1" required id="pending">
+                                    <select name="pendingInvoice[]" class="selectize1" required id="pending" multiple>
                                         @foreach ($pendingInvoices as $pendingInvoice)
                                             <option value="{{ $pendingInvoice->id }}" data-due="{{$pendingInvoice->due()}}">{{ $pendingInvoice->id }} | {{date('d M Y', strtotime($pendingInvoice->date))}} | {{number_format($pendingInvoice->due())}}</option>
                                         @endforeach
@@ -93,11 +115,11 @@
                             <div class="col-12 mt-2">
                                 <div class="form-group">
                                     <label for="notes">Notes</label>
-                                    <textarea name="notes" id="notes" class="form-control" cols="30" rows="5"></textarea>
+                                    <textarea name="notes" id="notes" class="form-control" cols="30" rows="5">{{ $return->notes }}</textarea>
                                 </div>
                             </div>
                             <div class="col-12 mt-2">
-                                <button type="submit" class="btn btn-primary w-100">Create Return</button>
+                                <button type="submit" class="btn btn-primary w-100">Approve Return</button>
                             </div>
                         </div>
                     </form>
@@ -136,7 +158,6 @@
             },
         });
 
-        var existingProducts = [];
         function getSingleProduct(id) {
             $.ajax({
                 url: "{{ url('return/getproduct/') }}/" + id,
@@ -209,6 +230,11 @@
             $('#row_'+id).remove();
             updateTotal();
         }
+
+        @foreach ($return->details as $detail)
+        existingProducts.push({{ $detail->productID }});
+        updateChanges({{ $detail->productID }});
+    @endforeach
 
 
     </script>
