@@ -26,6 +26,7 @@ class BranchOrdersController extends Controller
         $from = $request->start ?? firstDayOfMonth();
         $to = $request->end ?? now()->toDateString();
         $status = $request->status ?? "All";
+        $bookerID = $request->orderbookerID ?? null;
        
         $orders = orders::with('customer.area', 'details.product', 'details.unit', 'orderbooker')->currentBranch()->whereBetween("date", [$from, $to])->orderBy('id', 'desc');
 
@@ -33,11 +34,16 @@ class BranchOrdersController extends Controller
         {
             $orders->where('status', $status);
         }
+        if($bookerID != null)
+        {
+            $orders->where('orderbookerID', $bookerID);
+        }
         $orders = $orders->get();
 
         $warehouses = warehouses::all();
+        $orderbookers = User::orderbookers()->currentBranch()->get();
 
-        return view('orders.index', compact('orders', 'from', 'to', 'status', 'warehouses'));
+        return view('orders.index', compact('orders', 'from', 'to', 'status', 'warehouses', 'bookerID', 'orderbookers'));
     }
 
     public function show($id)

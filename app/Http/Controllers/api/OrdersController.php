@@ -24,6 +24,7 @@ class OrdersController extends Controller
     {
         $from = $request->from ?? now()->toDateString();
         $to = $request->to ?? now()->toDateString();
+        
        
         $data = orders::with('customer.area', 'details.product', 'details.unit')->where('orderbookerID', $request->user()->id)->whereBetween("date", [$from, $to])->orderBy('id', 'desc')->get();
 

@@ -2,6 +2,26 @@
 @section('content')
     <div class="row">
         <div class="col-12">
+            <form>
+                <div class="row">
+                   
+                    <div class="col-md-4">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Vendor</span>
+                            <select name="vendorID" id="vendorID" class="form-control">
+                                <option value="">All</option>
+                                @foreach ($vendors as $vendor)
+                                    <option value="{{$vendor->id}}" @selected($vendor->id == $vendorID)>{{$vendor->title}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                   
+                    <div class="col-md-2">
+                       <input type="submit" value="Filter" class="btn btn-success w-100">
+                    </div>
+                </div>
+            </form>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Products Stock </h3>

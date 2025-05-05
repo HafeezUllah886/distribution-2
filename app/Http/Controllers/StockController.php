@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\accounts;
 use App\Models\product_units;
 use App\Models\products;
 use App\Models\stock;
@@ -14,12 +15,20 @@ class StockController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = products::currentBranch()->get();
+        $vendorID = $request->vendorID ?? null;
+        $products = products::currentBranch();
+        if($vendorID != null)
+        {
+            $products = $products->where('vendorID', $vendorID);
+        }
+        $products = $products->get();
+        
         $units = units::all();
         $warehouses = warehouses::currentBranch()->get();
-        return view('stock.index', compact('products', 'units', 'warehouses'));
+        $vendors = accounts::vendor()->currentBranch()->get();
+        return view('stock.index', compact('products', 'units', 'warehouses', 'vendors', 'vendorID'));
     }
 
     /**
