@@ -225,6 +225,7 @@ class BranchOrdersController extends Controller
                     $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
                     $netPrice = ($price - $discount - $discountvalue - $claim) + $frieght;
                     $amount = $netPrice * $pc;
+                    $price_amount = $price * $pc;
                     $total += $amount;
                     $totalLabor += $request->labor[$key] * $pc;
                 sale_details::create(
@@ -239,6 +240,7 @@ class BranchOrdersController extends Controller
                         'discountvalue' => $discountvalue,
                         'qty'           => $request->qty[$key],
                         'pc'            => $pc,
+                        'price_amount'  => $price_amount,
                         'loose'         => $request->loose[$key],
                         'netprice'      => $netPrice,
                         'amount'        => $amount,
