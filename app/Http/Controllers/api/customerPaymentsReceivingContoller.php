@@ -165,6 +165,7 @@ class customerPaymentsReceivingContoller extends Controller
             }
 
             orderbookerPaymentsReceiving::create([
+                'customerID' => $request->customerID,
                 'orderbookerID' => $request->user()->id,
                 'date' => $request->date,
                 'amount' => $total_amount,
@@ -197,19 +198,12 @@ class customerPaymentsReceivingContoller extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */ 
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+   public function lastPayment(Request $request)
+   {
+    $payment = orderbookerPaymentsReceiving::orderBy('id', 'desc')->first();
+    return response()->json([
+        'status' => 'success',
+        'data' => $payment
+    ], 200);
+   }
 }

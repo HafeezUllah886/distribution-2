@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('orderbooker_payments_receivings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('orderbookerID')->constrained('users', 'id');
+            $table->foreignId('customerID')->constrained('accounts', 'id');
             $table->float('amount');
             $table->date('date');
             $table->text('notes')->nullable();
