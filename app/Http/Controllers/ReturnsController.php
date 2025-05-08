@@ -203,7 +203,7 @@ class ReturnsController extends Controller
                   'date'            => $request->date,
                   'invoices'        => $request->pendingInvoice,
                   'notes'           => $request->notes,
-                  'status'          => 1,
+                  
                 ]
             );
 
@@ -245,6 +245,7 @@ class ReturnsController extends Controller
             $return->update(
                 [
                     'net' => $net,
+                    'status' => 1,
                 ]
             );
 
@@ -292,17 +293,15 @@ class ReturnsController extends Controller
                 );
                 createTransaction($request->customerID, $request->date, 0, $amount, "Amount of Return No. $return->id", $ref);
                 }
-               
             }
             
             DB::commit();
-            session()->forget('confirmed_password');
             return to_route('return.index')->with('success', "Return Approved");
         }
         catch(\Exception $e)
         {
             DB::rollBack();
-            session()->forget('confirmed_password');
+            
             return to_route('return.index')->with('error', $e->getMessage());
         }
     }

@@ -14,11 +14,11 @@
                             <!--end card-header-->
                         </div><!--end col-->
                         <div class="col-lg-12 ">
-                            <div class="row">
+                            <div class="row mt-0">
                                 <div class="col-4"></div>
                                 <div class="col-4 text-center"><h2>SALES INVOICE</h2></div>
                             </div>
-                            <div class="card-body p-4">
+                            <div class="card-body p-4 pt-1 pb-1" >
                                 <div class="row g-3">
                                     <div class="col-1">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Inv #</p>
@@ -58,7 +58,7 @@
                             <!--end card-body-->
                         </div><!--end col-->
                         <div class="col-lg-12">
-                            <div class="card-body p-4">
+                            <div class="card-body p-4 pt-1 pb-1">
                                 <div class="table-responsive">
                                     <table class="table table-borderless text-center table-nowrap align-middle mb-0">
                                         <thead>
@@ -128,14 +128,14 @@
                                                 <th class="text-end">{{number_format($totalLoose)}}</th>
                                                 <th class="text-end">{{number_format($totalBonus)}}</th>
                                                 <th></th>
-                                                <th class="text-end">{{number_format($totalDiscount)}}</th>
-                                                <th class="text-end">{{number_format($totalDiscountValue)}}</th>
-                                                <th class="text-end">{{number_format($totalClaim)}}</th>
+                                                <th class="text-end">(-){{number_format($totalDiscount)}} </th>
+                                                <th class="text-end">(-){{number_format($totalDiscountValue)}}</th>
+                                                <th class="text-end">(-){{number_format($totalClaim)}}</th>
                                                 <th></th>
-                                                <th class="text-end">{{number_format($totalFright)}}</th>
+                                                <th class="text-end">(+){{number_format($totalFright)}}</th>
                                                 <th class="text-end">{{number_format($netAmount, 2)}}</th>
                                             </tr> 
-                                            <tr>
+                                           {{--  <tr>
                                                 <th class="text-end p-1" colspan="12">Gross Amount</th>
                                                 <th class="text-end p-1">{{number_format($netAmount + $totalDiscount + $totalDiscountValue + $totalClaim - $totalFright,2 )}}</th>
                                             </tr>
@@ -154,7 +154,7 @@
                                             <tr>
                                                 <th class="text-end p-1" colspan="12">Net Payable</th>
                                                 <th class="text-end p-1">{{number_format($netAmount,2 )}}</th>
-                                            </tr>
+                                            </tr> --}}
                                         </tfoot>
                                     </table><!--end table-->
                                 </div>
