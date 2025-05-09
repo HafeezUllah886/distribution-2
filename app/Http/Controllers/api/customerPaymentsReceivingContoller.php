@@ -167,6 +167,7 @@ class customerPaymentsReceivingContoller extends Controller
             orderbookerPaymentsReceiving::create([
                 'customerID' => $request->customerID,
                 'orderbookerID' => $request->user()->id,
+                'receivedBy' => $request->user()->id,
                 'date' => $request->date,
                 'amount' => $total_amount,
                 'notes' => $request->notes,
