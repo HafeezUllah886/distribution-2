@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('orderbookerID')->constrained('users', 'id');
             $table->foreignId('customerID')->constrained('accounts', 'id');
+            $table->foreignId('receivedBy')->constrained('users', 'id');
             $table->float('amount');
             $table->date('date');
             $table->text('notes')->nullable();

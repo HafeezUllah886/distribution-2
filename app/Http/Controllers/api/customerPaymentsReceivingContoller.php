@@ -200,7 +200,20 @@ class customerPaymentsReceivingContoller extends Controller
 
    public function lastPayment(Request $request)
    {
-    $payment = orderbookerPaymentsReceiving::orderBy('id', 'desc')->first();
+    $validation = Validator::make($request->all(), [
+        'customerID' => 'required|exists:accounts,id',
+    ]);
+
+    if($validation->fails())
+    {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Validation failed',
+            'errors' => $validation->errors()
+        ], 422);
+    }
+    
+    $payment = orderbookerPaymentsReceiving::where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->first();
     return response()->json([
         'status' => 'success',
         'data' => $payment

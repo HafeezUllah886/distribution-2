@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/payment/receiving', [customerPaymentsReceivingContoller::class, 'paymentReceiving']);
     Route::get('/pendinginvoices', [customerPaymentsReceivingContoller::class, 'pendingInvoices']);
     Route::post('/invoicespayment', [customerPaymentsReceivingContoller::class, 'invoicesPayment']);
+    Route::post('/lastpayment', [customerPaymentsReceivingContoller::class, 'lastPayment']);
 
     Route::post('/storelocation', [locationTrackingAPIController::class, 'storeLocation']);
 
