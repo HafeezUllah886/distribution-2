@@ -5,6 +5,8 @@ namespace App\Http\Controllers\reports;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\branches;
+use App\Models\orderbooker_customers;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TopCustomersReportController extends Controller
@@ -14,23 +16,37 @@ class TopCustomersReportController extends Controller
         if(auth()->user()->role == "Admin")
         {
             $branches = branches::all();
+            $orderbookers = User::orderbookers()->get();
         }
         else
         {
             $branches = branches::where('id', auth()->user()->branchID)->get();
+            $orderbookers = User::orderbookers()->where('branchID', auth()->user()->branchID)->get();
         }
-        return view('reports.top_customers.index', compact('branches'));
+        return view('reports.top_customers.index', compact('branches', 'orderbookers'));
     }  
 
-    public function data($branch)
+    public function data(Request $request)
     {
-            if($branch == "All")
+            if($request->branch == "All")
             {
-                $customers = accounts::customer()->with('sale')->get();
+                $customers = accounts::customer()->with('sale');
+                if($request->orderbooker)
+                {
+                   $orderbooker_customers = orderbooker_customers::whereIn('orderbookerID', $request->orderbooker)->pluck('customerID');
+                   $customers = $customers->whereIn('id', $orderbooker_customers);
+                }
+                $customers = $customers->get();
             }
             else
             {
-                $customers = accounts::customer()->with('sale')->where('branchID', $branch)->get();
+                $customers = accounts::customer()->with('sale')->where('branchID', $request->branch);
+                if($request->orderbooker)
+                {
+                   $orderbooker_customers = orderbooker_customers::whereIn('orderbookerID', $request->orderbooker)->pluck('customerID');
+                   $customers = $customers->whereIn('id', $orderbooker_customers);
+                }
+                $customers = $customers->get();
             }
 
             $customers = $customers->sortByDesc(function ($customer) {
@@ -43,9 +59,9 @@ class TopCustomersReportController extends Controller
                 $customer->sales = $customer->sale->sum('net');
             }
 
-            if($branch != "All")
+            if($request->branch != "All")
             {
-                $branch = branches::find($branch);
+                $branch = branches::find($request->branch);
                 $branch = $branch->name;
             }
 

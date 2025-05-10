@@ -66,8 +66,6 @@
                                                 <td>{{ $ser}}</td>
                                                 <td class="text-start">{{ $customer->branch->name}}</td>
                                                 <td class="text-start">{{ $customer->title}}</td>
-                                                <td class="text-start">{{ $customer->branch->name}}</td>
-                                                <td class="text-start">{{ $customer->title}}</td>
                                                 <td class="text-start">{{ $customer->area->name}}</td>
                                                 <td class="text-end">{{ number_format($customer->sales,2) }}</td>
                                                 <td class="text-end">{{ number_format($customer->balance,2) }}</td>

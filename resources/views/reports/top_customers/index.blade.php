@@ -6,8 +6,8 @@
                 <div class="card-header d-flex justify-content-between">
                     <h3>View Top Customers Report</h3>
                 </div>
+                <form action="{{route('reportTopCustomersData')}}" method="get">
                 <div class="card-body">
-                   
                     <div class="form-group mt-2">
                         <label for="branch">Branch</label>
                         <select name="branch" id="branch" class="form-control">
@@ -20,24 +20,37 @@
                         </select>
                     </div>
                     <div class="form-group mt-2">
+                        <label for="orderbooker">Order Booker</label>
+                        <select name="orderbooker[]" id="orderbooker" class="selectize" multiple>
+                          
+                            @foreach ($orderbookers as $orderbooker)
+                                <option value="{{$orderbooker->id}}">{{$orderbooker->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
                         <button class="btn btn-success w-100" id="viewBtn">View Report</button>
                     </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>
 
 
 @endsection
+@section('page-css')
+    <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
+@endsection
 @section('page-js')
-
+<script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
-
-        $("#viewBtn").on("click", function(){
-            var branch = $("#branch").find(":selected").val();
-            var url = "{{ route('reportTopCustomersData', ['branch' => ':branch']) }}"
-            .replace(':branch', branch);
-            window.open(url, "_blank", "width=1000,height=800");
-        });
+        $(".selectize").selectize({
+        plugins: ['remove_button'],
+        maxItems: null,
+        create: false,
+        placeholder: 'Select Option...'
+    });
+        
     </script>
 @endsection

@@ -6,6 +6,7 @@
                 <div class="card-header d-flex justify-content-between">
                     <h3>View Sales Report</h3>
                 </div>
+                <form action="{{route('reportSalesData')}}" method="get">
                 <div class="card-body">
                     <div class="form-group mt-2">
                         <label for="from">From</label>
@@ -27,28 +28,50 @@
                         </select>
                     </div>
                     <div class="form-group mt-2">
+                        <label for="customer">Customer</label>
+                        <select name="customer[]" id="customer" class="selectize" multiple>
+                            @if(auth()->user()->role == "Admin")
+                            <option value="All">All</option>
+                            @endif
+                            @foreach ($customers as $customer)
+                                <option value="{{$customer->id}}">{{$customer->title}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="orderbooker">Orderbooker</label>
+                        <select name="orderbooker[]" id="orderbooker" class="selectize" multiple>
+                            @if(auth()->user()->role == "Admin")
+                            <option value="All">All</option>
+                            @endif
+                            @foreach ($orderbookers as $orderbooker)
+                                <option value="{{$orderbooker->id}}">{{$orderbooker->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
                         <button class="btn btn-success w-100" id="viewBtn">View Report</button>
                     </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>
 
 
 @endsection
+@section('page-css')
+    <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
+@endsection
 @section('page-js')
-
+<script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
-
-        $("#viewBtn").on("click", function (){
-            var from = $("#from").val();
-            var to = $("#to").val();
-            var branch = $("#branch").find(":selected").val();
-            var url = "{{ route('reportSalesData', ['from' => ':from', 'to' => ':to', 'branch' => ':branch']) }}"
-        .replace(':from', from)
-        .replace(':to', to)
-        .replace(':branch', branch);
-            window.open(url, "_blank", "width=1000,height=800");
-        });
+        $(".selectize").selectize({
+        plugins: ['remove_button'],
+        maxItems: null,
+        create: false,
+        placeholder: 'Select Option...'
+    });
+        
     </script>
 @endsection

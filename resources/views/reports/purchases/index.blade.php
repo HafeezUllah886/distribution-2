@@ -6,6 +6,7 @@
                 <div class="card-header d-flex justify-content-between">
                     <h3>View Purchases Report</h3>
                 </div>
+                <form action="{{route('reportPurchasesData')}}" method="get">
                 <div class="card-body">
                     <div class="form-group mt-2">
                         <label for="from">From</label>
@@ -27,28 +28,37 @@
                         </select>
                     </div>
                     <div class="form-group mt-2">
+                        <label for="vendor">Vendor</label>
+                        <select name="vendor[]" id="vendor" class="selectize" multiple>
+                            @foreach ($vendors as $vendor)
+                                <option value="{{$vendor->id}}">{{$vendor->title}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
                         <button class="btn btn-success w-100" id="viewBtn">View Report</button>
                     </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>
 
 
 @endsection
+@section('page-css')
+    <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
+@endsection
 @section('page-js')
-
+<script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
-
-        $("#viewBtn").on("click", function (){
-            var from = $("#from").val();
-            var to = $("#to").val();
-            var branch = $("#branch").find(":selected").val();
-            var url = "{{ route('reportPurchasesData', ['from' => ':from', 'to' => ':to', 'branch' => ':branch']) }}"
-        .replace(':from', from)
-        .replace(':to', to)
-        .replace(':branch', branch);
-            window.open(url, "_blank", "width=1000,height=800");
-        });
+        $(".selectize").selectize({
+        plugins: ['remove_button'],
+        maxItems: null,
+        create: false,
+        placeholder: 'Select Vendors...'
+    });
+        
     </script>
+    
 @endsection
