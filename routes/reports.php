@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
 
     Route::get('/reports/profit', [profitController::class, 'index'])->name('reportProfit');
-    Route::get('/reports/profitData/{from}/{to}/{branch}', [profitController::class, 'data'])->name('reportProfitData');
+    Route::get('/reports/profitData', [profitController::class, 'data'])->name('reportProfitData');
 
     Route::get('/reports/loadsheet', [loadsheetController::class, 'index'])->name('reportLoadsheet');
     Route::get('/reports/loadsheet/{id}/{date}', [loadsheetController::class, 'data'])->name('reportLoadsheetData');

@@ -53,11 +53,14 @@
                                         <thead>
                                             <tr class="table-active">
                                                 <th scope="col" style="width: 50px;">#</th>
-                                                <th scope="col">Branch</th>
-                                                <th scope="col">Inv #</th>
+                                                <th scope="col" class="text-start">Branch</th>
+                                                <th scope="col" class="text-start">Inv #</th>
                                                 <th scope="col" class="text-start">Vendor Name</th>
-                                                <th scope="col">O-Date</th>
-                                                <th scope="col">R-Date</th>
+                                                <th scope="col" class="text-start">Date</th>
+                                                <th scope="col">Disc</th>
+                                                <th scope="col">Fright</th>
+                                                <th scope="col">Labor</th>
+                                                <th scope="col">Claim</th>
                                                 <th scope="col">Amount</th>
                                             </tr>
                                         </thead>
@@ -68,15 +71,18 @@
                                                 <td class="text-start">{{ $item->branch->name}}</td>
                                                 <td class="text-start">{{ $item->inv}}</td>
                                                 <td class="text-start">{{ $item->vendor->title }}</td>
-                                                <td>{{ date("d M Y", strtotime($item->orderdate))}}</td>
-                                                <td>{{ date("d M Y", strtotime($item->recdate))}}</td>
+                                                <td class="text-start">{{ date("d M Y", strtotime($item->recdate))}}</td>
+                                                <td class="text-end">{{ number_format($item->details->sum('discount') + $item->details->sum('discountValue'), 2) }}</td>
+                                                <td class="text-end">{{ number_format($item->details->sum('fright'), 2) }}</td>
+                                                <td class="text-end">{{ number_format($item->details->sum('labor'), 2) }}</td>
+                                                <td class="text-end">{{ number_format($item->details->sum('claim'), 2) }}</td>
                                                 <td class="text-end">{{ number_format($item->net, 2) }}</td>
                                             </tr>
                                         @endforeach
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="6" class="text-end">Total</th>
+                                                <th colspan="9" class="text-end">Total</th>
                                                 <th class="text-end">{{number_format($purchases->sum('net'), 2)}}</th>
                                             </tr>
                                         </tfoot>

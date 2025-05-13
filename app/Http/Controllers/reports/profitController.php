@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\reports;
 
 use App\Http\Controllers\Controller;
+use App\Models\accounts;
 use App\Models\branches;
 use App\Models\expenses;
 use App\Models\products;
@@ -21,12 +22,22 @@ class profitController extends Controller
         {
             $branches = branches::where('id', auth()->user()->branchID)->get();
         }
-        return view('reports.profit.index', compact('branches'));
+        $vendors = accounts::vendor()->currentBranch()->get();
+        return view('reports.profit.index', compact('branches', 'vendors'));
     }
 
-    public function data($from, $to, $branch)
+    public function data(Request $request)
     {
-        $products = products::all();
+        $from = $request->from;
+        $to = $request->to;
+        $branch = $request->branch;
+        $vendor = $request->vendor;
+        $products = products::query();
+        if($vendor)
+        {
+            $products->whereIn('vendorID', $vendor);
+        }
+        $products = $products->get();
         $data = [];
         foreach($products as $product)
         {

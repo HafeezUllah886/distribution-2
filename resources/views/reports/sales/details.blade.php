@@ -60,26 +60,30 @@
                                                 <th scope="col" class="text-start">Order Booker</th>
                                                 <th scope="col" class="text-start">Supplyman</th>
                                                 <th scope="col">Date</th>
+                                                <th scope="col">Disc</th>
+                                                <th scope="col">Fright</th>
+                                                <th scope="col">Labor</th>
+                                                <th scope="col">Claim</th>
                                                 <th scope="col">Amount</th>
-                                                <th scope="col">Paid</th>
-                                                <th scope="col">Due</th>
+                                                {{-- <th scope="col">Paid</th>
+                                                <th scope="col">Due</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @php
                                                 $totalAmount = 0;
-                                                $totalPaid = 0;
-                                                $totalDue = 0;
+                                               /*  $totalPaid = 0;
+                                                $totalDue = 0; */
                                             @endphp
                                         @foreach ($sales as $key => $item)
                                             @php
                                                 $amount = $item->net;
-                                                $paid = $item->paid();
-                                                $due = $item->due();
+                                              /*   $paid = $item->paid();
+                                                $due = $item->due(); */
 
                                                 $totalAmount += $amount;
-                                                $totalPaid += $paid;
-                                                $totalDue += $due;
+                                               /*  $totalPaid += $paid;
+                                                $totalDue += $due; */
                                             @endphp
                                             <tr>
                                                 <td>{{ $item->id}}</td>
@@ -88,18 +92,22 @@
                                                 <td class="text-start">{{ $item->orderbooker->name }}</td>
                                                 <td class="text-start">{{ $item->supplyman->title }}</td>
                                                 <td>{{ date("d M Y", strtotime($item->date))}}</td>
+                                                <td class="text-end">{{ number_format($item->details->sum('discount') + $item->details->sum('discountValue'), 2) }}</td>
+                                                <td class="text-end">{{ number_format($item->details->sum('fright'), 2) }}</td>
+                                                <td class="text-end">{{ number_format($item->details->sum('labor'), 2) }}</td>
+                                                <td class="text-end">{{ number_format($item->details->sum('claim'), 2) }}</td>
                                                 <td class="text-end">{{ number_format($amount, 2) }}</td>
-                                                <td class="text-end">{{ number_format($paid, 2) }}</td>
-                                                <td class="text-end">{{ number_format($due, 2) }}</td>
+                                               {{--  <td class="text-end">{{ number_format($paid, 2) }}</td>
+                                                <td class="text-end">{{ number_format($due, 2) }}</td> --}}
                                             </tr>
                                         @endforeach
                                         </tbody>
                                         <tfoot>
                                         <tr>
-                                                <th colspan="6" class="text-end">Total</th>
-                                                <th class="text-end">{{number_format($totalAmount, 2)}}</th>
-                                                <th class="text-end">{{number_format($totalPaid, 2)}}</th>
-                                                <th class="text-end">{{number_format($totalDue, 2)}}</th>
+                                                <th colspan="10" class="text-end">Total</th>
+                                                <th class="text-end">{{number_format($sales->sum('net'), 2)}}</th>
+                                               {{--  <th class="text-end">{{number_format($totalPaid, 2)}}</th>
+                                                <th class="text-end">{{number_format($totalDue, 2)}}</th> --}}
                                             </tr> 
                                         </tfoot>
                                     </table><!--end table-->
