@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\branches;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -41,5 +42,30 @@ class profileController extends Controller
         $user->save();
 
         return back()->with('success', 'Password Updated');
+    }
+
+    public function changeHeader(request $req)
+    {
+        $req->validate([
+            'img' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $branch = branches::find(auth()->user()->branchID);
+        $filePath = null;
+
+            $oldImg = asset('assets/header/' . $branch->header);
+            if (file_exists($oldImg)) {
+                unlink($oldImg);
+            }
+
+            $image = $req->file('img');
+            $filename = $branch->id . '.' . $image->getClientOriginalExtension();
+
+          $image->move('assets/header', $filename);
+
+          $branch->header = 'assets/header/' . $filename;
+        $branch->save();
+
+        return back()->with('success', 'Header Updated');
     }
 }

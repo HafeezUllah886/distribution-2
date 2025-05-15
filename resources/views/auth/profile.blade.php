@@ -23,6 +23,11 @@
                         <i class="far fa-user"></i> Change Password
                     </a>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link " data-bs-toggle="tab" href="#changeHeader" role="tab" aria-selected="false" tabindex="-1">
+                        <i class="far fa-user"></i> Change Header
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="card-body p-4">
@@ -90,6 +95,27 @@
                             <div class="col-lg-12">
                                 <div class="text-end">
                                     <button type="submit" class="btn btn-success">Change Password</button>
+                                </div>
+                            </div>
+                            <!--end col-->
+                        </div>
+                        <!--end row-->
+                    </form>
+                </div>
+                <div class="tab-pane " id="changeHeader" role="tabpanel">
+                    <form method="post" enctype="multipart/form-data" action="{{route('changeHeader')}}">
+                        @csrf
+                        <div class="row g-2">
+                            <div class="col-12">
+                                <div>
+                                    <label for="headerInput" class="form-label">Choose Header</label>
+                                    <input type="file" class="form-control" name="img" id="headerInput" placeholder="Enter current password">
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-lg-12">
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-success">Change Header</button>
                                 </div>
                             </div>
                             <!--end col-->

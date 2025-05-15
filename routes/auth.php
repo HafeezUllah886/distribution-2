@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [profileController::class, 'index'])->name('profile');
     Route::post('/profile/update', [profileController::class, 'update'])->name('updateProfile');
     Route::post('/profile/changepassword', [profileController::class, 'changePassword'])->name('changePassword');
+    Route::post('/profile/Changeheader', [profileController::class, 'changeHeader'])->name('changeHeader');
 
     Route::resource('orderbooker', OrderbookerController::class)->middleware(adminCheck::class);
 });
