@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('date');
             $table->text('notes')->nullable();
             $table->json('invoices')->nullable();
-            $table->enum('status', [0,1])->default(0);
+            $table->integer('status')->default(0);
             $table->float('net')->default(0);
             $table->bigInteger('refID');
             $table->timestamps();
