@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\reports;
 
 use App\Http\Controllers\Controller;
+use App\Models\accounts;
 use App\Models\branches;
 use App\Models\products;
 use App\Models\sales;
@@ -20,17 +21,22 @@ class TopSellingProductsReportController extends Controller
         {
             $branches = branches::where('id', auth()->user()->branchID)->get();
         }
-        return view('reports.top_products.index', compact('branches'));
+        $vendors = accounts::vendor()->currentBranch()->get();
+        return view('reports.top_products.index', compact('branches', 'vendors'));
     }  
 
-    public function data($branch)
+    public function data(Request $request)
     {
-            if($branch == "All")
+            if($request->branch == "All")
             {
                 $topProducts = products::with('units')->withSum('saleDetails', 'qty')->withSum('saleDetails', 'amount')
-                ->orderByDesc('sale_details_sum_qty')
-                ->take(200)
-                ->get();
+                ->orderByDesc('sale_details_sum_qty');
+
+                if($request->vendor)
+                {
+                    $topProducts->where('vendorID', $request->vendor);
+                }
+                $topProducts = $topProducts->take(200)->get();
 
                 $topProductsArray = [];
 
@@ -44,7 +50,7 @@ class TopSellingProductsReportController extends Controller
             }
             else
             {
-                $sales = sales::where('branchID', $branch)->get()->pluck('id')->toArray();
+                $sales = sales::where('branchID', $request->branch)->get()->pluck('id')->toArray();
                 $topProducts = products::with('units')->whereHas('saleDetails', function($query) use ($sales) {
                     $query->whereIn('saleID', $sales);
                 })
@@ -54,24 +60,28 @@ class TopSellingProductsReportController extends Controller
                 ->withSum(['saleDetails' => function($query) use ($sales) {
                     $query->whereIn('saleID', $sales);
                 }], 'amount')
-                ->orderByDesc('sale_details_sum_qty')
-                ->take(200)
-                ->get();
+                ->orderByDesc('sale_details_sum_qty');
+
+                if($request->vendor)
+                {
+                    $topProducts->where('vendorID', $request->vendor);
+                }
+                $topProducts = $topProducts->take(200)->get();
 
                 $topProductsArray = [];
 
             foreach($topProducts as $product)
             {
-                $stock = getBranchProductStock($product->id, $branch);
-                $price = avgSalePrice('all', 'all',$branch, $product->id);
+                $stock = getBranchProductStock($product->id, $request->branch);
+                $price = avgSalePrice('all', 'all',$request->branch, $product->id);
     
                 $topProductsArray [] = ['name' => $product->name, 'unit_value' => $product->units[0]->value, 'unit_name' => $product->units[0]->unit_name, 'price' => $price, 'stock' => $stock, 'amount' => $product->sale_details_sum_amount, 'sold' => $product->sale_details_sum_qty];
             }
             }
 
-            if($branch != "All")
+            if($request->branch != "All")
             {
-                $branch = branches::find($branch);
+                $branch = branches::find($request->branch);
                 $branch = $branch->name;
             }
 

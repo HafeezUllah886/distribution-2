@@ -6,6 +6,7 @@
                 <div class="card-header d-flex justify-content-between">
                     <h3>View Top Selling Products</h3>
                 </div>
+                <form action="{{route('reportTopSellingProductsData')}}" method="get">
                 <div class="card-body">
                    
                     <div class="form-group mt-2">
@@ -20,24 +21,38 @@
                         </select>
                     </div>
                     <div class="form-group mt-2">
+                        <label for="vendor">Vendors</label>
+                        <select name="vendor[]" id="vendor" class="selectize" multiple>
+                            @foreach ($vendors as $vendor)
+                                <option value="{{$vendor->id}}">{{$vendor->title}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-2">
                         <button class="btn btn-success w-100" id="viewBtn">View Report</button>
                     </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>
 
 
 @endsection
+@section('page-css')
+    <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
+@endsection
 @section('page-js')
 
-    <script>
+<script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
+<script>
+    $(".selectize").selectize({
+        plugins: ['remove_button'],
+        maxItems: null,
+        create: false,
+        placeholder: 'Select vendors...'
+    });
 
-        $("#viewBtn").on("click", function(){
-            var branch = $("#branch").find(":selected").val();
-            var url = "{{ route('reportTopSellingProductsData', ['branch' => ':branch']) }}"
-            .replace(':branch', branch);
-            window.open(url, "_blank", "width=1000,height=800");
-        });
     </script>
 @endsection

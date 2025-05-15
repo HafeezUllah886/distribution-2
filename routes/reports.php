@@ -54,5 +54,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/toporderbookersreport/{branch}', [OrderbookerPerformanceReportController::class, 'data'])->name('reportTopOrderbookersData');
 
     Route::get('/reports/topsellingproductsreport', [TopSellingProductsReportController::class, 'index'])->name('reportTopSellingProducts');
-    Route::get('/reports/topsellingproductsreport/{branch}', [TopSellingProductsReportController::class, 'data'])->name('reportTopSellingProductsData');
+    Route::get('/reports/topsellingproductsreportData', [TopSellingProductsReportController::class, 'data'])->name('reportTopSellingProductsData');
 });

@@ -14,7 +14,7 @@
                             <!--end card-header-->
                         </div><!--end col-->
                         <div class="col-lg-12 ">
-                            <div class="card-body p-4">
+                            <div class="card-body p-4 pt-1 pb-1">
                                 <div class="row g-3">
                                     <div class="col-1">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold urdu">بل نمبر</p>
@@ -22,11 +22,11 @@
                                     </div>
                                     <div class="col-4">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold urdu">بنام</p>
-                                        <h5 class="fs-14 mb-0 "> <span class="text-muted">M/S :</span> <span class="urdu">{{$sale->customer->title}}</span></h5>
+                                        <h5 class="fs-14 mb-0 "> <span class="text-muted">M/S :</span> <span class="urdu">{{$sale->customer->title_urdu}}</span></h5>
                                         @if ($sale->customerID != 2)
                                         <h5 class="fs-14 mb-0"> <span class="text-muted">Area :</span> {{$sale->customer->area->name ?? "NA"}} | <span class="text-muted">Contact :</span> {{$sale->customer->contact ?? "NA"}}</h5>
                                         <h5 class="fs-14 mb-0"> <span class="text-muted">Type :</span> {{$sale->customer->c_type}}</h5>
-                                        <h5 class="fs-14 mb-0"> <span class="text-muted">Address :</span> {{$sale->customer->address ?? "NA"}}</h5>
+                                        <h5 class="fs-14 mb-0"> <span class="text-muted">Address :</span> {{$sale->customer->address_urdu ?? "NA"}}</h5>
                                         @endif
 
                                     </div>
@@ -54,7 +54,7 @@
                             <!--end card-body-->
                         </div><!--end col-->
                         <div class="col-lg-12">
-                            <div class="card-body p-4">
+                            <div class="card-body p-1">
                                 <div >
                                     <table class="table table-borderless text-center table-nowrap align-middle mb-0">
                                         <thead>
@@ -124,14 +124,14 @@
                                                 <th class="text-end">{{number_format($totalLoose)}}</th>
                                                 <th class="text-end">{{number_format($totalBonus)}}</th>
                                                 <th></th>
-                                                <th class="text-end">{{number_format($totalDiscount)}}</th>
-                                                <th class="text-end">{{number_format($totalDiscountValue)}}</th>
-                                                <th class="text-end">{{number_format($totalClaim)}}</th>
+                                                <th class="text-end">{{number_format($totalDiscount)}} (-)</th>
+                                                <th class="text-end">{{number_format($totalDiscountValue)}} (-)</th>
+                                                <th class="text-end">{{number_format($totalClaim)}} (-)</th>
                                                 <th></th>
-                                                <th class="text-end">{{number_format($totalFright)}}</th>
+                                                <th class="text-end">{{number_format($totalFright)}} (+)</th>
                                                 <th class="text-end">{{number_format($netAmount, 2)}}</th>
                                             </tr> 
-                                            <tr>
+                                            {{-- <tr>
                                                 <th class="text-start p-1 urdu" colspan="12">مجموعی رقم</th>
                                                 <th class="text-end p-1">{{number_format($netAmount + $totalDiscount + $totalDiscountValue + $totalClaim - $totalFright,2 )}}</th>
                                             </tr>
@@ -150,7 +150,7 @@
                                             <tr>
                                                 <th class="text-start p-1 urdu" colspan="12">خالص رقم</th>
                                                 <th class="text-end p-1">{{number_format($netAmount,2 )}}</th>
-                                            </tr>
+                                            </tr> --}}
                                         </tfoot>
                                     </table><!--end table-->
                                 </div>

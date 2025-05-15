@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('branchID')->constrained('branches', 'id');
             $table->string('title');
+            $table->string('title_urdu')->nullable();
             $table->string('type');
             $table->string('category')->nullable();
             $table->string('address')->nullable();
+            $table->string('address_urdu')->nullable();
             $table->string('contact')->nullable();
             $table->string('email')->nullable();
             $table->string('c_type')->nullable()->default('Other');

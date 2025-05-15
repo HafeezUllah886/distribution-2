@@ -82,10 +82,12 @@ class AccountsController extends Controller
                     $account = accounts::create(
                         [
                             'title' => $request->title,
+                            'title_urdu' => $request->title_urdu,
                             'type' => $request->type,
                             'category' => $request->category,
                             'contact' => $request->contact,
                             'address' => $request->address,
+                            'address_urdu' => $request->address_urdu,
                             'c_type' => $request->c_type,
                             'branchID'  => $request->branch,
                             'areaID' =>  $request->area,
@@ -101,6 +103,7 @@ class AccountsController extends Controller
                     $account = accounts::create(
                         [
                             'title' => $request->title,
+                            'title_urdu' => $request->title_urdu,
                             'type' => $request->type,
                             'contact' => $request->contact,
                             'email' => $request->email,
@@ -115,6 +118,7 @@ class AccountsController extends Controller
                     $account = accounts::create(
                         [
                             'title' => $request->title,
+                            'title_urdu' => $request->title_urdu,
                             'type' => $request->type,
                             'contact' => $request->contact,
                             'email' => $request->email,
@@ -181,10 +185,13 @@ class AccountsController extends Controller
         $account = accounts::find($request->accountID)->update(
             [
                 'title' => $request->title,
+                'title_urdu' => $request->title_urdu,
                 'category' => $request->category,
                 'contact' => $request->contact ?? null,
                 'c_type' => $request->c_type,
                 'areaID' => $request->area ?? 1,
+                'address' => $request->address ?? null,
+                'address_urdu' => $request->address_urdu ?? null,
                 'credit_limit' => $request->limit ?? 0
             ]
         );

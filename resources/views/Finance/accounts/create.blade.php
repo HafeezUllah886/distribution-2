@@ -19,10 +19,17 @@
                     <form action="{{ route('account.store') }}" method="post">
                         @csrf
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="title">Account Title</label>
                                     <input type="text" name="title" id="title" value="{{ old('title') }}"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="title_urdu">Account Title (Urdu)</label>
+                                    <input type="text" name="title_urdu" id="title_urdu" value="{{ old('title_urdu') }}"
                                         class="form-control">
                                 </div>
                             </div>
@@ -86,13 +93,19 @@
                             <div class="col-6 mt-2 customer">
                                 <div class="form-group ">
                                     <label for="address">Address</label>
-                                    <input type="text" name="address" id="address" class="form-control">
+                                    <input type="text" name="address" id="address" value="{{ old('address') }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-6 mt-2 customer">
+                                <div class="form-group ">
+                                    <label for="address_urdu">Address (Urdu)</label>
+                                    <input type="text" name="address_urdu" id="address_urdu" value="{{ old('address_urdu') }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-6 mt-2 customer">
                                 <div class="form-group ">
                                     <label for="limit">Credit Limit</label>
-                                    <input type="number" min="0" name="limit" id="limit" class="form-control">
+                                    <input type="number" min="0" name="limit" id="limit" value="{{ old('limit') }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-6 mt-2" >

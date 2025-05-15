@@ -58,7 +58,7 @@
                             <!--end card-body-->
                         </div><!--end col-->
                         <div class="col-lg-12">
-                            <div class="card-body p-4 pt-1 pb-1">
+                            <div class="card-body p-1">
                                 <div class="table-responsive">
                                     <table class="table table-borderless text-center table-nowrap align-middle mb-0">
                                         <thead>
