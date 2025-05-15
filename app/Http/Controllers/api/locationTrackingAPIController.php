@@ -19,8 +19,7 @@ class locationTrackingAPIController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'message' => $validator->errors(),
             ], 422);
         }
 

@@ -72,10 +72,11 @@ class OrdersController extends Controller
         }
       
         return response()->json([
+            'status' => 'success',
             'data' => [
                 'orders' => $orders,
             ]
-        ], 201);
+        ], 200);
     }
 
     /**
@@ -114,8 +115,7 @@ class OrdersController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors()
+                    'message' => $validator->errors(),
                 ], 422);
             }
 
@@ -235,8 +235,7 @@ class OrdersController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors()
+                    'message' => $validator->errors(),
                 ], 422);
             }
 

@@ -50,7 +50,6 @@ class nonFinanancialInfoController extends Controller
 
         return [
             'customers' => $customers,
-            
         ];
     }
 }

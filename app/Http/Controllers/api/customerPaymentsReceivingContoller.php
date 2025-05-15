@@ -29,8 +29,7 @@ class customerPaymentsReceivingContoller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'message' => $validator->errors(),
             ], 422);
         }
 
@@ -84,8 +83,7 @@ class customerPaymentsReceivingContoller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'message' => $validator->errors(),
             ], 422);
         }
 
@@ -138,8 +136,7 @@ class customerPaymentsReceivingContoller extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'message' => $validator->errors(),
             ], 422);
         }
         try{
@@ -209,8 +206,7 @@ class customerPaymentsReceivingContoller extends Controller
     {
         return response()->json([
             'status' => 'error',
-            'message' => 'Validation failed',
-            'errors' => $validation->errors()
+            'message' => $validation->errors(),
         ], 422);
     }
     

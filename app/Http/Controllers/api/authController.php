@@ -23,8 +23,7 @@ class authController extends Controller
         if ($validate->fails()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Validation failed',
-                'errors' => $validate->errors()
+                'message' => $validate->errors()
             ], 422);
         }
 
@@ -33,6 +32,7 @@ class authController extends Controller
         if(!$user || !Hash::check($request->password, $user->password))
         {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Invalid username or password'
             ], 401);
         }
@@ -40,6 +40,7 @@ class authController extends Controller
         if($user->status == "Inactive")
         {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Account is inactive'
             ], 403);
         }
@@ -61,6 +62,7 @@ class authController extends Controller
         $request->user()->tokens()->delete();
 
         return [
+            'status' => 'success',  
             'message' => 'Logged out successfully',
         ];
     }
