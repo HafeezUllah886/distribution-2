@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class authController extends Controller
 {
@@ -14,12 +15,18 @@ class authController extends Controller
      */
     public function login(request $request)
     {
-        $request->validate(
-            [
-                'user_name' => 'required',
-                'password' => 'required' 
-            ]
-        );
+        $validate = validator::make($request->all(), [
+            'user_name' => 'required',
+            'password' => 'required' 
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validate->errors()
+            ], 422);
+        }
 
         $user = User::where('name', $request->user_name)->first();
 
