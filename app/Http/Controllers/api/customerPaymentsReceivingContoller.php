@@ -210,7 +210,20 @@ class customerPaymentsReceivingContoller extends Controller
         ], 422);
     }
     
-    $payment = orderbookerPaymentsReceiving::where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->first();
+    $payment_date = orderbookerPaymentsReceiving::where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->pluck('date');
+    $payments = orderbookerPaymentsReceiving::where('customerID', $request->customerID)
+    ->where('orderbookerID', $request->user()->id)
+    ->where('date', $payment_date)
+    ->get();
+
+    $data = [];
+
+    foreach($payments as $payment)
+    {
+        
+    }
+
+
     return response()->json([
         'status' => 'success',
         'data' => $payment
