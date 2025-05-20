@@ -28,7 +28,6 @@ class OrderDeliveryController extends Controller
       $warehouse = warehouses::findOrFail($warehouseID);
       $supplymen = accounts::supplyMen()->currentBranch()->get();
 
-
       foreach ($order->details as $product) {
         $product->delivered = $product->delivered();
         $product->remaining = $product->remaining();

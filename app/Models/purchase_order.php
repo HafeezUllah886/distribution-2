@@ -25,4 +25,24 @@ class purchase_order extends Model
     {
         return $this->belongsTo(branches::class, 'branchID');
     }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'Pending');
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'Approved');
+    }
+
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', 'Completed');
+    }
+
+    public function delivered_items()
+    {
+        return $this->hasMany(order_delivery::class, 'orderID');
+    }
 }

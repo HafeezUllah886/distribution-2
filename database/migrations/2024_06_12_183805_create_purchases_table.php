@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string("transporter")->nullable();
             $table->text('notes')->nullable();
             $table->float('net')->default(0);
+            $table->string('status')->default('Approved');
             $table->bigInteger('refID');
             $table->timestamps();
         });

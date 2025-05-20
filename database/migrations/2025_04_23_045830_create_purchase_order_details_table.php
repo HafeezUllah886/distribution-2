@@ -15,12 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('orderID')->constrained('purchase_orders', 'id');
             $table->foreignId('productID')->constrained('products', 'id');
-            $table->float('price', 10);
             $table->float('qty')->default(0);
             $table->float('loose')->default(0);
             $table->float('pc')->default(0);
             $table->float('bonus')->default(0);
-            $table->float('amount');
             $table->date('date');
             $table->foreignId('unitID')->constrained('product_units', 'id');
             $table->bigInteger('refID');

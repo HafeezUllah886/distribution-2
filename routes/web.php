@@ -20,6 +20,7 @@ require __DIR__ . '/sale.php';
 require __DIR__ . '/return.php';
 require __DIR__ . '/reports.php';
 require __DIR__ . '/orders.php';
+require __DIR__ . '/purchase_orders.php';
 require __DIR__ . '/targets.php';
 require __DIR__ . '/otherusers.php';
 require __DIR__ . '/setups.php';

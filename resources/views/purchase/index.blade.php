@@ -44,6 +44,7 @@
                             <th>Vendor</th>
                             <th>Receving Date</th>
                             <th>Amount</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
@@ -54,6 +55,7 @@
                                     <td>{{ $purchase->vendor->title }}</td>
                                     <td>{{ date('d M Y', strtotime($purchase->recdate)) }}</td>
                                     <td>{{ number_format($purchase->net) }}</td>
+                                    <td>{{$purchase->status}}</td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-soft-secondary btn-sm dropdown" type="button"

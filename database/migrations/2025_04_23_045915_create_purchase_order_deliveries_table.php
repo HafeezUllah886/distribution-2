@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('purchase_order_deliveries', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('orderID')->constrained('purchase_orders', 'id')->cascadeOnDelete();
+            $table->foreignId('purchaseID')->constrained('purchases', 'id')->cascadeOnDelete();
+            $table->foreignId('productID')->constrained('products', 'id');
+            $table->foreignId('warehouseID')->constrained('warehouses', 'id');
+            $table->float('qty')->default(0);
+            $table->float('loose')->default(0);
+            $table->float('pc')->default(0);
+            $table->foreignId('unitID')->constrained('product_units', 'id');
+            $table->bigInteger('refID');
             $table->timestamps();
         });
     }

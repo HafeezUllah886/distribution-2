@@ -91,7 +91,12 @@
               
                <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('Branch.orders', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()])}}">
-                        <i class="ri-shopping-cart-fill"></i><span data-key="t-apps">Orders</span>
+                        <i class="ri-shopping-cart-fill"></i><span data-key="t-apps">Sale Orders</span>
+                    </a>
+                </li>
+               <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('purchase_order.index', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()])}}">
+                        <i class="ri-shopping-cart-fill"></i><span data-key="t-apps">Purchase Orders</span>
                     </a>
                 </li>
                 <li class="nav-item">

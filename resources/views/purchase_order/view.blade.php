@@ -14,7 +14,7 @@
                             <!--end card-header-->
                         </div><!--end col-->
                         <div class="col-lg-12 ">
-                            <div class="w-100 text-center"><h2>ORDER</h2></div>
+                            <div class="w-100 text-center"><h2>PURCHASE ORDER</h2></div>
                             <div class="card-body p-4">
                                 <div class="row g-3">
                                     <div class="col-1">
@@ -22,18 +22,9 @@
                                         <h5 class="fs-14 mb-0">{{$order->id}}</h5>
                                     </div>
                                     <div class="col-4">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Customer</p>
-                                        <h5 class="fs-14 mb-0"> <span class="text-muted">M/S :</span> {{$order->customer->title}}</h5>
-                                        @if ($order->customerID != 2)
-                                        <h5 class="fs-14 mb-0"> <span class="text-muted">Area :</span> {{$order->customer->area->name ?? "NA"}} | <span class="text-muted">Contact :</span> {{$order->customer->contact ?? "NA"}}</h5>
-                                        <h5 class="fs-14 mb-0"> <span class="text-muted">Type :</span> {{$order->customer->c_type}}</h5>
-                                        <h5 class="fs-14 mb-0"> <span class="text-muted">Address :</span> {{$order->customer->address ?? "NA"}}</h5>
-                                        @endif
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Vendor</p>
+                                        <h5 class="fs-14 mb-0"> <span class="text-muted"></span> {{$order->vendor->title}}</h5>
 
-                                    </div>
-                                    <div class="col-2">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Order Booker</p>
-                                        <h5 class="fs-14 mb-0">{{$order->orderbooker->name}}</h5>
                                     </div>
                                    
                                     <div class="col-2">
@@ -63,40 +54,21 @@
                                                 <th scope="col" class="text-end">Qty</th>
                                                 <th scope="col" class="text-end">Loose</th>
                                                 <th scope="col" class="text-end">Bonus</th>
-                                                <th scope="col" class="text-end">Price</th>
-                                                <th scope="col" class="text-end">Dis-Val</th>
-                                                <th scope="col" class="text-end">Dis-Per</th>
-                                                <th scope="col" class="text-end">Claim</th>
-                                                <th scope="col" class="text-end">Net Price</th>
-                                                <th scope="col" class="text-end">Fright</th>
-                                                <th scope="col" class="text-end">Amount</th>
                                             </tr>
                                         </thead>
                                         <tbody id="products-list">
                                             @php
                                                 $totalQty = 0;
-                                                $totalDiscount = 0;
-                                                $totalDiscountValue = 0;
-                                                $totalFright = 0;
-                                                $totalClaim = 0;
                                                 $totalLoose = 0;
                                                 $totalBonus = 0;
                                             @endphp
                                            @foreach ($order->details as $key => $product)
                                            @php
                                            $qty = $product->pc;
-                                           $discount = $product->discount * $qty;
-                                           $discountvalue = $product->discountvalue * $qty;
-                                           $claim = $product->claim * $qty;
-                                           $fright = $product->fright * $qty;
+                                          
                                            $totalQty += $product->qty;
                                            $totalLoose += $product->loose;
                                            $totalBonus += $product->bonus;
-                                           $totalDiscount += $discount;
-                                           $totalDiscountValue += $discountvalue;
-                                           $totalClaim += $claim;
-                                           $totalFright += $fright;
-                                           $netAmount = $order->details->sum('amount');
                                             @endphp
                                                <tr>
                                                 <td class="p-1 m-1">{{$key+1}}</td>
@@ -105,13 +77,7 @@
                                                 <td class="text-end m-1 p-1">{{number_format($product->qty)}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->loose)}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->bonus)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->price,2)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($discount)}}</td>
-                                                <td class="text-end p-1 m-1">{{$product->discountp}}% | {{number_format($discountvalue)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->claim * $qty)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->netprice,2)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->fright * $qty)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->amount,2)}}</td>
+                                               
                                                </tr>
                                            @endforeach
                                         </tbody>
@@ -121,39 +87,12 @@
                                                 <th class="text-end">{{number_format($totalQty)}}</th>
                                                 <th class="text-end">{{number_format($totalLoose)}}</th>
                                                 <th class="text-end">{{number_format($totalBonus)}}</th>
-                                                <th></th>
-                                                <th class="text-end">{{number_format($totalDiscount)}}</th>
-                                                <th class="text-end">{{number_format($totalDiscountValue)}}</th>
-                                                <th class="text-end">{{number_format($totalClaim)}}</th>
-                                                <th></th>
-                                                <th class="text-end">{{number_format($totalFright)}}</th>
-                                                <th class="text-end">{{number_format($netAmount, 2)}}</th>
+                                               
                                             </tr> 
-                                          
-                                            <tr>
-                                                <th class="text-end p-1" colspan="12">Gross Amount</th>
-                                                <th class="text-end p-1">{{number_format($netAmount + $totalDiscount + $totalDiscountValue + $totalClaim - $totalFright,2 )}}</th>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-end p-1" colspan="12">Total Discounts (-)</th>
-                                                <th class="text-end p-1">{{number_format($totalDiscount + $totalDiscountValue,2 )}}</th>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-end p-1" colspan="12">Total Claim (-)</th>
-                                                <th class="text-end p-1">{{number_format($totalClaim,2 )}}</th>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-end p-1" colspan="12">Total Fright (+)</th>
-                                                <th class="text-end p-1">{{number_format($totalFright,2 )}}</th>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-end p-1" colspan="12">Net Payable</th>
-                                                <th class="text-end p-1">{{number_format($netAmount,2 )}}</th>
-                                            </tr>
                                         </tfoot>
                                     </table><!--end table-->
                                 </div>
-                                <div class="w-100 text-center"><h2>DELIVERY STATUS</h2></div>
+                                <div class="w-100 text-center"><h2>RECEIVING STATUS</h2></div>
                                 <div class="row">
                                     <div class="col-12">
                                         <table class="table">
@@ -161,7 +100,7 @@
                                                 <th class="m-1 p-1">#</th>
                                                 <th class="m-1 p-1">Product</th>
                                                 <th class="m-1 p-1">Total Order Qty</th>
-                                                <th class="m-1 p-1">Delivered Qty</th>
+                                                <th class="m-1 p-1">Received Qty</th>
                                                 <th class="m-1 p-1">Remainaing Qty</th>
                                             </thead>
                                             <tbody>

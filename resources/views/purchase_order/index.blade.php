@@ -4,16 +4,39 @@
         <div class="col-12">
             <form>
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-2">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">From</span>
                             <input type="date" class="form-control" placeholder="Username" name="start" value="{{$start}}" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-2">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">To</span>
                             <input type="date" class="form-control" placeholder="Username" name="end" value="{{$end}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Vendor</span>
+                            <select name="vendorID" id="vendorID" class="form-control">
+                                <option value="">All</option>
+                                @foreach ($vendors as $vendor)
+                                    <option value="{{$vendor->id}}" @selected($vendor->id == $vendorID)>{{$vendor->title}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Status</span>
+                            <select class="form-control" name="status" aria-label="Username" aria-describedby="basic-addon1">
+                                <option value="All">All</option>
+                                <option value="Pending" @selected($status == 'Pending')>Pending</option>
+                                <option value="Approved" @selected($status == 'Approved')>Approved</option>
+                                <option value="Under Process" @selected($status == 'Under Process')>Under Process</option>
+                                <option value="Completed" @selected($status == 'Completed')>Completed</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -24,7 +47,9 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Purchase Orders</h3>
-                    <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create New</button>
+                    @if (auth()->user()->role == 'Branch Admin')
+                        <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create New</button>
+                    @endif
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -40,20 +65,18 @@
                     <table class="table" id="buttons-datatables">
                         <thead>
                             <th>#</th>
-                            <th>Inv #</th>
                             <th>Vendor</th>
-                            <th>Receving Date</th>
-                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
-                            @foreach ($purchases as $key => $purchase)
+                            @foreach ($orders as $key => $order)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $purchase->inv }}</td>
-                                    <td>{{ $purchase->vendor->title }}</td>
-                                    <td>{{ date('d M Y', strtotime($purchase->recdate)) }}</td>
-                                    <td>{{ number_format($purchase->net) }}</td>
+                                    <td>{{ $order->vendor->title }}</td>
+                                    <td>{{ date('d M Y', strtotime($order->date)) }}</td>
+                                    <td>{{ $order->status }}</td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
@@ -61,25 +84,32 @@
                                                 <i class="ri-more-fill align-middle"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <button class="dropdown-item" onclick="newWindow('{{route('purchase.show', $purchase->id)}}')"
+                                               <li>
+                                                    <button class="dropdown-item" onclick="newWindow('{{route('purchase_order.show', $order->id)}}')"
                                                         onclick=""><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         View
                                                     </button>
-                                                </li>
+                                                </li> 
+                                                @if (auth()->user()->role == "Branch Admin" && $order->status != "Pending")
                                                 <li>
-                                                    <a class="dropdown-item" onclick="newWindow('{{route('purchase.edit', $purchase->id)}}')">
-                                                        <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                    <button class="dropdown-item" onclick="newWindow('{{route('Branch.orders.edit', $order->id)}}')"
+                                                        onclick=""><i
+                                                            class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                         Edit
-                                                    </a>
+                                                    </button>
                                                 </li>
+                                                @endif
+                                               
+                                                @if ($order->status != "Completed" && auth()->user()->role == 'Operator')
                                                 <li>
-                                                    <a class="dropdown-item text-danger" href="{{route('purchases.delete', $purchase->id)}}">
-                                                        <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
-                                                        Delete
+                                                    <a class="dropdown-item" href="{{route('purchaseOrderReceiveing', $order->id)}}"><i
+                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        Receive Order
                                                     </a>
                                                 </li>
+                                                @endif
+
                                             </ul>
                                         </div>
                                     </td>
@@ -88,12 +118,9 @@
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </div>
     </div>
-    <!-- Default Modals -->
-
     <div id="new" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -101,7 +128,7 @@
                     <h5 class="modal-title" id="myModalLabel">Select Vendor</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
-                <form action="{{ route('purchase.create') }}" method="get">
+                <form action="{{ route('purchase_order.create') }}" method="get">
                   @csrf
                          <div class="modal-body">
                                 <div class="form-group">
@@ -121,6 +148,8 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    
+    <!-- Default Modals -->
 @endsection
 
 @section('page-css')
@@ -142,5 +171,5 @@
     <script src="{{ asset('assets/libs/datatable/jszip.min.js')}}"></script>
 
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
+   
 @endsection
-
