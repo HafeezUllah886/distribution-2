@@ -17,6 +17,10 @@ return new class extends Migration
             $table->foreignId('branchID')->constrained('branches', 'id');
             $table->date('date');
             $table->text('notes')->nullable();
+            $table->string("inv")->nullable();
+            $table->string("bilty")->nullable();
+            $table->string("transporter")->nullable();
+            $table->float('net')->default(0);
             $table->string('status')->default('Pending');
             $table->bigInteger('refID');
             $table->timestamps();

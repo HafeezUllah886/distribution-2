@@ -71,27 +71,51 @@ class PurchaseOrderController extends Controller
                   'branchID'        => Auth()->user()->branchID,
                   'date'            => $request->date,
                   'notes'           => $request->notes,
+                  'bilty'           => $request->bilty,
+                  'transporter'     => $request->transporter,
+                  'inv'             => $request->inv,
                   'refID'           => $ref,
                 ]
             );
 
             $ids = $request->id;
+            $total = 0;
+            $totalLabor = 0;
 
             foreach($ids as $key => $id)
             {
                 $unit = product_units::find($request->unit[$key]);
                 $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
                 $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
-               
+                $price = $request->price[$key];
+                $discount = $request->discount[$key];
+                $claim = $request->claim[$key];
+                $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
+                $netPrice = ($price - $discount - $discountvalue - $claim);
+                $amount = $netPrice * $pc;
+                $price_amount = $price * $pc;
+                $total += $amount;
+                $totalLabor += $request->labor[$key] * $pc;
 
                 purchase_order_details::create(
                     [
                         'orderID'       => $order->id,
                         'productID'     => $id,
+                        'price'         => $price,
+                        'discount'      => $discount,
+                        'discountp'     => $request->discountp[$key],
+                        'discountvalue' => $discountvalue,
                         'qty'           => $request->qty[$key],
                         'pc'            => $pc,
                         'loose'         => $request->loose[$key],
+                        'netprice'      => $netPrice,
+                        'amount'        => $amount,
+                        'price_amount'  => $price_amount,
                         'date'          => $request->date,
+                        'bonus'         => $request->bonus[$key],
+                        'labor'         => $request->labor[$key],
+                        'fright'        => $request->fright[$key],
+                        'claim'         => $claim,
                         'unitID'        => $unit->id,
                         'refID'         => $ref,
                     ]

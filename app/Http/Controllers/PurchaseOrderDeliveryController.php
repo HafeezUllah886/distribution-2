@@ -86,6 +86,9 @@ class PurchaseOrderDeliveryController extends Controller
             {
                 $unit = product_units::find($request->unit[$key]);
                 $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
+                
+                if($qty > 0)
+                {
                 $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
                 $price = $request->price[$key];
                 $discount = $request->discount[$key];
@@ -136,6 +139,7 @@ class PurchaseOrderDeliveryController extends Controller
                         'refID'         => $ref,
                     ]
                 );
+            }
             }
 
             $net = $total;
