@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string("inv")->nullable();
             $table->string("bilty")->nullable();
             $table->string("transporter")->nullable();
+            $table->string("vehicle")->nullable();
+            $table->string("driver_contact")->nullable();
             $table->float('net')->default(0);
             $table->string('status')->default('Pending');
             $table->bigInteger('refID');

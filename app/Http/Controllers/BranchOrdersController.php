@@ -200,6 +200,7 @@ class BranchOrdersController extends Controller
                   'orderdate'       => $request->orderdate,
                   'date'            => $request->date,
                   'bilty'           => $request->bilty,
+                  'orderID'         => $request->orderID,
                   'transporter'     => $request->transporter,
                   'notes'           => $request->notes,
                   'edit'            => false,

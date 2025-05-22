@@ -16,8 +16,7 @@ Route::middleware(['auth', BranchAdmin_OperatorCheck::class])->group(function ()
 
     Route::resource('purchase_order', PurchaseOrderController::class);
     Route::get('purchase_order_receving/create/{id}', [PurchaseOrderDeliveryController::class, 'create'])->name('purchaseOrderReceiveing');
+    Route::get('purchase_order_receving/approval/{id}', [PurchaseOrderDeliveryController::class, 'approval'])->name('purchaseOrderReceiveingApproval');
 
     Route::resource('purchase_order_receiving', PurchaseOrderDeliveryController::class);
-
-  
 });

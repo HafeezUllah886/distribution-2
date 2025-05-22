@@ -7,6 +7,8 @@ use App\Models\product_units;
 use App\Models\products;
 use App\Models\purchase;
 use App\Models\purchase_details;
+use App\Models\purchase_order;
+use App\Models\purchase_order_delivery;
 use App\Models\purchase_payments;
 use App\Models\stock;
 use App\Models\transactions;
@@ -125,6 +127,7 @@ class PurchaseController extends Controller
             $purchase->update(
                 [
                     'net' => $net,
+                    'totalLabor' => $totalLabor,
                 ]
             );
 
@@ -154,6 +157,10 @@ class PurchaseController extends Controller
      */
     public function edit(purchase $purchase)
     {
+        if($purchase->orderID != null)
+        {
+            return back()->with('error', "This purchase can not be edited");
+        }
         $products = products::active()->vendor($purchase->vendorID)->orderby('name', 'asc')->get();
         $units = units::all();
         $accounts = accounts::business()->get();
@@ -238,6 +245,7 @@ class PurchaseController extends Controller
                     ]
                 );
                 createStock($id, $qty, 0, $request->recdate, "Purchased", $ref, $request->warehouseID);
+
             }
 
             $net = $total;
@@ -245,12 +253,13 @@ class PurchaseController extends Controller
             $purchase->update(
                 [
                     'net' => $net,
+                    'totalLabor' => $totalLabor,
                 ]
             );
 
             createTransaction($request->vendorID, $request->recdate, 0, $net, "Pending Amount of Purchase No. $purchase->id", $ref);
-
             createTransaction($request->unloaderID, $request->recdate, 0, $totalLabor, "Labor Charges of Purchase No. $purchase->id", $ref);
+          
             DB::commit();
             return back()->with('success', "Purchase Updated");
         }
@@ -278,6 +287,7 @@ class PurchaseController extends Controller
                 $product->delete();
             }
             transactions::where('refID', $purchase->refID)->delete();
+            purchase_order_delivery::where('purchaseID', $purchase->id)->delete();
             $purchase->delete();
             DB::commit();
             session()->forget('confirmed_password');

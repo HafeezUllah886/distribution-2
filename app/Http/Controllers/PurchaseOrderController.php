@@ -12,12 +12,15 @@ use App\Models\purchase_details;
 use App\Models\purchase_order_details;
 use App\Models\units;
 use App\Models\warehouses;
+use App\purchaseOrderTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PurchaseOrderController extends Controller
 {
+
+    use purchaseOrderTrait;
     /**
      * Display a listing of the resource.
      */
@@ -40,7 +43,7 @@ class PurchaseOrderController extends Controller
         return view('purchase_order.index', compact('orders', 'start', 'end', 'vendors', 'vendorID', 'status'));
     }
 
-    /**
+    /** 
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
@@ -72,6 +75,8 @@ class PurchaseOrderController extends Controller
                   'date'            => $request->date,
                   'notes'           => $request->notes,
                   'bilty'           => $request->bilty,
+                  'vehicle'         => $request->vehicle,
+                  'driver_contact'  => $request->driver_contact,
                   'transporter'     => $request->transporter,
                   'inv'             => $request->inv,
                   'refID'           => $ref,
@@ -137,6 +142,7 @@ class PurchaseOrderController extends Controller
      */
     public function show($id)
     {
+        $this->checkStatus($id);
         $order = purchase_order::with('vendor', 'details.product', 'details.unit')->findOrFail($id);
         return view('purchase_order.view', compact('order'));
     }
@@ -144,17 +150,95 @@ class PurchaseOrderController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(purchase_order $purchase_order)
+    public function edit($id)
     {
-        //
+        $this->checkStatus($id);
+        $this->validateOrder($id);
+        $order = purchase_order::with('vendor', 'details.product', 'details.unit')->findOrFail($id);
+        $products = products::active()->vendor($order->vendorID)->orderby('name', 'asc')->get();
+        $units = units::all();
+        $vendor = accounts::find($order->vendorID);
+        return view('purchase_order.edit', compact('order', 'products', 'units', 'vendor'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, purchase_order $purchase_order)
+    public function update(Request $request, $id)
     {
-        //
+        $this->checkStatus($id);
+        $this->validateOrder($id);
+
+        try
+        {
+            DB::beginTransaction();
+
+            $order = purchase_order::findOrFail($id);
+            $order->details()->delete();
+
+            $order->update([
+                'vendorID'        => $request->vendorID,
+                'date'            => $request->date,
+                'notes'           => $request->notes,
+                'bilty'           => $request->bilty,
+                'vehicle'         => $request->vehicle,
+                'driver_contact'  => $request->driver_contact,
+                'transporter'     => $request->transporter,
+                'inv'             => $request->inv,
+            ]);
+
+            $ids = $request->id;
+            $total = 0;
+            $totalLabor = 0;
+
+            foreach($ids as $key => $id)
+            {
+                $unit = product_units::find($request->unit[$key]);
+                $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
+                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                $price = $request->price[$key];
+                $discount = $request->discount[$key];
+                $claim = $request->claim[$key];
+                $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
+                $netPrice = ($price - $discount - $discountvalue - $claim);
+                $amount = $netPrice * $pc;
+                $price_amount = $price * $pc;
+                $total += $amount;
+                $totalLabor += $request->labor[$key] * $pc;
+
+                purchase_order_details::create(
+                    [
+                        'orderID'       => $order->id,
+                        'productID'     => $id,
+                        'price'         => $price,
+                        'discount'      => $discount,
+                        'discountp'     => $request->discountp[$key],
+                        'discountvalue' => $discountvalue,
+                        'qty'           => $request->qty[$key],
+                        'pc'            => $pc,
+                        'loose'         => $request->loose[$key],
+                        'netprice'      => $netPrice,
+                        'amount'        => $amount,
+                        'price_amount'  => $price_amount,
+                        'date'          => $request->date,
+                        'bonus'         => $request->bonus[$key],
+                        'labor'         => $request->labor[$key],
+                        'fright'        => $request->fright[$key],
+                        'claim'         => $claim,
+                        'unitID'        => $unit->id,
+                        'refID'         => $order->refID,
+                    ]
+                );
+            }
+
+            DB::commit();
+            return back()->with('success', "Purchase Order Updated");
+        }
+        catch(\Exception $e)
+        {
+            DB::rollback();
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -165,5 +249,48 @@ class PurchaseOrderController extends Controller
         //
     }
 
-    
+    public function validateOrder($id)
+    {
+        $order = purchase_order::findOrFail($id);
+
+        if($order->status != "Pending")
+        {
+            return redirect()->route('purchase_order.index')->with('error', 'Order cannot be edited');
+        }
+
+        if($order->branchID != Auth()->user()->branchID)
+        {
+            return redirect()->route('purchase_order.index')->with('error', 'Order does not belong to current branch');
+        }
+
+        return true;
+    }
+
+    public function checkStatus($orderID)
+    {
+        $order = purchase_order::findOrFail($orderID);
+       
+            $order_pc = $order->details->sum('pc');
+            $delivered_pc = $order->delivered_items->sum('pc');
+
+            if($order_pc == $delivered_pc)
+            {
+                $order->status = "Completed";
+              
+            }
+
+            if($order_pc > $delivered_pc)
+            {
+                $order->status = "Under Process";
+               
+            }
+            if($delivered_pc == 0)
+            {
+                $order->status = "Pending";
+               
+            }
+            $order->save();
+    }
+
+
 }

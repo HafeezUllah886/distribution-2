@@ -76,6 +76,14 @@
                                                         Edit
                                                     </a>
                                                 </li>
+                                                @if ($purchase->status == 'Pending' && auth()->user()->role == "Branch Admin")
+                                                <li>
+                                                    <a class="dropdown-item" href="{{route('purchaseOrderReceiveingApproval', $purchase->id)}}">
+                                                        <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        Approve
+                                                    </a>
+                                                </li>
+                                                @endif
                                                 <li>
                                                     <a class="dropdown-item text-danger" href="{{route('purchases.delete', $purchase->id)}}">
                                                         <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>

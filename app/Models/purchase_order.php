@@ -43,6 +43,6 @@ class purchase_order extends Model
 
     public function delivered_items()
     {
-        return $this->hasMany(order_delivery::class, 'orderID');
+        return $this->hasMany(purchase_order_delivery::class, 'orderID');
     }
 }

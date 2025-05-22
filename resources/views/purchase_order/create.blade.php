@@ -72,7 +72,7 @@
                                     <input type="text" name="inv" id="inv" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-2">
                                 <div class="form-group">
                                     <label for="vendor">Vendor</label>
                                     <input type="text" name="vendor" readonly value="{{$vendor->title}}" class="form-control">
@@ -85,10 +85,22 @@
                                     <input type="text" name="bilty" id="bilty" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-2">
                                 <div class="form-group">
                                     <label for="comp">Transporter</label>
                                     <input type="text" name="transporter" id="transporter" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="comp">Vehicle</label>
+                                    <input type="text" name="vehicle" id="vehicle" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="comp">Driver Contact</label>
+                                    <input type="text" name="driver_contact" id="driver_contact" class="form-control">
                                 </div>
                             </div>
                             <div class="col-2">

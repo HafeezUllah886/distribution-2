@@ -21,20 +21,36 @@
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Order #</p>
                                         <h5 class="fs-14 mb-0">{{$order->id}}</h5>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Vendor</p>
                                         <h5 class="fs-14 mb-0"> <span class="text-muted"></span> {{$order->vendor->title}}</h5>
 
                                     </div>
-                                   
+                                    <div class="col-2">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Vehicle</p>
+                                        <h5 class="fs-14 mb-0"><span>{{$order->vehicle}}</h5>
+                                    </div>
+                                    <div class="col-2">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Driver Contact</p>
+                                        <h5 class="fs-14 mb-0"><span>{{$order->driver_contact}}</h5>
+                                    </div>
+                                    <div class="col-2">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Transporter</p>
+                                        <h5 class="fs-14 mb-0"><span>{{$order->transporter}}</h5>
+                                    </div>
+                                    <div class="col-2">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Bilty</p>
+                                        <h5 class="fs-14 mb-0"><span>{{$order->bilty}}</h5>
+                                    </div>
                                     <div class="col-2">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Date</p>
                                         <h5 class="fs-14 mb-0">{{date("d M Y" ,strtotime($order->date))}}</h5>
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-2">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Status</p>
-                                        <h5 class="fs-14 mb-0"><span class="text-muted">{{$order->status}}</h5>
+                                        <h5 class="fs-14 mb-0"><span>{{$order->status}}</h5>
                                     </div>
+                                    
                                     <!--end col-->
                                     <!--end col-->
                                 </div>

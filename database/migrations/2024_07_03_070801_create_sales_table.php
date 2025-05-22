@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('warehouseID')->constrained('warehouses', 'id');
             $table->foreignId('orderbookerID')->constrained('users', 'id');
             $table->foreignId('supplymanID')->constrained('accounts', 'id');
+            $table->bigInteger('orderID')->nullable();
             $table->date('orderdate');
             $table->date('date');
             $table->string("bilty")->nullable();

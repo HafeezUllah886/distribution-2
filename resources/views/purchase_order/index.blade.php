@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-12">
             <form>
-                <div class="row">
+                <div class="row g-1">
                     <div class="col-md-2">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">From</span>
@@ -33,7 +33,6 @@
                             <select class="form-control" name="status" aria-label="Username" aria-describedby="basic-addon1">
                                 <option value="All">All</option>
                                 <option value="Pending" @selected($status == 'Pending')>Pending</option>
-                                <option value="Approved" @selected($status == 'Approved')>Approved</option>
                                 <option value="Under Process" @selected($status == 'Under Process')>Under Process</option>
                                 <option value="Completed" @selected($status == 'Completed')>Completed</option>
                             </select>
@@ -67,6 +66,9 @@
                             <th>#</th>
                             <th>Vendor</th>
                             <th>Date</th>
+                            <th>Bilty</th>
+                            <th>Inv #</th>
+                            <th>Qty</th>
                             <th>Status</th>
                             <th>Action</th>
                         </thead>
@@ -76,6 +78,9 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $order->vendor->title }}</td>
                                     <td>{{ date('d M Y', strtotime($order->date)) }}</td>
+                                    <td>{{ $order->bilty }}</td>
+                                    <td>{{ $order->inv }}</td>
+                                    <td>{{ $order->details->sum('qty') }}</td>
                                     <td>{{ $order->status }}</td>
                                     <td>
                                         <div class="dropdown">
@@ -91,9 +96,9 @@
                                                         View
                                                     </button>
                                                 </li> 
-                                                @if (auth()->user()->role == "Branch Admin" && $order->status != "Pending")
+                                               @if (auth()->user()->role == "Branch Admin" && $order->status == "Pending")
                                                 <li>
-                                                    <button class="dropdown-item" onclick="newWindow('{{route('Branch.orders.edit', $order->id)}}')"
+                                                    <button class="dropdown-item" onclick="newWindow('{{route('purchase_order.edit', $order->id)}}')"
                                                         onclick=""><i
                                                             class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                         Edit

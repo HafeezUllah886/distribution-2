@@ -18,14 +18,15 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-6"><h3> Edit Order </h3></div>
-                                <div class="col-6 d-flex flex-row-reverse"><a href="{{route('Branch.orders')}}" class="btn btn-danger">Close</a></div>
+                                <div class="col-6 d-flex flex-row-reverse"><a href="{{route('purchase_order.index')}}" class="btn btn-danger">Close</a></div>
                             </div>
                         </div>
                     </div>
                 </div><!--end row-->
                 <div class="card-body">
-                    <form action="{{ route('Branch.orders.update', $order->id) }}" method="post">
+                    <form action="{{ route('purchase_order.update', $order->id) }}" method="post">
                         @csrf
+                        @method('PUT')
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
@@ -65,19 +66,19 @@
                                             <td class="no-padding">{{ $product->product->name }}</td>
                                             <td class="no-padding"><select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges({{ $id }})" id="unit_{{ $id }}">
                                                 @foreach ($units as $unit)
-                                                <option data-unit="{{$unit->value}}" value="{{ $unit->id }}">{{ $unit->unit_name }}</option>
+                                                <option data-unit="{{$unit->value}}" @selected($unit->id == $product->unitID) value="{{ $unit->id }}">{{ $unit->unit_name }}</option>
                                                 @endforeach
                                             </select></td>
                                             <td class="no-padding"><div class="input-group"><input type="number" name="qty[]" oninput="updateChanges({{ $id }})" min="0" required step="any" value="{{$product->qty}}" class="form-control text-center no-padding" id="qty_{{ $id }}"></td>
                                             <td class="no-padding"><input type="number" name="loose[]" oninput="updateChanges({{ $id }})" min="0" required step="any" value="{{$product->loose}}" class="form-control text-center no-padding" id="loose_{{ $id }}"></td>
                                             <td class="no-padding"><input type="number" name="bonus[]" min="0" required oninput="updateChanges({{ $id }})" step="any" value="{{$product->bonus ?? 0}}" class="form-control text-center no-padding" id="bonus_{{ $id }}"></td>
-                                            <td class="no-padding"><input type="number" name="price[]" oninput="updateChanges({ $id })" required step="any" value="{{$product->price}}" min="1" class="form-control text-center no-padding" id="price_{{ $id }}"></td>
-                                            <td class="no-padding"><div class="input-group"><input type="number" name="discount[]" readonly required step="any" value="{{$product->discount}}" min="0" oninput="updateChanges({{ $id }})" class="form-control text-center no-padding" id="discount_{{ $id }}"><span class="input-group-text no-padding discountText_{{ $id }}" id="basic-addon2"></span></td>
-                                            <td class="no-padding"><div class="input-group"><input type="number" name="discountp[]" readonly required step="any" value="{{$product->discountp}}" min="0" oninput="updateChanges({{ $id }})" class="form-control text-center no-padding" id="discountp_{{ $id }}"><span class="input-group-text no-padding discountpText_{{ $id }}" id="basic-addon2">{{$product->discountvalue}}</span></td>
-                                            <td class="no-padding"><div class="input-group"><input type="number" name="fright[]" readonly required step="any" oninput="updateChanges({{ $id }})" value="{{$product->fright}}" min="0" class="form-control text-center no-padding" id="fright_{{ $id }}"> <span class="input-group-text no-padding frightText_{{ $id }}" id="basic-addon2"></span></div></td>
-                                            <td class="no-padding"><div class="input-group"><input type="number" name="labor[]" readonly required step="any" oninput="updateChanges({{ $id }})" value="{{ $product->labor }}" min="0" class="form-control text-center no-padding" id="labor_{{ $id }}"> <span class="input-group-text no-padding laborText_{{ $id }}" id="basic-addon2"></span></div></td>
-                                            <td class="no-padding"><div class="input-group"><input type="number" name="claim[]" readonly required step="any" oninput="updateChanges({{ $id }})" value="{{$product->claim}}" min="0" class="form-control text-center no-padding" id="claim_{{ $id }}"> <span class="input-group-text no-padding claimText_{{ $id }}" id="basic-addon2"></span></div></td>
-                                            <td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_{{ $id }}"></td>
+                                            <td class="no-padding"><input type="number" name="price[]" oninput="updateChanges({{ $id }})" required step="any" value="{{$product->price}}" min="1" class="form-control text-center no-padding" id="price_{{ $id }}"></td>
+                                            <td class="no-padding"><div class="input-group"><input type="number" name="discount[]"  required step="any" value="{{$product->discount}}" min="0" oninput="updateChanges({{ $id }})" class="form-control text-center no-padding" id="discount_{{ $id }}"><span class="input-group-text no-padding discountText_{{ $id }}" id="basic-addon2"></span></td>
+                                            <td class="no-padding"><div class="input-group"><input type="number" name="discountp[]"  required step="any" value="{{$product->discountp}}" min="0" oninput="updateChanges({{ $id }})" class="form-control text-center no-padding" id="discountp_{{ $id }}"><span class="input-group-text no-padding discountpText_{{ $id }}" id="basic-addon2">{{$product->discountvalue}}</span></td>
+                                            <td class="no-padding"><div class="input-group"><input type="number" name="fright[]" required step="any" oninput="updateChanges({{ $id }})" value="{{$product->fright}}" min="0" class="form-control text-center no-padding" id="fright_{{ $id }}"> <span class="input-group-text no-padding frightText_{{ $id }}" id="basic-addon2"></span></div></td>
+                                            <td class="no-padding"><div class="input-group"><input type="number" name="labor[]"  required step="any" oninput="updateChanges({{ $id }})" value="{{ $product->labor }}" min="0" class="form-control text-center no-padding" id="labor_{{ $id }}"> <span class="input-group-text no-padding laborText_{{ $id }}" id="basic-addon2"></span></div></td>
+                                            <td class="no-padding"><div class="input-group"><input type="number" name="claim[]"  required step="any" oninput="updateChanges({{ $id }})" value="{{$product->claim}}" min="0" class="form-control text-center no-padding" id="claim_{{ $id }}"> <span class="input-group-text no-padding claimText_{{ $id }}" id="basic-addon2"></span></div></td>
+                                            <td class="no-padding"><input type="number" name="amount[]" min="0.1"  required step="any" value="{{$product->amount}}" class="form-control text-center no-padding" id="amount_{{ $id }}"></td>
                                             <td class="no-padding">  
                                                 <span class="btn btn-sm btn-danger" onclick="deleteRow({{ $id }})">X</span> 
                                             </td>
@@ -110,25 +111,47 @@
                                     </tfoot>
                                 </table>
                             </div>
-                            <div class="col-4">
+                            <div class="col-2">
                                 <div class="form-group">
-                                    <label for="orderdate">Order Date</label>
-                                    <input type="date" name="orderdate" id="orderdate" readonly value="{{ date('Y-m-d', strtotime($order->date)) }}" class="form-control">
+                                    <label for="comp">Purchase Inv No.</label>
+                                    <input type="text" name="inv" value="{{$order->inv}}" id="inv" class="form-control">
                                 </div>
                             </div>
-                           
-                            <div class="col-4">
+                            <div class="col-2">
                                 <div class="form-group">
-                                    <label for="orderbooker">Order Booker</label>
-                                    <input type="text" value="{{$order->orderbooker->name}}" class="form-control" readonly>
-                                    
+                                    <label for="vendor">Vendor</label>
+                                    <input type="text" name="vendor" readonly value="{{$vendor->title}}" class="form-control">
+                                    <input type="hidden" name="vendorID" value="{{$vendor->id}}" id="vendorID" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-4">
+                            <div class="col-2">
                                 <div class="form-group">
-                                    <label for="customer">Customer</label>
-                                    <input type="text" value="{{$order->customer->title}}" class="form-control" readonly>
-                                  
+                                    <label for="comp">Bilty No.</label>
+                                    <input type="text" name="bilty" value="{{$order->bilty}}" id="bilty" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="comp">Transporter</label>
+                                    <input type="text" name="transporter" value="{{$order->transporter}}" id="transporter" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="comp">Vehicle</label>
+                                    <input type="text" name="vehicle" value="{{$order->vehicle}}"  id="vehicle" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="comp">Driver Contact</label>
+                                    <input type="text" name="driver_contact" value="{{$order->driver_contact}}" id="driver_contact" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="orderdate">Date</label>
+                                    <input type="date" name="date" id="date" value="{{ date('Y-m-d', strtotime($order->date)) }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-12 mt-2">
@@ -138,7 +161,7 @@
                                 </div>
                             </div>
                             <div class="col-12 mt-2">
-                                <button type="submit" class="btn btn-primary w-100">{{Auth()->user()->role == "Branch Admin" ? "Update & Approve Order" : "Update Order"}}</button>
+                                <button type="submit" class="btn btn-primary w-100">Update Order</button>
                             </div>
                         </div>
                     </form>
@@ -179,7 +202,7 @@
 
         function getSingleProduct(id) {
             $.ajax({
-                url: "{{ url('branchorders/getproduct/') }}/" + id + "/" + {{$order->customer->areaID}},
+                url: "{{ url('purchases/getproduct/') }}/" + id,
                 method: "GET",
                 success: function(product) {
                     let found = $.grep(existingProducts, function(element) {
@@ -200,12 +223,12 @@
                         html += '<td class="no-padding"><input type="number" name="loose[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="0" class="form-control text-center no-padding" id="loose_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="bonus[]" min="0" required oninput="updateChanges(' + id + ')" step="any" value="0" class="form-control text-center no-padding" id="bonus_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' + id + ')" required step="any" value="'+product.pprice+'" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
-                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="discount[]" readonly required step="any" value="'+product.discount+'" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discount_' + id + '"><span class="input-group-text no-padding discountText_'+id+'" id="basic-addon2"></span></td>';
-                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="discountp[]" readonly required step="any" value="'+product.discountp+'" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discountp_' + id + '"><span class="input-group-text no-padding discountpText_'+id+'" id="basic-addon2"></span></td>';
-                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="fright[]" readonly required step="any" oninput="updateChanges(' + id + ')" value="'+product.sfright+'" min="0" class="form-control text-center no-padding" id="fright_' + id + '"> <span class="input-group-text no-padding frightText_'+id+'" id="basic-addon2"></span></div></td>';
-                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="labor[]" readonly required step="any" oninput="updateChanges(' + id + ')" value="'+product.dc+'" min="0" class="form-control text-center no-padding" id="labor_' + id + '"> <span class="input-group-text no-padding laborText_'+id+'" id="basic-addon2"></span></div></td>';
-                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="claim[]" readonly required step="any" oninput="updateChanges(' + id + ')" value="'+product.sclaim+'" min="0" class="form-control text-center no-padding" id="claim_' + id + '"> <span class="input-group-text no-padding claimText_'+id+'" id="basic-addon2"></span></div></td>';
-                        html += '<td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_' + id + '"></td>';
+                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="discount[]"  required step="any" value="'+product.discount+'" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discount_' + id + '"><span class="input-group-text no-padding discountText_'+id+'" id="basic-addon2"></span></td>';
+                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="discountp[]"  required step="any" value="'+product.discountp+'" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discountp_' + id + '"><span class="input-group-text no-padding discountpText_'+id+'" id="basic-addon2"></span></td>';
+                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="fright[]"  required step="any" oninput="updateChanges(' + id + ')" value="'+product.sfright+'" min="0" class="form-control text-center no-padding" id="fright_' + id + '"> <span class="input-group-text no-padding frightText_'+id+'" id="basic-addon2"></span></div></td>';
+                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="labor[]"  required step="any" oninput="updateChanges(' + id + ')" value="'+product.dc+'" min="0" class="form-control text-center no-padding" id="labor_' + id + '"> <span class="input-group-text no-padding laborText_'+id+'" id="basic-addon2"></span></div></td>';
+                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="claim[]"  required step="any" oninput="updateChanges(' + id + ')" value="'+product.sclaim+'" min="0" class="form-control text-center no-padding" id="claim_' + id + '"> <span class="input-group-text no-padding claimText_'+id+'" id="basic-addon2"></span></div></td>';
+                        html += '<td class="no-padding"><input type="number" name="amount[]" min="0.1"  required step="any" value="1" class="form-control text-center no-padding" id="amount_' + id + '"></td>';
                         html += '<td class="no-padding"> <span class="btn btn-sm btn-danger" onclick="deleteRow('+id+')">X</span> </td>';
                         html += '<input type="hidden" name="id[]" value="' + id + '">';
                         html += '<input type="hidden" name="frightValue[]" id="frightValue_'+id+'" value="0">';

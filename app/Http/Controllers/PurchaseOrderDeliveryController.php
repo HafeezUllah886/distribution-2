@@ -61,6 +61,9 @@ class PurchaseOrderDeliveryController extends Controller
             DB::beginTransaction();
             $ref = getRef();
             $order = purchase_order::find($request->orderID);
+            $order->update([
+                'status' => 'Under Process',
+            ]);
             $purchase = purchase::create(
                 [
                   'vendorID'        => $request->vendorID,
@@ -71,6 +74,7 @@ class PurchaseOrderDeliveryController extends Controller
                   'recdate'         => $request->recdate,
                   'notes'           => $request->notes,
                   'bilty'           => $request->bilty,
+                  'orderID'         => $order->id,
                   'transporter'     => $request->transporter,
                   'inv'             => $request->inv,
                   'status'          => "Pending",
@@ -135,6 +139,7 @@ class PurchaseOrderDeliveryController extends Controller
                         'qty'           => $request->qty[$key],
                         'pc'            => $pc,
                         'loose'         => $request->loose[$key],
+                        'amount'        => $amount,
                         'unitID'        => $unit->id,
                         'refID'         => $ref,
                     ]
@@ -147,6 +152,7 @@ class PurchaseOrderDeliveryController extends Controller
             $purchase->update(
                 [
                     'net' => $net,
+                    'totalLabor' => $totalLabor,
                 ]
             );
 
@@ -167,9 +173,27 @@ class PurchaseOrderDeliveryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(purchase_order_delivery $purchase_order_delivery)
+    public function approval($id)
     {
-        //
+        try
+        {
+            DB::beginTransaction();
+        $purchase = purchase::find($id);
+
+        createTransaction($purchase->vendorID, $purchase->recdate, 0, $purchase->net, "Pending Amount of Purchase No. $purchase->id", $purchase->refID);
+
+        createTransaction($purchase->unloaderID, $purchase->recdate, 0, $purchase->totalLabor, "Labor Charges of Purchase No. $purchase->id", $purchase->refID);
+        $purchase->update([
+            'status' => 'Approved',
+        ]);
+        DB::commit();
+        return back()->with('success', "Purchase Approved");
+        }
+        catch(\Exception $e)
+        {
+            DB::rollback();
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     /**

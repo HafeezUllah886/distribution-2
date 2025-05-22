@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('branchID')->constrained('branches', 'id');
             $table->foreignId('warehouseID')->constrained('warehouses', 'id');
             $table->foreignId('unloaderID')->constrained('accounts', 'id');
+            $table->bigInteger('orderID')->nullable();
             $table->date('orderdate');
             $table->date('recdate');
             $table->string("inv")->nullable();
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->string("transporter")->nullable();
             $table->text('notes')->nullable();
             $table->float('net')->default(0);
+            $table->float('totalLabor')->default(0);
             $table->string('status')->default('Approved');
             $table->bigInteger('refID');
             $table->timestamps();
