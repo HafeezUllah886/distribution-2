@@ -66,6 +66,7 @@
                             <th>#</th>
                             <th>Vendor</th>
                             <th>Date</th>
+                            <th>Vehicle</th>
                             <th>Bilty</th>
                             <th>Inv #</th>
                             <th>Qty</th>
@@ -78,6 +79,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $order->vendor->title }}</td>
                                     <td>{{ date('d M Y', strtotime($order->date)) }}</td>
+                                    <td>{{ $order->vehicle }}</td>
                                     <td>{{ $order->bilty }}</td>
                                     <td>{{ $order->inv }}</td>
                                     <td>{{ $order->details->sum('qty') }}</td>
