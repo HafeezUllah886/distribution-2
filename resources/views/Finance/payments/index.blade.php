@@ -2,9 +2,10 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <span class="alert alert-info">Make payments to Vendors, Supply Man, Unloader and Business Accounts.</span>
+            <div class="card mt-4">
                 <div class="card-header d-flex justify-content-between">
-                    <h3>Vendor Payments</h3>
+                    <h3>Payments</h3>
                     <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create
                         New</button>
                 </div>
@@ -19,12 +20,14 @@
                     </div>
                 @endif
 
+            
+
                     <table class="table" id="buttons-datatables">
                         <thead>
                             <th>#</th>
                             <th>Ref #</th>
                             <th>Paid By</th>
-                            <th>Vendor</th>
+                            <th>Received By</th>
                             <th>Date</th>
                             <th>Notes</th>
                             <th>Amount</th>
@@ -35,8 +38,8 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $tran->refID }}</td>
-                                    <td>{{ $tran->vendor->title }}</td>
                                     <td>{{ $tran->user->name }}</td>
+                                    <td>{{ $tran->receiver->title }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->date)) }}</td>
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
@@ -48,14 +51,14 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <button class="dropdown-item" onclick="newWindow('{{route('vendor_payments.show', $tran->id)}}')"
+                                                    <button class="dropdown-item" onclick="newWindow('{{route('payments.show', $tran->id)}}')"
                                                         onclick=""><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         View
                                                     </button>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item text-danger" href="{{route('vendor_payments.delete', $tran->refID)}}">
+                                                    <a class="dropdown-item text-danger" href="{{route('payments.delete', $tran->refID)}}">
                                                         <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
                                                         Delete
                                                     </a>
@@ -81,50 +84,20 @@
                     <h5 class="modal-title" id="myModalLabel">Create Receipt</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
-                <form action="{{ route('vendor_payments.store') }}" enctype="multipart/form-data" method="post">
+                <form action="{{ route('payments.store') }}" enctype="multipart/form-data" method="post">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-6">
-                                <table class="w-100">
-                                    <thead>
-                                        <th>Currency</th>
-                                        <th>Amount</th>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($currencies as $currency)
-                                            <tr>
-                                                <td>{{$currency->title}}</td>
-                                                <td>
-                                                    <input type="number" class="form-control form-control-sm" data-value="{{$currency->value}}" id="currency_{{$currency->id}}" oninput="updateTotal()" name="qty[]" value="0">
-                                                    <input type="hidden" class="form-control" name="currencyID[]" value="{{$currency->id}}">
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        <tr>
-                                            <td>Total Amount</td>
-                                            <td>
-                                                <input type="number" class="form-control form-control-sm" readonly id="total" name="total" value="0">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Attachement</td>
-                                            <td>
-                                                <input type="file" class="form-control form-control-sm" name="file">
-                                            </td>
-                                        </tr>
-                                    </tbody>
-
-                                </table>
-
+                               @include('layout.payment')
                             </div>
                             <div class="col-6">
                                 <div class="form-group mt-2">
-                                    <label for="fromID">Vendor (Balance: <span id="accountBalance">0</span>)</label>
-                            <select name="vendorID" id="fromID" onchange="getBalance()" required class="selectize">
+                                    <label for="fromID">Received By (Balance: <span id="accountBalance">0</span>)</label>
+                            <select name="receiverID" id="fromID" onchange="getBalance()" required class="selectize">
                                 <option value=""></option>
-                                @foreach ($vendors as $vendor)
-                                    <option value="{{ $vendor->id }}">{{ $vendor->title }}</option>
+                                @foreach ($receivers as $receiver)
+                                    <option value="{{ $receiver->id }}">{{ $receiver->title }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -201,16 +174,6 @@
 
 <script>
   
-    function updateTotal() {
-        var total = 0;
-        $("input[id^='currency_']").each(function() {
-            var inputId = $(this).attr('id');
-            var inputVal = $(this).val();
-            var inputValue = $(this).data('value');
-            var value = inputVal * inputValue;
-            total += parseFloat(value);
-        });
-        $("#total").val(total.toFixed(2));
-    }
+   
 </script>
 @endsection

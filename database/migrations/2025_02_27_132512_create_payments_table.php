@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('labor_payments', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('laborID')->constrained('accounts', 'id');
+            $table->foreignId('receiverID')->constrained('accounts', 'id');
             $table->foreignId('userID')->constrained('users', 'id');
             $table->foreignId('branchID')->constrained('branches', 'id');
             $table->float('amount');
+            $table->enum('method', ['Cash', 'Online', 'Cheque', 'Other']);
+            $table->string('number')->nullable();
+            $table->string('bank')->nullable();
+            $table->string('remarks')->nullable();
             $table->date('date');
             $table->string('notes')->nullable();
             $table->bigInteger('refID');
@@ -29,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('labor_payments');
+        Schema::dropIfExists('payments');
     }
 };

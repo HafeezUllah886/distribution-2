@@ -75,11 +75,11 @@
                     </div>
                 </li> 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarFinance" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarFinance">
-                        <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Finance</span>
+                    <a class="nav-link menu-link" href="#sidebarAccounts" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarAccounts">
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Accounts</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="sidebarFinance">
+                    <div class="collapse menu-dropdown" id="sidebarAccounts">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a href="{{ route('account.create') }}" class="nav-link"
@@ -109,34 +109,20 @@
                                     data-key="t-pickers">
                                     Unloader Accounts </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ route('deposit_withdraw.index') }}" class="nav-link"
-                                    data-key="t-input-masks">Deposit / Withdraw</a>
-                            </li>
+                        </ul>
+                    </div>
+                </li>  
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarMakePayments" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarMakePayments">
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Make Payments</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarMakePayments">
+                        <ul class="nav nav-sm flex-column">
                            <li class="nav-item">
-                                <a href="{{ route('customer_payments.index') }}" class="nav-link"
-                                    data-key="t-input-masks">Customer Payments</a>
+                                <a href="{{ route('payments.index') }}" class="nav-link"
+                                    data-key="t-input-masks">Payments</a>
                             </li> 
-                           <li class="nav-item">
-                                <a href="{{ route('bulk_payment.index') }}" class="nav-link"
-                                    data-key="t-input-masks">Bulk Payments</a>
-                            </li> 
-                           <li class="nav-item">
-                                <a href="{{ route('vendor_payments.index') }}" class="nav-link"
-                                    data-key="t-input-masks">Vendor Payments</a>
-                            </li> 
-                           <li class="nav-item">
-                                <a href="{{ route('staff_payments.index') }}" class="nav-link"
-                                    data-key="t-input-masks">Staff Payments</a>
-                            </li> 
-                            <li class="nav-item">
-                                <a href="{{ route('labor_payments.index') }}" class="nav-link"
-                                    data-key="t-input-masks">Labor Payments</a>
-                            </li> 
-                            <li class="nav-item">
-                                <a href="{{ route('transfers.index') }}" class="nav-link"
-                                    data-key="t-advanced">Transfer</a>
-                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('expenses.index') }}" class="nav-link" data-key="t-range-slider">
                                     Expenses</a>
@@ -149,6 +135,32 @@
                                 <a href="{{ route('staff_amounts_adjustments.index') }}" class="nav-link"
                                     data-key="t-input-masks">Staff Amount Adjustment</a>
                             </li> 
+                        </ul>
+                    </div>
+                </li>  
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarReceivePayments" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarReceivePayments">
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Receive Payments</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarReceivePayments">
+                        <ul class="nav nav-sm flex-column">
+                           
+                           
+                           <li class="nav-item">
+                                <a href="{{ route('customer_payments.index') }}" class="nav-link"
+                                    data-key="t-input-masks">Customer Payments</a>
+                            </li> 
+                           <li class="nav-item">
+                                <a href="{{ route('bulk_payment.index') }}" class="nav-link"
+                                    data-key="t-input-masks">Bulk Payments</a>
+                            </li> 
+                          
+                           <li class="nav-item">
+                                <a href="{{ route('staff_payments.index') }}" class="nav-link"
+                                    data-key="t-input-masks">Staff Payments</a>
+                            </li> 
+                           
                         </ul>
                     </div>
                 </li>  

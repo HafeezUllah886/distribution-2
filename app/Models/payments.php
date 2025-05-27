@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class labor_payments extends Model
+class payments extends Model
 {
 
     use HasFactory;
 
     protected $guarded = [];
 
-    public function labor()
+    public function receiver()
     {
-        return $this->belongsTo(accounts::class, 'laborID');
+        return $this->belongsTo(accounts::class, 'receiverID');
     }
 
     public function user()
@@ -26,5 +26,4 @@ class labor_payments extends Model
     {
         return $query->where('branchID', auth()->user()->branchID);
     }
-
 }

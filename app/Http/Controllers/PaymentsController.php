@@ -7,22 +7,23 @@ use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
+use App\Models\payments;
 use App\Models\transactions;
 use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class VendorPaymentsController extends Controller
+class PaymentsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $payments = vendorPayments::currentBranch()->orderBy('id', 'desc')->get();
-        $vendors = accounts::vendor()->get();
+        $payments = payments::currentBranch()->orderBy('id', 'desc')->get();
+        $receivers = accounts::whereIn('type', ['Business', 'Vendor', 'Supply Man', 'Unloader'])->currentBranch()->active()->get();
         $currencies = currencymgmt::all();
-        return view('Finance.vendor_payments.index', compact('payments', 'vendors', 'currencies'));
+        return view('Finance.payments.index', compact('payments', 'receivers', 'currencies'));
     }
 
     /**
@@ -41,27 +42,37 @@ class VendorPaymentsController extends Controller
         try{ 
             DB::beginTransaction();
             $ref = getRef();
-            vendorPayments::create(
+            payments::create(
                 [
-                    'vendorID'      => $request->vendorID,
+                    'receiverID'      => $request->receiverID,
                     'date'          => $request->date,
-                    'amount'        => $request->total,
+                    'amount'        => $request->amount,
+                    'method'        => $request->method,
+                    'number'        => $request->number,
+                    'bank'          => $request->bank,
+                    'remarks'       => $request->remarks,
                     'branchID'      => auth()->user()->branchID,
                     'notes'         => $request->notes,
-                    'userID'        => auth()->id(),
+                    'userID'        => auth()->user()->id,
                     'refID'         => $ref,
                 ]
             );
-            $vendor = accounts::find($request->vendorID);
+            $receiver = accounts::find($request->receiverID);
             $user_name = auth()->user()->name;
-            createTransaction($request->vendorID, $request->date,$request->total, 0, "Payment paid by $user_name", $ref);
-            createUserTransaction(auth()->id(), $request->date,0, $request->total, "Payment paid to vendor: $vendor->title", $ref);
-            createCurrencyTransaction(auth()->id(), $request->currencyID, $request->qty, 'db', $request->date, "Payment paid to vendor: $vendor->title", $ref);
+            createMethodTransaction($request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $request->notes, $ref);
+            createTransaction($request->receiverID, $request->date, $request->amount, 0, "Payment by $user_name", $ref);
+            createUserTransaction(auth()->user()->id, $request->date,0, $request->amount, "Payment to $receiver->title", $ref);
+
+            if($request->method == 'Cash')
+            {
+                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, "Payment to $receiver->title", $ref);
+            }
+            
             if($request->has('file')){
                 createAttachment($request->file('file'), $ref);
             }
 
-            DB::commit();
+          DB::commit();
             return back()->with('success', "Payment Saved");
         }
         catch(\Exception $e)
@@ -74,9 +85,10 @@ class VendorPaymentsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(vendorPayments $vendorPayments)
+    public function show($id)
     {
-        //
+        $payment = payments::find($id);
+        return view('Finance.payments.receipt', compact('payment'));
     }
 
     /**

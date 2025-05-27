@@ -11,6 +11,7 @@ use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\LaborPaymentsController;
 use App\Http\Controllers\PaymentReceivingController;
+use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\StaffAmountAdjustmentController;
 use App\Http\Controllers\StaffPaymentsController;
@@ -42,8 +43,8 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::resource('customer_payments', CustomerPaymentsController::class);
     Route::get('customer_payments/delete/{ref}', [CustomerPaymentsController::class, 'delete'])->name('customer_payments.delete')->middleware(confirmPassword::class);
 
-    Route::resource('vendor_payments', VendorPaymentsController::class);
-    Route::get('vendor_payments/delete/{ref}', [VendorPaymentsController::class, 'delete'])->name('vendor_payments.delete')->middleware(confirmPassword::class);
+    Route::resource('payments', PaymentsController::class);
+    Route::get('payments/delete/{ref}', [PaymentsController::class, 'delete'])->name('payments.delete')->middleware(confirmPassword::class);
 
     Route::resource('labor_payments', LaborPaymentsController::class);
     Route::get('labor_payments/delete/{ref}', [LaborPaymentsController::class, 'delete'])->name('labor_payments.delete')->middleware(confirmPassword::class);

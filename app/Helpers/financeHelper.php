@@ -2,6 +2,7 @@
 
 use App\Models\attachment;
 use App\Models\currency_transactions;
+use App\Models\method_transactions;
 use App\Models\ref;
 use App\Models\transactions;
 use App\Models\userAccounts;
@@ -69,6 +70,24 @@ function createCurrencyTransaction($userID, $currencyID, $qty, $type ,$date, $no
         }
 
     }
+}
+
+function createMethodTransaction($method, $cr, $db, $date, $number, $bank, $remarks, $notes, $ref){
+    method_transactions::create(
+        [
+            'userID' => auth()->user()->id,
+            'branchID' => auth()->user()->branchID,
+            'method' => $method,
+            'date' => $date,
+            'cr' => $cr,
+            'db' => $db,
+            'number' => $number,
+            'bank' => $bank,
+            'remarks' => $remarks,
+            'notes' => $notes,
+            'refID' => $ref,
+        ]
+    );
 }
 
 function deleteAttachment($ref)

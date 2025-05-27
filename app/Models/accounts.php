@@ -95,6 +95,11 @@ class accounts extends Model
         return $query->whereNotIn('type', ['Business', 'Customer', 'Vendor', 'Supply Order']);
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'Active');
+    }
+
     public function transactions()
     {
         return $this->hasMany(transactions::class, 'accountID');
