@@ -13,17 +13,11 @@
                                     <div class="flex-grow-1">
                                         <h1>{{projectNameHeader()}}</h1>
                                         <div class="mt-sm-5 mt-4">
-                                           {{--  <div class="row">
-                                                <div class="col-6">
-                                                    <h6 class="text-muted text-uppercase fw-semibold">Industrial Area, Sirki Road, Quetta</h6>
-                                                    <p class="text-muted mb-1" id="address-details">NTN: 2645388-6</p>
-                                                    <p class="text-muted mb-0" id="zip-code"><span>0331-8358638 | </span> jaffarqta92@gmail.com</p>
-                                                </div>
-                                            </div>--}}
+                                          
                                         </div>
                                     </div>
                                     <div class="flex-shrink-0 mt-sm-0 mt-3">
-                                        <h3>Payment Receiving Receipt</h3>
+                                        <h3>Bulk Payment Receipt</h3>
                                         <p> <span class="text-muted text-uppercase fw-semibold mt-0 m-0 p-0">Receipt Ref # </span><span class="fs-14 m-0 p-0">{{$payment->refID}}</span></p>
                                         <p> <span class="text-muted text-uppercase fw-semibold mt-0 m-0 p-0">Date : </span><span class="fs-14 m-0 p-0">{{date("d M Y" ,strtotime($payment->date))}}</span></p>
                                     </div>
@@ -36,7 +30,7 @@
                                <table style="width:100%;">
                                 <tr>
                                     <td style="width:30%;" class="p-4 pb-1"><strong>Received with thanks from</strong></td>
-                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{$payment->bill->customer->title}}</td>
+                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{$payment->customer->title}}</td>
                                 </tr>
                                 <tr>
                                     <td style="width:30%;" class="p-4 pb-1"><strong>Receiving Amount</strong></td>
@@ -66,18 +60,22 @@
                                     <td style="width:30%;" class="p-4 pb-1"><strong>Remarks</strong></td>
                                     <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{$payment->remarks}}</td>
                                 </tr>
+                                <tr>
+                                    <td style="width:30%;" class="p-4 pb-1"><strong>Invoices</strong></td>
+                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{$payment->invoiceIDs}}</td>
+                                </tr>
                                </table>
 
                                <table style="width:100%;">
                                 <tr>
                                     <td style="width80%;" class="p-4 pb-1 text-end" colspan="3"><strong>Previous Balance: </strong></td>
-                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{number_format(spotBalanceBefore($payment->bill->customerID, $payment->refID),2)}}</td>
+                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{number_format(spotBalanceBefore($payment->customerID, $payment->refID),2)}}</td>
                                 </tr>
                                 <tr>
                                     <td class="p-4 pb-1"><strong>Deposited By: ____________________</strong></td>
                                     <td class="p-4 pb-1"><strong>Received By: ____________________</strong></td>
                                     <td class="p-4 pb-1 text-end"><strong>Current Balance: </strong></td>
-                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{number_format(spotBalance($payment->bill->customerID, $payment->refID),2)}}</td>
+                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{number_format(spotBalance($payment->customerID, $payment->refID),2)}}</td>
                                 </tr>
                                </table>
 

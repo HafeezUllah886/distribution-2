@@ -23,36 +23,7 @@
                             
                                 @csrf
                                 <div class="modal-body">
-                                    <table class="w-100">
-                                        <thead>
-                                            <th>Currency</th>
-                                            <th>Amount</th>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($currencies as $currency)
-                                                <tr>
-                                                    <td>{{$currency->title}}</td>
-                                                    <td>
-                                                        <input type="number" class="form-control form-control-sm" data-value="{{$currency->value}}" id="currency_{{$currency->id}}" oninput="updateTotal()" name="qty[]" value="0">
-                                                        <input type="hidden" class="form-control" name="currencyID[]" value="{{$currency->id}}">
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                            <tr>
-                                                <td>Total Amount</td>
-                                                <td>
-                                                    <input type="number" class="form-control form-control-sm" readonly id="total" name="amount" value="0">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Attachement</td>
-                                                <td>
-                                                    <input type="file" class="form-control form-control-sm" name="file">
-                                                </td>
-                                            </tr>
-                                        </tbody>
-    
-                                    </table>
+                                   @include('layout.payment')
                                     <div class="form-group mt-2">
                                         <label for="date">Date</label>
                                         <input type="date" name="date" required value="{{ date('Y-m-d') }}"
@@ -91,7 +62,7 @@
                                 <tfoot>
                                     <tr>
                                         <td colspan="5" class="text-end">Net Amount</td>
-                                        <td><input type="number" id="netAmount" value="0" class="form-control form-control-sm"></td>
+                                        <td><input type="number" id="netAmount" name="netAmount" readonly value="0" class="form-control form-control-sm"></td>
                                         <input type="hidden" name="customerID" value="{{ $_GET['customerID'] }}">
                                     </tr>
                                 </tfoot>
@@ -114,19 +85,6 @@
    
     <script>
 
-        function updateTotal() {
-            var total = 0;
-            $("input[id^='currency_']").each(function() {
-                var inputId = $(this).attr('id');
-                var inputVal = $(this).val();
-                var inputValue = $(this).data('value');
-                var value = inputVal * inputValue;
-                total += parseFloat(value);
-            });
-            $("#total").val(total.toFixed(2));
-            divideAmount();
-        }
-
         function updateNet() {
             var amount = 0;
             $("input[id^='amount_']").each(function() {
@@ -137,25 +95,15 @@
             $("#netAmount").val(amount.toFixed(2));
         }
 
-        function validateForm(event) {
-            event.preventDefault(); // Prevent the default form submission
-
-            // Get the values of total and netAmount
-            var total = parseFloat(document.getElementById('total').value);
-            var netAmount = parseFloat(document.getElementById('netAmount').value);
-
-            // Check if total equals netAmount
-            if (total === netAmount) {
-                // Proceed with the form submission
-                document.getElementById('paymentForm').submit();
-            } else {
-                // Display an alert
-                alert('Currencies Total does not match Invoices Net Amount. Please check your values.');
-            }
-        }
-
+        // Update selector to match the actual ID pattern 'currency_'
+        $(document).on('input', "input[id^='currency_']", function() {
+            divideAmount();
+        });
+        $("#amount").on("input", function() {
+            divideAmount();
+        });
         function divideAmount() {
-            var amount = parseFloat($("#total").val());
+            var amount = parseFloat($("#amount").val());
             $("input[id^='amount_']").each(function() {
                 var inputId = $(this).attr('id');
                 var inputVal = $(this).val();

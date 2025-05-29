@@ -55,6 +55,8 @@ class SalePaymentsController extends Controller
                 [
                     'salesID'       => $sale->id,
                     'orderbookerID' => $sale->orderbookerID,
+                    'branchID'      => auth()->user()->branchID,
+                    'customerID'    => $sale->customerID,
                     'method'        => $request->method,
                     'number'        => $request->number,
                     'bank'          => $request->bank,

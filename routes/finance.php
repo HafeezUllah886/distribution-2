@@ -57,6 +57,7 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::get('staff_amounts_adjustments/delete/{ref}', [StaffAmountAdjustmentController::class, 'delete'])->name('staff_amounts_adjustments.delete')->middleware(confirmPassword::class);
 
     Route::resource('bulk_payment', BulkInvoicePaymentsReceivingController::class);
+    Route::get('bulk_payment/delete/{ref}', [BulkInvoicePaymentsReceivingController::class, 'destroy'])->name('bulk_payment.delete')->middleware(confirmPassword::class);
 
     Route::get('/accountbalance/{id}', function ($id) {
         // Call your Laravel helper function here

@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sale_payments', function (Blueprint $table) {
+        Schema::create('bulk_payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('salesID')->constrained('sales', 'id');
             $table->foreignId('userID')->constrained('users', 'id');
             $table->foreignId('orderbookerID')->constrained('users', 'id');
             $table->foreignId('customerID')->constrained('accounts', 'id');
-            $table->foreignId('branchID')->constrained('branches', 'id');
             $table->enum('method', ['Cash', 'Online', 'Cheque', 'Other']);
             $table->string('number')->nullable();
             $table->string('bank')->nullable();
@@ -25,7 +23,9 @@ return new class extends Migration
             $table->date('date');
             $table->float('amount');
             $table->text('notes')->nullable();
+            $table->string('invoiceIDs');
             $table->bigInteger('refID');
+            $table->foreignId('branchID')->constrained('branches', 'id');
             $table->timestamps();
         });
     }
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sale_payments');
+        Schema::dropIfExists('bulk_payments');
     }
 };
