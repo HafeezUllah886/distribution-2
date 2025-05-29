@@ -6,6 +6,7 @@ use App\Models\staffAmountAdjustment;
 use App\Http\Controllers\Controller;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
+use App\Models\method_transactions;
 use App\Models\User;
 use App\Models\users_transactions;
 use Illuminate\Http\Request;
@@ -49,7 +50,7 @@ class StaffAmountAdjustmentController extends Controller
                 'branchID' => auth()->user()->branchID,
                 'date' => $request->date,
                 'type' => $request->type,
-                'amount' => $request->total,
+                'amount' => $request->amount,
                 'notes' => $request->notes,
                 'refID' => $ref
             ]
@@ -60,13 +61,25 @@ class StaffAmountAdjustmentController extends Controller
 
         if($request->type == 'credit')
         {
-            createUserTransaction($request->staffID, $request->date, $request->total, 0, "Amount Adjusted", $ref);
-            createCurrencyTransaction($request->staffID, $request->currencyID, $request->qty, 'cr', $request->date, "Amount Adjusted", $ref);
+            createMethodTransaction($staff->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, $request->notes, $ref);
+           
+            createUserTransaction($staff->id, $request->date, $request->amount, 0, "Staff Amount Adjusted - ".$request->notes, $ref);
+
+            if($request->method == 'Cash')
+            {
+                createCurrencyTransaction($staff->id, $request->currencyID, $request->qty, 'cr', $request->date, "Staff Amount Adjusted - ".$request->notes, $ref);
+            }
         }
         else
         {
-            createUserTransaction($request->staffID, $request->date, 0, $request->total, "Amount Adjusted", $ref);
-            createCurrencyTransaction($request->staffID, $request->currencyID, $request->qty, 'db', $request->date, "Amount Adjusted", $ref);
+            createMethodTransaction($staff->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $request->notes, $ref);
+           
+            createUserTransaction($staff->id, $request->date, 0, $request->amount, "Staff Amount Adjusted - ".$request->notes, $ref);
+
+            if($request->method == 'Cash')
+            {
+                createCurrencyTransaction($staff->id, $request->currencyID, $request->qty, 'db', $request->date, "Staff Amount Adjusted - ".$request->notes, $ref);
+            }
         }
         if($request->has('file'))
         {
@@ -115,6 +128,7 @@ class StaffAmountAdjustmentController extends Controller
             staffAmountAdjustment::where('refID', $ref)->delete();
             users_transactions::where('refID', $ref)->delete();
             currency_transactions::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');
             return redirect()->route('staff_amounts_adjustments.index')->with('success', "Adjustment Deleted");

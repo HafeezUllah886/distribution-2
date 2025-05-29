@@ -86,37 +86,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-6">
-                                <table class="w-100">
-                                    <thead>
-                                        <th>Currency</th>
-                                        <th>Amount</th>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($currencies as $currency)
-                                            <tr>
-                                                <td>{{$currency->title}}</td>
-                                                <td>
-                                                    <input type="number" class="form-control form-control-sm" data-value="{{$currency->value}}" id="currency_{{$currency->id}}" oninput="updateTotal()" name="qty[]" value="0">
-                                                    <input type="hidden" class="form-control" name="currencyID[]" value="{{$currency->id}}">
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        <tr>
-                                            <td>Total Amount</td>
-                                            <td>
-                                                <input type="number" class="form-control form-control-sm" readonly id="total" name="total" value="0">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Attachement</td>
-                                            <td>
-                                                <input type="file" class="form-control form-control-sm" name="file">
-                                            </td>
-                                        </tr>
-                                    </tbody>
-
-                                </table>
-
+                               @include('layout.payment')
                             </div>
                             <div class="col-6">
                                 <div class="form-group mt-2">
@@ -199,18 +169,4 @@
         }
     </script>
 
-<script>
-  
-    function updateTotal() {
-        var total = 0;
-        $("input[id^='currency_']").each(function() {
-            var inputId = $(this).attr('id');
-            var inputVal = $(this).val();
-            var inputValue = $(this).data('value');
-            var value = inputVal * inputValue;
-            total += parseFloat(value);
-        });
-        $("#total").val(total.toFixed(2));
-    }
-</script>
 @endsection

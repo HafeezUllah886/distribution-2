@@ -12,6 +12,7 @@ use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\LaborPaymentsController;
 use App\Http\Controllers\PaymentReceivingController;
 use App\Http\Controllers\PaymentsController;
+use App\Http\Controllers\PaymentsReceivingController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\StaffAmountAdjustmentController;
 use App\Http\Controllers\StaffPaymentsController;
@@ -29,9 +30,6 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::get('account/status/{id}', [AccountsController::class, 'status'])->name('account.status');
     Route::resource('account', AccountsController::class);
 
-    Route::resource('deposit_withdraw', DepositWithdrawController::class);
-    Route::get('depositwithdraw/delete/{ref}', [DepositWithdrawController::class, 'delete'])->name('deposit_withdraw.delete')->middleware(confirmPassword::class);
-
     Route::resource('transfers', TransferController::class);
     Route::get('transfer/delete/{ref}', [TransferController::class, 'delete'])->name('transfers.delete')->middleware(confirmPassword::class);
 
@@ -40,14 +38,11 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
 
     Route::resource('expense_categories', ExpenseCategoriesController::class);
 
-    Route::resource('customer_payments', CustomerPaymentsController::class);
-    Route::get('customer_payments/delete/{ref}', [CustomerPaymentsController::class, 'delete'])->name('customer_payments.delete')->middleware(confirmPassword::class);
-
     Route::resource('payments', PaymentsController::class);
     Route::get('payments/delete/{ref}', [PaymentsController::class, 'delete'])->name('payments.delete')->middleware(confirmPassword::class);
 
-    Route::resource('labor_payments', LaborPaymentsController::class);
-    Route::get('labor_payments/delete/{ref}', [LaborPaymentsController::class, 'delete'])->name('labor_payments.delete')->middleware(confirmPassword::class);
+    Route::resource('payments_receiving', PaymentsReceivingController::class);
+    Route::get('payments_receiving/delete/{ref}', [PaymentsReceivingController::class, 'delete'])->name('payments_receiving.delete')->middleware(confirmPassword::class);
 
     Route::get('currency/details/{id}', [CurrencymgmtController::class, 'details'])->name('currency.details');
     Route::get('currency/statement/{id}/{user}/{from}/{to}', [CurrencymgmtController::class, 'show'])->name('currency.statement');
@@ -60,7 +55,6 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
 
     Route::resource('staff_amounts_adjustments', StaffAmountAdjustmentController::class);
     Route::get('staff_amounts_adjustments/delete/{ref}', [StaffAmountAdjustmentController::class, 'delete'])->name('staff_amounts_adjustments.delete')->middleware(confirmPassword::class);
-
 
     Route::resource('bulk_payment', BulkInvoicePaymentsReceivingController::class);
 

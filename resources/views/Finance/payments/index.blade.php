@@ -2,7 +2,7 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <span class="alert alert-info">Make payments to Vendors, Supply Man, Unloader and Business Accounts.</span>
+            <span class="alert alert-info">Make payments to Vendors, Supply Man, Unloader, Customers and Business Accounts.</span>
             <div class="card mt-4">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Payments</h3>
@@ -19,8 +19,6 @@
                         </ul>
                     </div>
                 @endif
-
-            
 
                     <table class="table" id="buttons-datatables">
                         <thead>
@@ -97,7 +95,7 @@
                             <select name="receiverID" id="fromID" onchange="getBalance()" required class="selectize">
                                 <option value=""></option>
                                 @foreach ($receivers as $receiver)
-                                    <option value="{{ $receiver->id }}">{{ $receiver->title }}</option>
+                                    <option value="{{ $receiver->id }}">{{ $receiver->title }} ({{ $receiver->type }})</option>
                                 @endforeach
                             </select>
                         </div>

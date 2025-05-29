@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\accounts;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
+use App\Models\method_transactions;
 use App\Models\sale_payments;
 use App\Models\sales;
 use App\Models\transactions;
+use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -44,9 +46,19 @@ class SalePaymentsController extends Controller
             DB::beginTransaction();
             $ref = getRef();
             $sale = sales::find($request->salesID);
+            $due = $sale->due();
+            if($due < $request->amount)
+            {
+                throw new \Exception("Amount Exceeds Due");
+            }
             sale_payments::create(
                 [
                     'salesID'       => $sale->id,
+                    'orderbookerID' => $sale->orderbookerID,
+                    'method'        => $request->method,
+                    'number'        => $request->number,
+                    'bank'          => $request->bank,
+                    'remarks'       => $request->remarks,
                     'date'          => $request->date,
                     'amount'        => $request->amount,
                     'notes'         => $request->notes,
@@ -54,9 +66,15 @@ class SalePaymentsController extends Controller
                     'refID'         => $ref,
                 ]
             );
-            createTransaction($sale->customerID, $request->date,0, $request->amount, "Payment of Inv No. $sale->id", $ref);
+            $user = auth()->user()->name;
+            $customer = accounts::find($sale->customerID);
+            createTransaction($sale->customerID, $request->date,0, $request->amount, "Payment of Inv No. $sale->id Received By $user", $ref);
             createUserTransaction(auth()->id(), $request->date,$request->amount, 0, "Payment of Inv No. $sale->id", $ref);
-            createCurrencyTransaction(auth()->id(), $request->currencyID, $request->qty, 'cr', $request->date, "Sale Invoice Payment : ".$request->notes, $ref);
+            createMethodTransaction(auth()->user()->id, $request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, "Payment of Inv No. $sale->id", $ref);
+
+            if($request->method == 'Cash'){
+                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, "Sales Invoice Payment from $customer->name : $request->notes", $ref);
+            }
             if($request->has('file')){
                 createAttachment($request->file('file'), $ref);
             }
@@ -105,6 +123,8 @@ class SalePaymentsController extends Controller
             sale_payments::where('refID', $ref)->delete();
             transactions::where('refID', $ref)->delete();
             currency_transactions::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');
             return redirect()->route('salePayment.index', $id)->with('success', "Sale Payment Deleted");

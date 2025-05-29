@@ -33,7 +33,6 @@ function createUserTransaction($userID, $date, $cr, $db, $notes, $ref){
             'refID' => $ref,
         ]
     );
-
 }
 
 function createCurrencyTransaction($userID, $currencyID, $qty, $type ,$date, $notes, $ref){
@@ -72,10 +71,10 @@ function createCurrencyTransaction($userID, $currencyID, $qty, $type ,$date, $no
     }
 }
 
-function createMethodTransaction($method, $cr, $db, $date, $number, $bank, $remarks, $notes, $ref){
+function createMethodTransaction($user, $method, $cr, $db, $date, $number, $bank, $remarks, $notes, $ref){
     method_transactions::create(
         [
-            'userID' => auth()->user()->id,
+            'userID' => $user,
             'branchID' => auth()->user()->branchID,
             'method' => $method,
             'date' => $date,

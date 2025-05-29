@@ -8,28 +8,29 @@ use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\method_transactions;
 use App\Models\payments;
+use App\Models\paymentsReceiving;
 use App\Models\transactions;
 use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class PaymentsController extends Controller
+class PaymentsReceivingController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $payments = payments::currentBranch()->orderBy('id', 'desc')->get();
-        $receivers = accounts::whereIn('type', ['Business', 'Vendor', 'Supply Man', 'Unloader', 'Customer'])->currentBranch()->active()->get();
+        $payments = paymentsReceiving::currentBranch()->orderBy('id', 'desc')->get();
+        $depositers = accounts::whereIn('type', ['Business', 'Vendor', 'Supply Man', 'Unloader', 'Customer'])->currentBranch()->active()->get();
         $currencies = currencymgmt::all();
-        return view('Finance.payments.index', compact('payments', 'receivers', 'currencies'));
+        return view('Finance.payments_receiving.index', compact('payments', 'depositers', 'currencies'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create()    
     {
         //
     }
@@ -42,9 +43,9 @@ class PaymentsController extends Controller
         try{ 
             DB::beginTransaction();
             $ref = getRef();
-            payments::create(
+            paymentsReceiving::create(
                 [
-                    'receiverID'      => $request->receiverID,
+                    'depositerID'      => $request->depositerID,
                     'date'          => $request->date,
                     'amount'        => $request->amount,
                     'method'        => $request->method,
@@ -57,16 +58,17 @@ class PaymentsController extends Controller
                     'refID'         => $ref,
                 ]
             );
-            $receiver = accounts::find($request->receiverID);
+            $depositer = accounts::find($request->depositerID);
             $user_name = auth()->user()->name;
-            createTransaction($request->receiverID, $request->date, $request->amount, 0, "Payment by $user_name", $ref);
-            createMethodTransaction(auth()->user()->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $request->notes, $ref);
-           
-            createUserTransaction(auth()->user()->id, $request->date,0, $request->amount, "Payment to $receiver->title", $ref);
+            createTransaction($request->depositerID, $request->date, 0, $request->amount, "Payment deposited to $user_name : $request->notes", $ref);
+            
+            createMethodTransaction(auth()->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, "Payment deposited by $depositer->title : $request->notes", $ref);
+    
+            createUserTransaction(auth()->user()->id, $request->date, $request->amount, 0, "Payment deposited by $depositer->title : $request->notes", $ref);
 
             if($request->method == 'Cash')
             {
-                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, "Payment to $receiver->title", $ref);
+                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, "Payment deposited by $depositer->title : $request->notes", $ref);
             }
             
             if($request->has('file')){
@@ -88,8 +90,8 @@ class PaymentsController extends Controller
      */
     public function show($id)
     {
-        $payment = payments::find($id);
-        return view('Finance.payments.receipt', compact('payment'));
+        $payment = paymentsReceiving::find($id);
+        return view('Finance.payments_receiving.receipt', compact('payment'));
     }
 
     /**
@@ -116,20 +118,20 @@ class PaymentsController extends Controller
         try
         {
             DB::beginTransaction();
-            payments::where('refID', $ref)->delete();
+            paymentsReceiving::where('refID', $ref)->delete();
             transactions::where('refID', $ref)->delete();
             users_transactions::where('refID', $ref)->delete();
             currency_transactions::where('refID', $ref)->delete();
             method_transactions::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');
-            return redirect()->route('payments.index')->with('success', "Payment Deleted");
+            return redirect()->route('payments_receiving.index')->with('success', "Payment Deleted");
         }
         catch(\Exception $e)
         {
             DB::rollBack();
             session()->forget('confirmed_password');
-            return redirect()->route('payments.index')->with('error', $e->getMessage());
+            return redirect()->route('payments_receiving.index')->with('error', $e->getMessage());
         }
     }
 }

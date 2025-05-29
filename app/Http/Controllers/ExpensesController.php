@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\expense_categories;
 use App\Models\expenses;
+use App\Models\method_transactions;
 use App\Models\transactions;
+use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -53,7 +56,7 @@ class ExpensesController extends Controller
             expenses::create(
                 [
                     'userID' => auth()->user()->id,
-                    'amount' => $request->total,
+                    'amount' => $request->amount,
                     'branchID' => auth()->user()->branchID,
                     'categoryID' => $request->category,
                     'date' => $request->date,
@@ -61,8 +64,18 @@ class ExpensesController extends Controller
                     'refID' => $ref,
                 ]
             );
-            createUserTransaction(auth()->user()->id, $request->date, 0, $request->total, "Expense - ".$request->notes, $ref);
-            createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->currency, 'db', $request->date, "Expense: ".$request->notes, $ref);
+            createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $request->notes, $ref);
+           
+            createUserTransaction(auth()->user()->id, $request->date,0, $request->amount, "Expense - ".$request->notes, $ref);
+
+            if($request->method == 'Cash')
+            {
+                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, "Expense - ".$request->notes, $ref);
+            }
+            
+            if($request->has('file')){
+                createAttachment($request->file('file'), $ref);
+            }
 
             DB::commit();
             return back()->with('success', 'Expense Saved');
@@ -107,7 +120,9 @@ class ExpensesController extends Controller
         {
             DB::beginTransaction();
             expenses::where('refID', $ref)->delete();
-            transactions::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');
             return redirect()->route('expenses.index')->with('success', "Expense Deleted");

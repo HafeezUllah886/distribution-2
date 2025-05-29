@@ -59,11 +59,11 @@ class AccountsAdjustmentController extends Controller
 
             if($request->type == 'credit')
             {
-                createTransaction($request->accountID, $request->date, $request->amount, 0, "Amount Adjusted", $ref);
+                createTransaction($request->accountID, $request->date, $request->amount, 0, "Amount Adjusted: $request->notes", $ref);
             }
             else
             {
-                createTransaction($request->accountID, $request->date, 0, $request->amount, "Amount Adjusted", $ref);
+                createTransaction($request->accountID, $request->date, 0, $request->amount, "Amount Adjusted: $request->notes", $ref);
             }
 
            DB::commit();

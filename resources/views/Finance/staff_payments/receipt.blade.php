@@ -41,18 +41,34 @@
                                     <td style="width:30%;" class="p-4 pb-1"><strong>Received By</strong></td>
                                     <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{$receiving->user->name}}</td>
                                 </tr>
+                                <tr>
+                                    <td style="width:30%;" class="p-4 pb-1"><strong>Payment Method</strong></td>
+                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{$receiving->method}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width:30%;" class="p-4 pb-1"><strong>Payment Number</strong></td>
+                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{$receiving->number}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width:30%;" class="p-4 pb-1"><strong>Payment Bank</strong></td>
+                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{$receiving->bank}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width:30%;" class="p-4 pb-1"><strong>Payment Remarks</strong></td>
+                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1">{{$receiving->remarks}}</td>
+                                </tr>
                                </table>
 
                                <table style="width:100%;">
                                 <tr>
                                     <td style="width:80%;" class="p-4 pb-1 text-end" colspan="3"><strong>Previous Balance: </strong></td>
-                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1" >{{number_format(spotUserBalanceBefore($receiving->customerID, $receiving->refID),2)}}</td>
+                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1" >{{number_format(spotUserBalanceBefore($receiving->fromID, $receiving->refID),2)}}</td>
                                 </tr>
                                 <tr>
                                     <td class="p-4 pb-1"><strong>Deposited By: _________________</strong></td>
                                     <td class="p-4 pb-1"><strong>Received By: _________________</strong></td>
                                     <td class="p-4 pb-1 text-end"><strong>Current Balance: </strong></td>
-                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1" >{{number_format(spotUserBalance($receiving->customerID, $receiving->refID),2)}}</td>
+                                    <td class="border-2 border-top-0 border-start-0 border-end-0 text-center p-4 pb-1" >{{number_format(spotUserBalance($receiving->fromID, $receiving->refID),2)}}</td>
                                 </tr>
                                </table>
 

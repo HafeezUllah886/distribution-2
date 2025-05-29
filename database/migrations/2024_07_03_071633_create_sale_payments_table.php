@@ -15,6 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('salesID')->constrained('sales', 'id');
             $table->foreignId('userID')->constrained('users', 'id');
+            $table->foreignId('orderbookerID')->constrained('users', 'id');
+            $table->enum('method', ['Cash', 'Online', 'Cheque', 'Other']);
+            $table->string('number')->nullable();
+            $table->string('bank')->nullable();
+            $table->string('remarks')->nullable();
             $table->date('date');
             $table->float('amount');
             $table->text('notes')->nullable();
