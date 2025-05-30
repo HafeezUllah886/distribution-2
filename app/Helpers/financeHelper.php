@@ -141,6 +141,15 @@ function getCurrencyBalance($id, $user){
 
     return $balance;
 }
+function getMethodBalance($method, $user){
+    $transactions  = method_transactions::where('method', $method)->where('userID', $user);
+
+    $cr = $transactions->sum('cr');
+    $db = $transactions->sum('db');
+    $balance = $cr - $db;
+
+    return $balance;
+}
 
 
 

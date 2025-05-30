@@ -6,7 +6,10 @@ use App\Models\accounts;
 use App\Models\area;
 use App\Models\branches;
 use App\Models\customer_area;
+use App\Models\method_transactions;
 use App\Models\transactions;
+use App\Models\User;
+use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -226,5 +229,23 @@ class AccountsController extends Controller
         );
 
         return back()->with('success', "Status Updated");
+    }
+
+    public function methodStatement($user, $method, $from, $to)
+    {
+
+        $transactions = method_transactions::where('userID', $user)->where('method', $method)->whereBetween('date', [$from, $to])->get();
+
+        $pre_cr = method_transactions::where('userID', $user)->where('method', $method)->whereDate('date', '<', $from)->sum('cr');
+        $pre_db = method_transactions::where('userID', $user)->where('method', $method)->whereDate('date', '<', $from)->sum('db');
+        $pre_balance = $pre_cr - $pre_db;
+
+        $cur_cr = method_transactions::where('userID', $user)->where('method', $method)->sum('cr');
+        $cur_db = method_transactions::where('userID', $user)->where('method', $method)->sum('db');
+
+        $cur_balance = $cur_cr - $cur_db;
+        $user = User::find($user);
+
+        return view('Finance.my_balance.method_statment', compact('method', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to', 'user'));
     }
 }

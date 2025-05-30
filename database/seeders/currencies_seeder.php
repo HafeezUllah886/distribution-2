@@ -26,7 +26,6 @@ class currencies_seeder extends Seeder
             ['title' => "5", 'value' => '5'],
             ['title' => "2", 'value' => '2'],
             ['title' => "1", 'value' => '1'],
-            ['title' => "Other", 'value' => '1'],
         ];
         currencymgmt::insert($data);
     }

@@ -14,7 +14,7 @@
                                         <h1>{{projectNameHeader()}}</h1>
                                     </div>
                                     <div class="flex-shrink-0 mt-sm-0 mt-3">
-                                        <h3>Currency Statement</h3>
+                                        <h3>Payment Method Statement</h3>
                                     </div>
                                 </div>
                             </div>
@@ -26,7 +26,7 @@
                                     <div class="col-lg-3 col-6">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Ledger</p>
                                         <h5 class="fs-14 mb-0">User: {{ $user->name }}</h5>
-                                        <h5 class="fs-14 mb-0">Currency: {{ $currency->title }}</h5>
+                                        <h5 class="fs-14 mb-0">Method: {{ $method }}</h5>
                                     </div>
                                     <!--end col-->
                                     <div class="col-lg-3 col-6">
@@ -37,8 +37,8 @@
                                     <!--end col-->
                                     <div class="col-lg-3 col-6">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Balance</p>
-                                        <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">Current &nbsp;</small><span id="invoice-date">Nos. {{ number_format($cur_balance) }}</span> </h5>
-                                        <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">Previous </small><span id="invoice-date">Nos. {{ number_format($pre_balance) }}</span> </h5>
+                                        <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">Current &nbsp;</small><span id="invoice-date">Rs. {{ number_format($cur_balance) }}</span> </h5>
+                                        <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">Previous </small><span id="invoice-date">Rs. {{ number_format($pre_balance) }}</span> </h5>
                                     </div>
                                     <!--end col-->
                                     <div class="col-lg-3 col-6">
