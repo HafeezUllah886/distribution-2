@@ -168,6 +168,11 @@
                     </div>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('my_balance') }}">
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-my_balance">My Balance</span>
+                    </a>
+                </li> 
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#products" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-apps-2-line"></i> <span data-key="t-apps">Products</span>

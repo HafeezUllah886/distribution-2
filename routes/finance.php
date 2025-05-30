@@ -60,8 +60,6 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::resource('bulk_payment', BulkInvoicePaymentsReceivingController::class);
     Route::get('bulk_payment/delete/{ref}', [BulkInvoicePaymentsReceivingController::class, 'destroy'])->name('bulk_payment.delete')->middleware(confirmPassword::class);
 
-    Route::get('my_balance', [MyBalanceController::class, 'index'])->name('my_balance');
-    Route::get('method/statement/{user}/{method}/{from}/{to}', [AccountsController::class, 'methodStatement'])->name('methodStatement');
 
     Route::get('/accountbalance/{id}', function ($id) {
         // Call your Laravel helper function here
@@ -83,3 +81,8 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
 
 });
 
+Route::middleware('auth')->group(function () {
+    
+    Route::get('my_balance', [MyBalanceController::class, 'index'])->name('my_balance');
+    Route::get('method/statement/{user}/{method}/{from}/{to}', [AccountsController::class, 'methodStatement'])->name('methodStatement');
+});
