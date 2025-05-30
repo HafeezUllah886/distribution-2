@@ -8,6 +8,7 @@ use App\Models\bulk_payments;
 use App\Models\customerPayments;
 use App\Models\orderbooker_customers;
 use App\Models\orderbookerPaymentsReceiving;
+use App\Models\orders;
 use App\Models\paymentReceiving;
 use App\Models\paymentsReceiving;
 use App\Models\sale_payments;
@@ -260,8 +261,27 @@ class customerPaymentsReceivingContoller extends Controller
     $payment_receiving = paymentsReceiving::where('depositerID', $request->customerID)->where('date', $newest_date)->where('method', $method)->sum('amount');
 
     $total = $sales_payment + $payment_receiving;
-    $methodData[$method] = $total;
+    $methodData[$method] = round($total, 2);
    }
+
+   $last_sale = sales::where('customerID', $request->customerID)->orderBy('id', 'desc')->first()->date;
+   $last_sale_amount = sales::where('customerID', $request->customerID)->orderBy('id', 'desc')->first()->net;
+   $last_balance = getAccountBalance($request->customerID);
+
+   $orders = orders::with('details')->where('customerID', $request->customerID)->where('status', '!=','Completed')->get();
+
+   $pending_qty = 0;
+   foreach($orders as $order)
+   {
+        $qty = $order->details->sum('pc');
+        $delivered = $order->delivered_items()->sum('pc');
+        $pending_qty += $qty - $delivered;
+   }
+
+   $methodData['pending_qty'] = $pending_qty;
+   $methodData['last_sale'] = $last_sale;
+   $methodData['last_sale_amount'] = round($last_sale_amount, 2);
+   $methodData['last_balance'] = round($last_balance, 2);
   
 
     return response()->json([
