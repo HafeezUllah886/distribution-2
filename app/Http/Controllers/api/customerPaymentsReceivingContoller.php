@@ -26,7 +26,9 @@ class customerPaymentsReceivingContoller extends Controller
         $validator = Validator::make($request->all(), [
             'customerID' => 'required|exists:accounts,id',
             'date' => 'required',
+            'method' => 'required',
             'amount' => 'required',
+            'file' => 'nullable|file|mimes:jpg,png,jpeg',
         ]);
 
         if ($validator->fails()) {
@@ -39,27 +41,37 @@ class customerPaymentsReceivingContoller extends Controller
         try{ 
             DB::beginTransaction();
             $ref = getRef();
-            $payment = customerPayments::create(
+            $payment = paymentsReceiving::create(
                 [
-                    'customerID'    => $request->customerID,
+                    'depositerID'      => $request->customerID,
                     'date'          => $request->date,
                     'amount'        => $request->amount,
+                    'method'        => $request->method,
+                    'number'        => $request->number,
+                    'bank'          => $request->bank,
+                    'remarks'       => $request->remarks,
                     'branchID'      => $request->user()->branchID,
                     'notes'         => $request->notes,
-                    'receivedBy'    => $request->user()->id,
+                    'userID'        => $request->user()->id,
                     'refID'         => $ref,
                 ]
             );
-            $customer = accounts::find($request->customerID);
-            $user_name = request()->user()->name;
-            createTransaction($request->customerID, $request->date,0, $request->amount, "Payment submitted to $user_name", $ref);
-            createUserTransaction($request->user()->id, $request->date,$request->amount, 0, "Payment received from customer: $customer->title", $ref);
-           
+            $depositer = accounts::find($request->customerID);
+            $user_name = $request->user()->name;
+            createTransaction($request->customerID, $request->date, 0, $request->amount, "Payment deposited to $user_name : $request->notes", $ref);
+            
+            createMethodTransaction($request->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, "Payment deposited by $depositer->title : $request->notes", $ref);
+    
+            createUserTransaction($request->user()->id, $request->date, $request->amount, 0, "Payment deposited by $depositer->title : $request->notes", $ref);
+
+            if($request->has('file')){
+                createAttachment($request->file('file'), $ref);
+            }
             DB::commit();
             return response()->json([
                 'status' => 'success',
-                'message' => 'Payment received successfully',
                 'data' => [
+                    'message' => 'Payment received successfully',
                     'payment' => $payment,
                 ]
             ], 201);
