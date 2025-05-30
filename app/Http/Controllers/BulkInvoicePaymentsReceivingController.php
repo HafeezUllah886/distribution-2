@@ -66,7 +66,7 @@ class BulkInvoicePaymentsReceivingController extends Controller
                     'date' => $request->date,
                     'amount' => $request->invamount[$key],
                     'notes' => $request->notes,
-                    'branchID'      => auth()->user()->branchID,
+                    'branchID' => auth()->user()->branchID,
                     'method' => $request->method,
                     'bank' => $request->bank,
                     'number' => $request->number,

@@ -4,9 +4,12 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\bulk_payments;
 use App\Models\customerPayments;
 use App\Models\orderbooker_customers;
 use App\Models\orderbookerPaymentsReceiving;
+use App\Models\paymentReceiving;
+use App\Models\paymentsReceiving;
 use App\Models\sale_payments;
 use App\Models\sales;
 use Illuminate\Http\Request;
@@ -127,11 +130,10 @@ class customerPaymentsReceivingContoller extends Controller
             'amount' => 'required|array',
             'amount.*' => 'numeric|min:0',
             'date' => 'required|date',
-            'payment_method' => 'required|string',
-            'cheque_no' => 'required_if:payment_method,cheque|string',
-            'cheque_date' => 'required_if:payment_method,cheque|date',
+            'method' => 'required|string',
             'file' => 'nullable|file|mimes:jpg,png,jpeg',
         ]);
+
 
         if ($validator->fails()) {
             return response()->json([
@@ -143,38 +145,55 @@ class customerPaymentsReceivingContoller extends Controller
             DB::beginTransaction();
             $data = [];
             $total_amount = 0;
+            $ref = getRef();
             foreach($request->saleIDs as $key => $saleID)
             {
+                if($request->amount[$key] > 0)
+                {
                 $total_amount += $request->amount[$key];
-                $ref = getRef();
                 $sale = sales::find($saleID);
                 $data[] = sale_payments::create([
                     'salesID' => $saleID,
+                    'userID' => $request->user()->id,
+                    'orderbookerID' => $request->user()->id,
+                    'customerID' => $sale->customerID,
+                    'branchID' => $request->user()->branchID,
                     'date' => $request->date,
                     'amount' => $request->amount[$key],
                     'notes' => $request->notes,
-                    'userID' => $request->user()->id,
+                    'method' => $request->method,
+                    'bank' => $request->bank,
+                    'number' => $request->number,
+                    'remarks' => $request->remarks,
                     'refID' => $ref
                 ]);
 
-                createTransaction($sale->customerID, $request->date,0, $request->amount[$key], "Payment of Inv No. $sale->id", $ref);
-                createUserTransaction(auth()->id(), $request->date,$request->amount[$key], 0, "Payment of Inv No. $sale->id", $ref);
+                $saleIDs[] = $saleID;
+                }
             }
 
-            orderbookerPaymentsReceiving::create([
-                'customerID' => $request->customerID,
-                'orderbookerID' => $request->user()->id,
-                'receivedBy' => $request->user()->id,
+            $saleIDs = implode(',', $saleIDs);
+            bulk_payments::create([
+                'customerID' => $sale->customerID,
+                'orderbookerID' => $sale->orderbookerID,
                 'date' => $request->date,
                 'amount' => $total_amount,
                 'notes' => $request->notes,
-                'payment_method' => $request->payment_method,
-                'cheque_no' => $request->cheque_no,
-                'cheque_date' => $request->cheque_date,
-                'bank_name' => $request->bank_name,
-                'refID' => $ref
-            ]);
-
+                'branchID' => $request->user()->branchID,
+                'method' => $request->method,
+                'bank' => $request->bank,
+                'number' => $request->number,
+                'remarks' => $request->remarks,
+                'userID' => $request->user()->id,
+                'refID' => $ref,
+                'invoiceIDs' => $saleIDs
+            ]); 
+            $user = $request->user()->name;
+            $customer = accounts::find($sale->customerID);
+            createTransaction($request->customerID, $request->date,0, $total_amount, "Bulk Payment of Inv No. $saleIDs Received by $user", $ref);
+            createUserTransaction($request->user()->id, $request->date,$total_amount, 0, "Bulk Payment of Inv No. $saleIDs Received from $customer->title", $ref);
+           createMethodTransaction($request->user()->id, $request->method, $total_amount,0, $request->date, $request->number, $request->bank, $request->remarks, "Bulk Payment of Inv No. $saleIDs Received from $customer->title", $ref);
+            
             if($request->has('file'))
             {
                 createAttachment($request->file('file'), $ref);
@@ -209,24 +228,33 @@ class customerPaymentsReceivingContoller extends Controller
             'message' => $validation->errors(),
         ], 422);
     }
-    
-    $payment_date = orderbookerPaymentsReceiving::where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->pluck('date');
-    $payments = orderbookerPaymentsReceiving::where('customerID', $request->customerID)
-    ->where('orderbookerID', $request->user()->id)
-    ->where('date', $payment_date)
-    ->get();
 
-    $data = [];
+    $sale_payment_date = sale_payments::where('customerID', $request->customerID)->orderBy('id', 'desc')->pluck('date');
+    $payment_receiving_date = paymentsReceiving::where('depositerID', $request->customerID)->orderBy('id', 'desc')->pluck('date');
 
-    foreach($payments as $payment)
+    //newest date
+    $newest_date = $sale_payment_date->max();
+    if($payment_receiving_date->max() > $newest_date)
     {
-        
+        $newest_date = $payment_receiving_date->max();
     }
+    
+    $methods = ['Cash', 'Cheque', 'Online', 'Other'];
+    $methodData = [];
+    $methodData['date'] = $newest_date;
+   foreach($methods as $method)
+   {
+    $sales_payment = sale_payments::where('customerID', $request->customerID)->where('date', $newest_date)->where('method', $method)->sum('amount');
+    $payment_receiving = paymentsReceiving::where('depositerID', $request->customerID)->where('date', $newest_date)->where('method', $method)->sum('amount');
 
+    $total = $sales_payment + $payment_receiving;
+    $methodData[$method] = $total;
+   }
+  
 
     return response()->json([
         'status' => 'success',
-        'data' => $payment
+        'data' => $methodData
     ], 200);
    }
 }
