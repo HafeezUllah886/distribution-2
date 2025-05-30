@@ -148,10 +148,6 @@
                                     Supply Man Accounts </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('transfers.index') }}" class="nav-link"
-                                    data-key="t-advanced">Transfer</a>
-                            </li>
-                            <li class="nav-item">
                                 <a href="{{ route('expenses.index') }}" class="nav-link" data-key="t-range-slider">
                                     Expenses</a>
                             </li>

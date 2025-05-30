@@ -127,14 +127,7 @@
                                 <a href="{{ route('expenses.index') }}" class="nav-link" data-key="t-range-slider">
                                     Expenses</a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ route('accounts_adjustments.index') }}" class="nav-link"
-                                    data-key="t-input-masks">Accounts Adjustment</a>
-                            </li> 
-                            <li class="nav-item">
-                                <a href="{{ route('staff_amounts_adjustments.index') }}" class="nav-link"
-                                    data-key="t-input-masks">Staff Amount Adjustment</a>
-                            </li> 
+                           
                         </ul>
                     </div>
                 </li>  
@@ -163,10 +156,33 @@
                     </div>
                 </li>  
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarMiscellaneous" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarMiscellaneous">
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Miscellaneous</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarMiscellaneous">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('accounts_adjustments.index') }}" class="nav-link"
+                                    data-key="t-input-masks">Accounts Adjustment</a>
+                            </li> 
+                            <li class="nav-item">
+                                <a href="{{ route('staff_amounts_adjustments.index') }}" class="nav-link"
+                                    data-key="t-input-masks">Staff Amount Adjustment</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('transfers.index') }}" class="nav-link"
+                                    data-key="t-advanced">Transfer</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>  
+
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('my_balance') }}">
                         <i class="ri-file-list-3-line"></i> <span data-key="t-my_balance">My Balance</span>
                     </a>
-                </li> <!-- end Dashboard Menu -->
+                </li> 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarOtherUsers" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarOtherUsers">

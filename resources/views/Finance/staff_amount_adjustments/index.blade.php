@@ -89,7 +89,7 @@
                             <select name="staffID" id="fromID" onchange="getBalance()" required class="selectize">
                                 <option value=""></option>
                                 @foreach ($staffs as $staff)
-                                    <option value="{{ $staff->id }}">{{ $staff->name }}</option>
+                                    <option value="{{ $staff->id }}">{{ $staff->name }} ({{ $staff->role }})</option>
                                 @endforeach
                             </select>
                         </div>
