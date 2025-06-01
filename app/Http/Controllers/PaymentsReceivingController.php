@@ -60,15 +60,17 @@ class PaymentsReceivingController extends Controller
             );
             $depositer = accounts::find($request->depositerID);
             $user_name = auth()->user()->name;
-            createTransaction($request->depositerID, $request->date, 0, $request->amount, "Payment deposited to $user_name : $request->notes", $ref);
+            $notes = "Payment deposited by $depositer->title Method $request->method Notes : $request->notes";
+            $notes1 = "Payment deposited to $user_name Method $request->method Notes : $request->notes";
+            createTransaction($request->depositerID, $request->date, 0, $request->amount, $notes1, $ref);
             
-            createMethodTransaction(auth()->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, "Payment deposited by $depositer->title : $request->notes", $ref);
+            createMethodTransaction(auth()->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, $notes, $ref);
     
-            createUserTransaction(auth()->user()->id, $request->date, $request->amount, 0, "Payment deposited by $depositer->title : $request->notes", $ref);
+            createUserTransaction(auth()->user()->id, $request->date, $request->amount, 0, $notes, $ref);
 
             if($request->method == 'Cash')
             {
-                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, "Payment deposited by $depositer->title : $request->notes", $ref);
+                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, $notes, $ref);
             }
             
             if($request->has('file')){

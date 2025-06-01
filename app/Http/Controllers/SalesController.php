@@ -96,7 +96,7 @@ class SalesController extends Controller
                   'orderdate'       => $request->orderdate,
                   'date'            => $request->date,
                   'bilty'           => $request->bilty,
-                  'transporter'           => $request->transporter,
+                  'transporter'     => $request->transporter,
                   'notes'           => $request->notes,
                   'refID'           => $ref,
                 ]
@@ -150,7 +150,8 @@ class SalesController extends Controller
                 createStock($id, 0, $qty, $request->date, "Sold", $ref, $request->warehouseID);
             }
 
-            $net = $total;
+            $net = round($total,0);
+            $totalLabor = round($totalLabor,0);
 
             $sale->update(
                 [
@@ -310,7 +311,8 @@ class SalesController extends Controller
                 createStock($id, 0, $qty, $request->date, "Sold", $ref, $request->warehouseID);
             }
 
-            $net = $total;
+            $net = round($total,0);
+            $totalLabor = round($totalLabor,0);
 
             $sale->update(
                 [

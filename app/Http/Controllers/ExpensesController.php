@@ -60,17 +60,23 @@ class ExpensesController extends Controller
                     'branchID' => auth()->user()->branchID,
                     'categoryID' => $request->category,
                     'date' => $request->date,
+                    'method' => $request->method,
+                    'number' => $request->number,
+                    'bank' => $request->bank,
+                    'remarks' => $request->remarks,
                     'notes' => $request->notes,
                     'refID' => $ref,
                 ]
             );
-            createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $request->notes, $ref);
+
+            $notes = "Expense - Method ".$request->method." Notes : ".$request->notes;
+            createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $notes, $ref);
            
-            createUserTransaction(auth()->user()->id, $request->date,0, $request->amount, "Expense - ".$request->notes, $ref);
+            createUserTransaction(auth()->user()->id, $request->date,0, $request->amount, $notes, $ref);
 
             if($request->method == 'Cash')
             {
-                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, "Expense - ".$request->notes, $ref);
+                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, $notes, $ref);
             }
             
             if($request->has('file')){

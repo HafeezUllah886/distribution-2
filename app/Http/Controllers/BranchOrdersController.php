@@ -172,7 +172,6 @@ class BranchOrdersController extends Controller
             $pro->stock = getWarehouseProductStock($pro->productID, $warehouseID);
 
         }
-       
         $orderbooker = User::find($order->orderbookerID);
         $warehouse = warehouses::find($warehouseID);
         $supplymen = accounts::supplyMen()->get();
@@ -272,7 +271,8 @@ class BranchOrdersController extends Controller
             }
             }
 
-            $net = $total;
+            $net = round($total,0);
+            $totalLabor = round($totalLabor,0);
 
             $sale->update(
                 [

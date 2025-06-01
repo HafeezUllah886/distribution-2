@@ -70,12 +70,14 @@ class SalePaymentsController extends Controller
             );
             $user = auth()->user()->name;
             $customer = accounts::find($sale->customerID);
-            createTransaction($sale->customerID, $request->date,0, $request->amount, "Payment of Inv No. $sale->id Received By $user", $ref);
-            createUserTransaction(auth()->id(), $request->date,$request->amount, 0, "Payment of Inv No. $sale->id", $ref);
-            createMethodTransaction(auth()->user()->id, $request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, "Payment of Inv No. $sale->id", $ref);
+            $notes = "Payment of Inv No. $sale->id from $customer->title Method $request->method Notes : $request->notes";
+            $notes1 = "Payment of Inv No. $sale->id submitted to $user Method $request->method Notes : $request->notes";
+            createTransaction($sale->customerID, $request->date,0, $request->amount, $notes1, $ref);
+            createUserTransaction(auth()->id(), $request->date,$request->amount, 0, $notes, $ref);
+            createMethodTransaction(auth()->user()->id, $request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, $notes, $ref);
 
             if($request->method == 'Cash'){
-                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, "Sales Invoice Payment from $customer->name : $request->notes", $ref);
+                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, $notes, $ref);
             }
             if($request->has('file')){
                 createAttachment($request->file('file'), $ref);

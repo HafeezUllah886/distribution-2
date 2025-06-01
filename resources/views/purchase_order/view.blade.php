@@ -120,7 +120,9 @@
                                                 <th class="m-1 p-1">Remainaing Qty</th>
                                             </thead>
                                             <tbody>
+                                               
                                                 @foreach ($order->details as $key => $product)
+                                                   
                                                     <tr>
                                                         <td class="m-1 p-1">{{$key+1}}</td>
                                                         <td class="m-1 p-1">{{$product->product->name}}</td>
@@ -129,6 +131,19 @@
                                                         <td class="m-1 p-1">{{ packInfo($product->unit->value, $product->unit->unit_name, $product->remaining()) }}</td>
                                                     </tr>
                                                 @endforeach
+                                                <tr>
+                                                    @php
+                                                        $totalQty = $order->details->sum('qty');
+                                                        $totalReceivedQty = $order->delivered_items->sum('qty');
+                                                        $totalRemainingQty = $totalQty - $totalReceivedQty;
+
+                                                       
+                                                    @endphp
+                                                    <td colspan="2" class="text-end">Total</td>
+                                                    <td class="">{{ $totalQty }} Packing</td>
+                                                    <td class="">{{ $totalReceivedQty }} Packing</td>
+                                                    <td class="">{{ $totalRemainingQty }} Packing</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>

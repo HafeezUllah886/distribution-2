@@ -94,12 +94,14 @@ class BulkInvoicePaymentsReceivingController extends Controller
                 'refID' => $ref,
                 'invoiceIDs' => $saleIDs
             ]);
-            createTransaction($request->customerID, $request->date,0, $net, "Bulk Payment of Inv No. $saleIDs", $ref);
-            createUserTransaction(auth()->id(), $request->date,$net, 0, "Bulk Payment of Inv No. $saleIDs", $ref);
-           createMethodTransaction(auth()->user()->id, $request->method, $net,0, $request->date, $request->number, $request->bank, $request->remarks, "Bulk Payment of Inv No. $saleIDs", $ref);
+            $notes = "Bulk Payment of Inv No. $saleIDs from " . $sale->customer->title . " method " . $request->method . " notes : " . $request->notes;
+            $notes1 = "Bulk Payment of Inv No. $saleIDs to " . auth()->user()->name . " method " . $request->method . " notes : " . $request->notes;
+            createTransaction($request->customerID, $request->date,0, $net, $notes1, $ref);
+            createUserTransaction(auth()->id(), $request->date,$net, 0, $notes, $ref);
+           createMethodTransaction(auth()->user()->id, $request->method, $net,0, $request->date, $request->number, $request->bank, $request->remarks, $notes, $ref);
            if($request->method == "Cash")
            {
-            createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, "Bulk Payment of Inv No. $saleIDs", $ref);
+            createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, $notes, $ref);
            }
 
            if($request->has('file')){

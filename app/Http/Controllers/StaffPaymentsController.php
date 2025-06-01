@@ -57,16 +57,19 @@ class StaffPaymentsController extends Controller
             );
             $staff = User::find($request->fromID);
             $user_name = auth()->user()->name;
-            createUserTransaction(auth()->id(), $request->date,$request->amount, 0, "Payment received from staff: $staff->name", $ref);
-            createUserTransaction($request->fromID, $request->date,0, $request->amount, "Payment submitted to $user_name", $ref);
+            $notes = "Payment received from staff: $staff->name Method $request->method Notes : $request->notes";
+            $notes1 = "Payment submitted to $user_name Method $request->method Notes : $request->notes";
+
+            createUserTransaction(auth()->id(), $request->date,$request->amount, 0, $notes, $ref);
+            createUserTransaction($request->fromID, $request->date,0, $request->amount, $notes1, $ref);
            
-            createMethodTransaction($staff->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $request->notes, $ref);
-            createMethodTransaction(auth()->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, $request->notes, $ref);
+            createMethodTransaction($staff->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $notes1, $ref);
+            createMethodTransaction(auth()->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, $notes, $ref);
 
             if($request->method == 'Cash')
             {
-                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, "Payment received from staff: $staff->name", $ref);
-                createCurrencyTransaction($request->fromID, $request->currencyID, $request->qty, 'db', $request->date, "Payment submitted to $user_name", $ref);
+                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, $notes, $ref);
+                createCurrencyTransaction($request->fromID, $request->currencyID, $request->qty, 'db', $request->date, $notes1, $ref);
             }
             if($request->has('file')){
                 createAttachment($request->file('file'), $ref);

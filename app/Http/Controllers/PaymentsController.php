@@ -59,14 +59,16 @@ class PaymentsController extends Controller
             );
             $receiver = accounts::find($request->receiverID);
             $user_name = auth()->user()->name;
-            createTransaction($request->receiverID, $request->date, $request->amount, 0, "Payment by $user_name", $ref);
-            createMethodTransaction(auth()->user()->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $request->notes, $ref);
+            $notes = "Payment to $receiver->title Method $request->method Notes : $request->notes";
+
+            createTransaction($request->receiverID, $request->date, $request->amount, 0, $notes, $ref);
+            createMethodTransaction(auth()->user()->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $notes, $ref);
            
-            createUserTransaction(auth()->user()->id, $request->date,0, $request->amount, "Payment to $receiver->title", $ref);
+            createUserTransaction(auth()->user()->id, $request->date,0, $request->amount, $notes, $ref);
 
             if($request->method == 'Cash')
             {
-                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, "Payment to $receiver->title", $ref);
+                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, $notes, $ref);
             }
             
             if($request->has('file')){

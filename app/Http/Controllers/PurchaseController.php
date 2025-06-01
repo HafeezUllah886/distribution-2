@@ -130,7 +130,9 @@ class PurchaseController extends Controller
                 createStock($id, $qty, 0, $request->recdate, "Purchased", $ref, $request->warehouseID);
             }
 
-            $net = $total;
+            $net = round($total, 0);
+
+            $totalLabor = round($totalLabor, 0);
 
             $purchase->update(
                 [
@@ -256,7 +258,8 @@ class PurchaseController extends Controller
 
             }
 
-            $net = $total;
+            $net = round($total, 0);
+            $totalLabor = round($totalLabor, 0);
 
             $purchase->update(
                 [

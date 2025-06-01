@@ -27,6 +27,10 @@
                             <th>Paid By</th>
                             <th>Received By</th>
                             <th>Date</th>
+                            <th>Method</th>
+                            <th>Number</th>
+                            <th>Bank</th>
+                            <th>Remarks</th>
                             <th>Notes</th>
                             <th>Amount</th>
                             <th>Action</th>
@@ -39,6 +43,10 @@
                                     <td>{{ $tran->user->name }}</td>
                                     <td>{{ $tran->receiver->title }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->date)) }}</td>
+                                    <td>{{ $tran->method }}</td>
+                                    <td>{{ $tran->number }}</td>
+                                    <td>{{ $tran->bank }}</td>
+                                    <td>{{ $tran->remarks }}</td>
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
                                     <td>
