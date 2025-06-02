@@ -145,9 +145,7 @@
     <script src="{{ asset('assets/libs/datatable/vfs_fonts.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/pdfmake.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/jszip.min.js') }}"></script>
-
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
-
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
         $(".selectize").selectize();
