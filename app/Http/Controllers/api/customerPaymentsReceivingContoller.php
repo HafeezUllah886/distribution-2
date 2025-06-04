@@ -268,17 +268,6 @@ class customerPaymentsReceivingContoller extends Controller
    $last_sale_amount = sales::where('customerID', $request->customerID)->orderBy('id', 'desc')->first()->net;
    $last_balance = getAccountBalance($request->customerID);
 
-   $orders = orders::with('details')->where('customerID', $request->customerID)->where('status', '!=','Completed')->get();
-
-   $pending_qty = 0;
-   foreach($orders as $order)
-   {
-        $qty = $order->details->sum('pc');
-        $delivered = $order->delivered_items()->sum('pc');
-        $pending_qty += $qty - $delivered;
-   }
-
-   $methodData['pending_qty'] = $pending_qty;
    $methodData['last_sale'] = $last_sale;
    $methodData['last_sale_amount'] = round($last_sale_amount, 2);
    $methodData['last_balance'] = round($last_balance, 2);

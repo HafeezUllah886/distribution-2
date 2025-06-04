@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\bulk_payments;
+use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\method_transactions;
@@ -70,7 +71,7 @@ class BulkInvoicePaymentsReceivingController extends Controller
                     'method' => $request->method,
                     'bank' => $request->bank,
                     'number' => $request->number,
-                    'remarks' => $request->remarks,
+                    'cheque_date' => $request->cheque_date,
                     'userID' => auth()->id(),
                     'refID' => $ref
                 ]);
@@ -89,7 +90,7 @@ class BulkInvoicePaymentsReceivingController extends Controller
                 'method' => $request->method,
                 'bank' => $request->bank,
                 'number' => $request->number,
-                'remarks' => $request->remarks,
+                'cheque_date' => $request->cheque_date,
                 'userID' => auth()->id(),
                 'refID' => $ref,
                 'invoiceIDs' => $saleIDs
@@ -98,11 +99,14 @@ class BulkInvoicePaymentsReceivingController extends Controller
             $notes1 = "Bulk Payment of Inv No. $saleIDs to " . auth()->user()->name . " method " . $request->method . " notes : " . $request->notes;
             createTransaction($request->customerID, $request->date,0, $net, $notes1, $ref);
             createUserTransaction(auth()->id(), $request->date,$net, 0, $notes, $ref);
-           createMethodTransaction(auth()->user()->id, $request->method, $net,0, $request->date, $request->number, $request->bank, $request->remarks, $notes, $ref);
+           createMethodTransaction(auth()->user()->id, $request->method, $net,0, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
            if($request->method == "Cash")
            {
             createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, $notes, $ref);
            }
+           if($request->method == 'Cheque'){
+            saveCheque($sale->customerID, auth()->id(), $request->cheque_date, $request->amount,$request->number,$request->bank,$request->notes,$ref);
+        }
 
            if($request->has('file')){
             createAttachment($request->file('file'), $ref);
@@ -156,6 +160,7 @@ class BulkInvoicePaymentsReceivingController extends Controller
             currency_transactions::where('refID', $ref)->delete();
             users_transactions::where('refID', $ref)->delete();
             method_transactions::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');
             return to_route('bulk_payment.index')->with('success', "Payment Deleted");

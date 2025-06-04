@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('method', ['Cash', 'Online', 'Cheque', 'Other']);
             $table->string('number')->nullable();
             $table->string('bank')->nullable();
-            $table->string('remarks')->nullable();
+            $table->date('cheque_date')->nullable();
             $table->date('date');
             $table->float('amount');
             $table->text('notes')->nullable();

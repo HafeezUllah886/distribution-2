@@ -40,9 +40,9 @@
             </td>
         </tr>
         <tr class="non-cash d-none">
-            <td>Remarks</td>
+            <td>Cheque Date</td>
             <td>
-                <input type="text" class="form-control form-control-sm" name="remarks">
+                <input type="date" class="form-control form-control-sm" required name="cheque_date">
             </td>
         </tr>
         <tr>
@@ -78,6 +78,14 @@
             $(".non-cash").removeClass("d-none");
             $(".cash").addClass("d-none");
             $("#amount").attr("readonly", false);
+        }
+        if($("#method").val() == "Cheque")
+        {
+            $(".check_customer").removeClass("d-none");
+        }
+        else
+        {
+            $(".check_customer").addClass("d-none");
         }
     }
     

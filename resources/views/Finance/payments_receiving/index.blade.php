@@ -2,8 +2,38 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <span class="alert alert-info">Receive payments from Vendors, Supply Man, Unloader, Customers and Business Accounts.</span>
-            <div class="card mt-4">
+            <form>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Account Type</span>
+                            <select name="type" id="type" class="form-control">
+                                <option @selected($type == 'All') value="All">All</option>
+                                <option @selected($type == 'Business') value="Business">Business</option>
+                                <option @selected($type == 'Customer') value="Customer">Customer</option>
+                                <option @selected($type == 'Vendor') value="Vendor">Vendor</option>
+                                <option @selected($type == 'Unloader') value="Unloader">Unloader</option>
+                                <option @selected($type == 'Supply Man') value="Supply Man">Supply Man</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Area</span>
+                            <select name="area" id="area" class="form-control">
+                                <option @selected($area == 'All') value="All">All</option>
+                               @foreach ($areas as $are)
+                                   <option @selected($area == $are->id) value="{{$are->id}}">{{$are->name}}</option>
+                               @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                       <input type="submit" value="Filter" class="btn btn-success w-100">
+                    </div>
+                </div>
+            </form>
+            <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Receive Payments</h3>
                     <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create
@@ -80,6 +110,7 @@
                     </table>
                 </div>
             </div>
+            <span class="alert alert-info">Receive payments from Vendors, Supply Man, Unloader, Customers and Business Accounts.</span>
         </div>
     </div>
     <!-- Default Modals -->
@@ -161,7 +192,7 @@
                 url: "{{ url('/accountbalance/') }}/" + id,
                 method: 'GET',
                 success: function(response) {
-                    $("#accountBalance").html(response.data);
+                    $("#accountBalance").html(response.data.toFixed(0));
                     if(response.data > 0)
                     {
                         $("#accountBalance").addClass('text-success');

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\attachment;
+use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\method_transactions;
 use App\Models\ref;
@@ -71,7 +72,7 @@ function createCurrencyTransaction($userID, $currencyID, $qty, $type ,$date, $no
     }
 }
 
-function createMethodTransaction($user, $method, $cr, $db, $date, $number, $bank, $remarks, $notes, $ref){
+function createMethodTransaction($user, $method, $cr, $db, $date, $number, $bank, $cheque_date, $notes, $ref){
     method_transactions::create(
         [
             'userID' => $user,
@@ -82,7 +83,7 @@ function createMethodTransaction($user, $method, $cr, $db, $date, $number, $bank
             'db' => $db,
             'number' => $number,
             'bank' => $bank,
-            'remarks' => $remarks,
+            'cheque_date' => $cheque_date,
             'notes' => $notes,
             'refID' => $ref,
         ]
@@ -152,6 +153,39 @@ function getMethodBalance($method, $user){
 }
 
 
+function checkMethodExceed($method, $user, $amount){
+    $balance = getMethodBalance($method, $user);
+    if($balance < $amount)
+    {
+        return false;
+    }
+    return true;
+}
+
+function checkCurrencyExceed($userID, $currencyID, $qty){
+    foreach($currencyID as $key => $id)
+    {
+        if($qty[$key] > 0)
+        {
+            $balance = getCurrencyBalance($id, $userID);
+            if($balance < $qty[$key])
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function checkUserAccountExceed($userID, $amount){
+    $balance = getUserAccountBalance($userID);
+    if($balance < $amount)
+    {
+        return false;
+    }
+    return true;
+}
+
 
 function numberToWords($number)
 {
@@ -193,4 +227,20 @@ function spotUserBalance($id, $ref)
     $cr = users_transactions::where('userID', $id)->where('refID', '<=', $ref)->sum('cr');
     $db = users_transactions::where('userID', $id)->where('refID', '<=', $ref)->sum('db');
     return $balance = $cr - $db;
+}
+
+
+function saveCheque($customerID, $userID, $chequeDate, $amount, $number, $bank, $notes, $ref){
+    cheques::create(
+        [
+            'customerID' => $customerID,
+            'userID' => $userID,
+            'cheque_date' => $chequeDate,
+            'amount' => $amount,
+            'number' => $number,
+            'bank' => $bank,
+            'notes' => $notes,
+            'refID' => $ref,
+        ]
+    );
 }

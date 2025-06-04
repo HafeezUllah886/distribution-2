@@ -69,7 +69,9 @@
                             <th>Vehicle</th>
                             <th>Bilty</th>
                             <th>Inv #</th>
-                            <th>Qty</th>
+                            <th>Total Qty</th>
+                            <th>Received Qty</th>
+                            <th>Remaining Qty</th>
                             <th>Status</th>
                             <th>Action</th>
                         </thead>
@@ -82,7 +84,9 @@
                                     <td>{{ $order->vehicle }}</td>
                                     <td>{{ $order->bilty }}</td>
                                     <td>{{ $order->inv }}</td>
-                                    <td>{{ $order->details->sum('qty') }}</td>
+                                    <td>{{ $order->totalQty() }}</td>
+                                    <td>{{ $order->totalReceivedQty() }}</td>
+                                    <td>{{ $order->totalPendingQty() }}</td>
                                     <td>{{ $order->status }}</td>
                                     <td>
                                         <div class="dropdown">

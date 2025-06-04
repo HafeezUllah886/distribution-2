@@ -31,7 +31,7 @@
                             <th>Method</th>
                             <th>Number</th>
                             <th>Bank</th>
-                            <th>Remarks</th>
+                            <th>Cheque Date</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
@@ -48,7 +48,7 @@
                                     <td>{{ $payment->method }}</td>
                                     <td>{{ $payment->number }}</td>
                                     <td>{{ $payment->bank }}</td>
-                                    <td>{{ $payment->remarks }}</td>
+                                    <td>{{ date('d M Y', strtotime($payment->cheque_date)) }}</td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-soft-secondary btn-sm dropdown" type="button"

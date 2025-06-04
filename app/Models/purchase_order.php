@@ -45,4 +45,31 @@ class purchase_order extends Model
     {
         return $this->hasMany(purchase_order_delivery::class, 'orderID');
     }
+
+    public function totalQty()
+    {
+        $totalQty = $this->details()->sum('qty');
+        $totalLooseQty = $this->details()->sum('loose');
+
+        $total = "{$totalQty}, {$totalLooseQty}";
+        return $total;
+    }
+
+    public function totalReceivedQty()
+    {
+        $totalQty = $this->delivered_items()->sum('qty');
+        $totalLooseQty = $this->delivered_items()->sum('loose');
+
+        $total = "{$totalQty}, {$totalLooseQty}";
+        return $total;
+    }
+
+    public function totalPendingQty()
+    {
+        $totalQty = $this->details()->sum('qty') - $this->delivered_items()->sum('qty');
+        $totalLooseQty = $this->details()->sum('loose') - $this->delivered_items()->sum('loose');
+
+        $total = "{$totalQty}, {$totalLooseQty}";
+        return $total;
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\staffPayments;
 use App\Http\Controllers\Controller;
+use App\Models\accounts;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\method_transactions;
@@ -22,7 +23,8 @@ class StaffPaymentsController extends Controller
         $receivings = staffPayments::where('receivedBy', auth()->user()->id)->orderBy('id', 'desc')->get();
         $users = User::where('branchID', auth()->user()->branchID)->where('id', '!=', auth()->user()->id)->get();
         $currencies = currencymgmt::all();
-        return view('Finance.staff_payments.index', compact('receivings', 'users', 'currencies'));
+        $customers = accounts::customer()->currentBranch()->active()->get();
+        return view('Finance.staff_payments.index', compact('receivings', 'users', 'currencies', 'customers'));
     }
 
     /**
@@ -40,6 +42,21 @@ class StaffPaymentsController extends Controller
     {
        try{ 
             DB::beginTransaction(); 
+            if(!checkMethodExceed($request->method,$request->fromID, $request->amount))
+            {
+             throw new \Exception("Method Amount Exceed");
+            }
+            if(!checkUserAccountExceed($request->fromID, $request->amount))
+            {
+             throw new \Exception("User Account Amount Exceed");
+            }
+           if($request->method == 'Cash')
+           {
+             if(!checkCurrencyExceed($request->fromID, $request->currencyID, $request->qty))
+             {
+                 throw new \Exception("Currency Qty Exceed");
+             }
+           }
             $ref = getRef();
             staffPayments::create(
                 [
@@ -70,6 +87,10 @@ class StaffPaymentsController extends Controller
             {
                 createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, $notes, $ref);
                 createCurrencyTransaction($request->fromID, $request->currencyID, $request->qty, 'db', $request->date, $notes1, $ref);
+            }
+            if($request->method == 'Cheque')
+            {
+                saveCheque($request->customerID, auth()->user()->id, $request->date, $request->amount, $request->number, $request->bank, $request->notes, $ref);
             }
             if($request->has('file')){
                 createAttachment($request->file('file'), $ref);

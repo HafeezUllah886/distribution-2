@@ -52,6 +52,21 @@ class ExpensesController extends Controller
         try
         {
             DB::beginTransaction();
+            if(!checkMethodExceed($request->method, auth()->user()->id, $request->amount))
+            {
+             throw new \Exception("Method Amount Exceed");
+            }
+            if(!checkUserAccountExceed(auth()->user()->id, $request->amount))
+            {
+             throw new \Exception("User Account Amount Exceed");
+            }
+           if($request->method == 'Cash')
+           {
+             if(!checkCurrencyExceed(auth()->user()->id, $request->currencyID, $request->qty))
+             {
+                 throw new \Exception("Currency Qty Exceed");
+             }
+           }
             $ref = getRef();
             expenses::create(
                 [

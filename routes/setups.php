@@ -17,7 +17,6 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('warehouses', WarehousesController::class);
     Route::resource('branches', BranchesController::class);
-
     Route::resource('towns', TownController::class);
     Route::resource('areas', AreaController::class);
 

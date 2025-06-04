@@ -95,6 +95,14 @@
                         <div class="row">
                             <div class="col-6">
                                @include('layout.payment')
+                               <div class="form-group mt-2 check_customer d-none">
+                                    <label for="customerID">Check From</label>
+                                    <select name="customerID" id="customerID" required class="selectize">
+                                        @foreach ($customers as $customer)
+                                            <option value="{{ $customer->id }}">{{ $customer->title }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group mt-2">

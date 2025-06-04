@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\area;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\method_transactions;
@@ -19,12 +20,36 @@ class PaymentsReceivingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $payments = paymentsReceiving::currentBranch()->orderBy('id', 'desc')->get();
-        $depositers = accounts::whereIn('type', ['Business', 'Vendor', 'Supply Man', 'Unloader', 'Customer'])->currentBranch()->active()->get();
+        $type = $request->type ?? 'All';
+        $area = $request->area ?? 'All';
+
+        $payments = paymentsReceiving::currentBranch()->orderBy('id', 'desc');
+        if($type != 'All')
+        {
+            $accounts = accounts::where('type', $type)->currentBranch()->active()->get();
+            $payments = $payments->whereIn('depositerID', $accounts->pluck('id'));
+            $type = [$type];
+        }
+        else
+        {
+            $type = ['Business', 'Vendor', 'Supply Man', 'Unloader', 'Customer'];
+        }
+        $payments = $payments->get();
+
+        $depositers = accounts::whereIn('type', $type)->currentBranch()->active();
+        if($area != 'All')
+        {
+            $depositers = $depositers->where('areaID', $area);
+        }
+        $depositers = $depositers->get();
+
+        $areas = area::currentBranch()->get();
+
         $currencies = currencymgmt::all();
-        return view('Finance.payments_receiving.index', compact('payments', 'depositers', 'currencies'));
+        $type = $request->type;
+        return view('Finance.payments_receiving.index', compact('payments', 'depositers', 'currencies', 'areas', 'type', 'area'));
     }
 
     /**
@@ -45,7 +70,7 @@ class PaymentsReceivingController extends Controller
             $ref = getRef();
             paymentsReceiving::create(
                 [
-                    'depositerID'      => $request->depositerID,
+                    'depositerID'   => $request->depositerID,
                     'date'          => $request->date,
                     'amount'        => $request->amount,
                     'method'        => $request->method,

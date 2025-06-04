@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\method_transactions;
@@ -60,7 +61,7 @@ class SalePaymentsController extends Controller
                     'method'        => $request->method,
                     'number'        => $request->number,
                     'bank'          => $request->bank,
-                    'remarks'       => $request->remarks,
+                    'cheque_date'   => $request->cheque_date,
                     'date'          => $request->date,
                     'amount'        => $request->amount,
                     'notes'         => $request->notes,
@@ -74,10 +75,14 @@ class SalePaymentsController extends Controller
             $notes1 = "Payment of Inv No. $sale->id submitted to $user Method $request->method Notes : $request->notes";
             createTransaction($sale->customerID, $request->date,0, $request->amount, $notes1, $ref);
             createUserTransaction(auth()->id(), $request->date,$request->amount, 0, $notes, $ref);
-            createMethodTransaction(auth()->user()->id, $request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, $notes, $ref);
+            createMethodTransaction(auth()->user()->id, $request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
 
             if($request->method == 'Cash'){
                 createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, $notes, $ref);
+            }
+
+            if($request->method == 'Cheque'){
+                saveCheque($customer->id, auth()->id(), $request->cheque_date, $request->amount,$request->number,$request->bank,$request->notes,$ref);
             }
             if($request->has('file')){
                 createAttachment($request->file('file'), $ref);
@@ -129,6 +134,7 @@ class SalePaymentsController extends Controller
             currency_transactions::where('refID', $ref)->delete();
             users_transactions::where('refID', $ref)->delete();
             method_transactions::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');
             return redirect()->route('salePayment.index', $id)->with('success', "Sale Payment Deleted");

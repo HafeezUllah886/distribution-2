@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\area;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\method_transactions;
@@ -18,12 +19,36 @@ class PaymentsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $payments = payments::currentBranch()->orderBy('id', 'desc')->get();
-        $receivers = accounts::whereIn('type', ['Business', 'Vendor', 'Supply Man', 'Unloader', 'Customer'])->currentBranch()->active()->get();
+        $type = $request->type ?? 'All';
+        $area = $request->area ?? 'All';
+
+        $payments = payments::currentBranch()->orderBy('id', 'desc');
+        if($type != 'All')
+        {
+            $accounts = accounts::where('type', $type)->currentBranch()->active()->get();
+            $payments = $payments->whereIn('receiverID', $accounts->pluck('id'));
+            $type = [$type];
+        }
+        else
+        {
+            $type = ['Business', 'Vendor', 'Supply Man', 'Unloader', 'Customer'];
+        }
+        $payments = $payments->get();
+
+        $receivers = accounts::whereIn('type', $type)->currentBranch()->active();
+        if($area != 'All')
+        {
+            $receivers = $receivers->where('areaID', $area);
+        }
+        $receivers = $receivers->get();
+
+        $areas = area::currentBranch()->get();
+
         $currencies = currencymgmt::all();
-        return view('Finance.payments.index', compact('payments', 'receivers', 'currencies'));
+        $type = $request->type;
+        return view('Finance.payments.index', compact('payments', 'receivers', 'currencies', 'areas', 'type', 'area'));
     }
 
     /**
@@ -41,6 +66,21 @@ class PaymentsController extends Controller
     {
         try{ 
             DB::beginTransaction();
+           if(!checkMethodExceed($request->method, auth()->user()->id, $request->amount))
+           {
+            throw new \Exception("Method Amount Exceed");
+           }
+           if(!checkUserAccountExceed(auth()->user()->id, $request->amount))
+           {
+            throw new \Exception("User Account Amount Exceed");
+           }
+          if($request->method == 'Cash')
+          {
+            if(!checkCurrencyExceed(auth()->user()->id, $request->currencyID, $request->qty))
+            {
+                throw new \Exception("Currency Qty Exceed");
+            }
+          }
             $ref = getRef();
             payments::create(
                 [
