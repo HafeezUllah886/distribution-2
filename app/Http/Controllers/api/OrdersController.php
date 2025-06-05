@@ -181,7 +181,7 @@ class OrdersController extends Controller
             }
 
             $order->update([
-                'net' => $net,
+                'net' => round($net, 0),
             ]);
             if($net > $customer->credit_limit) {
                 DB::rollback();

@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/productSummaryData', [ProductsSummaryReportController::class, 'data'])->name('reportProductSummaryData');
 
     Route::get('/reports/sales', [salesReportController::class, 'index'])->name('reportSales');
+    Route::get('/reports/salesFilter', [salesReportController::class, 'filter'])->name('reportSalesFilter');
     Route::get('/reports/salesData', [salesReportController::class, 'data'])->name('reportSalesData');
 
     Route::get('/reports/purchases', [purchaseReportController::class, 'index'])->name('reportPurchases');

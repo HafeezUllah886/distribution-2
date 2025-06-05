@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\api\authController;
 use App\Http\Controllers\api\customerPaymentsReceivingContoller;
+use App\Http\Controllers\api\DailyCustomerWisePaymentsReport;
+use App\Http\Controllers\api\DailyProductsOrderReport;
 use App\Http\Controllers\api\locationTrackingAPIController;
 use App\Http\Controllers\api\nonFinanancialInfoController;
 use App\Http\Controllers\api\OrdersController;
@@ -40,5 +42,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/account_statement', [OrderbookerBalanceController::class, 'account_statement']);
     Route::get('/product_stock', [OrdersController::class, 'stock']);
     Route::get('/pending_qty', [OrdersController::class, 'pendingQty']);
+
+
+    Route::get('/daily_customer_wise_payments', [DailyCustomerWisePaymentsReport::class, 'index']);
+    Route::get('/daily_products_order_report', [DailyProductsOrderReport::class, 'index']);
 
 });
