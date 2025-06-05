@@ -137,12 +137,11 @@
                                                         $totalReceivedQty = $order->delivered_items->sum('qty');
                                                         $totalRemainingQty = $totalQty - $totalReceivedQty;
 
-                                                       
                                                     @endphp
                                                     <td colspan="2" class="text-end">Total</td>
-                                                    <td class="">{{ $totalQty }} Packing</td>
-                                                    <td class="">{{ $totalReceivedQty }} Packing</td>
-                                                    <td class="">{{ $totalRemainingQty }} Packing</td>
+                                                    <td class="">{{ $order->totalQty() }}</td>
+                                                    <td class="">{{ $order->totalReceivedQty() }}</td>
+                                                    <td class="">{{ $order->totalPendingQty() }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>

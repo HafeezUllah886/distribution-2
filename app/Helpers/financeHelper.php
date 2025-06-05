@@ -83,7 +83,7 @@ function createMethodTransaction($user, $method, $cr, $db, $date, $number, $bank
             'db' => $db,
             'number' => $number,
             'bank' => $bank,
-            'cheque_date' => $cheque_date,
+            'cheque_date' => $cheque_date ?? now(),
             'notes' => $notes,
             'refID' => $ref,
         ]

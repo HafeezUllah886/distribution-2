@@ -42,6 +42,7 @@ class StaffPaymentsController extends Controller
     {
        try{ 
             DB::beginTransaction(); 
+            $staff = User::find($request->fromID);
             if(!checkMethodExceed($request->method,$request->fromID, $request->amount))
             {
              throw new \Exception("Method Amount Exceed");
@@ -52,10 +53,11 @@ class StaffPaymentsController extends Controller
             }
            if($request->method == 'Cash')
            {
-             if(!checkCurrencyExceed($request->fromID, $request->currencyID, $request->qty))
-             {
-                 throw new \Exception("Currency Qty Exceed");
-             }
+            if($staff->role != 'Order Booker')
+                if(!checkCurrencyExceed($request->fromID, $request->currencyID, $request->qty))
+                {
+                    throw new \Exception("Currency Qty Exceed");
+                }
            }
             $ref = getRef();
             staffPayments::create(
@@ -72,7 +74,7 @@ class StaffPaymentsController extends Controller
                     'refID'         => $ref,
                 ]
             );
-            $staff = User::find($request->fromID);
+            
             $user_name = auth()->user()->name;
             $notes = "Payment received from staff: $staff->name Method $request->method Notes : $request->notes";
             $notes1 = "Payment submitted to $user_name Method $request->method Notes : $request->notes";

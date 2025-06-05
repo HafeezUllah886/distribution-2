@@ -42,7 +42,7 @@
         <tr class="non-cash d-none">
             <td>Cheque Date</td>
             <td>
-                <input type="date" class="form-control form-control-sm" required name="cheque_date">
+                <input type="date" class="form-control form-control-sm" name="cheque_date">
             </td>
         </tr>
         <tr>
