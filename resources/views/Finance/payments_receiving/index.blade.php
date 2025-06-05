@@ -78,6 +78,7 @@
                                     <td>{{ $tran->method }}</td>
                                     <td>{{ $tran->number }}</td>
                                     <td>{{ $tran->bank }}</td>
+                                    <td>{{ date('d M Y', strtotime($tran->cheque_date)) }}</td>
                                     <td>{{ $tran->remarks }}</td>
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>

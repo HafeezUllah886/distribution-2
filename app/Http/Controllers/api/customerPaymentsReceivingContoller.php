@@ -50,7 +50,7 @@ class customerPaymentsReceivingContoller extends Controller
                     'method'        => $request->method,
                     'number'        => $request->number,
                     'bank'          => $request->bank,
-                    'remarks'       => $request->remarks,
+                    'cheque_date'   => $request->cheque_date,
                     'branchID'      => $request->user()->branchID,
                     'notes'         => $request->notes,
                     'userID'        => $request->user()->id,
@@ -61,7 +61,7 @@ class customerPaymentsReceivingContoller extends Controller
             $user_name = $request->user()->name;
             createTransaction($request->customerID, $request->date, 0, $request->amount, "Payment deposited to $user_name : $request->notes", $ref);
             
-            createMethodTransaction($request->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, "Payment deposited by $depositer->title : $request->notes", $ref);
+            createMethodTransaction($request->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, "Payment deposited by $depositer->title : $request->notes", $ref);
     
             createUserTransaction($request->user()->id, $request->date, $request->amount, 0, "Payment deposited by $depositer->title : $request->notes", $ref);
 
@@ -177,7 +177,7 @@ class customerPaymentsReceivingContoller extends Controller
                     'method' => $request->method,
                     'bank' => $request->bank,
                     'number' => $request->number,
-                    'remarks' => $request->remarks,
+                    'cheque_date' => $request->cheque_date,
                     'refID' => $ref
                 ]);
 
@@ -196,7 +196,7 @@ class customerPaymentsReceivingContoller extends Controller
                 'method' => $request->method,
                 'bank' => $request->bank,
                 'number' => $request->number,
-                'remarks' => $request->remarks,
+                'cheque_date' => $request->cheque_date,
                 'userID' => $request->user()->id,
                 'refID' => $ref,
                 'invoiceIDs' => $saleIDs
@@ -205,7 +205,7 @@ class customerPaymentsReceivingContoller extends Controller
             $customer = accounts::find($sale->customerID);
             createTransaction($request->customerID, $request->date,0, $total_amount, "Bulk Payment of Inv No. $saleIDs Received by $user", $ref);
             createUserTransaction($request->user()->id, $request->date,$total_amount, 0, "Bulk Payment of Inv No. $saleIDs Received from $customer->title", $ref);
-           createMethodTransaction($request->user()->id, $request->method, $total_amount,0, $request->date, $request->number, $request->bank, $request->remarks, "Bulk Payment of Inv No. $saleIDs Received from $customer->title", $ref);
+           createMethodTransaction($request->user()->id, $request->method, $total_amount,0, $request->date, $request->number, $request->bank, $request->cheque_date, "Bulk Payment of Inv No. $saleIDs Received from $customer->title", $ref);
             
             if($request->has('file'))
             {
