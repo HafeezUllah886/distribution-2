@@ -80,7 +80,7 @@
                                                 <td>{{ $key+1 }}</td>
                                                 <td><a href="{{route('viewAttachment', $trans->refID)}}" target="_black">{{ $trans->refID }} <i class="ri-attachment-2"></i></a></td>
                                                 <td>{{ date('d M Y', strtotime($trans->date)) }}</td>
-                                                <td class="text-start">{{ $trans->notes }}</td>
+                                                <td class="text-start" style="max-width: 200px; overflow-wrap: break-word; white-space: normal;">{{ $trans->notes }}</td>
                                                 <td class="text-end">{{ number_format($trans->cr) }}</td>
                                                 <td class="text-end">{{ number_format($trans->db) }}</td>
                                                 <td class="text-end">{{ number_format($balance) }}</td>

@@ -234,6 +234,20 @@
                     </div>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="#warehouses" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarApps">
+                        <i class="ri-apps-2-line"></i> <span data-key="t-apps">Warehouses</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="warehouses">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('warehouses.index') }}" class="nav-link" data-key="t-chat">Warehouses
+                                    List </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarReports" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarReports">
                         <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Reports</span>
@@ -280,6 +294,10 @@
                             <li class="nav-item">
                                 <a href="{{ route('reportBalanceSheet') }}" class="nav-link"
                                     data-key="t-basic-elements">Balance Sheet</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('reportDailyVendorWiseProductsSales') }}" class="nav-link"
+                                    data-key="t-basic-elements">Daily Vendor Wise Products Sales</a>
                             </li>
                         </ul>
                     </div>

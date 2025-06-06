@@ -32,7 +32,9 @@
                             <th>#</th>
                             <th>Product</th>
                             <th>Stock</th>
+                            @if(auth()->user()->role != 'Operator')
                             <th>Stock Value (P)</th>
+                            @endif
                             <th>Stock Value (S)</th>
                             <th>Action</th>
                         </thead>
@@ -42,7 +44,9 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $product->name }}</td>
                                     <td>{{packInfo($product->units[0]->value, $product->units[0]->unit_name , getStock($product->id))}} </td>
+                                    @if(auth()->user()->role != 'Operator')
                                     <td>{{number_format(productStockValue($product->id))}} </td>
+                                    @endif
                                     <td>{{number_format(productStockValueS($product->id))}} </td>
                                     <td>
                                         <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#new_{{$product->id}}">

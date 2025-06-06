@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\reports\BranchStockReportController;
 use App\Http\Controllers\reports\profitController;
-use App\Http\Controllers\reports;
 use App\Http\Controllers\reports\balanceSheetReport;
 use App\Http\Controllers\reports\dailycashbookController;
+use App\Http\Controllers\reports\DailyVendorWiseProductsSalesReport;
 use App\Http\Controllers\reports\loadsheetController;
 use App\Http\Controllers\reports\OrderbookerPerformanceReportController;
 use App\Http\Controllers\reports\ProductsSummaryReportController;
@@ -15,7 +15,7 @@ use App\Http\Controllers\reports\salesReportController;
 use App\Http\Controllers\reports\TopCustomersReportController;
 use App\Http\Controllers\reports\TopSellingProductsReportController;
 use App\Http\Controllers\reports\WarehouseStockReportController;
-use App\Http\Middleware\adminCheck;
+
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -56,4 +56,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/reports/topsellingproductsreport', [TopSellingProductsReportController::class, 'index'])->name('reportTopSellingProducts');
     Route::get('/reports/topsellingproductsreportData', [TopSellingProductsReportController::class, 'data'])->name('reportTopSellingProductsData');
+    
+    Route::get('/reports/dailyvendorwiseproductssalesreport', [DailyVendorWiseProductsSalesReport::class, 'index'])->name('reportDailyVendorWiseProductsSales');
+    Route::get('/reports/dailyvendorwiseproductssalesreportData', [DailyVendorWiseProductsSalesReport::class, 'data'])->name('reportDailyVendorWiseProductsSalesData');
 });

@@ -15,7 +15,7 @@ class WarehouseStockReportController extends Controller
         if (auth()->user()->role == "Admin") {
             $warehouses = warehouses::all();
         } else {
-            $warehouses = warehouses::where('id', auth()->user()->branchID)->get();
+            $warehouses = warehouses::where('branchID', auth()->user()->branchID)->get();
         }
 
         $vendors = accounts::vendor()->currentBranch()->get();

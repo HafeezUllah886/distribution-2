@@ -22,8 +22,15 @@ class OtherusersController extends Controller
         }
 
         $users = User::currentBranch()->where('role', $type)->get();
-        $branches = branches::all();
 
+        if(auth()->user()->role == 'Admin')
+        {
+            $branches = branches::all();
+        }
+        else
+        {
+            $branches = branches::where('id', auth()->user()->branchID)->get();
+        }
         return view('users.index', compact('users', 'type', 'branches'));
     }
 

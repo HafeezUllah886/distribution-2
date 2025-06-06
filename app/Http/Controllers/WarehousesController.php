@@ -14,8 +14,14 @@ class WarehousesController extends Controller
      */
     public function index()
     {
-        $warehouses = warehouses::all();
-        $branches = branches::all();
+        if(auth()->user()->role == 'Admin') {
+            $warehouses = warehouses::all();
+            $branches = branches::all();
+        } else {
+            $warehouses = warehouses::currentBranch()->get();
+            $branches = branches::where('id', auth()->user()->branchID)->get();
+        }
+       
 
         return view('warehouses.index', compact('warehouses', 'branches'));
     }
