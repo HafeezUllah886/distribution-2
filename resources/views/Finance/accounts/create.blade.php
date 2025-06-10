@@ -90,7 +90,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-6 mt-2 customer">
+                            <div class="col-6 mt-2 customer vendor">
                                 <div class="form-group ">
                                     <label for="address">Address</label>
                                     <input type="text" name="address" id="address" value="{{ old('address') }}" class="form-control">
@@ -145,7 +145,6 @@
        
     function checkType(){
             var type = $("#type").find(":selected").val();
-
             if(type === "Business")
             {
                 $("#catBox").show();
@@ -154,7 +153,6 @@
             {
                 $("#catBox").hide();
             }
-
             if(type === "Customer")
             {
                 $(".customer").show();
@@ -162,6 +160,18 @@
             else
             {
                 $(".customer").hide();
+            }
+            if(type === "Vendor")
+            {
+                $(".vendor").show();
+            }
+            else
+            {
+                $(".vendor").hide();
+                if(type === "Customer")
+                {
+                    $(".customer").show();
+                }
             }
         }
         checkType();

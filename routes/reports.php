@@ -4,18 +4,20 @@ use App\Http\Controllers\reports\BranchStockReportController;
 use App\Http\Controllers\reports\profitController;
 use App\Http\Controllers\reports\balanceSheetReport;
 use App\Http\Controllers\reports\dailycashbookController;
+use App\Http\Controllers\reports\DailyInvWiseProductsSalesReport;
 use App\Http\Controllers\reports\DailyVendorWiseProductsSalesReport;
 use App\Http\Controllers\reports\loadsheetController;
 use App\Http\Controllers\reports\OrderbookerPerformanceReportController;
 use App\Http\Controllers\reports\ProductsSummaryReportController;
 
 use App\Http\Controllers\reports\purchaseReportController;
-
 use App\Http\Controllers\reports\salesReportController;
 use App\Http\Controllers\reports\TopCustomersReportController;
 use App\Http\Controllers\reports\TopSellingProductsReportController;
 use App\Http\Controllers\reports\WarehouseStockReportController;
-
+use App\Http\Controllers\reports\stockMovementReportController;
+use App\Http\Controllers\reports\SupplymanLabourChargesReportController;
+use App\Http\Controllers\reports\UnloaderLabourChargesReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -59,4 +61,16 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/reports/dailyvendorwiseproductssalesreport', [DailyVendorWiseProductsSalesReport::class, 'index'])->name('reportDailyVendorWiseProductsSales');
     Route::get('/reports/dailyvendorwiseproductssalesreportData', [DailyVendorWiseProductsSalesReport::class, 'data'])->name('reportDailyVendorWiseProductsSalesData');
+    
+    Route::get('/reports/dailyinvwiseproductssalesreport', [DailyInvWiseProductsSalesReport::class, 'index'])->name('reportDailyInvWiseProductsSales');
+    Route::get('/reports/dailyinvwiseproductssalesreportData', [DailyInvWiseProductsSalesReport::class, 'data'])->name('reportDailyInvWiseProductsSalesData');
+    
+    Route::get('/reports/stockmovementreport', [stockMovementReportController::class, 'index'])->name('reportStockMovement');
+    Route::get('/reports/stockmovementreportData', [stockMovementReportController::class, 'data'])->name('reportStockMovementData');
+
+    Route::get('/reports/supplymanreport', [SupplymanLabourChargesReportController::class, 'index'])->name('reportSupplymanReport');
+    Route::get('/reports/supplymanreportData', [SupplymanLabourChargesReportController::class, 'data'])->name('reportSupplymanReportData');
+
+    Route::get('/reports/unloaderreport', [UnloaderLabourChargesReportController::class, 'index'])->name('reportUnloaderReport');
+    Route::get('/reports/unloaderreportData', [UnloaderLabourChargesReportController::class, 'data'])->name('reportUnloaderReportData');
 });

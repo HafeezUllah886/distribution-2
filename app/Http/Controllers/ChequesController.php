@@ -13,7 +13,8 @@ class ChequesController extends Controller
      */
     public function index()
     {
-        //
+        $cheques = cheques::where('userID', auth()->user()->id)->orderBy('cheque_date', 'asc')->get();
+        return view('Finance.cheques.index', compact('cheques'));
     }
 
     /**
@@ -35,9 +36,22 @@ class ChequesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(cheques $cheques)
+    public function show($id, $status)
     {
-        //
+        $cheque = cheques::findOrFail($id);
+        if($cheque->userID == auth()->user()->id)
+        {
+            $cheque->update([
+                'status' => $status,
+            ]);
+            if($status == 'bounced')
+            {
+                $ref = getRef();
+                createTransaction($cheque->customerID, now(), $cheque->amount, 0, "Cheque Bounced Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date", $ref);
+            }
+            return redirect()->back()->with('success', 'Cheque status updated successfully');
+        }
+        return redirect()->back()->with('error', 'You are not authorized to update this cheque');
     }
 
     /**

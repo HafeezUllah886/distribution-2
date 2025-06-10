@@ -90,6 +90,7 @@ class ReturnsController extends Controller
             $ids = $request->id;
 
             $total = 0;
+            $customer = accounts::find($request->customerID);
             foreach($ids as $key => $id)
             {
                 $unit = product_units::find($request->unit[$key]);
@@ -115,7 +116,7 @@ class ReturnsController extends Controller
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, $qty, 0, $request->date, "Returned", $ref, $request->warehouseID);
+                createStock($id, $qty, 0, $request->date, "Returned from $customer->name", $ref, $request->warehouseID);
             }
 
             $net = $total;
@@ -212,6 +213,7 @@ class ReturnsController extends Controller
             $ref = $return->refID;
 
             $total = 0;
+            $customer = accounts::find($request->customerID);
             foreach($ids as $key => $id)
             {
                 $unit = product_units::find($request->unit[$key]);
@@ -237,20 +239,16 @@ class ReturnsController extends Controller
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, $qty, 0, $request->date, "Returned", $ref, $request->warehouseID);
+                createStock($id, $qty, 0, $request->date, "Returned from $customer->name", $ref, $request->warehouseID);
             }
 
             $net = $total;
-
             $return->update(
                 [
                     'net' => $net,
                     'status' => 1,
                 ]
             );
-
-
-
             foreach($request->pendingInvoice as $index => $invoice)
             {
                 $sale = sales::find($invoice);

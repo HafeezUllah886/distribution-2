@@ -86,6 +86,7 @@ class PurchaseOrderDeliveryController extends Controller
 
             $total = 0;
             $totalLabor = 0;
+            $vendor = accounts::find($request->vendorID);
             foreach($ids as $key => $id)
             {
                 $unit = product_units::find($request->unit[$key]);
@@ -128,7 +129,7 @@ class PurchaseOrderDeliveryController extends Controller
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, $qty, 0, $request->recdate, "Purchased", $ref, $request->warehouseID);
+                createStock($id, $qty, 0, $request->recdate, "Purchased from $vendor->name", $ref, $request->warehouseID);
 
                 purchase_order_delivery::create(
                     [

@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountsAdjustmentController;
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\BulkInvoicePaymentsReceivingController;
+use App\Http\Controllers\ChequesController;
 use App\Http\Controllers\CurrencymgmtController;
 use App\Http\Controllers\CustomerPaymentsController;
 use App\Http\Controllers\DepositWithdrawController;
@@ -60,6 +61,8 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::resource('bulk_payment', BulkInvoicePaymentsReceivingController::class);
     Route::get('bulk_payment/delete/{ref}', [BulkInvoicePaymentsReceivingController::class, 'destroy'])->name('bulk_payment.delete')->middleware(confirmPassword::class);
 
+    Route::resource('cheques', ChequesController::class);
+    Route::get('cheques/status/{id}/{status}', [ChequesController::class, 'show'])->name('cheques.status');
 
     Route::get('/accountbalance/{id}', function ($id) {
         // Call your Laravel helper function here

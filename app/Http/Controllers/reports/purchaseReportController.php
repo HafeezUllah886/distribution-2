@@ -35,7 +35,7 @@ class purchaseReportController extends Controller
             $purchases = purchase::with('vendor', 'details', 'branch')->whereBetween('orderdate', [$from, $to]);
             if($request->vendor)
             {
-                $purchases = $purchases->where('vendorID', $request->vendor);
+                $purchases = $purchases->whereIn('vendorID', $request->vendor);
             }
             $purchases = $purchases->get();
         }
@@ -44,7 +44,7 @@ class purchaseReportController extends Controller
             $purchases = purchase::with('vendor', 'details', 'branch')->whereBetween('orderdate', [$from, $to])->where('branchID', $branch);
             if($request->vendor)
             {
-                $purchases = $purchases->where('vendorID', $request->vendor);
+                $purchases = $purchases->whereIn('vendorID', $request->vendor);
             }
             $purchases = $purchases->get();
             $branch = branches::find($branch);

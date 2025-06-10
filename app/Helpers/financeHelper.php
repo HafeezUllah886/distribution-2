@@ -235,6 +235,7 @@ function saveCheque($customerID, $userID, $chequeDate, $amount, $number, $bank, 
         [
             'customerID' => $customerID,
             'userID' => $userID,
+            'branchID' => auth()->user()->branchID,
             'cheque_date' => $chequeDate,
             'amount' => $amount,
             'number' => $number,

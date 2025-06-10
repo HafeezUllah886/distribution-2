@@ -102,7 +102,6 @@ class AccountsController extends Controller
                 {
                    if($request->type == "Business")
                    {
-                    
                     $account = accounts::create(
                         [
                             'title' => $request->title,
@@ -127,6 +126,7 @@ class AccountsController extends Controller
                             'email' => $request->email,
                             'branchID'  => $request->branch,
                             'category' => $request->category,
+                            'address' => $request->address ?? null,
                             'areaID' => 1,
                         ]
                     );

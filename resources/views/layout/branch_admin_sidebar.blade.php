@@ -290,7 +290,6 @@
                                 <a href="{{ route('reportTopOrderbookers') }}" class="nav-link"
                                     data-key="t-basic-elements">Top Orderbookers</a>
                             </li>
-                            
                             <li class="nav-item">
                                 <a href="{{ route('reportBalanceSheet') }}" class="nav-link"
                                     data-key="t-basic-elements">Balance Sheet</a>
@@ -298,6 +297,22 @@
                             <li class="nav-item">
                                 <a href="{{ route('reportDailyVendorWiseProductsSales') }}" class="nav-link"
                                     data-key="t-basic-elements">Daily Vendor Wise Products Sales</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('reportDailyInvWiseProductsSales') }}" class="nav-link"
+                                    data-key="t-basic-elements">Daily Invoice Wise Products Sales</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('reportStockMovement') }}" class="nav-link"
+                                    data-key="t-basic-elements">Stock Movement</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('reportSupplymanReport') }}" class="nav-link"
+                                    data-key="t-basic-elements">Supplyman Labour Charges</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('reportUnloaderReport') }}" class="nav-link"
+                                    data-key="t-basic-elements">Unloader Labour Charges</a>
                             </li>
                         </ul>
                     </div>

@@ -14,6 +14,10 @@
                             @if ($filter == 'Business')
                                 <th>Category</th>
                             @endif
+                            @if ($filter == 'Vendor')
+                                <th>Address</th>
+                            @endif
+
                             @if ($filter == 'Customer')
                                 <th>Area</th>
                             @endif
@@ -29,6 +33,9 @@
                                     <td>{{ $account->title }}</td>
                                     @if ($filter == 'Business')
                                         <td>{{ $account->category }}</td>
+                                    @endif
+                                    @if ($filter == 'Vendor')
+                                        <td>{{ $account->address }}</td>
                                     @endif
                                     @if ($filter == 'Customer')
                                         <td>{{ $account->area->town->name }} - {{ $account->area->name }}</td>

@@ -69,12 +69,17 @@
                                         class="form-control">
                                 </div>
                             </div>
+                            @endif
+                            @if ($account->type == 'Customer' || $account->type == 'Vendor')
                             <div class="col-6 mt-2 customer">
                                 <div class="form-group ">
                                     <label for="address">Address</label>
                                     <input type="text" name="address" id="address" value="{{ $account->address }}" class="form-control">
                                 </div>
                             </div>
+                            @endif
+                            @if ($account->type == 'Customer')
+                           
                             <div class="col-6 mt-2 customer">
                                 <div class="form-group ">
                                     <label for="address_urdu">Address (urdu)</label>
