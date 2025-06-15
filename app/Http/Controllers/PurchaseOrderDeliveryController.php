@@ -160,8 +160,11 @@ class PurchaseOrderDeliveryController extends Controller
             $order->update([
                 'status' => 'Under Process',
             ]);
+            $this->checkStatus($request->orderID);
 
             DB::commit();
+
+            
             return back()->with('success', "Purchase Created");
         }
         catch(\Exception $e)
@@ -219,6 +222,32 @@ class PurchaseOrderDeliveryController extends Controller
     public function destroy(purchase_order_delivery $purchase_order_delivery)
     {
         //
+    }
+
+    public function checkStatus($orderID)
+    {
+        $order = purchase_order::findOrFail($orderID);
+       
+            $order_pc = $order->details->sum('pc');
+            $delivered_pc = $order->delivered_items->sum('pc');
+
+            if($order_pc == $delivered_pc)
+            {
+                $order->status = "Completed";
+              
+            }
+
+            if($order_pc > $delivered_pc)
+            {
+                $order->status = "Under Process";
+               
+            }
+            if($delivered_pc == 0)
+            {
+                $order->status = "Pending";
+               
+            }
+            $order->save();
     }
 
     

@@ -160,8 +160,10 @@ class SalesController extends Controller
             );
 
             createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id", $ref);
+
+            $customer = accounts::find($request->customerID)->title;
            
-            createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id", $ref);
+            createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer", $ref);
 
             DB::commit();
             return back()->with('success', "Sale Created");
@@ -321,8 +323,9 @@ class SalesController extends Controller
             );
 
             createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id", $ref);
+            $customer = accounts::find($request->customerID)->title;
            
-           createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id", $ref);
+           createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer", $ref);
 
             DB::commit();
             return back()->with('success', "Sale Updated");
