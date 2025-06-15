@@ -68,7 +68,7 @@ class StaffPaymentsController extends Controller
                     'method'        => $request->method,
                     'number'        => $request->number,
                     'bank'          => $request->bank,
-                    'remarks'       => $request->remarks,
+                    'cheque_date'   => $request->cheque_date,
                     'notes'         => $request->notes,
                     'receivedBy'    => auth()->id(),
                     'refID'         => $ref,
@@ -82,8 +82,8 @@ class StaffPaymentsController extends Controller
             createUserTransaction(auth()->id(), $request->date,$request->amount, 0, $notes, $ref);
             createUserTransaction($request->fromID, $request->date,0, $request->amount, $notes1, $ref);
            
-            createMethodTransaction($staff->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $notes1, $ref);
-            createMethodTransaction(auth()->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, $notes, $ref);
+            createMethodTransaction($staff->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes1, $ref);
+            createMethodTransaction(auth()->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
 
             if($request->method == 'Cash')
             {
@@ -92,7 +92,7 @@ class StaffPaymentsController extends Controller
             }
             if($request->method == 'Cheque')
             {
-                saveCheque($request->customerID, auth()->user()->id, $request->date, $request->amount, $request->number, $request->bank, $request->notes, $ref);
+                saveCheque($request->customerID, auth()->user()->id, $request->cheque_date, $request->amount, $request->number, $request->bank, $request->notes, $ref);
             }
             if($request->has('file')){
                 createAttachment($request->file('file'), $ref);

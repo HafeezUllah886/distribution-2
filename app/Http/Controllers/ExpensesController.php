@@ -78,14 +78,14 @@ class ExpensesController extends Controller
                     'method' => $request->method,
                     'number' => $request->number,
                     'bank' => $request->bank,
-                    'remarks' => $request->remarks,
+                    'cheque_date' => $request->cheque_date,
                     'notes' => $request->notes,
                     'refID' => $ref,
                 ]
             );
 
             $notes = "Expense - Method ".$request->method." Notes : ".$request->notes;
-            createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $notes, $ref);
+            createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
            
             createUserTransaction(auth()->user()->id, $request->date,0, $request->amount, $notes, $ref);
 

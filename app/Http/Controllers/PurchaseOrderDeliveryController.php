@@ -163,8 +163,6 @@ class PurchaseOrderDeliveryController extends Controller
             $this->checkStatus($request->orderID);
 
             DB::commit();
-
-            
             return back()->with('success', "Purchase Created");
         }
         catch(\Exception $e)

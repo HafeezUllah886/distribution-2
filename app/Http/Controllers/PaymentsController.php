@@ -90,7 +90,7 @@ class PaymentsController extends Controller
                     'method'        => $request->method,
                     'number'        => $request->number,
                     'bank'          => $request->bank,
-                    'remarks'       => $request->remarks,
+                    'cheque_date'   => $request->cheque_date,
                     'branchID'      => auth()->user()->branchID,
                     'notes'         => $request->notes,
                     'userID'        => auth()->user()->id,
@@ -102,7 +102,7 @@ class PaymentsController extends Controller
             $notes = "Payment to $receiver->title Method $request->method Notes : $request->notes";
 
             createTransaction($request->receiverID, $request->date, $request->amount, 0, $notes, $ref);
-            createMethodTransaction(auth()->user()->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $notes, $ref);
+            createMethodTransaction(auth()->user()->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
            
             createUserTransaction(auth()->user()->id, $request->date,0, $request->amount, $notes, $ref);
 

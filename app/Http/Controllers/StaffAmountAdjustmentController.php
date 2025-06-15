@@ -61,7 +61,7 @@ class StaffAmountAdjustmentController extends Controller
 
         if($request->type == 'credit')
         {
-            createMethodTransaction($staff->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, $request->notes, $ref);
+            createMethodTransaction($staff->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, $request->notes, $ref);
            
             createUserTransaction($staff->id, $request->date, $request->amount, 0, "Staff Amount Adjusted - ".$request->notes, $ref);
 
@@ -72,7 +72,7 @@ class StaffAmountAdjustmentController extends Controller
         }
         else
         {
-            createMethodTransaction($staff->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->remarks, $request->notes, $ref);
+            createMethodTransaction($staff->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $request->notes, $ref);
            
             createUserTransaction($staff->id, $request->date, 0, $request->amount, "Staff Amount Adjusted - ".$request->notes, $ref);
 

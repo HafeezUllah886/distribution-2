@@ -76,7 +76,7 @@ class PaymentsReceivingController extends Controller
                     'method'        => $request->method,
                     'number'        => $request->number,
                     'bank'          => $request->bank,
-                    'remarks'       => $request->remarks,
+                    'cheque_date'   => $request->cheque_date,
                     'branchID'      => auth()->user()->branchID,
                     'notes'         => $request->notes,
                     'userID'        => auth()->user()->id,
@@ -89,13 +89,17 @@ class PaymentsReceivingController extends Controller
             $notes1 = "Payment deposited to $user_name Method $request->method Notes : $request->notes";
             createTransaction($request->depositerID, $request->date, 0, $request->amount, $notes1, $ref);
             
-            createMethodTransaction(auth()->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->remarks, $notes, $ref);
+            createMethodTransaction(auth()->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
     
             createUserTransaction(auth()->user()->id, $request->date, $request->amount, 0, $notes, $ref);
 
             if($request->method == 'Cash')
             {
                 createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, $notes, $ref);
+            }
+
+            if($request->method == 'Cheque'){
+                saveCheque($request->depositerID, auth()->user()->id, $request->cheque_date, $request->amount,$request->number,$request->bank,$request->notes,$ref);
             }
             
             if($request->has('file')){
