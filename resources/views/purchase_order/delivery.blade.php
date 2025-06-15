@@ -79,7 +79,6 @@
                                             <th></th>
                                             <th></th>
                                             <th></th>
-                                            <th></th>
                                             <th class="text-end" id="totalDiscount">0.00</th>
                                             <th class="text-end" id="totalPDiscount">0.00</th>
                                             <th class="text-end" id="totalFright">0.00</th>

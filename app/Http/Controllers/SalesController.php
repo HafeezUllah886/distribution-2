@@ -106,6 +106,7 @@ class SalesController extends Controller
 
             $total = 0;
             $totalLabor = 0;
+            $customer = accounts::find($request->customerID)->title;
             foreach($ids as $key => $id)
             {
                 $unit = product_units::find($request->unit[$key]);
@@ -147,7 +148,7 @@ class SalesController extends Controller
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, 0, $qty, $request->date, "Sold", $ref, $request->warehouseID);
+                createStock($id, 0, $qty, $request->date, "Sold to $customer", $ref, $request->warehouseID);
             }
 
             $net = round($total,0);
@@ -161,7 +162,7 @@ class SalesController extends Controller
 
             createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id", $ref);
 
-            $customer = accounts::find($request->customerID)->title;
+        
            
             createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer", $ref);
 
@@ -269,6 +270,7 @@ class SalesController extends Controller
 
             $total = 0;
             $totalLabor = 0;
+            $customer = accounts::find($request->customerID)->title;
             foreach($ids as $key => $id)
             {
                 $unit = product_units::find($request->unit[$key]);
@@ -310,7 +312,7 @@ class SalesController extends Controller
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, 0, $qty, $request->date, "Sold", $ref, $request->warehouseID);
+                createStock($id, 0, $qty, $request->date, "Sold to $customer", $ref, $request->warehouseID);
             }
 
             $net = round($total,0);
@@ -323,7 +325,6 @@ class SalesController extends Controller
             );
 
             createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id", $ref);
-            $customer = accounts::find($request->customerID)->title;
            
            createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer", $ref);
 

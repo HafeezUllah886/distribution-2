@@ -154,6 +154,14 @@
                                                     </tr>
                                                 @endforeach
                                             </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="2" class="text-end">Total</th>
+                                                    <th>{{$order->details->sum('qty')}}, {{$order->details->sum('loose')}}</th>
+                                                    <th>{{$order->delivered_items->sum('qty')}}, {{$order->delivered_items->sum('loose')}}</th>
+                                                    <th>{{$order->details->sum('qty') - $order->delivered_items->sum('qty')}}, {{$order->details->sum('loose') - $order->delivered_items->sum('loose')}}</th>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>

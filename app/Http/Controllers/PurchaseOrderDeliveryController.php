@@ -129,7 +129,7 @@ class PurchaseOrderDeliveryController extends Controller
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, $qty, 0, $request->recdate, "Purchased from $vendor->name", $ref, $request->warehouseID);
+                createStock($id, $qty, 0, $request->recdate, "Purchased from $vendor->title", $ref, $request->warehouseID);
 
                 purchase_order_delivery::create(
                     [

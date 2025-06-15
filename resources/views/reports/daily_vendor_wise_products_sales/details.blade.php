@@ -64,6 +64,11 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php
+                                            $totalQty = 0;
+                                            $totalLoose = 0;
+                                            $totalAmount = 0;
+                                        @endphp
                                            
                                         @foreach ($vendors as $key => $vendor)
                                         @php
@@ -72,7 +77,9 @@
                                         <tr>
                                             <td colspan="7" class="text-start">{{ $vendor->title }}</td>
                                         </tr>
+                                      
                                         @foreach ($vendor->products as $product)
+
                                             <tr>
                                                 <td>{{ $ser++ }}</td>
                                                 <td>{{ $product->name }}</td>
@@ -89,9 +96,20 @@
                                             <td  class="text-end">{{ number_format($vendor->products->sum('product_loose'),2) }}</td>
                                             <td class="text-end">{{ number_format($vendor->products->sum('product_amount'),2) }}</td>
                                         </tr>
+                                        @php
+                                            $totalQty += $vendor->products->sum('product_qty');
+                                            $totalLoose += $vendor->products->sum('product_loose');
+                                            $totalAmount += $vendor->products->sum('product_amount');
+                                        @endphp
                                         @endforeach
                                         </tbody>
                                         <tfoot>
+                                            <tr>
+                                                <td colspan="4" class="text-end">Total</td>
+                                                <td  class="text-end">{{ number_format($totalQty,2) }}</td>
+                                                <td  class="text-end">{{ number_format($totalLoose,2) }}</td>
+                                                <td class="text-end">{{ number_format($totalAmount,2) }}</td>
+                                            </tr>
                                         </tfoot>
                                     </table><!--end table-->
                                 </div>

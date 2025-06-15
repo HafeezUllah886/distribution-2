@@ -128,8 +128,7 @@
                                     <tfoot>
                                         <tr>
                                             <th colspan="2" class="text-end">Total</th>
-                                           {{--  <th class="text-end" id="totalQty">0.00</th> --}}
-                                            <th></th>
+                                            <th class="text-end" id="totalQty">0.00</th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
@@ -321,6 +320,15 @@
             });
 
             $("#totalAmount").html(total.toFixed(2));
+
+            var totalQty = 0;
+            $("input[id^='qty_']").each(function() {
+                var inputId = $(this).attr('id');
+                var inputValue = $(this).val();
+                totalQty += parseFloat(inputValue);
+            });
+
+            $("#totalQty").html(totalQty.toFixed(2));
 
             var totalFright = 0;
             $("input[id^='frightValue_']").each(function() {

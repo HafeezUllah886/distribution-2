@@ -88,7 +88,7 @@ class PurchaseController extends Controller
 
             $total = 0;
             $totalLabor = 0;
-            $vendor = accounts::find($request->vendorID);
+            $vendor = accounts::find($request->vendorID)->title;
             foreach($ids as $key => $id)
             {
                 $unit = product_units::find($request->unit[$key]);
@@ -128,7 +128,7 @@ class PurchaseController extends Controller
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, $qty, 0, $request->recdate, "Purchased from $vendor->name", $ref, $request->warehouseID);
+                createStock($id, $qty, 0, $request->recdate, "Purchased from $vendor", $ref, $request->warehouseID);
             }
 
             $net = round($total, 0);
@@ -143,8 +143,6 @@ class PurchaseController extends Controller
             );
 
             createTransaction($request->vendorID, $request->recdate, 0, $net, "Pending Amount of Purchase No. $purchase->id", $ref);
-
-            $vendor = accounts::find($request->vendorID)->title;
 
             createTransaction($request->unloaderID, $request->recdate, 0, $totalLabor, "Labor Charges of Purchase No. $purchase->id Vendor: $vendor", $ref);
             DB::commit();
@@ -218,7 +216,7 @@ class PurchaseController extends Controller
 
             $total = 0;
             $totalLabor = 0;
-            $vendor = accounts::find($request->vendorID);
+            $vendor = accounts::find($request->vendorID)->title;
             foreach($ids as $key => $id)
             {
                 $unit = product_units::find($request->unit[$key]);
@@ -258,7 +256,7 @@ class PurchaseController extends Controller
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, $qty, 0, $request->recdate, "Purchased from $vendor->name", $ref, $request->warehouseID);
+                createStock($id, $qty, 0, $request->recdate, "Purchased from $vendor", $ref, $request->warehouseID);
 
             }
 
@@ -273,7 +271,7 @@ class PurchaseController extends Controller
             );
 
             createTransaction($request->vendorID, $request->recdate, 0, $net, "Pending Amount of Purchase No. $purchase->id", $ref);
-            $vendor = accounts::find($request->vendorID)->title;
+           
             createTransaction($request->unloaderID, $request->recdate, 0, $totalLabor, "Labor Charges of Purchase No. $purchase->id Vendor: $vendor", $ref);
           
             DB::commit();

@@ -211,6 +211,7 @@ class BranchOrdersController extends Controller
 
             $total = 0;
             $totalLabor = 0;
+            $customer = accounts::find($request->customerID)->title;
             foreach($ids as $key => $id)
             {
                 $unit = product_units::find($request->unit[$key]);
@@ -253,7 +254,7 @@ class BranchOrdersController extends Controller
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, 0, $qty, $request->date, "Sold", $ref, $request->warehouseID);
+                createStock($id, 0, $qty, $request->date, "Sold to $customer", $ref, $request->warehouseID);
 
                 order_delivery::create(
                     [
@@ -288,7 +289,7 @@ class BranchOrdersController extends Controller
 
             createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id", $ref);
            
-            createTransaction($request->supplymanID, $request->date, $totalLabor, 0, "Labor Charges of Sale No. $sale->id", $ref);
+            createTransaction($request->supplymanID, $request->date, $totalLabor, 0, "Labor Charges of Sale No. $sale->id Customer: $customer", $ref);
 
             $this->checkCompletion($order->id);
 

@@ -54,52 +54,52 @@
                                     <table class="table table-bordered text-center table-nowrap align-middle mb-0">
                                         <thead>
                                             <tr class="table-active">
-                                                <th scope="col" style="width: 50px;">#</th>
-                                                <th scope="col" style="width: 50px;">Inv #</th>
-                                                <th scope="col" class="text-start">Customer</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Orderbooker</th>
-                                                <th scope="col">Supplyman</th>
-                                                <th scope="col">Net Amount</th>
+                                                <td scope="col" class="p-1 m-0" style="width: 50px;">#</td>
+                                                <td scope="col" class="p-1 m-0" style="width: 50px;">Inv #</td>
+                                                <td scope="col" class="text-start p-1 m-0">Customer</td>
+                                                <td scope="col" class="p-1 m-0">Date</td>
+                                                <td scope="col" class="p-1 m-0">Orderbooker</td>
+                                                <td scope="col" class="p-1 m-0">Supplyman</td>
+                                                <td scope="col" class="p-1 m-0">Net Amount</td>
                                             </tr>
                                         </thead>
                                         <tbody>
                                         @foreach ($sales as $key => $sale)
-                                        <tr class="table-active">
-                                            <td>{{ $key+1 }}</td>
-                                            <td>{{ $sale->id }}</td>
-                                            <td class="text-start">{{ $sale->customer->title }}</td>
-                                            <td>{{ date('d M Y', strtotime($sale->date)) }}</td>
-                                            <td>{{ $sale->orderbooker->name }}</td>
-                                            <td>{{ $sale->supplyman->title }}</td>
-                                            <td>{{ number_format($sale->net,2)}}</td>
+                                        <tr class="table-active text-success">
+                                            <th class="p-1 m-0">{{ $key+1 }}</th>
+                                            <th class="p-1 m-0">{{ $sale->id }}</th>
+                                            <th class="text-start p-1 m-0">{{ $sale->customer->title }}</th>
+                                            <th class="p-1 m-0">{{ date('d M Y', strtotime($sale->date)) }}</th>
+                                            <th class="p-1 m-0">{{ $sale->orderbooker->name }}</th>
+                                            <th class="p-1 m-0">{{ $sale->supplyman->title }}</th>
+                                            <th class="p-1 m-0">{{ number_format($sale->net,2)}}</th>
                                         </tr>
                                         <tr>
                                             <td colspan="7">
-                                                <table class="table table-bordered">
+                                                <table class="table table-bordered table-nowrap align-middle mb-0">
                                                     <thead>
                                                         <tr class="table-active">
-                                                            <th scope="col" style="width: 50px;">#</th>
-                                                            <th scope="col" class="text-start" style="width: 50px;">Product</th>
-                                                            <th scope="col">Unit</th>
-                                                            <th scope="col">Pack Size</th>
-                                                            <th scope="col">Qty</th>
-                                                            <th scope="col">Loose</th>
-                                                            <th scope="col">Bonus</th>
-                                                            <th scope="col" class="text-end">Amount</th>
+                                                            <td scope="col" class="p-1 m-0" style="width: 50px;">#</td>
+                                                            <td scope="col" class="text-start p-1 m-0" style="width: 50px;">Product</td>
+                                                            <td scope="col" class="p-1 m-0">Unit</td>
+                                                            <td scope="col" class="p-1 m-0">Pack Size</td>
+                                                            <td scope="col" class="p-1 m-0">Qty</td>
+                                                            <td scope="col" class="p-1 m-0">Loose</td>
+                                                            <td scope="col" class="p-1 m-0">Bonus</td>
+                                                            <td scope="col" class="text-end p-1 m-0">Amount</td>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                     @foreach ($sale->details as $key => $detail)
                                                     <tr>
-                                                        <td>{{ $key+1 }}</td>
-                                                        <td>{{ $detail->product->name }}</td>
-                                                        <td>{{ $detail->unit->unit_name }}</td>
-                                                        <td>{{ $detail->unit->value }}</td>
-                                                        <td>{{ $detail->qty }}</td>
-                                                        <td>{{ $detail->loose }}</td>
-                                                        <td>{{ $detail->bonus }}</td>
-                                                        <td class="text-end">{{ number_format($detail->amount,2) }}</td>
+                                                        <td class="p-1 m-0">{{ $key+1 }}</td>
+                                                        <td class="p-1 m-0">{{ $detail->product->name }}</td>
+                                                        <td class="p-1 m-0">{{ $detail->unit->unit_name }}</td>
+                                                        <td class="p-1 m-0">{{ $detail->unit->value }}</td>
+                                                        <td class="p-1 m-0">{{ $detail->qty }}</td>
+                                                        <td class="p-1 m-0">{{ $detail->loose }}</td>
+                                                        <td class="p-1 m-0">{{ $detail->bonus }}</td>
+                                                        <td class="text-end p-1 m-0">{{ number_format($detail->amount,2) }}</td>
                                                     </tr>
                                                     @endforeach
                                                     </tbody>

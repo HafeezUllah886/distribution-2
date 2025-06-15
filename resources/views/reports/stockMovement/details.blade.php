@@ -64,6 +64,7 @@
                                         <tbody>
                                            
                                         @foreach ($products as $key => $product)
+                                        @if ($product->opening_stock > 0 || $product->stock_in > 0 || $product->stock_out > 0 || $product->closing_stock > 0)
                                             <tr>
                                                 <td class="p-1 m-0">{{ $key+1}}</td>
                                                 <td class="text-start p-1 m-0">{{ $product->name}}</td>
@@ -75,6 +76,7 @@
                                                 <td class="text-end p-1 m-0">{{ packInfo($product->units[0]->value, $product->units[0]->unit_name, $product->closing_stock) }}</td>
                                                 <td class="text-end p-1 m-0">{{ packInfo($product->units[0]->value, $product->units[0]->unit_name, $product->current_stock) }}</td>
                                             </tr>
+                                        @endif
                                         @endforeach
                                         
                                     </tbody>
