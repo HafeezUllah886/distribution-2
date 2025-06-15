@@ -6,10 +6,10 @@ use App\Http\Controllers\reports\balanceSheetReport;
 use App\Http\Controllers\reports\dailycashbookController;
 use App\Http\Controllers\reports\DailyInvWiseProductsSalesReport;
 use App\Http\Controllers\reports\DailyVendorWiseProductsSalesReport;
+use App\Http\Controllers\reports\invoicePaymentsReportController;
 use App\Http\Controllers\reports\loadsheetController;
 use App\Http\Controllers\reports\OrderbookerPerformanceReportController;
 use App\Http\Controllers\reports\ProductsSummaryReportController;
-
 use App\Http\Controllers\reports\purchaseReportController;
 use App\Http\Controllers\reports\salesReportController;
 use App\Http\Controllers\reports\TopCustomersReportController;
@@ -73,4 +73,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/reports/unloaderreport', [UnloaderLabourChargesReportController::class, 'index'])->name('reportUnloaderReport');
     Route::get('/reports/unloaderreportData', [UnloaderLabourChargesReportController::class, 'data'])->name('reportUnloaderReportData');
+
+    Route::get('/reports/invoicepaymentsreport', [invoicePaymentsReportController::class, 'index'])->name('reportInvoicePayments');
+    Route::get('/reports/invoicepaymentsreportData', [invoicePaymentsReportController::class, 'data'])->name('reportInvoicePaymentsData');
 });

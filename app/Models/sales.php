@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -60,5 +61,10 @@ class sales extends Model
     {
         return $this->belongsTo(branches::class, 'branchID');
     }
+
+    public function age()
+{
+    return Carbon::parse($this->date)->age;
+}
 
 }

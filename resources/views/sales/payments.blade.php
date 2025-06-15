@@ -31,7 +31,7 @@
                                     </div>
                                     <div class="form-group mt-2">
                                         <label for="notes">Notes</label>
-                                        <textarea name="notes" class="form-control" id="notes" cols="30" rows="5"></textarea>
+                                        <textarea name="notes" class="form-control" required id="notes" cols="30" rows="5"></textarea>
                                     </div>
                                 </div>
                                 <div class="card-footer">
