@@ -43,6 +43,7 @@ class profitController extends Controller
         foreach($products as $product)
         {
             $unit = $product->units->first()->value;
+            $unit_name = $product->units->first()->unit_name;
             if($branch == "All")
             {
              
@@ -75,7 +76,7 @@ class profitController extends Controller
                 $stockValue = $stock * $purchaseRate;
             }
 
-            $data[] = ['name' => $product->name, 'purchaseRate' => $purchaseRate, 'saleRate' => $saleRate, 'sold' => $sold, 'ppu' => $ppu, 'profit' => $profit, 'stock' => $stock, 'stockValue' => $stockValue];
+            $data[] = ['name' => $product->name, 'purchaseRate' => $purchaseRate, 'saleRate' => $saleRate, 'sold' => $sold, 'ppu' => $ppu, 'profit' => $profit, 'stock' => $stock, 'stockValue' => $stockValue, 'unit' => $unit_name, 'unit_value' => $unit];
         }
 
        if($branch == "All")
