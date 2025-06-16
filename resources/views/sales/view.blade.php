@@ -115,9 +115,9 @@
                                                 <td class="text-end p-1 m-1">{{number_format($discount)}}</td>
                                                 <td class="text-end p-1 m-1">{{$product->discountp}}% | {{number_format($discountvalue)}}</td>
                                                 <td class="text-end p-1 m-1">{{number_format($product->claim * $qty)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->netprice,2)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->netprice,0)}}</td>
                                                 <td class="text-end p-1 m-1">{{number_format($product->fright * $qty)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->amount,2)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->amount,0)}}</td>
                                                </tr>
                                            @endforeach
                                         </tbody>
@@ -133,7 +133,7 @@
                                                 <th class="text-end">(-){{number_format($totalClaim)}}</th>
                                                 <th></th>
                                                 <th class="text-end">(+){{number_format($totalFright)}}</th>
-                                                <th class="text-end">{{number_format($netAmount, 2)}}</th>
+                                                <th class="text-end">{{number_format($netAmount, 0)}}</th>
                                             </tr> 
                                            {{--  <tr>
                                                 <th class="text-end p-1" colspan="12">Gross Amount</th>

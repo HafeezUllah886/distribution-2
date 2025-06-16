@@ -21,4 +21,9 @@ class returnsDetails extends Model
     {
         return $this->belongsTo(product_units::class, 'unitID');
     }
+
+    public function return()
+    {
+        return $this->belongsTo(returns::class, 'returnID');
+    }
 }

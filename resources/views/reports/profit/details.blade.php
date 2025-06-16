@@ -87,7 +87,7 @@
                                         @endphp
                                             <tr>
                                                 <td>{{ $key+1 }}</td>
-                                                <td>{{ $item['name'] }}</td>
+                                                <td class="text-start">{{ $item['name'] }}</td>
                                                 <td class="text-end">{{ number_format($item['purchaseRate'],2) }}</td>
                                                 <td class="text-end">{{ number_format($item['saleRate'],2) }}</td>
                                                 <td class="text-end">{{ number_format($item['sold'],2) }}</td>

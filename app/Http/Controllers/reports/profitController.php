@@ -7,6 +7,7 @@ use App\Models\accounts;
 use App\Models\branches;
 use App\Models\expenses;
 use App\Models\products;
+use App\Models\returnsDetails;
 use App\Models\sale_details;
 use Illuminate\Http\Request;
 
@@ -41,22 +42,29 @@ class profitController extends Controller
         $data = [];
         foreach($products as $product)
         {
+            $unit = $product->units->first()->value;
             if($branch == "All")
             {
-                $purchaseRate = avgPurchasePrice($from, $to, 'all', $product->id);
-                $saleRate = avgSalePrice($from, $to, 'all',$product->id);
-                $sold = sale_details::where('productID', $product->id)->whereBetween('date', [$from, $to])->sum('qty');
-                $ppu = $saleRate - $purchaseRate;
+             
+                $purchaseRate = avgPurchasePrice($from, $to, 'all', $product->id) * $unit;
+                $saleRate = avgSalePrice($from, $to, 'all',$product->id) * $unit;
+                $sold = sale_details::where('productID', $product->id)->whereBetween('date', [$from, $to])->sum('qty') - returnsDetails::where('productID', $product->id)->whereBetween('date', [$from, $to])->sum('qty');
+                $ppu = $saleRate - $purchaseRate ;
                 $profit = $ppu * $sold;
                 $stock = getStock($product->id);
                 $stockValue = productStockValue($product->id);
             }
             else
             {
-                $purchaseRate = avgPurchasePrice($from, $to, $branch, $product->id);
-                $saleRate = avgSalePrice($from, $to, $branch, $product->id);
+                $purchaseRate = avgPurchasePrice($from, $to, $branch, $product->id) * $unit;
+                $saleRate = avgSalePrice($from, $to, $branch, $product->id) * $unit;
                 $sold = sale_details::where('productID', $product->id)
                     ->whereHas('sale', function($query) use ($branch) {
+                        $query->where('branchID', $branch);
+                    })
+                    ->whereBetween('date', [$from, $to])
+                    ->sum('qty') - returnsDetails::where('productID', $product->id)
+                    ->whereHas('return', function($query) use ($branch) {
                         $query->where('branchID', $branch);
                     })
                     ->whereBetween('date', [$from, $to])

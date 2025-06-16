@@ -60,6 +60,7 @@
                                                 <th scope="col" class="text-start">Order Booker</th>
                                                 <th scope="col" class="text-start">Supplyman</th>
                                                 <th scope="col">Date</th>
+                                                <th scope="col">Qty</th>
                                                 <th scope="col">Disc</th>
                                                 <th scope="col">Fright</th>
                                                 <th scope="col">Labor</th>
@@ -84,7 +85,21 @@
                                                 $totalAmount += $amount;
                                                $totalPaid += $paid;
                                                 $totalDue += $due;
-                                            @endphp
+                                                $totalFright = 0;
+                                                $totalClaim = 0;
+                                                $totalLabor = 0;
+                                                @endphp
+                                                 @foreach ($item->details as $key => $product)
+                                                 @php
+                                                 $qty = $product->pc;
+                                                 $fright = $product->fright * $qty;
+                                                 $claim = $product->claim * $qty;
+                                                 $labor = $product->labor * $qty;
+                                                 $totalFright += $fright;
+                                                 $totalClaim += $claim;
+                                                 $totalLabor += $labor;
+                                                 @endphp
+                                             @endforeach
                                             <tr>
                                                 <td>{{ $item->id}}</td>
                                                 <td class="text-start">{{ $item->branch->name}}</td>
@@ -92,22 +107,23 @@
                                                 <td class="text-start">{{ $item->orderbooker->name }}</td>
                                                 <td class="text-start">{{ $item->supplyman->title }}</td>
                                                 <td>{{ date("d M Y", strtotime($item->date))}}</td>
-                                                <td class="text-end">{{ number_format($item->details->sum('discount') + $item->details->sum('discountValue'), 2) }}</td>
-                                                <td class="text-end">{{ number_format($item->details->sum('fright'), 2) }}</td>
-                                                <td class="text-end">{{ number_format($item->details->sum('labor'), 2) }}</td>
-                                                <td class="text-end">{{ number_format($item->details->sum('claim'), 2) }}</td>
-                                                <td class="text-end">{{ number_format($amount, 2) }}</td>
-                                               <td class="text-end">{{ number_format($paid, 2) }}</td>
-                                                <td class="text-end">{{ number_format($due, 2) }}</td>
+                                                <td class="text-end">{{ number_format($item->details->sum('qty'), 0) }}, {{ $item->details->sum('loose') }}</td>
+                                                <td class="text-end">{{ number_format($item->details->sum('discount') + $item->details->sum('discountValue'), 0) }}</td>
+                                                <td class="text-end">{{ number_format($totalFright, 0) }}</td>
+                                                <td class="text-end">{{ number_format($totalLabor, 0) }}</td>
+                                                <td class="text-end">{{ number_format($totalClaim, 0) }}</td>
+                                                <td class="text-end">{{ number_format($item->net, 0) }}</td>
+                                               <td class="text-end">{{ number_format($paid, 0) }}</td>
+                                                <td class="text-end">{{ number_format($due, 0) }}</td>
                                             </tr>
                                         @endforeach
                                         </tbody>
                                         <tfoot>
                                         <tr>
-                                                <th colspan="10" class="text-end">Total</th>
-                                                <th class="text-end">{{number_format($sales->sum('net'), 2)}}</th>
-                                               <th class="text-end">{{number_format($totalPaid, 2)}}</th>
-                                                <th class="text-end">{{number_format($totalDue, 2)}}</th>
+                                                <th colspan="11" class="text-end">Total</th>
+                                                <th class="text-end">{{number_format($sales->sum('net'), 0)}}</th>
+                                               <th class="text-end">{{number_format($totalPaid, 0)}}</th>
+                                                <th class="text-end">{{number_format($totalDue, 0)}}</th>
                                             </tr> 
                                         </tfoot>
                                     </table><!--end table-->
