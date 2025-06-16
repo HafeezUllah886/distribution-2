@@ -22,6 +22,7 @@
                                     <thead>
                                         <th width="10%">Item</th>
                                         <th width="10%" class="text-center">Unit</th>
+                                        <th class="text-center">Stock</th>
                                         <th class="text-center">Qty</th>
                                         <th class="text-center">loose</th>
                                         <th class="text-center">Bonus</th>
@@ -51,6 +52,7 @@
                                                 <option data-unit="{{$unit->value}}" value="{{ $unit->id }}">{{ $unit->unit_name }}</option>
                                                 @endforeach
                                             </select></td>
+                                            <td class="no-padding"><input type="number" name="stock[]" readonly step="any" value="{{$product->stock}}" class="form-control text-center no-padding" id="stock_{{ $id }}"></td>
                                             <td class="no-padding"><div class="input-group"><span class="input-group-text no-padding stock_{{ $id }}" id="basic-addon2"></span><input type="number" name="qty[]" oninput="updateChanges({{ $id }})" max="{{$product->stock}}" min="0" required step="any" value="0" class="form-control text-center no-padding" id="qty_{{ $id }}"> </div></td>
                                             <td class="no-padding"><input type="number" name="loose[]" oninput="updateChanges({{ $id }})" min="0" required step="any" value="0" class="form-control text-center no-padding" id="loose_{{ $id }}"></td>
                                             <td class="no-padding"><input type="number" name="bonus[]" min="0" required oninput="updateChanges({{ $id }})" step="any" value="0" class="form-control text-center no-padding" id="bonus_{{ $id }}"></td>
@@ -67,6 +69,7 @@
                                             <input type="hidden" name="claimValue[]" id="claimValue_{{ $id }}">
                                             <input type="hidden" name="discountValue[]" id="discountValue_{{ $id }}">
                                             <input type="hidden" id="stockInput_{{ $id }}" value="{{$product->stock < $product->remaining ? $product->stock : $product->remaining}}">
+                                            <input type="hidden" id="stockInput1_{{ $id }}" value="{{$product->stock}}">
                                             <input type="hidden" name="discountPValue[]" id="discountPValue_{{ $id }}">
                                             </tr>
                                             @endif
@@ -74,7 +77,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="2" class="text-end">Total</th>
+                                            <th colspan="3" class="text-end">Total</th>
                                            <th class="text-end" id="totalQty">0.00</th>
                                             <th></th>
                                             <th></th>
@@ -191,14 +194,16 @@
             var bonus = parseFloat($('#bonus_' + id).val());
             var unit = $('#unit_' + id).find(':selected').data('unit');
             var stock = parseFloat($('#stockInput_' + id).val());
+            var stock1 = parseFloat($('#stockInput1_' + id).val());
 
             var unit_qty = unit * qty;
             var stock_place = stock / unit;
+            var stock_place1 = stock1 / unit;
             var totalQty = unit_qty + loose + bonus;
 
             $("#qty_"+id).attr("max", stock_place);
             $(".stock_"+id).html(stock_place.toFixed(0));
-
+            $("#stock_"+id).val(stock_place1.toFixed(0));
             if(totalQty > stock)
             {
                 $('#qty_' + id).val(0);

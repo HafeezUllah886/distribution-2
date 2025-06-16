@@ -64,6 +64,8 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::resource('cheques', ChequesController::class);
     Route::get('cheques/status/{id}/{status}', [ChequesController::class, 'show'])->name('cheques.status');
 
+    Route::get('staff_balance/{staff}', [MyBalanceController::class, 'staff_balance'])->name('staff_balance');
+
     Route::get('/accountbalance/{id}', function ($id) {
         // Call your Laravel helper function here
         $result = getAccountBalance($id);

@@ -106,7 +106,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-group mt-2">
-                                    <label for="fromID">From (Balance: <span id="accountBalance">0</span>)</label>
+                                    <label for="fromID">From (Balance: <span id="accountBalance">0</span>) <span class="text-primary" id="viewBalance">View Balance</span></label>
                             <select name="fromID" id="fromID" onchange="getBalance()" required class="selectize">
                                 <option value=""></option>
                                 @foreach ($users as $user)
@@ -183,6 +183,11 @@
                 }
             });
         }
+        $("#viewBalance").click(function() {
+           var user = $("#fromID").find(":selected").val();
+           var url = "{{ url('/staff_balance/') }}/" + user;
+           window.open(url, "_blank", "width=600,height=800");
+        });
     </script>
 
 @endsection
