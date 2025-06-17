@@ -73,13 +73,15 @@
                                         @foreach ($vendors as $key => $vendor)
                                         @php
                                             $ser = 1;
+                                            $check_total = $vendor->products->sum('product_amount')
                                         @endphp
+                                        @if($check_total > 0)
                                         <tr>
                                             <td colspan="7" class="text-start">{{ $vendor->title }}</td>
                                         </tr>
                                       
                                         @foreach ($vendor->products as $product)
-
+                                        @if($product->product_amount > 0)
                                             <tr>
                                                 <td>{{ $ser++ }}</td>
                                                 <td>{{ $product->name }}</td>
@@ -89,6 +91,7 @@
                                                 <td class="text-end">{{ number_format($product->product_loose,2) }}</td>
                                                 <td class="text-end">{{ number_format($product->product_amount,2) }}</td>
                                             </tr>
+                                            @endif
                                         @endforeach
                                         <tr class="table-active">
                                             <td colspan="4" class="text-end">Total</td>
@@ -102,10 +105,11 @@
                                             $totalAmount += $vendor->products->sum('product_amount');
                                         @endphp
                                         @endforeach
+                                        @endif
                                         </tbody>
                                         <tfoot>
-                                            <tr>
-                                                <td colspan="4" class="text-end">Total</td>
+                                            <tr class="table-active">
+                                                <td colspan="4" class="text-end">Grand Total </td>
                                                 <td  class="text-end">{{ number_format($totalQty,2) }}</td>
                                                 <td  class="text-end">{{ number_format($totalLoose,2) }}</td>
                                                 <td class="text-end">{{ number_format($totalAmount,2) }}</td>
