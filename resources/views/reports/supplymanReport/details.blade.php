@@ -57,6 +57,7 @@
                                                 <th scope="col" class="text-start">Orderbooker</th>
                                                 <th scope="col" class="text-start">Bilty No.</th>
                                                 <th scope="col" class="text-start">Transport</th>
+                                                <th scope="col" class="text-start">Qty</th>
                                                 <th scope="col" class="text-start">Bill Amount</th>
                                                 <th scope="col" class="text-start">Labour Charge</th>
                                             </tr>
@@ -64,11 +65,15 @@
                                         <tbody>
                                             @php
                                                 $total_labour = 0;
+                                                $total_qty = 0;
+                                                $total_loose = 0;
                                             @endphp
                                            
                                         @foreach ($sales as $key => $sale)
                                         @php
                                             $total_labour += $sale->details->sum('labor');
+                                            $total_qty += $sale->details->sum('qty');
+                                            $total_loose += $sale->details->sum('loose');
                                         @endphp
                                             <tr>
                                                 <td class="p-1 m-0">{{ $key+1}}</td>
@@ -78,12 +83,14 @@
                                                 <td class="text-start p-1 m-0">{{ $sale->orderbooker->name}}</td>
                                                 <td class="text-end p-1 m-0">{{ $sale->bilty}}</td>
                                                 <td class="text-end p-1 m-0">{{ $sale->transporter}}</td>
+                                                <td class="text-end p-1 m-0">{{ number_format($sale->details->sum('qty'))}}, {{ $sale->details->sum('loose') }}</td>
                                                 <td class="text-end p-1 m-0">{{ number_format($sale->net,2)}}</td>
                                                 <td class="text-end p-1 m-0">{{ number_format($sale->details->sum('labor'),2)}}</td>
                                             </tr>
                                         @endforeach
                                         <tr>
                                             <td colspan="7" class="text-end p-1 m-0">Total</td>
+                                            <td class="text-end p-1 m-0">{{ number_format($total_qty)}} , {{ $total_loose }}</td>
                                             <td class="text-end p-1 m-0">{{ number_format($sales->sum('net'),2)}}</td>
                                             <td class="text-end p-1 m-0">{{ number_format($total_labour,2)}}</td>
                                         </tr>

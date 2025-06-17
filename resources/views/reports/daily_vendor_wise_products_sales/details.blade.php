@@ -85,7 +85,7 @@
                                                     @if ($product->product_amount > 0)
                                                         <tr>
                                                             <td>{{ $ser++ }}</td>
-                                                            <td>{{ $product->name }}</td>
+                                                            <td class="text-start">{{ $product->name }}</td>
                                                             <td class="text-start">{{ $product->product_unit }}</td>
                                                             <td class="text-end">
                                                                 {{ number_format($product->product_unit_value, 2) }}</td>
@@ -120,10 +120,10 @@
                                     </tbody>
                                     <tfoot>
                                         <tr class="table-active">
-                                            <td colspan="4" class="text-end">Grand Total </td>
-                                            <td class="text-end">{{ number_format($totalQty, 2) }}</td>
-                                            <td class="text-end">{{ number_format($totalLoose, 2) }}</td>
-                                            <td class="text-end">{{ number_format($totalAmount, 2) }}</td>
+                                            <th colspan="4" class="text-end">Grand Total </th>
+                                            <th class="text-end">{{ number_format($totalQty, 2) }}</th>
+                                            <th class="text-end">{{ number_format($totalLoose, 2) }}</th>
+                                            <th class="text-end">{{ number_format($totalAmount, 2) }}</th>
                                         </tr>
                                     </tfoot>
                                 </table><!--end table-->
