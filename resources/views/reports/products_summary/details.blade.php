@@ -56,6 +56,7 @@
                                                 <th scope="col" style="width: 50px;">#</th>
                                                 <th scope="col" class="text-start">Product</th>
                                                 <th scope="col" class="text-end">Unit</th>
+                                                <th scope="col" class="text-end">Pack Size</th>
                                                 <th scope="col" class="text-end">P-Price</th>
                                                 <th scope="col" class="text-end">S-Price</th>
                                                 <th scope="col" class="text-end">Sold</th>
@@ -70,11 +71,12 @@
                                                 <td>{{ $key+1}}</td>
                                                 <td class="text-start">{{ $product['name']}}</td>
                                                 <td class="text-end">{{ $product['unit']}}</td>
+                                                <td class="text-end">{{ $product['unitValue']}}</td>
                                                 <td class="text-end">{{ number_format($product['pprice'],2) }}</td>
                                                 <td class="text-end">{{ number_format($product['price'],2)}}</td>
-                                                <td class="text-end">{{packInfo($product['unitValue'], $product['unit'], $product['sold'])}} </td>
+                                                <td class="text-end">{{packInfoWithOutName($product['unitValue'], $product['sold'])}} </td>
                                                 <td class="text-end">{{ number_format($product['profit'],2) }}</td>
-                                                <td class="text-end">{{packInfo($product['unitValue'], $product['unit'], $product['stock'])}} </td>
+                                                <td class="text-end">{{packInfoWithOutName($product['unitValue'], $product['stock'])}} </td>
                                                 <td class="text-end">{{ number_format($product['amount'],2) }}</td>
                                             </tr>
                                         @endforeach

@@ -157,5 +157,23 @@ function packInfo($size, $name, $qty)
     return "$packs $name, $remains Pcs";
  }
 
+ function packInfoWithOutName($size, $qty)
+ {
+    $packs = intdiv($qty, $size);
+    $remains = $qty - ($packs*$size);
+    if($packs == 0 && $remains == 0)
+    {
+        return 0;
+    }
+    if($packs == 0)
+    {
+        return $remains;
+    }
+    if($remains == 0)
+    {
+        return $packs;
+    }
+    return $packs . ", " . $remains;
+ }
 
 
