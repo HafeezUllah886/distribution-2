@@ -17,12 +17,14 @@ class StockTransferController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $stockTransfers = StockTransfer::with('details')->where('branchID', auth()->user()->branchID)->get();
+        $from = $request->start ?? firstDayOfMonth();
+        $to = $request->end ?? lastDayOfMonth();
+        $stockTransfers = StockTransfer::with('details')->where('branchID', auth()->user()->branchID)->whereBetween('date', [$from, $to])->get();
         $warehouses = warehouses::currentBranch()->get();
        
-        return view('stock.transfer.index', compact('stockTransfers', 'warehouses'));
+        return view('stock.transfer.index', compact('stockTransfers', 'warehouses', 'from', 'to'));
     }
 
     /**

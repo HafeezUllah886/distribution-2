@@ -17,10 +17,12 @@ class StockAdjustmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $adjustments = stockAdjustment::currentBranch()->orderBy('id', 'desc')->get();
-        return view('stock.adjustment.index', compact('adjustments'));
+        $from = $request->start ?? firstDayOfMonth();
+        $to = $request->end ?? lastDayOfMonth();
+        $adjustments = stockAdjustment::currentBranch()->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
+        return view('stock.adjustment.index', compact('adjustments', 'from', 'to'));
     }
 
     /**
