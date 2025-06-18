@@ -72,21 +72,26 @@
                                             </tr>
                                         </thead>
                                         @foreach ($customers as $key => $customer)
+                                                @php
+                                                $totalPaid = 0;
+                                                $totalDue = 0;
+                                            @endphp
+                                            @foreach ($customer->sales as $key => $sale)
+                                                @php
+                                                    $totalPaid += $sale->paid();
+                                                    $totalDue += $sale->due();
+                                                @endphp
+                                            @endforeach
+                                            @if($totalPaid > 0 || $totalDue > 0)
                                         <thead>
                                             <tr class="table-active bg-success bg-opacity-50">
                                                 <th scope="col" colspan="7" class="text-start">{{ $customer->title }} - {{ $customer->area->name }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @php
-                                                $totalPaid = 0;
-                                                $totalDue = 0;
-                                            @endphp
+                                           
                                             @foreach ($customer->sales as $key => $sale)
-                                            @php
-                                                $totalPaid += $sale->paid();
-                                                $totalDue += $sale->due();
-                                            @endphp
+                                            
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $sale->id }}</td>
@@ -127,7 +132,8 @@
                                                 <td colspan="7" class="text-start">Total:  Inv({{ $customer->sales->count() }}) ------ Amount ({{ $customer->sales->sum('net') }}) ------ Paid({{ $totalPaid }}) ------ Due({{ $totalDue }})</td>
                                             </tr>
                                         </tbody>
-                                        
+                                        @endif
+        
                                         @endforeach
                                     </table><!--end table-->
                                 </div>
