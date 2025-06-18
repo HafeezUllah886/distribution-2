@@ -26,6 +26,7 @@ return new class extends Migration
         Schema::create('stock_transfer_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('stockTransferID')->constrained('stock_transfers');
+            $table->foreignId('branchID')->constrained('branches', 'id');
             $table->foreignId('productID')->constrained('products', 'id');
             $table->float('qty')->default(0);
             $table->float('loose')->default(0);

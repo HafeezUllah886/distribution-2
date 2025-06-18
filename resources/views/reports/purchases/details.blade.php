@@ -66,6 +66,14 @@
                                             </tr>
                                         </thead>
                                         <tbody >
+                                            @php
+                                                $netQty = 0;
+                                                $netLoose = 0;
+                                                $netDiscount = 0;
+                                                $netFright = 0;
+                                                $netClaim = 0;
+                                                $netLabor = 0;
+                                            @endphp
                                         @foreach ($purchases as $key => $item)
                                         @php
                                                $totalFright = 0;
@@ -83,6 +91,14 @@
                                             $totalLabor += $labor;
                                             @endphp
                                         @endforeach
+                                        @php
+                                            $netQty += $item->details->sum('qty');
+                                            $netLoose += $item->details->sum('loose');
+                                            $netDiscount += $item->details->sum('discount') + $item->details->sum('discountValue');
+                                            $netFright += $totalFright;
+                                            $netClaim += $totalClaim;
+                                            $netLabor += $totalLabor;
+                                        @endphp
                                             <tr>
                                                 <td>{{ $item->id}}</td>
                                                 <td class="text-start">{{ $item->branch->name}}</td>
@@ -100,7 +116,12 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="10" class="text-end">Total</th>
+                                                <th colspan="5" class="text-end">Total</th>
+                                                <th class="text-end">{{number_format($netQty)}}, {{ number_format($netLoose) }}</th>
+                                                <th class="text-end">{{number_format($netDiscount, 0)}}</th>
+                                                <th class="text-end">{{number_format($netFright, 0)}}</th>
+                                                <th class="text-end">{{number_format($netLabor, 0)}}</th>
+                                                <th class="text-end">{{number_format($netClaim, 0)}}</th>
                                                 <th class="text-end">{{number_format($purchases->sum('net'), 2)}}</th>
                                             </tr>
                                         </tfoot>

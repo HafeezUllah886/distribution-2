@@ -74,6 +74,7 @@ class StockTransferController extends Controller
                     [
                         'stockTransferID' => $stockTransfer->id,
                         'productID'     => $id,
+                        'branchID'        => Auth()->user()->branchID,
                         'qty'           => $request->qty[$key],
                         'loose'         => $request->loose[$key],
                         'pc'            => $pc,

@@ -75,6 +75,13 @@
                                                 $totalAmount = 0;
                                                $totalPaid = 0;
                                                 $totalDue = 0;
+
+                                                $netQty = 0;
+                                                $netLoose = 0;
+                                                $netFright = 0;
+                                                $netClaim = 0;
+                                                $netLabor = 0;
+                                                $netDiscount = 0;
                                             @endphp
                                         @foreach ($sales as $key => $item)
                                             @php
@@ -88,6 +95,10 @@
                                                 $totalFright = 0;
                                                 $totalClaim = 0;
                                                 $totalLabor = 0;
+                                                $netQty += $item->details->sum('qty');
+                                                $netLoose += $item->details->sum('loose');
+                                                $netDiscount += $item->details->sum('discount') + $item->details->sum('discountValue');
+                                                
                                                 @endphp
                                                  @foreach ($item->details as $key => $product)
                                                  @php
@@ -96,10 +107,19 @@
                                                  $claim = $product->claim * $qty;
                                                  $labor = $product->labor * $qty;
                                                  $totalFright += $fright;
+
                                                  $totalClaim += $claim;
                                                  $totalLabor += $labor;
+                                                 
+                                                 
+                                                
                                                  @endphp
                                              @endforeach
+                                             @php
+                                                 $netFright += $totalFright;
+                                                 $netClaim += $totalClaim;
+                                                 $netLabor += $totalLabor;
+                                             @endphp
                                             <tr>
                                                 <td>{{ $item->id}}</td>
                                                 <td class="text-start">{{ $item->branch->name}}</td>
@@ -120,7 +140,13 @@
                                         </tbody>
                                         <tfoot>
                                         <tr>
-                                                <th colspan="11" class="text-end">Total</th>
+                                                <th colspan="6" class="text-end">Total</th>
+                                                <th class="text-end">{{number_format($netQty)}}, {{ number_format($netLoose) }}</th>
+                                                <th class="text-end">{{number_format($netDiscount, 0)}}</th>
+                                                <th class="text-end">{{number_format($netFright, 0)}}</th>
+                                                <th class="text-end">{{number_format($netLabor, 0)}}</th>
+                                                <th class="text-end">{{number_format($netClaim, 0)}}</th>
+                                               
                                                 <th class="text-end">{{number_format($sales->sum('net'), 0)}}</th>
                                                <th class="text-end">{{number_format($totalPaid, 0)}}</th>
                                                 <th class="text-end">{{number_format($totalDue, 0)}}</th>

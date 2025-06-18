@@ -66,7 +66,19 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $totalSold = 0;
+                                                $totalProfit = 0;
+                                                $totalStock = 0;
+                                                $totalAmount = 0;
+                                            @endphp
                                         @foreach ($topProductsArray as $key => $product)
+                                        @php
+                                            $totalSold += $product['sold'];
+                                            $totalProfit += $product['profit'];
+                                            $totalStock += $product['stock'];
+                                            $totalAmount += $product['amount'];
+                                        @endphp
                                             <tr>
                                                 <td>{{ $key+1}}</td>
                                                 <td class="text-start">{{ $product['name']}}</td>
@@ -81,6 +93,15 @@
                                             </tr>
                                         @endforeach
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="6" class="text-end">Total</th>
+                                                <th class="text-end">{{ number_format($totalSold) }}</th>
+                                                <th class="text-end">{{ number_format($totalProfit) }}</th>
+                                                <th class="text-end">{{ number_format($totalStock) }}</th>
+                                                <th class="text-end">{{ number_format($totalAmount) }}</th>
+                                            </tr>
+                                        </tfoot>
                                     </table><!--end table-->
                                 </div>
 

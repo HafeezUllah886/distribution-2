@@ -105,6 +105,7 @@ class ReturnsController extends Controller
                         'returnID'        => $return->id,
                         'warehouseID'   => $request->warehouseID,
                         'orderbookerID' => $request->orderbookerID,
+                        'branchID'        => Auth()->user()->branchID,
                         'productID'     => $id,
                         'price'         => $price,
                         'qty'           => $request->qty[$key],

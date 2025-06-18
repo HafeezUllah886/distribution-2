@@ -108,6 +108,7 @@ class PurchaseController extends Controller
                     [
                         'purchaseID'    => $purchase->id,
                         'warehouseID'   => $request->warehouseID,
+                        'branchID'        => Auth()->user()->branchID,
                         'productID'     => $id,
                         'price'         => $price,
                         'discount'      => $discount,

@@ -234,6 +234,7 @@ class BranchOrdersController extends Controller
                         'saleID'        => $sale->id,
                         'warehouseID'   => $request->warehouseID,
                         'orderbookerID' => $request->orderbookerID,
+                        'branchID'        => Auth()->user()->branchID,
                         'productID'     => $id,
                         'price'         => $price,
                         'discount'      => $discount,
