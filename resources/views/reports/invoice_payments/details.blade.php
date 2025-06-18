@@ -33,7 +33,15 @@
                                     </div>
                                     <div class="col-lg-3 col-6">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Orderbooker</p>
-                                        <h5 class="fs-14 mb-0">{{ $orderbooker->name }}</h5>
+                                        <h5 class="fs-14 mb-0">{{ $orderbooker }}</h5>
+                                    </div>
+                                    <div class="col-lg-3 col-6">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Customer</p>
+                                        <h5 class="fs-14 mb-0">{{ $customer }}</h5>
+                                    </div>
+                                    <div class="col-lg-3 col-6">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Type</p>
+                                        <h5 class="fs-14 mb-0">{{ $type }}</h5>
                                     </div>
                                     <!--end col-->
                                     <!--end col-->
@@ -65,7 +73,7 @@
                                         </thead>
                                         @foreach ($customers as $key => $customer)
                                         <thead>
-                                            <tr class="table-active">
+                                            <tr class="table-active bg-success bg-opacity-50">
                                                 <th scope="col" colspan="7" class="text-start">{{ $customer->title }} - {{ $customer->area->name }}</th>
                                             </tr>
                                         </thead>
@@ -117,7 +125,6 @@
                                             @endforeach
                                             <tr class="table-active">
                                                 <td colspan="7" class="text-start">Total:  Inv({{ $customer->sales->count() }}) ------ Amount ({{ $customer->sales->sum('net') }}) ------ Paid({{ $totalPaid }}) ------ Due({{ $totalDue }})</td>
-                                               
                                             </tr>
                                         </tbody>
                                         

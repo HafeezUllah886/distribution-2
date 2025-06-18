@@ -5,6 +5,7 @@ namespace App\Http\Controllers\reports;
 
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\area;
 use App\Models\orderbooker_customers;
 use App\Models\sales;
 use Illuminate\Http\Request;
@@ -15,7 +16,9 @@ class invoicePaymentsReportController extends Controller
     public function index()
     {
         $orderbookers = User::orderbookers()->currentBranch()->get();
-        return view('reports.invoice_payments.index', compact('orderbookers'));
+        $customers = accounts::customer()->currentBranch()->get();
+        $areas = area::currentBranch()->get();
+        return view('reports.invoice_payments.index', compact('orderbookers', 'customers', 'areas'));
     }
 
 
@@ -24,17 +27,50 @@ class invoicePaymentsReportController extends Controller
         $from = $request->from;
         $to = $request->to;
         $orderbooker = $request->orderbooker;
+        $customer = $request->customer;
+        $area = $request->area ?? 'All';
+        $type = $request->type;
 
-        $customers = orderbooker_customers::where('orderbookerID', $orderbooker)->pluck('customerID')->toArray();
-        $customers = accounts::whereIn('id', $customers)->get();
-
-        foreach ($customers as $customer) {
-            $sales = sales::with('payments')->where('customerID', $customer->id)->where('orderbookerID', $orderbooker)->whereBetween('date', [$from, $to])->get();
-
-            $customer->sales = $sales;
+        if ($customer != 'All') {
+            $customers = accounts::where('id', $customer)->get();
+        } else {
+            if($area != 'All') {
+                $customers = accounts::customer()->whereIn('areaID', $area)->get();
+            } else {
+                $customers = accounts::customer()->currentBranch()->orderBy('areaID', 'asc')->get();
+            }
         }
 
-        $orderbooker = User::find($orderbooker);
-        return view('reports.invoice_payments.details', compact('customers', 'from', 'to', 'orderbooker'));
+        foreach ($customers as $customer1) {
+
+            $sales = sales::with('payments')->where('customerID', $customer1->id)->whereBetween('date', [$from, $to]);
+            if($orderbooker != "All")
+            {
+                $sales->where('orderbookerID', $orderbooker);
+            }
+            if($type != "All")
+            {
+                if($type == "Paid")
+                {
+                    $sales->paidStatus();
+                }
+                if($type == "Due")
+                {
+                    $sales->dueStatus();
+                }
+            }
+            $customer1->sales = $sales->get();
+        }
+
+        if($orderbooker != "All")
+        {
+            $orderbooker = User::find($orderbooker)->name;
+        }
+        if($customer != "All")
+        {
+            $customer = accounts::find($customer)->title;
+        }
+
+        return view('reports.invoice_payments.details', compact('customers', 'from', 'to', 'orderbooker', 'customer', 'area', 'type'));
     }
 }

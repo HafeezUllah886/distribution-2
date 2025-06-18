@@ -47,6 +47,16 @@ class sales extends Model
         return $this->net - $this->scopePaid();
     }
 
+    public function scopePaidStatus($query)
+    {
+        return $query->whereRaw('(net - (SELECT COALESCE(SUM(amount), 0) FROM sale_payments WHERE salesID = sales.id)) <= 0');
+    }
+
+    public function scopeDueStatus($query)
+    {
+        return $query->whereRaw('(net - (SELECT COALESCE(SUM(amount), 0) FROM sale_payments WHERE salesID = sales.id)) > 0');
+    }
+
     public function scopeUnpaidOrPartiallyPaid($query)
     {
         return $query->whereRaw('net > (SELECT COALESCE(SUM(amount), 0) FROM sale_payments WHERE salesID = sales.id)');
