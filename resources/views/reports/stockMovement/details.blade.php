@@ -28,12 +28,12 @@
                                         <h5 class="fs-14 mb-0">{{ date('d M Y', strtotime($from)) }}</h5>
                                     </div>
                                     <div class="col-lg-3 col-6">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">To</p>
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">To (Closing Date)</p>
                                         <h5 class="fs-14 mb-0">{{ date('d M Y', strtotime($to)) }}</h5>
                                     </div>
                                     <div class="col-lg-3 col-6">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Warehouse</p>
-                                        <h5 class="fs-14 mb-0">{{ $warehouse->name }}</h5>
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Branch</p>
+                                        <h5 class="fs-14 mb-0">{{ $branch->name }}</h5>
                                     </div>
                                     <div class="col-lg-3 col-6">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Printed On</p>
@@ -50,15 +50,25 @@
                                     <table class="table table-bordered text-center table-nowrap align-middle mb-0">
                                         <thead>
                                             <tr class="table-active">
-                                                <th scope="col" style="width: 50px;">#</th>
-                                                <th scope="col" class="text-start">Product</th>
-                                                <th scope="col" class="text-start">Unit</th>
-                                                <th scope="col" class="text-start">Pack Size</th>
-                                                <th scope="col">Opening Stock</th>
-                                                <th scope="col">Stock - In</th>
-                                                <th scope="col">Stock - Out</th>
-                                                <th scope="col">Closing Stock ({{date('d M Y', strtotime($to))}})</th>
-                                                <th scope="col">Current Stock</th>
+                                                <th scope="col" rowspan="2" style="width: 50px;">#</th>
+                                                <th scope="col" rowspan="2" class="text-start">Product</th>
+                                                <th scope="col" rowspan="2" class="text-start">Unit</th>
+                                                <th scope="col" rowspan="2" class="text-start">Pack <br> Size</th>
+                                                <th scope="col" rowspan="2">Opening</th>
+                                                <th scope="col" class="bg-success" colspan="4">Stock - In</th>
+                                                <th scope="col" class="bg-danger" colspan="4">Stock - Out</th>
+                                                <th scope="col" rowspan="2">Closing</th>
+                                                <th scope="col" rowspan="2">Current</th>
+                                            </tr>
+                                            <tr class="table-active">
+                                                <th scope="col" class="bg-success">Purchase</th>
+                                                <th scope="col" class="bg-success">Sale Ret</th>
+                                                <th scope="col" class="bg-success">Adj.</th>
+                                                <th scope="col" class="bg-success">Total In</th>
+                                                <th scope="col" class="bg-danger">Sales</th>
+                                                <th scope="col" class="bg-danger">Obsolete</th>
+                                                <th scope="col" class="bg-danger">Adj.</th>
+                                                <th scope="col" class="bg-danger">Total Out</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -70,11 +80,20 @@
                                                 <td class="text-start p-1 m-0">{{ $product->name}}</td>
                                                 <td class="text-start p-1 m-0">{{ $product->units[0]->unit_name}}</td>
                                                 <td class="text-start p-1 m-0">{{ $product->units[0]->value}}</td>
-                                                <td class="text-end p-1 m-0">{{ packInfo($product->units[0]->value, $product->units[0]->unit_name, $product->opening_stock) }}</td>
-                                                <td class="text-end p-1 m-0">{{ packInfo($product->units[0]->value, $product->units[0]->unit_name, $product->stock_in) }}</td>
-                                                <td class="text-end p-1 m-0">{{ packInfo($product->units[0]->value, $product->units[0]->unit_name, $product->stock_out) }}</td>
-                                                <td class="text-end p-1 m-0">{{ packInfo($product->units[0]->value, $product->units[0]->unit_name, $product->closing_stock) }}</td>
-                                                <td class="text-end p-1 m-0">{{ packInfo($product->units[0]->value, $product->units[0]->unit_name, $product->current_stock) }}</td>
+                                                <td class="text-end p-1 m-0">{{ packInfoWithOutName($product->units[0]->value, $product->opening_stock) }}</td>
+
+                                                <td class="text-end p-1 m-0 text-success">{{ packInfoWithOutName($product->units[0]->value, $product->purchased) }}</td>
+                                                <td class="text-end p-1 m-0 text-success">{{ packInfoWithOutName($product->units[0]->value, $product->returned) }}</td>
+                                                <td class="text-end p-1 m-0 text-success">{{ packInfoWithOutName($product->units[0]->value, $product->stock_adjustment_in) }}</td>
+                                                <td class="text-end p-1 m-0 text-success">{{ packInfoWithOutName($product->units[0]->value, $product->total_stock_in) }}</td>
+
+                                                <td class="text-end p-1 m-0 text-danger">{{ packInfoWithOutName($product->units[0]->value, $product->sales) }}</td>
+                                                <td class="text-end p-1 m-0 text-danger">{{ packInfoWithOutName($product->units[0]->value, $product->obsolete) }}</td>
+                                                <td class="text-end p-1 m-0 text-danger">{{ packInfoWithOutName($product->units[0]->value, $product->stock_adjustment_out) }}</td>
+                                                <td class="text-end p-1 m-0 text-danger">{{ packInfoWithOutName($product->units[0]->value, $product->total_stock_out) }}</td>
+
+                                                <td class="text-end p-1 m-0">{{ packInfoWithOutName($product->units[0]->value, $product->closing_stock) }}</td>
+                                                <td class="text-end p-1 m-0">{{ packInfoWithOutName($product->units[0]->value, $product->current_stock) }}</td>
                                             </tr>
                                         @endif
                                         @endforeach

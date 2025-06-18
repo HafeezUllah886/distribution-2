@@ -17,10 +17,10 @@
                         <input type="date" name="to" id="to" value="{{lastDayOfMonth()}}" class="form-control">
                     </div>
                     <div class="form-group mt-2">
-                        <label for="warehouse">Warehouse</label>
-                        <select name="warehouse" id="warehouse" class="form-control">
-                            @foreach ($warehouses as $warehouse)
-                                <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
+                        <label for="branch">Branch</label>
+                        <select name="branch" id="branch" class="form-control">
+                            @foreach ($branches as $branch)
+                                <option value="{{$branch->id}}">{{$branch->name}}</option>
                             @endforeach
                         </select>
                     </div>
