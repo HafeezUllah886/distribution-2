@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\area;
+use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\method_transactions;
@@ -163,6 +164,7 @@ class PaymentsController extends Controller
             users_transactions::where('refID', $ref)->delete();
             currency_transactions::where('refID', $ref)->delete();
             method_transactions::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');
             return redirect()->route('payments.index')->with('success', "Payment Deleted");

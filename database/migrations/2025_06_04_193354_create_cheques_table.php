@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customerID')->constrained('accounts', 'id')->cascadeOnDelete();
             $table->foreignId('userID')->constrained('users', 'id')->cascadeOnDelete();
+            $table->foreignId('orderbookerID')->constrained('users', 'id')->cascadeOnDelete();
             $table->foreignId('branchID')->constrained('branches', 'id')->cascadeOnDelete();
             $table->date('cheque_date');
             $table->float('amount');

@@ -82,7 +82,7 @@ class SalePaymentsController extends Controller
             }
 
             if($request->method == 'Cheque'){
-                saveCheque($customer->id, auth()->id(), $request->cheque_date, $request->amount,$request->number,$request->bank,$request->notes,$ref);
+                saveCheque($customer->id, auth()->id(), $sale->orderbookerID, $request->cheque_date, $request->amount,$request->number,$request->bank,$request->notes,$ref);
             }
             if($request->has('file')){
                 createAttachment($request->file('file'), $ref);

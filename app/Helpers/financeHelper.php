@@ -230,11 +230,12 @@ function spotUserBalance($id, $ref)
 }
 
 
-function saveCheque($customerID, $userID, $chequeDate, $amount, $number, $bank, $notes, $ref){
+function saveCheque($customerID, $userID, $orderbookerID, $chequeDate, $amount, $number, $bank, $notes, $ref){
     cheques::create(
         [
             'customerID' => $customerID,
             'userID' => $userID,
+            'orderbookerID' => $orderbookerID,
             'branchID' => auth()->user()->branchID,
             'cheque_date' => $chequeDate,
             'amount' => $amount,

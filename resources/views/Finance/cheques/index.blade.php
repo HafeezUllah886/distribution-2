@@ -2,6 +2,46 @@
 @section('content')
     <div class="row">
         <div class="col-12">
+            <form>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">From</span>
+                            <input type="date" class="form-control" placeholder="Username" name="start" value="{{$start}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">To</span>
+                            <input type="date" class="form-control" placeholder="Username" name="end" value="{{$end}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Orderbooker</span>
+                            <select name="orderbookerID" id="orderbookerID" class="form-control">
+                                <option value="">All</option>
+                                @foreach ($orderbookers as $booker)
+                                    <option value="{{$booker->id}}" @selected($booker->id == $orderbooker)>{{$booker->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Status</span>
+                            <select name="status" id="status1" class="form-control">
+                                <option value="">All</option>
+                                <option value="cleared" @selected($status == 'cleared')>Cleared</option>
+                                <option value="bounced" @selected($status == 'bounced')>Bounced</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                       <input type="submit" value="Filter" class="btn btn-success w-100">
+                    </div>
+                </div>
+            </form>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Cheques</h3>
@@ -22,6 +62,7 @@
                             <th>#</th>
                             <th>Ref #</th>
                             <th>Cheque From</th>
+                            <th>Order Booker</th>
                             <th>Amount</th>
                             <th>Clearing Date</th>
                             <th>Number</th>
@@ -36,6 +77,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $tran->refID }}</td>
                                     <td>{{ $tran->customer->title }}</td>
+                                    <td>{{ $tran->orderbooker->name }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->cheque_date)) }}</td>
                                     <td>{{ $tran->number }}</td>

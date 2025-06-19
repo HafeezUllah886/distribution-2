@@ -38,8 +38,9 @@ class BulkInvoicePaymentsReceivingController extends Controller
     {
         $invoices = sales::where('customerID', $request->customerID)->where('orderbookerID', $request->orderbookerID)->unpaidOrPartiallyPaid()->get();
         $currencies = currencymgmt::all();
+        $orderbookerID = $request->orderbookerID;
 
-        return view('Finance.bulk_payment.create', compact('invoices', 'currencies'));
+        return view('Finance.bulk_payment.create', compact('invoices', 'currencies', 'orderbookerID'));
     }
 
     /**
@@ -105,7 +106,7 @@ class BulkInvoicePaymentsReceivingController extends Controller
             createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, $notes, $ref);
            }
            if($request->method == 'Cheque'){
-            saveCheque($sale->customerID, auth()->id(), $request->cheque_date, $request->amount,$request->number,$request->bank,$request->notes,$ref);
+            saveCheque($sale->customerID, auth()->id(), $request->orderbookerID, $request->cheque_date, $request->amount,$request->number,$request->bank,$request->notes,$ref);
         }
 
            if($request->has('file')){

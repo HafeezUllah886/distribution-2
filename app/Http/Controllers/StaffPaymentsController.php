@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\staffPayments;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\method_transactions;
@@ -24,7 +25,8 @@ class StaffPaymentsController extends Controller
         $users = User::where('branchID', auth()->user()->branchID)->where('id', '!=', auth()->user()->id)->get();
         $currencies = currencymgmt::all();
         $customers = accounts::customer()->currentBranch()->active()->get();
-        return view('Finance.staff_payments.index', compact('receivings', 'users', 'currencies', 'customers'));
+        $orderbookers = User::orderbookers()->currentBranch()->get();
+        return view('Finance.staff_payments.index', compact('receivings', 'users', 'currencies', 'customers', 'orderbookers'));
     }
 
     /**
@@ -92,7 +94,7 @@ class StaffPaymentsController extends Controller
             }
             if($request->method == 'Cheque')
             {
-                saveCheque($request->customerID, auth()->user()->id, $request->cheque_date, $request->amount, $request->number, $request->bank, $request->notes, $ref);
+                saveCheque($request->customerID, auth()->user()->id, $request->orderbookerID, $request->cheque_date, $request->amount, $request->number, $request->bank, $request->notes, $ref);
             }
             if($request->has('file')){
                 createAttachment($request->file('file'), $ref);
@@ -144,6 +146,7 @@ class StaffPaymentsController extends Controller
             users_transactions::where('refID', $ref)->delete();
             currency_transactions::where('refID', $ref)->delete();
             method_transactions::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');
             return to_route('staff_payments.index')->with('success', "Payment Deleted");

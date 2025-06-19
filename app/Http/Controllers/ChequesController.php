@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\cheques;
 use App\Http\Controllers\Controller;
+use App\Models\accounts;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ChequesController extends Controller
@@ -11,10 +13,27 @@ class ChequesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cheques = cheques::where('userID', auth()->user()->id)->orderBy('cheque_date', 'asc')->get();
-        return view('Finance.cheques.index', compact('cheques'));
+        $start = $request->start ?? firstDayOfMonth();
+        $end = $request->end ?? lastDayOfMonth();
+        $orderbooker = $request->orderbookerID ?? 'All';
+        $status = $request->status ?? "All";
+
+        $cheques = cheques::where('userID', auth()->user()->id)->orderBy('cheque_date', 'asc')->whereBetween('cheque_date', [$start, $end]);
+        if($orderbooker != 'All')
+        {
+            $cheques->where('orderbookerID', $orderbooker);
+        }
+        if($status != 'All')
+        {
+            $cheques->where('status', $status);
+        }
+
+        $cheques = $cheques->get();
+        $orderbookers = User::orderbookers()->currentBranch()->get();
+
+        return view('Finance.cheques.index', compact('cheques', 'start', 'end', 'orderbooker', 'status', 'orderbookers'));
     }
 
     /**
@@ -47,7 +66,10 @@ class ChequesController extends Controller
             if($status == 'bounced')
             {
                 $ref = getRef();
+                $customer = accounts::find($cheque->customerID);
                 createTransaction($cheque->customerID, now(), $cheque->amount, 0, "Cheque Bounced Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date", $ref);
+                createUserTransaction(Auth()->id(), now(), 0, $cheque->amount, "Cheque Bounced of $customer->name Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date", $ref);
+                createMethodTransaction(Auth()->id(), "Cheque", 0, $cheque->amount, now(), $cheque->number, $cheque->bank, $cheque->cheque_date, "Cheque Bounced of $customer->name", $ref);
             }
             return redirect()->back()->with('success', 'Cheque status updated successfully');
         }

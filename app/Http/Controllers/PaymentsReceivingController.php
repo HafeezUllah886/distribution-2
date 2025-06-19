@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\area;
+use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\method_transactions;
 use App\Models\payments;
 use App\Models\paymentsReceiving;
 use App\Models\transactions;
+use App\Models\User;
 use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -49,12 +51,13 @@ class PaymentsReceivingController extends Controller
 
         $currencies = currencymgmt::all();
         $type = $request->type;
-        return view('Finance.payments_receiving.index', compact('payments', 'depositers', 'currencies', 'areas', 'type', 'area'));
+        $orderbookers = User::orderbookers()->currentBranch()->get();
+        return view('Finance.payments_receiving.index', compact('payments', 'depositers', 'currencies', 'areas', 'type', 'area', 'orderbookers'));
     }
 
     /**
      * Show the form for creating a new resource.
-     */
+     */ 
     public function create()    
     {
         //
@@ -99,7 +102,7 @@ class PaymentsReceivingController extends Controller
             }
 
             if($request->method == 'Cheque'){
-                saveCheque($request->depositerID, auth()->user()->id, $request->cheque_date, $request->amount,$request->number,$request->bank,$request->notes,$ref);
+                saveCheque($request->depositerID, auth()->user()->id, $request->orderbookerID, $request->cheque_date, $request->amount,$request->number,$request->bank,$request->notes,$ref);
             }
             
             if($request->has('file')){
@@ -154,6 +157,7 @@ class PaymentsReceivingController extends Controller
             users_transactions::where('refID', $ref)->delete();
             currency_transactions::where('refID', $ref)->delete();
             method_transactions::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');
             return redirect()->route('payments_receiving.index')->with('success', "Payment Deleted");

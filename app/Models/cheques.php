@@ -23,6 +23,11 @@ class cheques extends Model
         return $this->belongsTo(User::class, 'userID');
     }
 
+    public function orderbooker()
+    {
+        return $this->belongsTo(User::class, 'orderbookerID');
+    }
+
     public function scopeCurrentBranch($query)
     {
         return $query->where('branchID', auth()->user()->branchID);

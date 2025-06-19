@@ -24,6 +24,7 @@
                                 @csrf
                                 <div class="modal-body">
                                    @include('layout.payment')
+                                   <input type="hidden" name="orderbookerID" value="{{$orderbookerID}}">
                                     <div class="form-group mt-2">
                                         <label for="date">Date</label>
                                         <input type="date" name="date" required value="{{ date('Y-m-d') }}"

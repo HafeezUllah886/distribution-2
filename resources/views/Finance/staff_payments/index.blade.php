@@ -103,6 +103,14 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="form-group mt-2 check_customer d-none">
+                                    <label for="orderbookerID">Order Booker</label>
+                                    <select name="orderbookerID" id="orderbookerID" required class="selectize">
+                                        @foreach ($orderbookers as $orderbooker)
+                                            <option value="{{ $orderbooker->id }}">{{ $orderbooker->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group mt-2">

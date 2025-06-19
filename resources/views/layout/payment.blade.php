@@ -82,10 +82,12 @@
         if($("#method").val() == "Cheque")
         {
             $(".check_customer").removeClass("d-none");
+            $(".check_orderbooker").removeClass("d-none");
         }
         else
         {
             $(".check_customer").addClass("d-none");
+            $(".check_orderbooker").addClass("d-none");
         }
     }
     
