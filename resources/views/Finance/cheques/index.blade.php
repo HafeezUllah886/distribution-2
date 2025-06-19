@@ -62,6 +62,7 @@
                             <th>#</th>
                             <th>Ref #</th>
                             <th>Cheque From</th>
+                            <th>Area</th>
                             <th>Order Booker</th>
                             <th>Amount</th>
                             <th>Clearing Date</th>
@@ -77,6 +78,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $tran->refID }}</td>
                                     <td>{{ $tran->customer->title }}</td>
+                                    <td>{{ $tran->customer->area->name }}</td>
                                     <td>{{ $tran->orderbooker->name }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->cheque_date)) }}</td>
