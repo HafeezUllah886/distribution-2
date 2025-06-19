@@ -109,6 +109,7 @@ class PurchaseOrderDeliveryController extends Controller
                     [
                         'purchaseID'    => $purchase->id,
                         'warehouseID'   => $request->warehouseID,
+                        'branchID'        => Auth()->user()->branchID,
                         'productID'     => $id,
                         'price'         => $price,
                         'discount'      => $discount,
@@ -181,10 +182,11 @@ class PurchaseOrderDeliveryController extends Controller
         {
             DB::beginTransaction();
         $purchase = purchase::find($id);
+        $vendor = accounts::find($purchase->vendorID);
 
         createTransaction($purchase->vendorID, $purchase->recdate, 0, $purchase->net, "Pending Amount of Purchase No. $purchase->id", $purchase->refID);
 
-        createTransaction($purchase->unloaderID, $purchase->recdate, 0, $purchase->totalLabor, "Labor Charges of Purchase No. $purchase->id", $purchase->refID);
+        createTransaction($purchase->unloaderID, $purchase->recdate, 0, $purchase->totalLabor, "Labor Charges of Purchase No. $purchase->id Vendor: $vendor->title", $purchase->refID);
         $purchase->update([
             'status' => 'Approved',
         ]);

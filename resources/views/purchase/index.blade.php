@@ -93,12 +93,15 @@
                                                         View
                                                     </button>
                                                 </li>
+                                                @if ($purchase->orderID == null)
                                                 <li>
                                                     <a class="dropdown-item" onclick="newWindow('{{route('purchase.edit', $purchase->id)}}')">
                                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                         Edit
                                                     </a>
                                                 </li>
+                                                @endif
+                                               
                                                 @if ($purchase->status == 'Pending' && auth()->user()->role == "Branch Admin")
                                                 <li>
                                                     <a class="dropdown-item" href="{{route('purchaseOrderReceiveingApproval', $purchase->id)}}">

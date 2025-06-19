@@ -143,9 +143,6 @@ class PurchaseController extends Controller
                 ]
             );
 
-            createTransaction($request->vendorID, $request->recdate, 0, $net, "Pending Amount of Purchase No. $purchase->id", $ref);
-
-            createTransaction($request->unloaderID, $request->recdate, 0, $totalLabor, "Labor Charges of Purchase No. $purchase->id Vendor: $vendor", $ref);
             DB::commit();
             return back()->with('success', "Purchase Created");
         }
@@ -207,6 +204,7 @@ class PurchaseController extends Controller
                   'recdate'         => $request->recdate,
                   'notes'           => $request->notes,
                   'bilty'           => $request->bilty,
+                  'status'          => "Pending",
                   'transporter'     => $request->transporter,
                   'inv'             => $request->inv,
                   'refID'           => $ref,
@@ -270,10 +268,6 @@ class PurchaseController extends Controller
                     'totalLabor' => $totalLabor,
                 ]
             );
-
-            createTransaction($request->vendorID, $request->recdate, 0, $net, "Pending Amount of Purchase No. $purchase->id", $ref);
-           
-            createTransaction($request->unloaderID, $request->recdate, 0, $totalLabor, "Labor Charges of Purchase No. $purchase->id Vendor: $vendor", $ref);
           
             DB::commit();
             return back()->with('success', "Purchase Updated");
