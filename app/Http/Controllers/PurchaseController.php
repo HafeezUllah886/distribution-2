@@ -79,6 +79,7 @@ class PurchaseController extends Controller
                   'notes'           => $request->notes,
                   'bilty'           => $request->bilty,
                   'transporter'     => $request->transporter,
+                  'status'          => "Pending",
                   'inv'             => $request->inv,
                   'refID'           => $ref,
                 ]
