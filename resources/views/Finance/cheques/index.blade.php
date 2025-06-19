@@ -65,6 +65,7 @@
                             <th>Area</th>
                             <th>Order Booker</th>
                             <th>Amount</th>
+                            <th>Date</th>
                             <th>Clearing Date</th>
                             <th>Number</th>
                             <th>Bank</th>
@@ -81,6 +82,7 @@
                                     <td>{{ $tran->customer->area->name }}</td>
                                     <td>{{ $tran->orderbooker->name }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
+                                    <td>{{ date('d M Y', strtotime($tran->created_at)) }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->cheque_date)) }}</td>
                                     <td>{{ $tran->number }}</td>
                                     <td>{{ $tran->bank }}</td>
