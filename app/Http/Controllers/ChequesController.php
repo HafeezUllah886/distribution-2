@@ -68,8 +68,8 @@ class ChequesController extends Controller
                 $ref = getRef();
                 $customer = accounts::find($cheque->customerID);
                 createTransaction($cheque->customerID, now(), $cheque->amount, 0, "Cheque Bounced Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date", $ref);
-                createUserTransaction(Auth()->id(), now(), 0, $cheque->amount, "Cheque Bounced of $customer->name Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date", $ref);
-                createMethodTransaction(Auth()->id(), "Cheque", 0, $cheque->amount, now(), $cheque->number, $cheque->bank, $cheque->cheque_date, "Cheque Bounced of $customer->name", $ref);
+                createUserTransaction(Auth()->id(), now(), 0, $cheque->amount, "Cheque Bounced of $customer->title Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date", $ref);
+                createMethodTransaction(Auth()->id(), "Cheque", 0, $cheque->amount, now(), $cheque->number, $cheque->bank, $cheque->cheque_date, "Cheque Bounced of $customer->title", $ref);
             }
             return redirect()->back()->with('success', 'Cheque status updated successfully');
         }
