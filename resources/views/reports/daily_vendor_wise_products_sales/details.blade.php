@@ -88,13 +88,13 @@
                                                             <td class="text-start">{{ $product->name }}</td>
                                                             <td class="text-start">{{ $product->product_unit }}</td>
                                                             <td class="text-end">
-                                                                {{ number_format($product->product_unit_value, 2) }}</td>
+                                                                {{ number_format($product->product_unit_value) }}</td>
                                                             <td class="text-end">
-                                                                {{ number_format($product->product_qty, 2) }}</td>
+                                                                {{ number_format($product->product_qty) }}</td>
                                                             <td class="text-end">
-                                                                {{ number_format($product->product_loose, 2) }}</td>
+                                                                {{ number_format($product->product_loose) }}</td>
                                                             <td class="text-end">
-                                                                {{ number_format($product->product_amount, 2) }}</td>
+                                                                {{ number_format($product->product_amount) }}</td>
                                                         </tr>
                                                     @endif
                                                 @endforeach
@@ -102,11 +102,11 @@
                                                 <tr class="table-active">
                                                     <td colspan="4" class="text-end">Total</td>
                                                     <td class="text-end">
-                                                        {{ number_format($vendor->products->sum('product_qty'), 2) }}</td>
+                                                        {{ number_format($vendor->products->sum('product_qty')) }}</td>
                                                     <td class="text-end">
-                                                        {{ number_format($vendor->products->sum('product_loose'), 2) }}</td>
+                                                        {{ number_format($vendor->products->sum('product_loose')) }}</td>
                                                     <td class="text-end">
-                                                        {{ number_format($vendor->products->sum('product_amount'), 2) }}
+                                                        {{ number_format($vendor->products->sum('product_amount')) }}
                                                     </td>
                                                 </tr>
                                                 @php
@@ -119,11 +119,11 @@
                                        
                                     </tbody>
                                     <tfoot>
-                                        <tr class="table-active">
+                                        <tr class="table-active bg-success bg-opacity-25">
                                             <th colspan="4" class="text-end">Grand Total </th>
-                                            <th class="text-end">{{ number_format($totalQty, 2) }}</th>
-                                            <th class="text-end">{{ number_format($totalLoose, 2) }}</th>
-                                            <th class="text-end">{{ number_format($totalAmount, 2) }}</th>
+                                            <th class="text-end">{{ number_format($totalQty) }}</th>
+                                            <th class="text-end">{{ number_format($totalLoose) }}</th>
+                                            <th class="text-end">{{ number_format($totalAmount) }}</th>
                                         </tr>
                                     </tfoot>
                                 </table><!--end table-->
