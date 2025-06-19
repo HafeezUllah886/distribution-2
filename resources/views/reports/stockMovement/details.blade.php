@@ -72,34 +72,159 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+
+                                            @php
+                                                $totalOpeningQty = 0;
+                                                $totalOpeningLoose = 0;
+
+                                                $totalPurchaseQty = 0;
+                                                $totalPurchaseLoose = 0;
+
+                                                $totalSaleRetQty = 0;
+                                                $totalSaleRetLoose = 0;
+
+                                                $totalInAdjQty = 0;
+                                                $totalInAdjLoose = 0;
+
+                                                $totalInQty = 0;
+                                                $totalInLoose = 0;
+
+                                                $totalSaleQty = 0;
+                                                $totalSaleLoose = 0;
+
+                                                $totalObsoleteQty = 0;
+                                                $totalObsoleteLoose = 0;
+
+                                                $totalOutAdjQty = 0;
+                                                $totalOutAdjLoose = 0;
+
+                                                $totalOutQty = 0;
+                                                $totalOutLoose = 0;
+
+                                                $totalClosingQty = 0;
+                                                $totalClosingLoose = 0;
+
+                                                $totalCurrentQty = 0;
+                                                $totalCurrentLoose = 0;
+                                            @endphp
                                            
                                         @foreach ($products as $key => $product)
                                         @if ($product->opening_stock > 0 || $product->stock_in > 0 || $product->stock_out > 0 || $product->closing_stock > 0)
+
+                                        @php
+
+                                            $opening = packInfoWithOutName($product->units[0]->value, $product->opening_stock);
+                                            $purchase = packInfoWithOutName($product->units[0]->value, $product->purchased);
+                                            $saleRet = packInfoWithOutName($product->units[0]->value, $product->returned);
+                                            $inAdj = packInfoWithOutName($product->units[0]->value, $product->stock_adjustment_in);
+                                            $in = packInfoWithOutName($product->units[0]->value, $product->total_stock_in);
+                                            $sale = packInfoWithOutName($product->units[0]->value, $product->sales);
+                                            $obsolete = packInfoWithOutName($product->units[0]->value, $product->obsolete);
+                                            $outAdj = packInfoWithOutName($product->units[0]->value, $product->stock_adjustment_out);
+                                            $out = packInfoWithOutName($product->units[0]->value, $product->total_stock_out);
+                                            $closing = packInfoWithOutName($product->units[0]->value, $product->closing_stock);
+                                            $current = packInfoWithOutName($product->units[0]->value, $product->current_stock);
+
+
+                                            // Handle opening
+                                            [$opeingQty, $opeingLoose] = explode(",", $opening);
+                                            $totalOpeningQty += (int) $opeingQty;
+                                            $totalOpeningLoose += (int) $opeingLoose;
+
+                                            // Handle purchase
+                                            [$purchaseQty, $purchaseLoose] = explode(",", $purchase);
+                                            $totalPurchaseQty += (int) $purchaseQty;
+                                            $totalPurchaseLoose += (int) $purchaseLoose;
+
+                                            // Handle sale return
+                                            [$saleRetQty, $saleRetLoose] = explode(",", $saleRet);
+                                            $totalSaleRetQty += (int) $saleRetQty;
+                                            $totalSaleRetLoose += (int) $saleRetLoose;
+
+                                            // Handle in adjustment
+                                            [$inAdjQty, $inAdjLoose] = explode(",", $inAdj);
+                                            $totalInAdjQty += (int) $inAdjQty;
+                                            $totalInAdjLoose += (int) $inAdjLoose;
+
+                                            // Handle in
+                                            [$inQty, $inLoose] = explode(",", $in);
+                                            $totalInQty += (int) $inQty;
+                                            $totalInLoose += (int) $inLoose;
+
+                                            // Handle sale
+                                            [$saleQty, $saleLoose] = explode(",", $sale);
+                                            $totalSaleQty += (int) $saleQty;
+                                            $totalSaleLoose += (int) $saleLoose;
+                                            
+
+                                            // Handle obsolete
+                                            [$obsoleteQty, $obsoleteLoose] = explode(",", $obsolete);
+                                            $totalObsoleteQty += (int) $obsoleteQty;
+                                            $totalObsoleteLoose += (int) $obsoleteLoose;
+
+                                            // Handle out adjustment
+                                            [$outAdjQty, $outAdjLoose] = explode(",", $outAdj);
+                                            $totalOutAdjQty += (int) $outAdjQty;
+                                            $totalOutAdjLoose += (int) $outAdjLoose;
+
+                                            // Handle out
+                                            [$outQty, $outLoose] = explode(",", $out);
+                                            $totalOutQty += (int) $outQty;
+                                            $totalOutLoose += (int) $outLoose;
+
+                                            // Handle closing
+                                            [$closingQty, $closingLoose] = explode(",", $closing);
+                                            $totalClosingQty += (int) $closingQty;
+                                            $totalClosingLoose += (int) $closingLoose;
+
+                                            // Handle current
+                                            [$currentQty, $currentLoose] = explode(",", $current);
+                                            $totalCurrentQty += (int) $currentQty;
+                                            $totalCurrentLoose += (int) $currentLoose;
+
+                                        @endphp
                                             <tr>
                                                 <td class="p-1 m-0">{{ $key+1}}</td>
                                                 <td class="text-start p-1 m-0">{{ $product->name}}</td>
                                                 <td class="text-start p-1 m-0">{{ $product->units[0]->unit_name}}</td>
                                                 <td class="text-start p-1 m-0">{{ $product->units[0]->value}}</td>
-                                                <td class="text-end p-1 m-0">{{ packInfoWithOutName($product->units[0]->value, $product->opening_stock) }}</td>
+                                                <td class="text-end p-1 m-0">{{ $opening }}</td>
 
-                                                <td class="text-end p-1 m-0 text-success">{{ packInfoWithOutName($product->units[0]->value, $product->purchased) }}</td>
-                                                <td class="text-end p-1 m-0 text-success">{{ packInfoWithOutName($product->units[0]->value, $product->returned) }}</td>
-                                                <td class="text-end p-1 m-0 text-success">{{ packInfoWithOutName($product->units[0]->value, $product->stock_adjustment_in) }}</td>
-                                                <td class="text-end p-1 m-0 text-success">{{ packInfoWithOutName($product->units[0]->value, $product->total_stock_in) }}</td>
+                                                <td class="text-end p-1 m-0 text-success">{{ $purchase }}</td>
+                                                <td class="text-end p-1 m-0 text-success">{{ $saleRet }}</td>
+                                                <td class="text-end p-1 m-0 text-success">{{ $inAdj }}</td>
+                                                <td class="text-end p-1 m-0 text-success">{{ $in }}</td>
 
-                                                <td class="text-end p-1 m-0 text-danger">{{ packInfoWithOutName($product->units[0]->value, $product->sales) }}</td>
-                                                <td class="text-end p-1 m-0 text-danger">{{ packInfoWithOutName($product->units[0]->value, $product->obsolete) }}</td>
-                                                <td class="text-end p-1 m-0 text-danger">{{ packInfoWithOutName($product->units[0]->value, $product->stock_adjustment_out) }}</td>
-                                                <td class="text-end p-1 m-0 text-danger">{{ packInfoWithOutName($product->units[0]->value, $product->total_stock_out) }}</td>
+                                                <td class="text-end p-1 m-0 text-danger">{{ $sale }}</td>
+                                                <td class="text-end p-1 m-0 text-danger">{{ $obsolete }}</td>
+                                                <td class="text-end p-1 m-0 text-danger">{{ $outAdj }}</td>
+                                                <td class="text-end p-1 m-0 text-danger">{{ $out }}</td>
 
-                                                <td class="text-end p-1 m-0">{{ packInfoWithOutName($product->units[0]->value, $product->closing_stock) }}</td>
-                                                <td class="text-end p-1 m-0">{{ packInfoWithOutName($product->units[0]->value, $product->current_stock) }}</td>
+                                                <td class="text-end p-1 m-0">{{ $closing }}</td>
+                                                <td class="text-end p-1 m-0">{{ $current }}</td>
                                             </tr>
                                         @endif
                                         @endforeach
                                         
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4" class="text-end p-1 m-0">Total</td>
+                                            <td class="text-end p-1 m-0">{{ $totalOpeningQty }}, {{ $totalOpeningLoose }}</td>
+                                            <td class="text-end p-1 m-0">{{ $totalPurchaseQty }}, {{ $totalPurchaseLoose }}</td>
+                                            <td class="text-end p-1 m-0">{{ $totalSaleRetQty }}, {{ $totalSaleRetLoose }}</td>
+                                            <td class="text-end p-1 m-0">{{ $totalInAdjQty }}, {{ $totalInAdjLoose }}</td>
+                                            <td class="text-end p-1 m-0">{{ $totalInQty }}, {{ $totalInLoose }}</td>
+                                            <td class="text-end p-1 m-0">{{ $totalSaleQty }}, {{ $totalSaleLoose }}</td>
+                                            <td class="text-end p-1 m-0">{{ $totalObsoleteQty }}, {{ $totalObsoleteLoose }}</td>
+                                            <td class="text-end p-1 m-0">{{ $totalOutAdjQty }}, {{ $totalOutAdjLoose }}</td>
+                                            <td class="text-end p-1 m-0">{{ $totalOutQty }}, {{ $totalOutLoose }}</td>
+                                            <td class="text-end p-1 m-0">{{ $totalClosingQty }}, {{ $totalClosingLoose }}</td>
+                                            <td class="text-end p-1 m-0">{{ $totalCurrentQty }}, {{ $totalCurrentLoose }}</td>
+                                        </tr>
+                                    </tfoot>
                                     </table><!--end table-->
+
                                 </div>
 
                             </div>
