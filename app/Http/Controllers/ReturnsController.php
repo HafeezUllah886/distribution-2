@@ -117,7 +117,7 @@ class ReturnsController extends Controller
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, $qty, 0, $request->date, "Returned from $customer->name", $ref, $request->warehouseID);
+                createStock($id, $qty, 0, $request->date, "Returned from $customer->title", $ref, $request->warehouseID);
             }
 
             $net = $total;
@@ -240,7 +240,7 @@ class ReturnsController extends Controller
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, $qty, 0, $request->date, "Returned from $customer->name", $ref, $request->warehouseID);
+                createStock($id, $qty, 0, $request->date, "Returned from $customer->title", $ref, $request->warehouseID);
             }
 
             $net = $total;

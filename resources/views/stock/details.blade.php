@@ -86,6 +86,14 @@
                                             </tr>
                                         @endforeach
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="4" class="text-end">Total</th>
+                                                <th class="text-end">{{packInfo($unit->value, $unit->unit_name, $stocks->sum('cr'))}} </th>
+                                                <th class="text-end">{{packInfo($unit->value, $unit->unit_name, $stocks->sum('db'))}} </th>
+                                                <th class="text-end">{{packInfo($unit->value, $unit->unit_name, $balance)}} </th>
+                                            </tr>
+                                        </tfoot>
                                     </table><!--end table-->
                                 </div>
 

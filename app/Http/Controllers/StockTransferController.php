@@ -73,17 +73,19 @@ class StockTransferController extends Controller
                 StockTransferDetails::create(
                     [
                         'stockTransferID' => $stockTransfer->id,
-                        'productID'     => $id,
+                        'productID'       => $id,
                         'branchID'        => Auth()->user()->branchID,
-                        'qty'           => $request->qty[$key],
-                        'loose'         => $request->loose[$key],
-                        'pc'            => $pc,
-                        'unitID'        => $unit->id,
+                        'qty'             => $request->qty[$key],
+                        'loose'           => $request->loose[$key],
+                        'pc'              => $pc,
+                        'unitID'          => $unit->id,
                         'refID'         => $ref,
                     ]
                 );
-                createStock($id, 0, $pc, now(), "Transfer:  $request->notes", $ref, $request->fromWarehouse);
-                createStock($id, $pc, 0, now(), "Transfer:  $request->notes", $ref, $request->toWarehouse);
+                $fromWarehouse = warehouses::find($request->fromWarehouse);
+                $toWarehouse = warehouses::find($request->toWarehouse);
+                createStock($id, 0, $pc, now(), "Transfered to $toWarehouse->name:  $request->notes", $ref, $fromWarehouse->id);
+                createStock($id, $pc, 0, now(), "Transfered from $fromWarehouse->name:  $request->notes", $ref, $toWarehouse->id);
             }
             DB::commit();
             return redirect()->route('stockTransfers.index')->with('success', 'Stock Transfer Created Successfully');
