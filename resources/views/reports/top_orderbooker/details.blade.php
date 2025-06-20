@@ -72,6 +72,14 @@
                                             </tr>
                                         @endforeach
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="3" class="text-end">Total</th>
+                                                <th class="text-end">{{ number_format($orderbookers->sum('sales'),2) }}</th>
+                                                <th class="text-end">{{ number_format($orderbookers->sum('customer_balance'),2) }}</th>
+                                                <th class="text-end">{{ number_format($orderbookers->sum('balance'),2) }}</th>
+                                            </tr>
+                                        </tfoot>
                                     </table><!--end table-->
                                 </div>
 

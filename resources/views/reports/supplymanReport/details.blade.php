@@ -88,11 +88,11 @@
                                                 <td class="text-end p-1 m-0">{{ number_format($sale->details->sum('labor'),2)}}</td>
                                             </tr>
                                         @endforeach
-                                        <tr>
-                                            <td colspan="7" class="text-end p-1 m-0">Total</td>
-                                            <td class="text-end p-1 m-0">{{ number_format($total_qty)}} , {{ $total_loose }}</td>
-                                            <td class="text-end p-1 m-0">{{ number_format($sales->sum('net'),2)}}</td>
-                                            <td class="text-end p-1 m-0">{{ number_format($total_labour,2)}}</td>
+                                        <tr class="table-active bg-success bg-opacity-25">
+                                            <th colspan="7" class="text-end p-1 m-0">Total</th>
+                                            <th class="text-end p-1 m-0">{{ number_format($total_qty)}} , {{ $total_loose }}</th>
+                                            <th class="text-end p-1 m-0">{{ number_format($sales->sum('net'),2)}}</th>
+                                            <th class="text-end p-1 m-0">{{ number_format($total_labour,2)}}</th>
                                         </tr>
                                     </tbody>
                                     </table><!--end table-->

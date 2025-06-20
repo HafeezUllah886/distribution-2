@@ -64,7 +64,19 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $totalQty = 0;
+                                                $totalLoose = 0;
+                                                $totalBonus = 0;
+                                                $totalAmount = 0;
+                                            @endphp
                                         @foreach ($sales as $key => $sale)
+                                        @php
+                                            $totalQty += $sale->details->sum('qty');
+                                            $totalLoose += $sale->details->sum('loose');
+                                            $totalBonus += $sale->details->sum('bonus');
+                                            $totalAmount += $sale->details->sum('amount');
+                                        @endphp
                                         <tr class="table-active text-success">
                                             <th class="p-1 m-0">{{ $key+1 }}</th>
                                             <th class="p-1 m-0">{{ $sale->id }}</th>
@@ -103,6 +115,15 @@
                                                     </tr>
                                                     @endforeach
                                                     </tbody>
+                                                    <tfoot>
+                                                        <tr class="table-active text-success">
+                                                            <th colspan="4" class="text-end">Total</th>
+                                                            <th class="text-end">{{ number_format($sale->details->sum('qty')) }}</th>
+                                                            <th class="text-end">{{ number_format($sale->details->sum('loose')) }}</th>
+                                                            <th class="text-end">{{ number_format($sale->details->sum('bonus')) }}</th>
+                                                            <th class="text-end">{{ number_format($sale->details->sum('amount'),2) }}</th>
+                                                        </tr>
+                                                    </tfoot>
                                                 </table>
                                                 <hr>
                                             </td>
@@ -110,6 +131,10 @@
                                         @endforeach
                                         </tbody>
                                         <tfoot>
+                                            <tr class="table-active text-success">
+                                                <th colspan="7" class="text-start">Grand Total:    QTY: {{ number_format($totalQty) }} ----- LOOSE: {{ number_format($totalLoose) }} ----- BONUS: {{ number_format($totalBonus) }} ----- AMOUNT: {{ number_format($totalAmount,2) }}</th>
+                                              
+                                            </tr>
                                         </tfoot>
                                     </table><!--end table-->
                                 </div>

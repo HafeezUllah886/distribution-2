@@ -48,6 +48,8 @@
                                             <tr class="table-active">
                                                 <th scope="col" style="width: 50px;">#</th>
                                                 <th scope="col" class="text-start">Product</th>
+                                                <th scope="col" class="text-start">Unit</th>
+                                                <th scope="col" class="text-start">Pack Size</th>
                                                 <th scope="col" class="text-end">Average Price</th>
                                                 <th scope="col" class="text-end">Available Stock</th>
                                                 <th scope="col" class="text-end">Sold Qty</th>
@@ -58,21 +60,50 @@
                                         <tbody>
                                             @php
                                                 $ser = 0;
+                                                $totalAmount = 0;
+                                                $totalSoldQty = 0;
+                                                $totalSoldLoose = 0;
+
+                                                $totalStockQty = 0;
+                                                $totalStockLoose = 0;
                                             @endphp
                                         @foreach ($topProductsArray as $key => $product)
                                             @php
                                                 $ser++;
+                                                $sold = PackInfoWithoutName($product['unit_value'], $product['sold']);
+                                                [$soldQty, $soldLoose] = explode(",", $sold);
+
+                                                $totalSoldQty += (int) $soldQty;
+                                                $totalSoldLoose += (int) $soldLoose;
+
+                                                $stock = PackInfoWithoutName($product['unit_value'], $product['stock']);
+                                                [$stockQty, $stockLoose] = explode(",", $stock);
+
+                                                $totalStockQty += (int) $stockQty;
+                                                $totalStockLoose += (int) $stockLoose;
+                                             
+                                                $totalAmount += $product['amount'];
                                             @endphp
                                             <tr>
                                                 <td>{{ $ser}}</td>
                                                 <td class="text-start">{{ $product['name']}}</td>
+                                                <td class="text-start">{{ $product['unit_name']}}</td>
+                                                <td class="text-start">{{ $product['unit_value']}}</td>
                                                 <td class="text-end">{{ number_format($product['price'],2)}}</td>
-                                                <td class="text-end">{{ packInfo($product['unit_value'], $product['unit_name'], $product['stock'])}}</td>
-                                                <td class="text-end">{{packInfo($product['unit_value'], $product['unit_name'], $product['sold'])}} </td>
+                                                <td class="text-end">{{ packInfoWithOutName($product['unit_value'], $product['stock'])}}</td>
+                                                <td class="text-end">{{packInfoWithOutName($product['unit_value'], $product['sold'])}} </td>
                                                 <td class="text-end">{{ number_format($product['amount'],2) }}</td>
                                             </tr>
                                         @endforeach
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="5" class="text-end">Total</th>
+                                                <th class="text-end">{{ $totalStockQty }}, {{ $totalStockLoose }}</th>
+                                                <th class="text-end">{{ $totalSoldQty }}, {{ $totalSoldLoose }}</th>
+                                                <th class="text-end">{{ number_format($totalAmount,2) }}</th>
+                                            </tr>
+                                        </tfoot>
                                     </table><!--end table-->
                                 </div>
 

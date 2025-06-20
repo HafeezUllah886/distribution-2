@@ -208,19 +208,19 @@
                                         
                                     </tbody>
                                     <tfoot>
-                                        <tr>
-                                            <td colspan="4" class="text-end p-1 m-0">Total</td>
-                                            <td class="text-end p-1 m-0">{{ $totalOpeningQty }}, {{ $totalOpeningLoose }}</td>
-                                            <td class="text-end p-1 m-0">{{ $totalPurchaseQty }}, {{ $totalPurchaseLoose }}</td>
-                                            <td class="text-end p-1 m-0">{{ $totalSaleRetQty }}, {{ $totalSaleRetLoose }}</td>
-                                            <td class="text-end p-1 m-0">{{ $totalInAdjQty }}, {{ $totalInAdjLoose }}</td>
-                                            <td class="text-end p-1 m-0">{{ $totalInQty }}, {{ $totalInLoose }}</td>
-                                            <td class="text-end p-1 m-0">{{ $totalSaleQty }}, {{ $totalSaleLoose }}</td>
-                                            <td class="text-end p-1 m-0">{{ $totalObsoleteQty }}, {{ $totalObsoleteLoose }}</td>
-                                            <td class="text-end p-1 m-0">{{ $totalOutAdjQty }}, {{ $totalOutAdjLoose }}</td>
-                                            <td class="text-end p-1 m-0">{{ $totalOutQty }}, {{ $totalOutLoose }}</td>
-                                            <td class="text-end p-1 m-0">{{ $totalClosingQty }}, {{ $totalClosingLoose }}</td>
-                                            <td class="text-end p-1 m-0">{{ $totalCurrentQty }}, {{ $totalCurrentLoose }}</td>
+                                        <tr class="table-active bg-success bg-opacity-25">
+                                            <th colspan="4" class="text-end p-1 m-0">Total</th>
+                                            <th class="text-end p-1 m-0">{{ $totalOpeningQty }}, {{ $totalOpeningLoose }}</th>
+                                            <th class="text-end p-1 m-0">{{ $totalPurchaseQty }}, {{ $totalPurchaseLoose }}</th>
+                                            <th class="text-end p-1 m-0">{{ $totalSaleRetQty }}, {{ $totalSaleRetLoose }}</th>
+                                            <th class="text-end p-1 m-0">{{ $totalInAdjQty }}, {{ $totalInAdjLoose }}</th>
+                                            <th class="text-end p-1 m-0">{{ $totalInQty }}, {{ $totalInLoose }}</th>
+                                            <th class="text-end p-1 m-0">{{ $totalSaleQty }}, {{ $totalSaleLoose }}</th>
+                                            <th class="text-end p-1 m-0">{{ $totalObsoleteQty }}, {{ $totalObsoleteLoose }}</th>
+                                            <th class="text-end p-1 m-0">{{ $totalOutAdjQty }}, {{ $totalOutAdjLoose }}</th>
+                                            <th class="text-end p-1 m-0">{{ $totalOutQty }}, {{ $totalOutLoose }}</th>
+                                            <th class="text-end p-1 m-0">{{ $totalClosingQty }}, {{ $totalClosingLoose }}</th>
+                                            <th class="text-end p-1 m-0">{{ $totalCurrentQty }}, {{ $totalCurrentLoose }}</th>
                                         </tr>
                                     </tfoot>
                                     </table><!--end table-->
