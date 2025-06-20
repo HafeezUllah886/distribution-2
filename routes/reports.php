@@ -3,6 +3,7 @@
 use App\Http\Controllers\reports\BranchStockReportController;
 use App\Http\Controllers\reports\profitController;
 use App\Http\Controllers\reports\balanceSheetReport;
+use App\Http\Controllers\reports\customerProductsSaleReport;
 use App\Http\Controllers\reports\dailycashbookController;
 use App\Http\Controllers\reports\DailyInvWiseProductsSalesReport;
 use App\Http\Controllers\reports\DailyVendorWiseProductsSalesReport;
@@ -76,4 +77,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/reports/invoicepaymentsreport', [invoicePaymentsReportController::class, 'index'])->name('reportInvoicePayments');
     Route::get('/reports/invoicepaymentsreportData', [invoicePaymentsReportController::class, 'data'])->name('reportInvoicePaymentsData');
+
+    Route::get('/reports/customerproductsalesreport', [customerProductsSaleReport::class, 'index'])->name('reportCustomerProductSales');
+    Route::get('/reports/customerproductsalesreportData', [customerProductsSaleReport::class, 'data'])->name('reportCustomerProductSalesData');
 });

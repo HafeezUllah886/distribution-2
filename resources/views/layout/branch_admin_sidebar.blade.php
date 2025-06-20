@@ -303,6 +303,10 @@
                                     data-key="t-basic-elements">Daily Invoice Wise Products Sales</a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ route('reportCustomerProductSales') }}" class="nav-link"
+                                    data-key="t-basic-elements">Customer Product Sales</a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('reportInvoicePayments') }}" class="nav-link"
                                     data-key="t-basic-elements">Invoices Payments</a>
                             </li>
