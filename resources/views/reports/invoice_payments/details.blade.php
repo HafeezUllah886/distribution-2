@@ -71,6 +71,12 @@
                                                 <th scope="col">Balance</th>
                                             </tr>
                                         </thead>
+                                        @php
+                                            $grandTotalInv = 0;
+                                            $grandTotalPaid = 0;
+                                            $grandTotalDue = 0;
+                                            $grandTotalAmount = 0;
+                                        @endphp
                                         @foreach ($customers as $key => $customer)
                                                 @php
                                                 $totalPaid = 0;
@@ -82,6 +88,12 @@
                                                     $totalDue += $sale->due();
                                                 @endphp
                                             @endforeach
+                                            @php
+                                                $grandTotalInv += $customer->sales->count();
+                                                $grandTotalPaid += $totalPaid;
+                                                $grandTotalDue += $totalDue;
+                                                $grandTotalAmount += $customer->sales->sum('net');
+                                            @endphp
                                             @if($totalPaid > 0 || $totalDue > 0)
                                         <thead>
                                             <tr class="table-active bg-success bg-opacity-50">
@@ -105,6 +117,7 @@
                                                             <td class="p-1">Date</td>
                                                             <td class="p-1">Amount</td>
                                                             <td class="p-1 text-start">Method</td>
+                                                            <td class="p-1 text-start">User</td>
                                                             <td class="p-1 text-start">Notes</td>
                                                         </tr>
                                                     </thead>
@@ -114,13 +127,14 @@
                                                                 <td class="p-1">{{ date('d M Y', strtotime($payment->date)) }}</td>
                                                                 <td class="p-1">{{ number_format($payment->amount) }}</td>
                                                                 <td class="p-1 text-start">{{ $payment->method }}</td>
+                                                                <td class="p-1 text-start">{{ $payment->user->name }}</td>
                                                                 <td class="p-1 text-start">{{ $payment->notes }}</td>
                                                             </tr>
                                                         @endforeach
                                                         <tr class="table-active">
                                                             <td class="text-end p-1">Total:</td>
                                                             <td class="p-1">{{ number_format($sale->paid()) }}</td>
-                                                            <td colspan="2"></td>
+                                                            <td colspan="3"></td>
                                                         </tr>
                                                     </tbody>
                                                        </table>
@@ -135,6 +149,11 @@
                                         @endif
         
                                         @endforeach
+                                        <tfoot>
+                                            <tr class="table-active bg-info bg-opacity-25">
+                                                <th colspan="7" class="text-start">Grand Total:  Inv({{ $grandTotalInv }}) ------ Amount ({{ $grandTotalAmount }}) ------ Paid({{ $grandTotalPaid }}) ------ Due({{ $grandTotalDue }})</th>
+                                            </tr>
+                                        </tfoot>
                                     </table><!--end table-->
                                 </div>
 
