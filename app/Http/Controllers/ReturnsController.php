@@ -346,6 +346,8 @@ class ReturnsController extends Controller
     public function getSignleProduct($id)
     {
         $product = products::with('units')->find($id);
+        $pDiscount = $product->price * $product->discountp / 100;
+        $product->price =  round(($product->price - $product->discount - $pDiscount - $product->sclaim) + $product->sfright, 2);
         return $product;
     }
 }
