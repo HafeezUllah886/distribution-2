@@ -73,19 +73,29 @@
                                                 $totalPR = 0;
                                                 $totalSP = 0;
                                                 $totalS = 0;
-                                                $totalStock = 0;
+                                                $totalStockQty = 0;
+                                                $totalStockLoose = 0;
                                                 $totalValue = 0;
                                                 $totalPPU = 0;
                                             @endphp
                                         @foreach ($data as $key => $item)
+                                        @if ($item['profit'] != 0)
+                                            
+                                        
                                         @php
                                             $total += $item['profit'];
                                             $totalPR += $item['purchaseRate'];
                                             $totalSP += $item['saleRate'];
                                             $totalS += $item['sold'];
-                                            $totalStock += $item['stock'];
+                                            
+
                                             $totalValue += $item['stockValue'];
                                             $totalPPU += $item['ppu'];
+
+                                            $stock = packInfoWithOutName($item['unit_value'], $item['stock']);
+                                            [$stockQty, $stockLoose] = explode(',', $stock);
+                                            $totalStockQty += (int) $stockQty;
+                                            $totalStockLoose += (int) $stockLoose;
                                         @endphp
                                             <tr>
                                                 <td>{{ $key+1 }}</td>
@@ -97,9 +107,10 @@
                                                 <td class="text-end">{{ number_format($item['sold'],2) }}</td>
                                                 <td class="text-end">{{ number_format($item['ppu'],2) }}</td>
                                                 <td class="text-end">{{ number_format($item['profit'],2) }}</td>
-                                                <td class="text-end">{{ number_format($item['stock'],2) }}</td>
+                                                <td class="text-end">{{ packInfoWithOutName($item['unit_value'], $item['stock']) }}</td>
                                                 <td class="text-end">{{ number_format($item['stockValue'],2) }}</td>
                                             </tr>
+                                            @endif
                                         @endforeach
                                         </tbody>
                                         <tfoot>
@@ -110,7 +121,7 @@
                                                 <th class="text-end">{{number_format($totalS, 2)}}</th>
                                                 <th class="text-end">{{number_format($totalPPU, 2)}}</th>
                                                 <th class="text-end">{{number_format($total, 2)}}</th>
-                                                <th class="text-end">{{number_format($totalStock, 2)}}</th>
+                                                <th class="text-end">{{$totalStockQty}} , {{$totalStockLoose}}</th>
                                                 <th class="text-end">{{number_format($totalValue, 2)}}</th>
                                             </tr>
                                             <tr>

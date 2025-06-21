@@ -71,7 +71,15 @@
                                            
                                         @foreach ($sales as $key => $sale)
                                         @php
-                                            $total_labour += $sale->details->sum('labor');
+                                            $labor = 0;
+                                        @endphp
+                                        @foreach ($sale->details as $detail)
+                                            @php
+                                                $labor += $detail->labor * $detail->pc;
+                                            @endphp
+                                        @endforeach
+                                        @php
+                                            $total_labour += $labor;
                                             $total_qty += $sale->details->sum('qty');
                                             $total_loose += $sale->details->sum('loose');
                                         @endphp
@@ -85,7 +93,7 @@
                                                 <td class="text-end p-1 m-0">{{ $sale->transporter}}</td>
                                                 <td class="text-end p-1 m-0">{{ number_format($sale->details->sum('qty'))}}, {{ $sale->details->sum('loose') }}</td>
                                                 <td class="text-end p-1 m-0">{{ number_format($sale->net,2)}}</td>
-                                                <td class="text-end p-1 m-0">{{ number_format($sale->details->sum('labor'),2)}}</td>
+                                                <td class="text-end p-1 m-0">{{ number_format($labor,2)}}</td>
                                             </tr>
                                         @endforeach
                                         <tr class="table-active bg-success bg-opacity-25">
