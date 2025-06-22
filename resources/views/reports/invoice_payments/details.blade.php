@@ -60,22 +60,27 @@
                             <div class="card-body p-4">
                                 <div class="table-responsive">
                                     <table class="table table-bordered text-center table-nowrap align-middle mb-0">
-                                        <thead>
-                                            <tr class="table-active">
-                                                <th scope="col" style="width: 50px;" >#</th>
-                                                <th scope="col">Inv #</th>
-                                                <th scope="col">Inv Date</th>
-                                                <th scope="col">Inv Age</th>
-                                                <th scope="col">Inv Amount</th>
-                                                <th scope="col">Payments</th>
-                                                <th scope="col">Balance</th>
-                                            </tr>
+                                        
                                         </thead>
                                         @php
                                             $grandTotalInv = 0;
                                             $grandTotalPaid = 0;
                                             $grandTotalDue = 0;
                                             $grandTotalAmount = 0;
+
+                                            $totalCash = 0;
+                                            $totalOnline = 0;
+                                            $totalCheque = 0;
+                                            $totalOthers = 0;
+
+                                            $totalPaidInv = 0;
+                                            $totalDueInv = 0;
+                                            $totalPartialyPaidInv = 0;
+
+                                            $totalPaidAmount = 0;
+                                            $totalDueAmount = 0;
+                                            $totalPartialyPaidAmount = 0;
+
                                         @endphp
                                         @foreach ($customers as $key => $customer)
                                                 @php
@@ -86,6 +91,25 @@
                                                 @php
                                                     $totalPaid += $sale->paid();
                                                     $totalDue += $sale->due();
+
+                                                    if($sale->paid() == $sale->net)
+                                                    {
+                                                        $totalPaidInv += 1;
+                                                        $totalPaidAmount += $sale->net;
+
+                                                    }
+                                                    if($sale->paid() != 0 && $sale->paid() < $sale->net)
+                                                    {
+                                                        $totalPartialyPaidInv += 1;
+                                                        $totalPartialyPaidAmount += $sale->paid();
+                                                    }
+                                                    if($sale->paid() == 0)
+                                                    {
+                                                        $totalDueInv += 1;
+                                                        $totalDueAmount += $sale->due();
+                                                    }
+                                                   
+                                                    
                                                 @endphp
                                             @endforeach
                                             @php
@@ -103,6 +127,17 @@
                                         <tbody>
                                            
                                             @foreach ($customer->sales as $key => $sale)
+                                            <thead>
+                                                <tr class="table-active">
+                                                    <th scope="col" style="width: 50px;" >#</th>
+                                                    <th scope="col">Inv #</th>
+                                                    <th scope="col">Inv Date</th>
+                                                    <th scope="col">Inv Age</th>
+                                                    <th scope="col">Inv Amount</th>
+                                                    <th scope="col">Payments</th>
+                                                    <th scope="col">Balance</th>
+                                                </tr>
+                                            </thead>
                                             
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
@@ -123,6 +158,17 @@
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($sale->payments as $payment)
+                                                        @php
+                                                            if($payment->method == 'Cash'){
+                                                                $totalCash += $payment->amount;
+                                                            }elseif($payment->method == 'Online'){
+                                                                $totalOnline += $payment->amount;
+                                                            }elseif($payment->method == 'Cheque'){
+                                                                $totalCheque += $payment->amount;
+                                                            }else{
+                                                                $totalOthers += $payment->amount;
+                                                            }
+                                                        @endphp
                                                             <tr>
                                                                 <td class="p-1">{{ date('d M Y', strtotime($payment->date)) }}</td>
                                                                 <td class="p-1">{{ number_format($payment->amount) }}</td>
@@ -131,19 +177,21 @@
                                                                 <td class="p-1 text-start">{{ $payment->notes }}</td>
                                                             </tr>
                                                         @endforeach
-                                                        <tr class="table-active">
-                                                            <td class="text-end p-1">Total:</td>
-                                                            <td class="p-1">{{ number_format($sale->paid()) }}</td>
-                                                            <td colspan="3"></td>
-                                                        </tr>
+                                                       
                                                     </tbody>
                                                        </table>
                                                 </td>
                                                 <td>{{ number_format($sale->due()) }}</td>
                                             </tr>
                                             @endforeach
-                                            <tr class="table-active">
-                                                <td colspan="7" class="text-start">Total:  Inv({{ $customer->sales->count() }}) ------ Amount ({{ $customer->sales->sum('net') }}) ------ Paid({{ $totalPaid }}) ------ Due({{ $totalDue }})</td>
+                                            <tr class="table-active ">
+                                                <th class="text-start">Total</th>
+                                                <th>{{ $customer->sales->count() }}</th>
+                                                <th></th>
+                                                <th></th>
+                                                <th>{{ number_format($customer->sales->sum('net')) }}</th>
+                                                <th>{{ number_format($totalPaid) }}</th>
+                                                <th>{{ number_format($totalDue) }}</th>
                                             </tr>
                                         </tbody>
                                         @endif
@@ -151,15 +199,75 @@
                                         @endforeach
                                         <tfoot>
                                             <tr class="table-active bg-info bg-opacity-25">
-                                                <th colspan="7" class="text-start">Grand Total:  Inv({{ $grandTotalInv }}) ------ Amount ({{ $grandTotalAmount }}) ------ Paid({{ $grandTotalPaid }}) ------ Due({{ $grandTotalDue }})</th>
+                                                <th class="text-start">G-Total:</th>
+                                                <th>{{ $grandTotalInv }}</th>
+                                                <th></th>
+                                                <th></th>
+                                                <th>{{ number_format($grandTotalAmount) }}</th>
+                                                <th>{{ number_format($grandTotalPaid) }}</th>
+                                                <th>{{ number_format($grandTotalDue) }}</th>
                                             </tr>
                                         </tfoot>
                                     </table><!--end table-->
                                 </div>
-
                             </div>
                             <!--end card-body-->
                         </div><!--end col-->
+                        <div class="col-lg-12 p-4">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Collection</th>
+                                        <th class="text-center">Cash</th>
+                                        <th class="text-center">Online</th>
+                                        <th class="text-center">Cheque</th>
+                                        <th class="text-center">Others</th>
+                                        <th class="text-center">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center">Amount</td>
+                                        <td class="text-center">{{ number_format($totalCash) }}</td>
+                                        <td class="text-center">{{ number_format($totalOnline) }}</td>
+                                        <td class="text-center">{{ number_format($totalCheque) }}</td>
+                                        <td class="text-center">{{ number_format($totalOthers) }}</td>
+                                        <td class="text-center">{{ number_format($totalCash + $totalOnline + $totalCheque + $totalOthers) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-12 p-4">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Total Inv</th>
+                                        <th class="text-center">Total Paid</th>
+                                        <th class="text-center">Total Partialy Paid</th>
+                                        <th class="text-center">Total Due</th>
+                                        <th class="text-center">Total Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center">{{ $grandTotalInv }}</td>
+                                        <td class="text-center">{{ $totalPaidInv }}</td>
+                                        <td class="text-center">{{ $totalPartialyPaidInv }}</td>
+                                        <td class="text-center">{{ $totalDueInv }}</td>
+                                        <td class="text-center">{{ $grandTotalInv }}</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center">{{ number_format($grandTotalAmount) }}</td>
+                                        <td class="text-center">{{ number_format($totalPaidAmount) }}</td>
+                                        <td class="text-center">{{ number_format($totalPartialyPaidAmount) }}</td>
+                                        <td class="text-center">{{ number_format($totalDueAmount) }}</td>
+                                        <td class="text-center">{{ number_format($grandTotalDue) }}</td>
+                                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div><!--end row-->
                 </div>
                 <!--end card-->

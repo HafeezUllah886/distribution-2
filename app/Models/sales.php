@@ -74,7 +74,7 @@ class sales extends Model
 
     public function age()
 {
-    return Carbon::parse($this->date)->age;
+    return (int) Carbon::parse($this->date)->diffInDays(now());
 }
 
 }

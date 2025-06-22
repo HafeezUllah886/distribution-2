@@ -14,13 +14,38 @@
                     </div>
                     <div class="form-group mt-2">
                         <label for="to">To</label>
-                                <input type="date" name="to" id="to" value="{{lastDayOfMonth()}}" class="form-control">
+                        <input type="date" name="to" id="to" value="{{lastDayOfMonth()}}" class="form-control">
                     </div>
                     <div class="form-group mt-2">
                         <label for="customer">Customer</label>
                         <select name="customer" id="customer" class="selectize">
                             @foreach ($customers as $customer)
                                 <option value="{{$customer->id}}">{{$customer->title}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="area">Area</label>
+                        <select name="area" id="area" class="selectize" multiple>
+                            @foreach ($areas as $area)
+                                <option value="{{$area->id}}">{{$area->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="orderbooker">Order Booker</label>
+                        <select name="orderbooker" id="orderbooker" class="selectize" multiple>
+                            @foreach ($orderbookers as $orderbooker)
+                                <option value="{{$orderbooker->id}}">{{$orderbooker->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label for="vendor">Vendor</label>
+                        <select name="vendor" id="vendor" class="selectize" multiple>
+                            @foreach ($vendors as $vendor)
+                                <option value="{{$vendor->id}}">{{$vendor->title}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -44,6 +69,9 @@
 <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
 <script>
     $(".selectize").selectize({
+        plugins: ['remove_button'],
+        delimiter: ",",
+        persist: false,
         
     });
 
