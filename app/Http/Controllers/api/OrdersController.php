@@ -162,6 +162,7 @@ class OrdersController extends Controller
                     'orderID' => $order->id,
                     'productID' => $id,
                     'price' => $price,
+                    'branchID' => $request->user()->branchID,
                     'discount' => $discount,
                     'discountp' => $discountp,
                     'discountvalue' => $discountpValue,
