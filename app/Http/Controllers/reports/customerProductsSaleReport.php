@@ -32,22 +32,29 @@ class customerProductsSaleReport extends Controller
         $area = $request->area ?? 'All';
         $orderbooker = $request->orderbooker ?? 'All';
 
-        $customers = accounts::whereIn('id', $customer)->pluck('id')->toArray();
+        $customers = accounts::where('id', $customer)->pluck('id')->toArray();
+        $customer_titles = accounts::whereIn('id', $customers)->pluck('title')->toArray();
 
         if($area != "All")
         {
-            $customers = accounts::whereIn('id', $customer)->whereIn('areaID', $area)->pluck('id')->toArray();
+            $customers = accounts::where('type', 'Customer')->whereIn('areaID', $area)->pluck('id')->toArray();
+            $customer_titles = accounts::where('type', 'Customer')->whereIn('areaID', $area)->pluck('title')->toArray();
+            $area = area::whereIn('id', $area)->pluck('name')->toArray();
+
         }
 
-        foreach($customers as $customer)
+        foreach($customers as $customer1)
         {
             if($orderbooker == 'All')
             {
-                $sales = sales::where('customerID', $customer)->whereBetween('date', [$from, $to])->pluck('id')->toArray();
+                $sales = sales::where('customerID', $customer1)->whereBetween('date', [$from, $to])->pluck('id')->toArray();
+                $orderbookerIDs = sales::where('customerID', $customer1)->whereBetween('date', [$from, $to])->pluck('orderbookerID')->toArray();
+                $orderbooker_titles = User::whereIn('id', $orderbookerIDs)->pluck('name')->toArray();
             }
             else
             {
-                $sales = sales::where('customerID', $customer)->whereBetween('date', [$from, $to])->whereIn('orderbookerID', $orderbooker)->pluck('id')->toArray();
+                $sales = sales::where('customerID', $customer1)->whereBetween('date', [$from, $to])->whereIn('orderbookerID', $orderbooker)->pluck('id')->toArray();
+                $orderbooker_titles = User::whereIn('id', $orderbooker)->pluck('name')->toArray();
             }
            
             if($vendor == 'All')
@@ -71,13 +78,14 @@ class customerProductsSaleReport extends Controller
                 $product->unit_value = $product1->units->first()->value;
                 $product->total_pc = $product->total_pc;
                 $product->total_amount = $product->total_amount;
+                $product->vendorID = $product1->vendorID;
             }
-    
-            $customer = accounts::find($customer);
+
+            // Group products by vendor while maintaining object structure
+            $vendor_wise = collect($sale_details)->groupBy('vendorID');
         }
+        
 
-       
-
-       return view('reports.customerProductsSaleReport.details', compact('sale_details', 'customer', 'from', 'to'));
+       return view('reports.customerProductsSaleReport.details', compact('sale_details', 'from', 'to', 'vendor_wise', 'customer_titles', 'orderbooker_titles', 'area'));
     }
 }

@@ -32,10 +32,18 @@
                                     <p class="text-muted mb-2 text-uppercase fw-semibold">To</p>
                                     <h5 class="fs-14 mb-0">{{ date('d M Y', strtotime($to)) }}</h5>
                                 </div>
-                                <div class="col-lg-3 col-6">
-                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Customer</p>
-                                    <h5 class="fs-14 mb-0">{{ $customer->title }} - {{ $customer->area->name }}</h5>
+                                {{-- <div class="col-lg-3 col-6">
+                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Customer(s)</p>
+                                    <h5 class="fs-14 mb-0">{{ is_array($customer_titles) ? implode(',', $customer_titles) : $customer_titles }}</h5>
                                 </div>
+                                <div class="col-lg-3 col-6">
+                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Area(s)</p>
+                                    <h5 class="fs-14 mb-0">{{ is_array($area) ? implode(',', $area) : $area }}</h5>
+                                </div>
+                                <div class="col-lg-3 col-6">
+                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Orderbooker(s)</p>
+                                    <h5 class="fs-14 mb-0">{{ is_array($orderbooker_titles) ? implode(',', $orderbooker_titles) : $orderbooker_titles }}</h5>
+                                </div> --}}
                                 <!--end col-->
                                 <!--end col-->
                                 <div class="col-lg-3 col-6">
@@ -70,25 +78,47 @@
                                             $totalQty = 0;
                                             $totalLoose = 0;
                                         @endphp
-                                        @foreach ($sale_details as $key => $product)
                                         @php
-                                            $qty = packInfoWithOutName($product->unit_value, $product->total_pc);
-
-                                           [$Qty, $Loose] = explode(',', $qty);
-                                           $totalQty += (int)$Qty;
-                                           $totalLoose += (int)$Loose;
+                                            $rowNumber = 1;
                                         @endphp
-                                            <tr>
-                                                <td>{{ $key+1 }}</td>
-                                                <td class="text-start">{{ $product->name }}</td>
-                                                <td class="text-start">{{ $product->brand }}</td>
-                                                <td class="text-start">{{ $product->category }}</td>
-                                                <td class="text-start">{{ $product->unit }}</td>
-                                                <td class="text-end">{{ number_format($product->unit_value) }}</td>
-                                                <td class="text-end">{{ packInfoWithOutName($product->unit_value, $product->total_pc) }}</td>
-                                                <td class="text-end">{{ number_format($product->total_amount) }}</td>
+                                        @foreach ($vendor_wise as $vendorId => $products)
+                                            @php
+                                                $vendor = \App\Models\accounts::find($vendorId);
+                                                $vendorTotal = 0;
+                                                $VendorTotalQty = 0;
+                                                $VendorTotalLoose = 0;
+                                            @endphp
+                                            <tr class="table-active bg-light">
+                                                <th colspan="8" class="text-start">{{ $vendor ? $vendor->title : 'Unknown Vendor' }}</th>
+                                            </tr>
+                                            @foreach ($products as $product)
+                                                @php
+                                                    $qty = packInfoWithOutName($product->unit_value, $product->total_pc);
+                                                    [$Qty, $Loose] = explode(',', $qty);
+                                                    $totalQty += (int)$Qty;
+                                                    $totalLoose += (int)$Loose;
+                                                    $vendorTotal += $product->total_amount;
+                                                    $VendorTotalQty += (int)$Qty;
+                                                    $VendorTotalLoose += (int)$Loose;
+                                                @endphp
+                                                <tr>
+                                                    <td>{{ $rowNumber++ }}</td>
+                                                    <td class="text-start">{{ $product->name }}</td>
+                                                    <td class="text-start">{{ $product->brand }}</td>
+                                                    <td class="text-start">{{ $product->category }}</td>
+                                                    <td class="text-start">{{ $product->unit }}</td>
+                                                    <td class="text-end">{{ number_format($product->unit_value) }}</td>
+                                                    <td class="text-end">{{ packInfoWithOutName($product->unit_value, $product->total_pc) }}</td>
+                                                    <td class="text-end">{{ number_format($product->total_amount) }}</td>
+                                                </tr>
+                                            @endforeach
+                                            <tr class="table-active">
+                                                <td colspan="6" class="text-end fw-bold">Vendor Total:</td>
+                                                <td class="text-end fw-bold">{{ $VendorTotalQty }}, {{ $VendorTotalLoose }}</td>
+                                                <td class="text-end fw-bold">{{ number_format($vendorTotal) }}</td>
                                             </tr>
                                         @endforeach
+                                       
                                     </tbody>
                                     <tfoot>
                                         <tr class="table-active bg-success bg-opacity-25">
