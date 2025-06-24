@@ -46,11 +46,10 @@ class profitController extends Controller
             $unit_name = $product->units->first()->unit_name;
             if($branch == "All")
             {
-             
                 $purchaseRate = avgPurchasePrice($from, $to, 'all', $product->id) * $unit;
                 $saleRate = avgSalePrice($from, $to, 'all',$product->id) * $unit;
                 $sold = sale_details::where('productID', $product->id)->whereBetween('date', [$from, $to])->sum('qty') - returnsDetails::where('productID', $product->id)->whereBetween('date', [$from, $to])->sum('qty');
-                $ppu = $saleRate - $purchaseRate ;
+                $ppu = $saleRate - $purchaseRate;
                 $profit = $ppu * $sold;
                 $stock = getStock($product->id);
                 $stockValue = productStockValue($product->id);
@@ -73,7 +72,7 @@ class profitController extends Controller
                 $ppu = $saleRate - $purchaseRate;
                 $profit = $ppu * $sold;
                 $stock = getBranchProductStock($product->id, $branch);
-                $stockValue = $stock * $purchaseRate;
+                $stockValue = productStockValue($product->id);
             }
 
             $data[] = ['name' => $product->name, 'purchaseRate' => $purchaseRate, 'saleRate' => $saleRate, 'sold' => $sold, 'ppu' => $ppu, 'profit' => $profit, 'stock' => $stock, 'stockValue' => $stockValue, 'unit' => $unit_name, 'unit_value' => $unit];
