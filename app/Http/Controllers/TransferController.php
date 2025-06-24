@@ -15,11 +15,13 @@ class TransferController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $transfers = transfer::orderby('id', 'desc')->currentBranch()->get();
+        $start = $request->start ?? firstDayOfMonth();
+        $end = $request->end ?? lastDayOfMonth();
+        $transfers = transfer::orderby('id', 'desc')->currentBranch()->whereBetween('date', [$start, $end])->get();
         $accounts = accounts::business()->currentBranch()->get();
-        return view('Finance.transfer.index', compact('transfers', 'accounts'));
+        return view('Finance.transfer.index', compact('transfers', 'accounts', 'start', 'end'));
     }
 
     /**

@@ -14,11 +14,26 @@ class AccountsAdjustmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $accountsAdjustments = accountsAdjustment::currentBranch()->get();
+        $start = $request->start ?? firstDayOfMonth();
+        $end = $request->end ?? lastDayOfMonth();
+        $accountID = $request->accountID ?? "All";
+        $type = $request->type ?? 'All';
+
+        $accountsAdjustments = accountsAdjustment::currentBranch()->whereBetween('date', [$start, $end]);
+        if($accountID != "All")
+        {
+            $accountsAdjustments->where('accountID', $accountID);
+        }
+        if($type != "All")
+        {
+            $accountsAdjustments->where('type', $type);
+        }
+        $accountsAdjustments = $accountsAdjustments->get();
         $accounts = accounts::currentBranch()->get();
-        return view('Finance.accounts_adjustments.index', compact('accountsAdjustments', 'accounts'));
+
+        return view('Finance.accounts_adjustments.index', compact('accountsAdjustments', 'accounts', 'start', 'end', 'accountID', 'type'));
     }
 
     /**

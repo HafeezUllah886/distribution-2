@@ -2,6 +2,46 @@
 @section('content')
     <div class="row">
         <div class="col-12">
+            <form>
+                <div class="row g-1">
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">From</span>
+                            <input type="date" class="form-control" placeholder="Username" name="start" value="{{$start}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">To</span>
+                            <input type="date" class="form-control" placeholder="Username" name="end" value="{{$end}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Account</span>
+                            <select name="accountID" id="accountID" class="form-control">
+                                <option value="">All</option>
+                                @foreach ($accounts as $account)
+                                    <option value="{{$account->id}}" @selected($account->id == $accountID)>{{$account->title}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Type</span>
+                            <select name="type" id="type" class="form-control">
+                                <option value="">All</option>
+                                <option value="debit" @selected($type == 'debit')>Debit</option>
+                                <option value="credit" @selected($type == 'credit')>Credit</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                       <input type="submit" value="Filter" class="btn btn-success w-100">
+                    </div>
+                </div>
+            </form>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Accounts Adjustments</h3>

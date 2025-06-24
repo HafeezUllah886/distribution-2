@@ -17,12 +17,25 @@ class StaffAmountAdjustmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $staffAdjustments = staffAmountAdjustment::currentBranch()->get();
+        $start = $request->start ?? firstDayOfMonth();
+        $end = $request->end ?? lastDayOfMonth();
+        $staffID = $request->staffID ?? "All";
+        $type = $request->type ?? 'All';
+        $staffAdjustments = staffAmountAdjustment::currentBranch()->whereBetween('date', [$start, $end]);
+        if($staffID != "All")
+        {
+            $staffAdjustments->where('staffID', $staffID);
+        }
+        if($type != "All")
+        {
+            $staffAdjustments->where('type', $type);
+        }
+        $staffAdjustments = $staffAdjustments->get();
         $staffs = User::currentBranch()->get();
         $currencies = currencymgmt::all();
-        return view('Finance.staff_amount_adjustments.index', compact('staffAdjustments', 'staffs', 'currencies'));
+        return view('Finance.staff_amount_adjustments.index', compact('staffAdjustments', 'staffs', 'currencies', 'start', 'end', 'staffID', 'type'));
     }
 
     /**
