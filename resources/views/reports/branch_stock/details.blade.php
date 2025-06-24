@@ -67,9 +67,19 @@
                                             @endphp
                                             @foreach ($vendors as $key => $vendor)
                                             @php
-                                                $amount = $vendor->vendor_products->sum('stock_value');
+                                            $amount = $vendor->vendor_products->sum('stock_value');
 
-                                                $totalAmount += $amount;
+                                            $totalAmount += $amount;
+                                         $tQty = 0;
+                                        @endphp
+                                            @foreach ($vendor->vendor_products as $key => $product)
+                                                @php
+                                                    $qty = $product->stock / $product->units[0]->value;
+                                                    $totalQty += $qty;
+                                                    $tQty += $qty;
+                                                @endphp
+                                            @endforeach
+                                            @if($tQty > 0)
                                             @endphp
                                             <tr>
                                                 <td colspan="7">
@@ -80,20 +90,18 @@
                                                 $tQty = 0;
                                             @endphp
                                                 @foreach ($vendor->vendor_products as $key => $product)
-
                                                 @php
-                                                $qty = $product->stock / $product->units[0]->value;
-                                                $totalQty += $qty;
-                                                $tQty += $qty;
-                                                if($product->stock > 0)
-                                                {
-                                                    $unit_value = $product->stock_value / ($product->stock / $product->units[0]->value);
-                                                }
-                                                else
-                                                {
+                                                if ($product->stock > 0) {
+                                                    $unit_value =
+                                                        $product->stock_value /
+                                                        ($product->stock / $product->units[0]->value);
+                                                } else {
                                                     $unit_value = 0;
                                                 }
-                                                @endphp
+                                                $qty = $product->stock / $product->units[0]->value;
+
+                                            @endphp
+                                                @if ($qty > 0)
                                                     <tr>
                                                         <td class="p-1 m-0">{{ $key+1}}</td>
                                                         <td class="text-start p-1 m-0">{{ $product->name}}</td>
@@ -103,12 +111,14 @@
                                                         <td class="text-end p-1 m-0">{{ number_format($qty,2)}}</td>
                                                         <td class="text-end p-1 m-0">{{ number_format($product->stock_value,2) }}</td>
                                                     </tr>
+                                                @endif
                                                 @endforeach
                                                 <tr>
                                                     <td colspan="5" class="text-end p-1 m-0">Total</td>
                                                     <td class="text-end p-1 m-0">{{ number_format($tQty,2) }}</td>
                                                     <td class="text-end p-1 m-0">{{ number_format($amount,2) }}</td>
                                                 </tr>
+                                                @endif
                                             @endforeach
                                             
                                         </tbody>

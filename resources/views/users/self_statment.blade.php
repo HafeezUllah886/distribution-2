@@ -87,6 +87,14 @@
                                             </tr>
                                         @endforeach
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="4" class="text-end p-1 m-0">Total</th>
+                                                <th class="text-end p-1 m-0">{{ number_format($transactions->sum('cr'),2) }}</th>
+                                                <th class="text-end p-1 m-0">{{ number_format($transactions->sum('db'),2) }}</th>
+                                                <th class="text-end p-1 m-0">{{ number_format($balance,2) }}</th>
+                                            </tr>
+                                        </tfoot>
                                     </table><!--end table-->
                                 </div>
                             </div>
