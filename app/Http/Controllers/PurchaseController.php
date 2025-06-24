@@ -196,6 +196,10 @@ class PurchaseController extends Controller
                 stock::where('refID', $product->refID)->delete();
                 $product->delete();
             }
+            if($purchase->orderID != null)
+            {
+                purchase_order_delivery::where('purchaseID', $purchase->id)->delete();
+            }
             transactions::where('refID', $purchase->refID)->delete();
             $ref = $purchase->refID;
             $purchase->update(
@@ -236,6 +240,7 @@ class PurchaseController extends Controller
                     [
                         'purchaseID'    => $purchase->id,
                         'warehouseID'   => $request->warehouseID,
+                        'branchID'      => auth()->user()->branchID,
                         'productID'     => $id,
                         'price'         => $price,
                         'discount'      => $discount,
@@ -258,6 +263,24 @@ class PurchaseController extends Controller
                 );
                 createStock($id, $qty, 0, $request->recdate, "Purchased from $vendor", $ref, $request->warehouseID);
 
+              if($purchase->orderID != null)
+              {
+                purchase_order_delivery::create(
+                    [
+                        'orderID'       => $purchase->orderID,
+                        'purchaseID'    => $purchase->id,
+                        'productID'     => $id,
+                        'warehouseID'   => $purchase->warehouseID,
+                        'qty'           => $request->qty[$key],
+                        'pc'            => $pc,
+                        'loose'         => $request->loose[$key],
+                        'amount'        => $amount,
+                        'unitID'        => $unit->id,
+                        'refID'         => $ref,
+                    ]
+                );
+
+              }
             }
 
             $net = round($total, 0);

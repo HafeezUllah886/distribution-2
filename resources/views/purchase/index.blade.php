@@ -93,7 +93,7 @@
                                                         View
                                                     </button>
                                                 </li>
-                                                @if ($purchase->orderID == null)
+                                                @if ($purchase->status == 'Pending')
                                                 <li>
                                                     <a class="dropdown-item" onclick="newWindow('{{route('purchase.edit', $purchase->id)}}')">
                                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
