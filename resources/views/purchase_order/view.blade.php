@@ -67,6 +67,7 @@
                                                 <th scope="col" style="width: 50px;">#</th>
                                                 <th scope="col" class="text-start">Product</th>
                                                 <th scope="col" class="text-start">Unit</th>
+                                                <th scope="col" class="text-start">Pack Size</th>
                                                 <th scope="col" class="text-end">Qty</th>
                                                 <th scope="col" class="text-end">Loose</th>
                                                 <th scope="col" class="text-end">Bonus</th>
@@ -90,6 +91,7 @@
                                                 <td class="p-1 m-1">{{$key+1}}</td>
                                                 <td class="text-start p-1 m-1">{{$product->product->name}} | {{$product->product->nameurdu}}</td>
                                                 <td class="text-start m-1 p-1">{{$product->unit->unit_name}}</td>
+                                                <td class="text-start m-1 p-1">{{$product->unit->value}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->qty)}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->loose)}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->bonus)}}</td>
@@ -99,7 +101,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="3" class="text-end">Total</th>
+                                                <th colspan="4" class="text-end">Total</th>
                                                 <th class="text-end">{{number_format($totalQty)}}</th>
                                                 <th class="text-end">{{number_format($totalLoose)}}</th>
                                                 <th class="text-end">{{number_format($totalBonus)}}</th>
@@ -115,6 +117,8 @@
                                             <thead>
                                                 <th class="m-1 p-1">#</th>
                                                 <th class="m-1 p-1">Product</th>
+                                                <th class="m-1 p-1">Unit</th>
+                                                <th class="m-1 p-1">Pack Size</th>
                                                 <th class="m-1 p-1">Total Order Qty</th>
                                                 <th class="m-1 p-1">Received Qty</th>
                                                 <th class="m-1 p-1">Remainaing Qty</th>
@@ -126,6 +130,8 @@
                                                     <tr>
                                                         <td class="m-1 p-1">{{$key+1}}</td>
                                                         <td class="m-1 p-1">{{$product->product->name}}</td>
+                                                        <td class="m-1 p-1">{{$product->unit->unit_name}}</td>
+                                                        <td class="m-1 p-1">{{$product->unit->value}}</td>
                                                         <td class="m-1 p-1">{{ packInfo($product->unit->value, $product->unit->unit_name, $product->pc) }}</td>
                                                         <td class="m-1 p-1">{{ packInfo($product->unit->value, $product->unit->unit_name, $product->delivered()) }}</td>
                                                         <td class="m-1 p-1">{{ packInfo($product->unit->value, $product->unit->unit_name, $product->remaining()) }}</td>
@@ -138,7 +144,7 @@
                                                         $totalRemainingQty = $totalQty - $totalReceivedQty;
 
                                                     @endphp
-                                                    <td colspan="2" class="text-end">Total</td>
+                                                    <td colspan="4" class="text-end">Total</td>
                                                     <td class="">{{ $order->totalQty() }}</td>
                                                     <td class="">{{ $order->totalReceivedQty() }}</td>
                                                     <td class="">{{ $order->totalPendingQty() }}</td>

@@ -62,6 +62,7 @@
                                                 <th scope="col" style="width: 50px;">#</th>
                                                 <th scope="col" class="text-end urdu">تفصیل</th>
                                                 <th scope="col" class="text-end urdu">یونٹ</th>
+                                                <th scope="col" class="text-end urdu">پیکینگ</th>
                                                 <th scope="col" class="text-end urdu">تعداد</th>
                                                 <th scope="col" class="text-end urdu">کھلہ مال</th>
                                                 <th scope="col" class="text-end urdu">بونس</th>
@@ -104,14 +105,15 @@
                                                 <td class="p-1 m-1">{{$key+1}}</td>
                                                 <td class="text-end p-1 m-1 urdu">{{$product->product->nameurdu}}</td>
                                                 <td class="text-end m-1 p-1">{{$product->unit->unit_name}}</td>
+                                                <td class="text-end m-1 p-1">{{$product->unit->value}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->qty)}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->loose)}}</td>
                                                 <td class="text-end m-1 p-1">{{number_format($product->bonus)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->price,2)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->price * $product->unit->value)}}</td>
                                                 <td class="text-end p-1 m-1">{{number_format($discount)}}</td>
                                                 <td class="text-end p-1 m-1">{{$product->discountp}}% | {{number_format($discountvalue)}}</td>
                                                 <td class="text-end p-1 m-1">{{number_format($product->claim * $qty)}}</td>
-                                                <td class="text-end p-1 m-1">{{number_format($product->netprice,2)}}</td>
+                                                <td class="text-end p-1 m-1">{{number_format($product->netprice * $product->unit->value)}}</td>
                                                 <td class="text-end p-1 m-1">{{number_format($product->fright * $qty)}}</td>
                                                 <td class="text-end p-1 m-1">{{number_format($product->amount,2)}}</td>
                                                </tr>
@@ -119,7 +121,7 @@
                                         </tbody>
                                         <tfoot>
                                            <tr>
-                                                <th colspan="3" class="text-start urdu">ٹوٹل</th>
+                                                <th colspan="4" class="text-start urdu">ٹوٹل</th>
                                                 <th class="text-end">{{number_format($totalQty)}}</th>
                                                 <th class="text-end">{{number_format($totalLoose)}}</th>
                                                 <th class="text-end">{{number_format($totalBonus)}}</th>
