@@ -72,7 +72,8 @@ class profitController extends Controller
                 $ppu = $saleRate - $purchaseRate;
                 $profit = $ppu * $sold;
                 $stock = getBranchProductStock($product->id, $branch);
-                $stockValue = productStockValue($product->id);
+                $purchaseRatePC = avgPurchasePrice($from, $to, $branch, $product->id);
+                $stockValue = $stock * $purchaseRatePC;
             }
 
             $data[] = ['name' => $product->name, 'purchaseRate' => $purchaseRate, 'saleRate' => $saleRate, 'sold' => $sold, 'ppu' => $ppu, 'profit' => $profit, 'stock' => $stock, 'stockValue' => $stockValue, 'unit' => $unit_name, 'unit_value' => $unit];
