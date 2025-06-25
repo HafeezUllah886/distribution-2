@@ -118,6 +118,7 @@ class BranchOrdersController extends Controller
                     'productID' => $id,
                     'price' => $price,
                     'discount' => $discount,
+                    'branchID' => Auth()->user()->branchID,
                     'discountp' => $discountp,
                     'discountvalue' => $discountpValue,
                     'qty' => $request->qty[$key],
