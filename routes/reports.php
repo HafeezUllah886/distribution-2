@@ -10,6 +10,7 @@ use App\Http\Controllers\reports\DailyVendorWiseProductsSalesReport;
 use App\Http\Controllers\reports\invoicePaymentsReportController;
 use App\Http\Controllers\reports\loadsheetController;
 use App\Http\Controllers\reports\OrderbookerPerformanceReportController;
+use App\Http\Controllers\reports\OrderbookerWiseCustomerBalanceReport;
 use App\Http\Controllers\reports\ProductsSummaryReportController;
 use App\Http\Controllers\reports\purchaseReportController;
 use App\Http\Controllers\reports\salesReportController;
@@ -80,4 +81,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/reports/customerproductsalesreport', [customerProductsSaleReport::class, 'index'])->name('reportCustomerProductSales');
     Route::get('/reports/customerproductsalesreportData', [customerProductsSaleReport::class, 'data'])->name('reportCustomerProductSalesData');
+
+    Route::get('/reports/orderbooker_customer_balance', [OrderbookerWiseCustomerBalanceReport::class, 'index'])->name('reportOrderbookerWiseCustomerBalance');
+    Route::get('/reports/orderbooker_customer_balanceData', [OrderbookerWiseCustomerBalanceReport::class, 'data'])->name('reportOrderbookerWiseCustomerBalanceData');
+
+    Route::get('/get-orderbookers-by-customer/{customer}', [OrderbookerWiseCustomerBalanceReport::class, 'getOrderbookersByCustomer'])->name('get-orderbookers-by-customer');
 });

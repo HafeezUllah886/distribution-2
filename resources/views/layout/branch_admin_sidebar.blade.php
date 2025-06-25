@@ -322,6 +322,10 @@
                                 <a href="{{ route('reportUnloaderReport') }}" class="nav-link"
                                     data-key="t-basic-elements">Unloader Labour Charges</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('reportOrderbookerWiseCustomerBalance') }}" class="nav-link"
+                                    data-key="t-basic-elements">Orderbooker Wise Customer Balance</a>
+                            </li>
                         </ul>
                     </div>
                 </li> 
