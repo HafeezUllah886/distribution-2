@@ -184,9 +184,9 @@ class PurchaseOrderDeliveryController extends Controller
         $purchase = purchase::find($id);
         $vendor = accounts::find($purchase->vendorID);
 
-        createTransaction($purchase->vendorID, $purchase->recdate, 0, $purchase->net, "Pending Amount of Purchase No. $purchase->id", $purchase->refID);
+        createTransaction($purchase->vendorID, $purchase->recdate, 0, $purchase->net, "Pending Amount of Purchase No. $purchase->id", $purchase->refID, 0);
 
-        createTransaction($purchase->unloaderID, $purchase->recdate, 0, $purchase->totalLabor, "Labor Charges of Purchase No. $purchase->id Vendor: $vendor->title", $purchase->refID);
+        createTransaction($purchase->unloaderID, $purchase->recdate, 0, $purchase->totalLabor, "Labor Charges of Purchase No. $purchase->id Vendor: $vendor->title", $purchase->refID, 0);
         $purchase->update([
             'status' => 'Approved',
         ]);

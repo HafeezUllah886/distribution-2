@@ -49,9 +49,6 @@
                         </ul>
                     </div>
                 @endif
-
-            
-
                     <table class="table" id="buttons-datatables">
                         <thead>
                             <th>#</th>
@@ -130,7 +127,7 @@
                         <div class="row">
                             <div class="col-6">
                                @include('layout.payment')
-                               <div class="form-group mt-2 check_customer d-none">
+                               <div class="form-group mt-2">
                                 <label for="orderbookerID">Order Booker</label>
                                 <select name="orderbookerID" id="orderbookerID" required class="selectize">
                                     @foreach ($orderbookers as $orderbooker)

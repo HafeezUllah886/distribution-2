@@ -139,6 +139,14 @@
                             </select>
                         </div>
                         <div class="form-group mt-2">
+                            <label for="orderbookerID">Orderbooker</label>
+                            <select name="orderbookerID" id="orderbookerID" class="form-control">
+                                @foreach ($orderbookers as $orderbooker)
+                                    <option value="{{$orderbooker->id}}">{{$orderbooker->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mt-2">
                             <label for="date">Date</label>
                             <input type="date" name="date" required id="date" value="{{ date('Y-m-d') }}"
                                 class="form-control">

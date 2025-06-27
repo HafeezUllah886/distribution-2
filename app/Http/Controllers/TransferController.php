@@ -65,8 +65,8 @@ class TransferController extends Controller
             $fromAccount = $transfer->fromAccount->title;
             $toAccount = $transfer->toAccount->title;
 
-            createTransaction($request->from,$request->date, 0, $request->amount, "Transfered to $toAccount :" .$request->notes, $ref);
-            createTransaction($request->to, $request->date, $request->amount, 0, "Transfered from $fromAccount :" .$request->notes, $ref);
+            createTransaction($request->from,$request->date, 0, $request->amount, "Transfered to $toAccount :" .$request->notes, $ref, 0);
+            createTransaction($request->to, $request->date, $request->amount, 0, "Transfered from $fromAccount :" .$request->notes, $ref, 0);
 
             DB::commit();
             return back()->with('success', "Transfered Successfully");

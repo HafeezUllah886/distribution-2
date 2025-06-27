@@ -165,6 +165,14 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="form-group mt-2">
+                                    <label for="orderbookerID">Order Booker</label>
+                                    <select name="orderbookerID" id="orderbookerID" class="form-control">
+                                        @foreach ($orderbookers as $orderbooker)
+                                            <option value="{{$orderbooker->id}}">{{$orderbooker->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                          </div>
                          <div class="modal-footer">
                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>

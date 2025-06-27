@@ -6,6 +6,7 @@ use App\Models\accountsAdjustment;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\transactions;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -33,7 +34,9 @@ class AccountsAdjustmentController extends Controller
         $accountsAdjustments = $accountsAdjustments->get();
         $accounts = accounts::currentBranch()->get();
 
-        return view('Finance.accounts_adjustments.index', compact('accountsAdjustments', 'accounts', 'start', 'end', 'accountID', 'type'));
+        $orderbookers = User::orderbookers()->currentBranch()->get();
+
+        return view('Finance.accounts_adjustments.index', compact('accountsAdjustments', 'accounts', 'start', 'end', 'accountID', 'type', 'orderbookers'));
     }
 
     /**
@@ -74,11 +77,11 @@ class AccountsAdjustmentController extends Controller
 
             if($request->type == 'credit')
             {
-                createTransaction($request->accountID, $request->date, $request->amount, 0, "Amount Adjusted: $request->notes", $ref);
+                createTransaction($request->accountID, $request->date, $request->amount, 0, "Amount Adjusted: $request->notes", $ref, $request->orderbookerID);
             }
             else
             {
-                createTransaction($request->accountID, $request->date, 0, $request->amount, "Amount Adjusted: $request->notes", $ref);
+                createTransaction($request->accountID, $request->date, 0, $request->amount, "Amount Adjusted: $request->notes", $ref, $request->orderbookerID);
             }
 
            DB::commit();

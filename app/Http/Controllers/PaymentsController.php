@@ -11,6 +11,7 @@ use App\Models\currencymgmt;
 use App\Models\method_transactions;
 use App\Models\payments;
 use App\Models\transactions;
+use App\Models\User;
 use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -49,7 +50,8 @@ class PaymentsController extends Controller
 
         $currencies = currencymgmt::all();
         $type = $request->type;
-        return view('Finance.payments.index', compact('payments', 'receivers', 'currencies', 'areas', 'type', 'area'));
+        $orderbookers = User::orderbookers()->currentBranch()->get();
+        return view('Finance.payments.index', compact('payments', 'receivers', 'currencies', 'areas', 'type', 'area', 'orderbookers'));
     }
 
     /**
@@ -102,7 +104,7 @@ class PaymentsController extends Controller
             $user_name = auth()->user()->name;
             $notes = "Payment to $receiver->title Method $request->method Notes : $request->notes";
 
-            createTransaction($request->receiverID, $request->date, $request->amount, 0, $notes, $ref);
+            createTransaction($request->receiverID, $request->date, $request->amount, 0, $notes, $ref, $request->orderbookerID);
             createMethodTransaction(auth()->user()->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
            
             createUserTransaction(auth()->user()->id, $request->date,0, $request->amount, $notes, $ref);

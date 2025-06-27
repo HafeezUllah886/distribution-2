@@ -9,7 +9,7 @@ use App\Models\transactions;
 use App\Models\userAccounts;
 use App\Models\users_transactions;
 
-function createTransaction($accountID, $date, $cr, $db, $notes, $ref){
+function createTransaction($accountID, $date, $cr, $db, $notes, $ref, $orderbookerID){
     transactions::create(
         [
             'accountID' => $accountID,
@@ -18,6 +18,7 @@ function createTransaction($accountID, $date, $cr, $db, $notes, $ref){
             'db' => $db,
             'notes' => $notes,
             'refID' => $ref,
+            'orderbookerID' => $orderbookerID == 0 ? null : $orderbookerID,
         ]
     );
 

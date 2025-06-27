@@ -148,6 +148,14 @@
                                     class="form-control">
                             </div>
                             <div class="form-group mt-2">
+                                <label for="orderbookerID">Orderbooker</label>
+                                <select name="orderbookerID" id="orderbookerID" class="form-control">
+                                    @foreach ($orderbookers as $orderbooker)
+                                        <option value="{{$orderbooker->id}}">{{$orderbooker->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group mt-2">
                                 <label for="notes">Notes</label>
                                 <textarea name="notes" required id="notes" cols="30" class="form-control" rows="5"></textarea>
                             </div>

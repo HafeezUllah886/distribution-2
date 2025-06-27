@@ -73,7 +73,7 @@ class SalePaymentsController extends Controller
             $customer = accounts::find($sale->customerID);
             $notes = "Payment of Inv No. $sale->id from $customer->title Method $request->method Notes : $request->notes";
             $notes1 = "Payment of Inv No. $sale->id submitted to $user Method $request->method Notes : $request->notes";
-            createTransaction($sale->customerID, $request->date,0, $request->amount, $notes1, $ref);
+            createTransaction($sale->customerID, $request->date,0, $request->amount, $notes1, $ref, $sale->orderbookerID);
             createUserTransaction(auth()->id(), $request->date,$request->amount, 0, $notes, $ref);
             createMethodTransaction(auth()->user()->id, $request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
 

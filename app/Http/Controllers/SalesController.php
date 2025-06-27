@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\accounts;
 use App\Models\expenses;
 use App\Models\order_delivery;
+use App\Models\orderbooker_products;
 use App\Models\orders;
 use App\Models\product_dc;
 use App\Models\product_units;
@@ -58,7 +59,8 @@ class SalesController extends Controller
      */
     public function create(request $request)
     {
-        $products = products::currentBranch()->orderby('name', 'asc')->get();
+        $orderbooker_products = orderbooker_products::where('orderbookerID', $request->orderbookerID)->pluck('productID')->toArray();
+        $products = products::whereIn('id', $orderbooker_products)->orderby('name', 'asc')->get();
         $customer = accounts::find($request->customerID);
         foreach($products as $product)
         {
@@ -67,10 +69,10 @@ class SalesController extends Controller
            
         }
         $units = units::all();
-        $orderbookers = User::orderbookers()->get();
+        $orderbooker = User::find($request->orderbookerID);
         $warehouse = warehouses::find($request->warehouseID);
         $supplymen = accounts::supplyMen()->get();
-        return view('sales.create', compact('products', 'units', 'customer', 'orderbookers', 'warehouse', 'supplymen'));
+        return view('sales.create', compact('products', 'units', 'customer', 'orderbooker', 'warehouse', 'supplymen'));
     }
 
     /**
@@ -161,11 +163,8 @@ class SalesController extends Controller
                 ]
             );
 
-            createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id", $ref);
-
-        
-           
-            createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer", $ref);
+            createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id", $ref, $request->orderbookerID);
+            createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer", $ref, $request->orderbookerID);
 
             DB::commit();
             return back()->with('success', "Sale Created");
@@ -204,7 +203,8 @@ class SalesController extends Controller
      */
     public function edit(sales $sale)
     {
-        $products = products::orderby('name', 'asc')->get();
+        $orderbooker_products = orderbooker_products::where('orderbookerID', $sale->orderbookerID)->pluck('productID')->toArray();
+        $products = products::whereIn('id', $orderbooker_products)->orderby('name', 'asc')->get();
         $customer = accounts::find($sale->customerID);
         foreach($products as $product)
         {
@@ -220,10 +220,10 @@ class SalesController extends Controller
         }
         $units = units::all();
        
-        $orderbookers = User::orderbookers()->get();
+        $orderbooker = User::find($sale->orderbookerID);
         $warehouse = warehouses::find($sale->warehouseID);
         $supplymen = accounts::supplyMen()->get();
-        return view('sales.edit', compact('products', 'units', 'customer', 'sale', 'orderbookers', 'warehouse', 'supplymen'));
+        return view('sales.edit', compact('products', 'units', 'customer', 'sale', 'orderbooker', 'warehouse', 'supplymen'));
     }
 
     /**
@@ -326,9 +326,9 @@ class SalesController extends Controller
                 ]
             );
 
-            createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id", $ref);
+            createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id", $ref, $sale->orderbookerID);
            
-           createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer", $ref);
+           createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer", $ref, $sale->orderbookerID);
 
             DB::commit();
             return back()->with('success', "Sale Updated");

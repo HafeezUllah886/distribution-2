@@ -19,6 +19,7 @@ return new class extends Migration
             $table->float('db', 2)->default(0);
             $table->text('notes');
             $table->bigInteger('refID');
+            $table->bigInteger('orderbookerID')->nullable();
             $table->timestamps();
         });
     }

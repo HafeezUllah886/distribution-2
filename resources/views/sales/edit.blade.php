@@ -138,12 +138,9 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label for="orderbooker">Order Booker</label>
-                                    <select name="orderbookerID" id="orderbooker" class="form-control">
-                                        @foreach ($orderbookers as $orderbooker)
-                                            <option value="{{$orderbooker->id}}" @selected($orderbooker->id == $sale->orderbookerID)>{{$orderbooker->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="orderbookerID">Orderbooker</label>
+                                    <input type="text" value="{{$orderbooker->name}}" class="form-control" readonly>
+                                    <input type="hidden" name="orderbookerID" value="{{$orderbooker->id}}">
                                 </div>
                             </div>
                             <div class="col-4 mt-2">

@@ -274,7 +274,7 @@ class ReturnsController extends Controller
                             'refID'         => $ref,
                         ]
                     );
-                    createTransaction($request->customerID, $request->date, 0, $net, "Amount of Return No. $return->id", $ref);
+                    createTransaction($request->customerID, $request->date, 0, $net, "Amount of Return No. $return->id", $ref, $request->orderbookerID);
                 }
                 else
                 {
@@ -297,7 +297,7 @@ class ReturnsController extends Controller
                         'refID'         => $ref,
                     ]
                 );
-                createTransaction($request->customerID, $request->date, 0, $amount, "Amount of Return No. $return->id", $ref);
+                createTransaction($request->customerID, $request->date, 0, $amount, "Amount of Return No. $return->id", $ref, $request->orderbookerID);
                 }
             }
             

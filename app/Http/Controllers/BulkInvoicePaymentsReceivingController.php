@@ -98,7 +98,7 @@ class BulkInvoicePaymentsReceivingController extends Controller
             ]);
             $notes = "Bulk Payment of Inv No. $saleIDs from " . $sale->customer->title . " method " . $request->method . " notes : " . $request->notes;
             $notes1 = "Bulk Payment of Inv No. $saleIDs to " . auth()->user()->name . " method " . $request->method . " notes : " . $request->notes;
-            createTransaction($request->customerID, $request->date,0, $net, $notes1, $ref);
+            createTransaction($request->customerID, $request->date,0, $net, $notes1, $ref, $sale->orderbookerID);
             createUserTransaction(auth()->id(), $request->date,$net, 0, $notes, $ref);
            createMethodTransaction(auth()->user()->id, $request->method, $net,0, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
            if($request->method == "Cash")
