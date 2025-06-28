@@ -59,7 +59,7 @@ class customerPaymentsReceivingContoller extends Controller
             );
             $depositer = accounts::find($request->customerID);
             $user_name = $request->user()->name;
-            createTransaction($request->customerID, $request->date, 0, $request->amount, "Payment deposited to $user_name : $request->notes", $ref);
+            createTransaction($request->customerID, $request->date, 0, $request->amount, "Payment deposited to $user_name : $request->notes", $ref, $request->user()->id);
             
             createMethodTransaction($request->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, "Payment deposited by $depositer->title : $request->notes", $ref);
     
