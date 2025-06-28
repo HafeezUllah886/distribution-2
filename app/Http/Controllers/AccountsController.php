@@ -33,7 +33,9 @@ class AccountsController extends Controller
             $accounts = accounts::Other()->get();
         }
 
-        return view('Finance.accounts.index', compact('accounts', 'filter'));
+        $orderbookers = User::orderbookers()->currentBranch()->get();
+
+        return view('Finance.accounts.index', compact('accounts', 'filter', 'orderbookers'));
     }
 
     /**
@@ -145,22 +147,51 @@ class AccountsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id, $from, $to)
+    public function show($id, $from, $to, $orderbooker = 0)
     {
+        $orderbooker = $orderbooker ?? 0;
         $account = accounts::find($id);
 
-        $transactions = transactions::where('accountID', $id)->whereBetween('date', [$from, $to])->get();
+        $transactions = transactions::where('accountID', $id)->whereBetween('date', [$from, $to]);
+        if($orderbooker != 0)
+        {
+            $transactions = $transactions->where('orderbookerID', $orderbooker);
+        }
+        $transactions = $transactions->get();
 
-        $pre_cr = transactions::where('accountID', $id)->whereDate('date', '<', $from)->sum('cr');
-        $pre_db = transactions::where('accountID', $id)->whereDate('date', '<', $from)->sum('db');
+        $pre_cr = transactions::where('accountID', $id)->whereDate('date', '<', $from);
+        if($orderbooker != 0)
+        {
+            $pre_cr = $pre_cr->where('orderbookerID', $orderbooker);
+        }
+        $pre_cr = $pre_cr->sum('cr');
+
+        $pre_db = transactions::where('accountID', $id)->whereDate('date', '<', $from);
+        if($orderbooker != 0)
+        {
+            $pre_db = $pre_db->where('orderbookerID', $orderbooker);
+        }
+        $pre_db = $pre_db->sum('db');
+
         $pre_balance = $pre_cr - $pre_db;
 
-        $cur_cr = transactions::where('accountID', $id)->sum('cr');
-        $cur_db = transactions::where('accountID', $id)->sum('db');
+        $cur_cr = transactions::where('accountID', $id);
+        if($orderbooker != 0)
+        {
+            $cur_cr = $cur_cr->where('orderbookerID', $orderbooker);
+        }
+        $cur_cr = $cur_cr->sum('cr');
+
+        $cur_db = transactions::where('accountID', $id);
+        if($orderbooker != 0)
+        {
+            $cur_db = $cur_db->where('orderbookerID', $orderbooker);
+        }
+        $cur_db = $cur_db->sum('db');
 
         $cur_balance = $cur_cr - $cur_db;
 
-        return view('Finance.accounts.statment', compact('account', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to'));
+        return view('Finance.accounts.statment', compact('account', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to', 'orderbooker'));
     }
 
     /**
