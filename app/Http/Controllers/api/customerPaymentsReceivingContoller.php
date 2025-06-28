@@ -122,7 +122,10 @@ class customerPaymentsReceivingContoller extends Controller
                 'salesID' => $invoice->id,
                 'total_bill' => $invoice->net,
                 'paid' => $payment,
-                'due' => $invoice->net - $payment
+                'due' => $invoice->net - $payment,
+                'date' => $invoice->date,
+                'age' => $invoice->age(),
+                'payments' => $invoice->payments()->select('method', 'number', 'bank', 'cheque_date', 'amount', 'date', 'notes')->get(),
             ];
         }
         return response()->json([

@@ -161,7 +161,7 @@
                                     <label for="customerID">Customer</label>
                                     <select name="customerID" id="customerID" class="form-control">
                                         @foreach ($customers as $customer)
-                                            <option value="{{$customer->id}}">{{$customer->title}}</option>
+                                            <option value="{{$customer->id}}">{{$customer->title}} - {{$customer->address}}</option>
                                         @endforeach
                                     </select>
                                 </div>
