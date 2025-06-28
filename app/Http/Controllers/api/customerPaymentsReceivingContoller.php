@@ -203,7 +203,7 @@ class customerPaymentsReceivingContoller extends Controller
             ]); 
             $user = $request->user()->name;
             $customer = accounts::find($sale->customerID);
-            createTransaction($request->customerID, $request->date,0, $total_amount, "Bulk Payment of Inv No. $saleIDs Received by $user", $ref);
+            createTransaction($request->customerID, $request->date,0, $total_amount, "Bulk Payment of Inv No. $saleIDs Received by $user", $ref, $sale->orderbookerID);
             createUserTransaction($request->user()->id, $request->date,$total_amount, 0, "Bulk Payment of Inv No. $saleIDs Received from $customer->title", $ref);
            createMethodTransaction($request->user()->id, $request->method, $total_amount,0, $request->date, $request->number, $request->bank, $request->cheque_date, "Bulk Payment of Inv No. $saleIDs Received from $customer->title", $ref);
             
