@@ -2,6 +2,48 @@
 @section('content')
     <div class="row">
         <div class="col-12">
+            <form>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">From</span>
+                            <input type="date" name="start" value="{{$start}}" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">To</span>
+                            <input type="date" name="end" value="{{$end}}" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">From</span>
+                            <select name="from" id="from" class="form-control">
+                                <option @selected($from == 'All') value="All">All</option>
+                                @foreach ($users as $user)
+                                    <option @selected($from == $user->id) value="{{$user->id}}">{{$user->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Method</span>
+                            <select name="method" id="method" class="form-control">
+                                <option @selected($method == 'All') value="All">All</option>
+                                <option @selected($method == 'Cash') value="Cash">Cash</option>
+                                <option @selected($method == 'Bank') value="Bank">Bank</option>
+                                <option @selected($method == 'Cheque') value="Cheque">Cheque</option>
+                                <option @selected($method == 'Other') value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                       <input type="submit" value="Filter" class="btn btn-success w-100">
+                    </div>
+                </div>
+            </form>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Staff Payment Receiving</h3>

@@ -19,14 +19,28 @@ class StaffPaymentsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $receivings = staffPayments::where('receivedBy', auth()->user()->id)->orderBy('id', 'desc')->get();
+        $start = $request->start ?? firstDayOfMonth();
+        $end = $request->end ?? lastDayOfMonth();
+        $from = $request->from ?? 'All';
+        $method = $request->method ?? 'All';
+
+        $receivings = staffPayments::where('receivedBy', auth()->user()->id)->whereBetween('date', [$start, $end])->orderBy('id', 'desc');
+        if($from != 'All')
+        {
+            $receivings->where('fromID', $from);
+        }
+        if($method != 'All')
+        {
+            $receivings->where('method', $method);
+        }
+        $receivings = $receivings->get();
         $users = User::where('branchID', auth()->user()->branchID)->where('id', '!=', auth()->user()->id)->get();
         $currencies = currencymgmt::all();
         $customers = accounts::customer()->currentBranch()->active()->get();
         $orderbookers = User::orderbookers()->currentBranch()->get();
-        return view('Finance.staff_payments.index', compact('receivings', 'users', 'currencies', 'customers', 'orderbookers'));
+        return view('Finance.staff_payments.index', compact('receivings', 'users', 'currencies', 'customers', 'orderbookers', 'start', 'end', 'from', 'method'));
     }
 
     /**
