@@ -1,7 +1,50 @@
 @extends('layout.app')
 @section('content')
     <div class="row">
+        
         <div class="col-12">
+            <form>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">From</span>
+                            <input type="date" class="form-control" placeholder="Username" name="start" value="{{$start}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">To</span>
+                            <input type="date" class="form-control" placeholder="Username" name="end" value="{{$end}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Customer</span>
+                            <select name="customerID" id="customerID" class="form-control">
+                                <option value="">All</option>
+                                @foreach ($customers as $customer)
+                                    <option value="{{$customer->id}}" @selected($customer->id == $customerID)>{{$customer->title}} - {{$customer->area->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Method</span>
+                            <select name="method" id="method" class="form-control">
+                                <option value="">All</option>
+                                <option value="Cash" @selected($method == 'Cash')>Cash</option>
+                                <option value="Cheque" @selected($method == 'Cheque')>Cheque</option>
+                                <option value="Online" @selected($method == 'Online')>Online</option>
+                                <option value="Other" @selected($method == 'Other')>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                       <input type="submit" value="Filter" class="btn btn-success w-100">
+                    </div>
+                </div>
+            </form>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Bulk Payments</h3>
@@ -25,6 +68,7 @@
                             <th>Invoice IDs</th>
                             <th>Received By</th>
                             <th>Customer</th>
+                            <th>Area</th>
                             <th>Order Booker</th>
                             <th>Date</th>
                             <th>Amount</th>
@@ -42,6 +86,7 @@
                                     <td>{{ $payment->invoiceIDs }}</td>
                                     <td>{{ $payment->user->name }}</td>
                                     <td>{{ $payment->customer->title }}</td>
+                                    <td>{{ $payment->customer->area->name }}</td>
                                     <td>{{ $payment->orderbooker->name }}</td>
                                     <td>{{ date('d M Y', strtotime($payment->date)) }}</td>
                                     <td>{{ number_format($payment->amount) }}</td>

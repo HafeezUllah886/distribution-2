@@ -24,10 +24,12 @@ class PaymentsReceivingController extends Controller
      */
     public function index(Request $request)
     {
+        $start = $request->start ?? firstDayOfMonth();
+        $end = $request->end ?? now()->toDateString();
         $type = $request->type ?? 'All';
         $area = $request->area ?? 'All';
 
-        $payments = paymentsReceiving::currentBranch()->orderBy('id', 'desc');
+        $payments = paymentsReceiving::currentBranch()->orderBy('id', 'desc')->whereBetween('date', [$start, $end]);
         if($type != 'All')
         {
             $accounts = accounts::where('type', $type)->currentBranch()->active()->get();
@@ -52,7 +54,7 @@ class PaymentsReceivingController extends Controller
         $currencies = currencymgmt::all();
         $type = $request->type;
         $orderbookers = User::orderbookers()->currentBranch()->get();
-        return view('Finance.payments_receiving.index', compact('payments', 'depositers', 'currencies', 'areas', 'type', 'area', 'orderbookers'));
+        return view('Finance.payments_receiving.index', compact('payments', 'depositers', 'currencies', 'areas', 'type', 'area', 'orderbookers', 'start', 'end'));
     }
 
     /**

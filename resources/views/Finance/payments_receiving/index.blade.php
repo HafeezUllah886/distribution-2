@@ -4,9 +4,21 @@
         <div class="col-12">
             <form>
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">Account Type</span>
+                            <span class="input-group-text" id="basic-addon1">From</span>
+                            <input type="date" name="start" value="{{$start}}" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">To</span>
+                            <input type="date" name="end" value="{{$end}}" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Type</span>
                             <select name="type" id="type" class="form-control">
                                 <option @selected($type == 'All') value="All">All</option>
                                 <option @selected($type == 'Business') value="Business">Business</option>
@@ -17,7 +29,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-2">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">Area</span>
                             <select name="area" id="area" class="form-control">
@@ -55,12 +67,12 @@
                             <th>Ref #</th>
                             <th>Received By</th>
                             <th>Deposited By</th>
+                            <th>Area</th>
                             <th>Date</th>
                             <th>Method</th>
                             <th>Number</th>
                             <th>Bank</th>
-                            <th>Remarks</th>
-                            <th>Notes</th>
+                            <th>Cheque Date</th>
                             <th>Amount</th>
                             <th>Action</th>
                         </thead>
@@ -71,13 +83,13 @@
                                     <td>{{ $tran->refID }}</td>
                                     <td>{{ $tran->user->name }}</td>
                                     <td>{{ $tran->depositer->title }}</td>
+                                    <td>{{ $tran->depositer->type == 'Customer' ? $tran->depositer->area->name : '-' }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->date)) }}</td>
                                     <td>{{ $tran->method }}</td>
                                     <td>{{ $tran->number }}</td>
                                     <td>{{ $tran->bank }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->cheque_date)) }}</td>
-                                    <td>{{ $tran->remarks }}</td>
-                                    <td>{{ $tran->notes }}</td>
+                                   
                                     <td>{{ number_format($tran->amount) }}</td>
                                     <td>
                                         <div class="dropdown">

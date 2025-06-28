@@ -22,13 +22,28 @@ class BulkInvoicePaymentsReceivingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $start = $request->start ?? firstDayOfMonth();
+        $end = $request->end ?? now()->toDateString();
+        $customerID = $request->customerID;
+        $method = $request->method;
+
         $customers = accounts::customer()->currentBranch()->get();
         $orderBookers = User::orderbookers()->currentBranch()->get();
-        $payments = bulk_payments::currentBranch()->orderBy('id', 'desc')->get();
 
-        return view('Finance.bulk_payment.index', compact('customers', 'orderBookers', 'payments'));
+        $payments = bulk_payments::currentBranch()->orderBy('id', 'desc')->whereBetween('date', [$start, $end]);
+        if($customerID)
+        {
+            $payments = $payments->where('customerID', $customerID);
+        }
+        if($method)
+        {
+            $payments = $payments->where('method', $method);
+        }
+        $payments = $payments->get();
+
+        return view('Finance.bulk_payment.index', compact('customers', 'orderBookers', 'payments', 'start', 'end', 'customerID', 'method'));
     }
 
     /**
