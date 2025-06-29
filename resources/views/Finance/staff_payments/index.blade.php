@@ -33,7 +33,7 @@
                             <select name="method" id="method" class="form-control">
                                 <option @selected($method == 'All') value="All">All</option>
                                 <option @selected($method == 'Cash') value="Cash">Cash</option>
-                                <option @selected($method == 'Bank') value="Bank">Bank</option>
+                                <option @selected($method == 'Online') value="Online">Online</option>
                                 <option @selected($method == 'Cheque') value="Cheque">Cheque</option>
                                 <option @selected($method == 'Other') value="Other">Other</option>
                             </select>
