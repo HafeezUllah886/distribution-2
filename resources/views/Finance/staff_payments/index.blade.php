@@ -71,7 +71,7 @@
                             <th>Method</th>
                             <th>Number</th>
                             <th>Bank</th>
-                            <th>Remarks</th>
+                            <th>Cheque Date</th>
                             <th>Notes</th>
                             <th>Amount</th>
                             <th>Action</th>
