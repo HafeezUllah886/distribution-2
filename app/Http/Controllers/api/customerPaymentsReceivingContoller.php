@@ -59,11 +59,11 @@ class customerPaymentsReceivingContoller extends Controller
             );
             $depositer = accounts::find($request->customerID);
             $user_name = $request->user()->name;
-            createTransaction($request->customerID, $request->date, 0, $request->amount, "Payment deposited to $user_name : $request->notes", $ref, $request->user()->id);
+            createTransaction($request->customerID, $request->date, 0, $request->amount, "Mobile - Payment deposited to $user_name : $request->notes", $ref, $request->user()->id);
             
-            createMethodTransaction($request->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, "Payment deposited by $depositer->title : $request->notes", $ref);
+            createMethodTransaction($request->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, "Mobile - Payment deposited by $depositer->title : $request->notes", $ref);
     
-            createUserTransaction($request->user()->id, $request->date, $request->amount, 0, "Payment deposited by $depositer->title : $request->notes", $ref);
+            createUserTransaction($request->user()->id, $request->date, $request->amount, 0, "Mobile - Payment deposited by $depositer->title : $request->notes", $ref);
 
             if($request->has('file')){
                 createAttachment($request->file('file'), $ref);
@@ -206,9 +206,9 @@ class customerPaymentsReceivingContoller extends Controller
             ]); 
             $user = $request->user()->name;
             $customer = accounts::find($sale->customerID);
-            createTransaction($request->customerID, $request->date,0, $total_amount, "Bulk Payment of Inv No. $saleIDs Received by $user", $ref, $sale->orderbookerID);
-            createUserTransaction($request->user()->id, $request->date,$total_amount, 0, "Bulk Payment of Inv No. $saleIDs Received from $customer->title", $ref);
-           createMethodTransaction($request->user()->id, $request->method, $total_amount,0, $request->date, $request->number, $request->bank, $request->cheque_date, "Bulk Payment of Inv No. $saleIDs Received from $customer->title", $ref);
+            createTransaction($request->customerID, $request->date,0, $total_amount, "Mobile - Bulk Payment of Inv No. $saleIDs Received by $user", $ref, $sale->orderbookerID);
+            createUserTransaction($request->user()->id, $request->date,$total_amount, 0, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title", $ref);
+           createMethodTransaction($request->user()->id, $request->method, $total_amount,0, $request->date, $request->number, $request->bank, $request->cheque_date, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title", $ref);
             
             if($request->has('file'))
             {
