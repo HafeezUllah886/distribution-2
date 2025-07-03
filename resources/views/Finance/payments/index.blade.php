@@ -4,7 +4,19 @@
         <div class="col-12">
             <form>
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">From</span>
+                            <input type="date" class="form-control" placeholder="Username" name="start" value="{{$start}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">To</span>
+                            <input type="date" class="form-control" placeholder="Username" name="end" value="{{$end}}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">Account Type</span>
                             <select name="type" id="type" class="form-control">
@@ -17,7 +29,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">Area</span>
                             <select name="area" id="area" class="form-control">
@@ -28,7 +40,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                        <input type="submit" value="Filter" class="btn btn-success w-100">
                     </div>
                 </div>
@@ -60,7 +72,7 @@
                             <th>Method</th>
                             <th>Number</th>
                             <th>Bank</th>
-                            <th>Remarks</th>
+                            <th>Cheque Date</th>
                             <th>Notes</th>
                             <th>Amount</th>
                             <th>Action</th>
@@ -76,7 +88,7 @@
                                     <td>{{ $tran->method }}</td>
                                     <td>{{ $tran->number }}</td>
                                     <td>{{ $tran->bank }}</td>
-                                    <td>{{ $tran->remarks }}</td>
+                                    <td>{{ $tran->cheque_date }}</td>
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
                                     <td>
