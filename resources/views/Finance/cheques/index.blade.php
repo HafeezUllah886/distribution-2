@@ -34,6 +34,8 @@
                                 <option value="">All</option>
                                 <option value="cleared" @selected($status == 'cleared')>Cleared</option>
                                 <option value="bounced" @selected($status == 'bounced')>Bounced</option>
+                                <option value="pending" @selected($status == 'pending')>Pending</option>
+
                             </select>
                         </div>
                     </div>
