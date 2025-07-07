@@ -82,7 +82,7 @@
                                                 <td>{{ $trans->refID }}</td>
                                                 <td>{{ $trans->account->title }}</td>
                                                 <td>{{ date('d M Y', strtotime($trans->date)) }}</td>
-                                                <td class="text-start">{{ $trans->notes }}</td>
+                                                <td class="text-start" style="max-width: 200px;overflow-wrap: break-word; white-space: normal;">{{ $trans->notes }}</td>
                                                 <td class="text-end">{{ number_format($trans->cr) }}</td>
                                                 <td class="text-end">{{ number_format($trans->db) }}</td>
                                                 <td class="text-end">{{ number_format($balance) }}</td>

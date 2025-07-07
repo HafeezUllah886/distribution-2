@@ -244,9 +244,21 @@ class PurchaseOrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(purchase_order $purchase_order)
+    public function delete($id)
     {
-        //
+        try
+        {
+            $order = purchase_order::findOrFail($id);
+            $order->details()->delete();
+            $order->delete();
+            session()->forget('confirmed_password');
+            return to_route('purchase_order.index')->with('success', "Purchase Order Deleted");
+        }
+        catch(\Exception $e)
+        {
+            session()->forget('confirmed_password');
+            return to_route('purchase_order.index')->with('error', $e->getMessage());
+        }
     }
 
     public function validateOrder($id)

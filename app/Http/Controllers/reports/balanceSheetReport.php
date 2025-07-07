@@ -36,7 +36,7 @@ class balanceSheetReport extends Controller
             $branch = $branch->name;
         }
 
-        $transactions = transactions::whereIn('accountID', $ids)->whereBetween('date', [$from, $to])->get();
+        $transactions = transactions::with('account')->whereIn('accountID', $ids)->whereBetween('date', [$from, $to])->get();
 
         $pre_cr = transactions::whereIn('accountID', $ids)->whereDate('date', '<', $from)->sum('cr');
         $pre_db = transactions::whereIn('accountID', $ids)->whereDate('date', '<', $from)->sum('db');

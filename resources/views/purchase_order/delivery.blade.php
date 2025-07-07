@@ -217,7 +217,7 @@
         
             var discountValue = price * discountp / 100;
             qty = loose + (qty * unit);
-            var amount = ((price - discount - discountValue - claim) + fright) * qty;
+            var amount = (price - discount - discountValue - claim) * qty;
             $("#amount_"+id).val(amount.toFixed(2));
             $("#frightValue_"+id).val((fright * qty).toFixed(0));
             $("#laborValue_"+id).val((labor * qty).toFixed(0));

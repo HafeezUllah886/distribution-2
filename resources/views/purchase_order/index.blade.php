@@ -110,6 +110,13 @@
                                                         Edit
                                                     </button>
                                                 </li>
+                                                <li>
+                                                    <a href="{{route('purchaseOrderDelete', $order->id)}}" class="dropdown-item" 
+                                                        onclick=""><i
+                                                            class="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                                                        Delete
+                                                    </a>
+                                                </li>
                                                 @endif
                                                
                                                 @if ($order->status != "Completed" && auth()->user()->role == 'Operator')
