@@ -111,9 +111,23 @@ class ExpensesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(expenses $expenses)
+    public function show($id)
     {
-        //
+        $expense = expenses::find($id);
+        $currencies = currencymgmt::all();
+        if($expense->method == "Cash")
+        {
+          
+            foreach($currencies as $currency)
+            {
+                $currenyTransaction = currency_transactions::where('currencyID', $currency->id)->where('refID', $expense->refID)->first();
+
+                $currency->qty = $currenyTransaction->db ?? 0;
+            }
+
+        }
+
+        return view('Finance.expense.receipt', compact('expense', 'currencies'));
     }
 
     /**

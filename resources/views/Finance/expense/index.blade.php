@@ -74,6 +74,9 @@
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
                                     <td>
+                                        <a href="{{ route('expenses.show', $tran->id) }}"
+                                            class="btn btn-primary">View</a>
+
                                         <a href="{{ route('expense.delete', $tran->refID) }}"
                                             class="btn btn-danger">Delete</a>
                                     </td>

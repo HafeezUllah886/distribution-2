@@ -22,7 +22,7 @@
                             </div>
                             <!--end card-header-->
                         </div><!--end col-->
-                        <div class="col-lg-12">
+                        <div class="col-9">
                             <div class="card-body p-4">
                                <table style="width:100%;">
                                 <tr>
@@ -82,6 +82,30 @@
                             </div>
                             <!--end card-body-->
                         </div><!--end col-->
+                        <div class="col-3">
+                            <div class="card-body p-4">
+                                @if ($receiving->method == 'Cash')
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Currency</th>
+                                                <th>Qty</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($currencies as $currency)
+                                                @if ($currency->qty > 0)
+                                                    <tr>
+                                                        <td>{{ $currency->title }}</td>
+                                                        <td>{{ number_format($currency->qty, 0) }}</td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @endif
+                            </div>
+                        </div>
 
                     </div><!--end row-->
                 </div>

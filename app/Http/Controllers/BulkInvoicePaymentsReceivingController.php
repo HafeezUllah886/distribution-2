@@ -144,7 +144,18 @@ class BulkInvoicePaymentsReceivingController extends Controller
     public function show($id)
     {
         $payment = bulk_payments::find($id);
-        return view('Finance.bulk_payment.receipt', compact('payment'));
+        $currencies = currencymgmt::all();
+        if($payment->method == "Cash")
+        {
+            foreach($currencies as $currency)
+            {
+                $currenyTransaction = currency_transactions::where('currencyID', $currency->id)->where('refID', $payment->refID)->first();
+
+                $currency->qty = $currenyTransaction->cr ?? 0;
+            }
+
+        }
+        return view('Finance.bulk_payment.receipt', compact('payment', 'currencies'));
     }
 
     /**

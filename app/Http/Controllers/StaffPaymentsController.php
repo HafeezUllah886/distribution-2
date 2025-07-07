@@ -130,7 +130,18 @@ class StaffPaymentsController extends Controller
     public function show($id)
     {
         $receiving = staffPayments::find($id);
-        return view('Finance.staff_payments.receipt', compact('receiving'));
+        $currencies = currencymgmt::all();
+        if($receiving->method == "Cash")
+        {
+            foreach($currencies as $currency)
+            {
+                $currenyTransaction = currency_transactions::where('currencyID', $currency->id)->where('refID', $receiving->refID)->first();
+
+                $currency->qty = $currenyTransaction->cr ?? 0;
+            }
+
+        }
+        return view('Finance.staff_payments.receipt', compact('receiving', 'currencies'));
     }
 
     /**
