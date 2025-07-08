@@ -123,6 +123,16 @@ function getAccountBalance($id){
     return $balance;
 }
 
+function getAccountBalanceOrderbookerWise($accountID, $orderbookerID){
+    $transactions  = transactions::where('accountID', $accountID)->where('orderbookerID', $orderbookerID);
+
+    $cr = $transactions->sum('cr');
+    $db = $transactions->sum('db');
+    $balance = $cr - $db;
+
+    return $balance;
+}
+
 function getUserAccountBalance($id){
     $transactions  = users_transactions::where('userID', $id);
 

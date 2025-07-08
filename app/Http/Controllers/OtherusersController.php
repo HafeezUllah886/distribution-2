@@ -36,7 +36,6 @@ class OtherusersController extends Controller
 
     public function store(request $request, $type)
     {
-
         try
         {
         DB::beginTransaction();
@@ -49,24 +48,27 @@ class OtherusersController extends Controller
             ]
         );
 
+        if($type == 'Order Booker' || $type == 'Operator')
+        {
+            $cashable = 'no';
+        }
+        else
+        {
+            $cashable = 'yes';
+        }
         $user = User::create(
             [
                 'name'      => $request->name,
                 'branchID'  => $request->branchID,
                 'contact'   => $request->contact,
                 'role'      => $type,
+                'cashable'  => $cashable,
                 'password'  => Hash::make($request->password),
             ]
         );
 
-        $account = accounts::create(
-            [
-                'title'     => $user->name,
-                'branchID'  => $request->branchID,
-                'type'  => $user->role,
-                'areaID'  => 1,
-            ]
-        );
+      
+
         DB::commit();
         return back()->with('success', 'User Created');
     }

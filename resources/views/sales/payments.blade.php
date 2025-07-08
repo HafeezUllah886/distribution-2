@@ -65,7 +65,7 @@
                                             <td>{{ $payment->method }}</td>
                                             <td>{{ $payment->number }}</td>
                                             <td>{{ $payment->bank }}</td>
-                                            <td>{{ date('d M Y', strtotime($payment->cheque_date)) }}</td>
+                                            <td>{{ $payment->cheque_date ? date('d M Y', strtotime($payment->cheque_date)) : '' }}</td>
                                             <td>{{ $payment->notes }}</td>
                                             <td class="text-end">{{ number_format($payment->amount) }}</td>
                                             <td class="text-center">

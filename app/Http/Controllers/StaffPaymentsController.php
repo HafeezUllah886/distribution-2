@@ -9,6 +9,8 @@ use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\method_transactions;
+use App\Models\payments;
+use App\Models\transactions_que;
 use App\Models\User;
 use App\Models\users_transactions;
 use Illuminate\Http\Request;
@@ -69,11 +71,13 @@ class StaffPaymentsController extends Controller
             }
            if($request->method == 'Cash')
            {
-            if($staff->role != 'Order Booker')
+            if($staff->cashable == 'yes')
+            {
                 if(!checkCurrencyExceed($request->fromID, $request->currencyID, $request->qty))
                 {
                     throw new \Exception("Currency Qty Exceed");
                 }
+            }
            }
             $ref = getRef();
             staffPayments::create(
@@ -163,15 +167,19 @@ class StaffPaymentsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($ref)
+    public function delete($ref)
     {
         try{
             DB::beginTransaction();
             staffPayments::where('refID', $ref)->delete();
+            payments::where('refID', $ref)->delete();
             users_transactions::where('refID', $ref)->delete();
             currency_transactions::where('refID', $ref)->delete();
             method_transactions::where('refID', $ref)->delete();
             cheques::where('refID', $ref)->delete();
+            transactions_que::where('trefID', $ref)->update([
+                'status' => 'pending'
+            ]);
             DB::commit();
             session()->forget('confirmed_password');
             return to_route('staff_payments.index')->with('success', "Payment Deleted");

@@ -104,7 +104,7 @@
                                                         <div class="col-10 ">
                                                             <select class="selectize" id="unit">
                                                                @foreach ($units as $unit)
-                                                                   <option value="{{$unit->id}}" data-name="{{$unit->name}}" data-value="{{$unit->value}}">{{$unit->name}} - {{$unit->value}}</option>
+                                                                   <option value="{{$unit->id}}" >{{$unit->name}} - {{$unit->value}}</option>
                                                                @endforeach
                                                             </select>
                                                         </div>
@@ -200,22 +200,27 @@
     <script>
         $(".selectize").selectize();
 
-        var unitCount = {{$ser}};
-        function addUnit() {
-            var selectizeInstance = $("#unit")[0].selectize; // Access the Selectize instance
-            var unit_id = selectizeInstance.getValue(); // Get the selected value (from the 'value' attribute)
-            var unit_name = selectizeInstance.options[unit_id]?.name; // Access the data-name equivalent
-            var unit_value = selectizeInstance.options[unit_id]?.value; // Access the data-value equivalent
-            unitCount += 1;
+var unitCount = 1;
+function addUnit() {
 
-            var html = '<tr class="p-0" id="row_' + unitCount + '">';
-            html += '<td width="70%" class="p-0"><input type="text" class="form-control form-control-sm" name="unit_names[]" value="'+unit_name+'"></td>';
-            html += '<td class="p-0"><input type="number" step="any" class="form-control form-control-sm text-center" name="unit_values[]" value="'+unit_value+'"></td>';
-            html += '<td class="p-0"> <span class="btn btn-sm btn-danger" onclick="deleteRow(' + unitCount + ')">X</span></td>';
-            html += '</tr>';
+    var unit = $("#unit").find(':selected').val();
 
-            $("#units").append(html);
+    $.ajax({
+        url: "{{ url('getUnit/') }}/" + unit,
+        method: "GET",
+        success: function(response) {
+            var html = '<tr class="p-0" id="row_' + response.unit_id + '">';
+    html += '<td width="70%" class="p-0"><input type="text" class="form-control form-control-sm" name="unit_names[]" value="'+response.unit_name+'"></td>';
+    html += '<td class="p-0"><input type="number" step="any" class="form-control form-control-sm text-center" name="unit_values[]" value="'+response.unit_value+'"></td>';
+    html += '<td class="p-0"> <span class="btn btn-sm btn-danger" onclick="deleteRow(' + response.unit_id + ')">X</span></td>';
+    html += '</tr>';
+
+    $("#units").append(html);
         }
+    });
+
+    
+}
         function deleteRow(optionCount) {
             $('#row_' + optionCount).remove();
         }

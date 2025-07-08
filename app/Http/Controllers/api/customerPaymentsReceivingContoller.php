@@ -13,6 +13,7 @@ use App\Models\paymentReceiving;
 use App\Models\paymentsReceiving;
 use App\Models\sale_payments;
 use App\Models\sales;
+use App\Models\transactions_que;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -57,6 +58,24 @@ class customerPaymentsReceivingContoller extends Controller
                     'refID'         => $ref,
                 ]
             );
+
+            if($request->method != 'Cash')
+                {
+                    transactions_que::create(
+                        [
+                            'userID' => $request->user()->id,
+                            'customerID' => $request->customerID,
+                            'orderbookerID' => $request->user()->id,
+                            'branchID' => $request->user()->branchID,
+                            'method' => $request->method,
+                            'number' => $request->number,
+                            'bank' => $request->bank,
+                            'cheque_date' => $request->cheque_date,
+                            'amount' => $request->amount,
+                            'refID' => $ref,
+                        ]
+                    );
+                }
             $depositer = accounts::find($request->customerID);
             $user_name = $request->user()->name;
             createTransaction($request->customerID, $request->date, 0, $request->amount, "Mobile - Payment deposited to $user_name : $request->notes", $ref, $request->user()->id);
@@ -204,11 +223,29 @@ class customerPaymentsReceivingContoller extends Controller
                 'refID' => $ref,
                 'invoiceIDs' => $saleIDs
             ]); 
+
+            if($request->method != 'Cash')
+                {
+                    transactions_que::create(
+                        [
+                            'userID' => $request->user()->id,
+                            'customerID' => $sale->customerID,
+                            'orderbookerID' => $sale->orderbookerID,
+                            'branchID' => $request->user()->branchID,
+                            'method' => $request->method,
+                            'number' => $request->number,
+                            'bank' => $request->bank,
+                            'cheque_date' => $request->cheque_date,
+                            'amount' => $request->amount,
+                            'refID' => $ref,
+                        ]
+                    );
+                }
             $user = $request->user()->name;
             $customer = accounts::find($sale->customerID);
-            createTransaction($request->customerID, $request->date,0, $total_amount, "Mobile - Bulk Payment of Inv No. $saleIDs Received by $user", $ref, $sale->orderbookerID);
-            createUserTransaction($request->user()->id, $request->date,$total_amount, 0, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title", $ref);
-           createMethodTransaction($request->user()->id, $request->method, $total_amount,0, $request->date, $request->number, $request->bank, $request->cheque_date, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title", $ref);
+            createTransaction($request->customerID, $request->date,0, $total_amount, "Mobile - Bulk Payment of Inv No. $saleIDs Received by $user Method: $request->method", $ref, $sale->orderbookerID);
+            createUserTransaction($request->user()->id, $request->date,$total_amount, 0, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title Method: $request->method", $ref);
+           createMethodTransaction($request->user()->id, $request->method, $total_amount,0, $request->date, $request->number, $request->bank, $request->cheque_date, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title Method: $request->method", $ref);
             
             if($request->has('file'))
             {
@@ -269,7 +306,7 @@ class customerPaymentsReceivingContoller extends Controller
 
    $last_sale = sales::where('customerID', $request->customerID)->orderBy('id', 'desc')->first()->date;
    $last_sale_amount = sales::where('customerID', $request->customerID)->orderBy('id', 'desc')->first()->net;
-   $last_balance = getAccountBalance($request->customerID);
+   $last_balance = getAccountBalanceOrderbookerWise($request->customerID, $request->user()->id);
 
    $methodData['last_sale'] = $last_sale;
    $methodData['last_sale_amount'] = round($last_sale_amount, 2);

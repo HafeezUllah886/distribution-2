@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountsAdjustmentController;
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\authController;
+use App\Http\Controllers\AutoStaffPaymentsController;
 use App\Http\Controllers\BulkInvoicePaymentsReceivingController;
 use App\Http\Controllers\ChequesController;
 use App\Http\Controllers\CurrencymgmtController;
@@ -51,6 +52,11 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
 
     Route::resource('staff_payments', StaffPaymentsController::class);
     Route::get('staff_payments/delete/{ref}', [StaffPaymentsController::class, 'delete'])->name('staff_payments.delete')->middleware(confirmPassword::class);
+
+    Route::get('auto_staff_payments', [AutoStaffPaymentsController::class, 'index'])->name('auto_staff_payments');
+    Route::get('auto_staff_payments/create', [AutoStaffPaymentsController::class, 'create'])->name('auto_staff_payments.create');
+    Route::post('auto_staff_payments/store', [AutoStaffPaymentsController::class, 'store'])->name('auto_staff_payments.store');
+
 
     Route::resource('accounts_adjustments', AccountsAdjustmentController::class);
     Route::get('accounts_adjustments/delete/{ref}', [AccountsAdjustmentController::class, 'delete'])->name('accounts_adjustments.delete')->middleware(confirmPassword::class);

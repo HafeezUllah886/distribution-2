@@ -148,6 +148,10 @@
                                 <a href="{{ route('staff_payments.index') }}" class="nav-link"
                                     data-key="t-input-masks">Staff Payments</a>
                             </li> 
+                            <li class="nav-item">
+                                <a href="{{ route('auto_staff_payments') }}" class="nav-link"
+                                    data-key="t-input-masks">Auto Staff Payments</a>
+                            </li> 
                            <li class="nav-item">
                                 <a href="{{ route('bulk_payment.index') }}" class="nav-link"
                                     data-key="t-input-masks">Bulk Payments</a>

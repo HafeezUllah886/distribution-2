@@ -10,7 +10,9 @@ use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\method_transactions;
 use App\Models\payments;
+use App\Models\staffPayments;
 use App\Models\transactions;
+use App\Models\transactions_que;
 use App\Models\User;
 use App\Models\users_transactions;
 use Illuminate\Http\Request;
@@ -89,7 +91,7 @@ class PaymentsController extends Controller
             $ref = getRef();
             payments::create(
                 [
-                    'receiverID'      => $request->receiverID,
+                    'receiverID'    => $request->receiverID,
                     'date'          => $request->date,
                     'amount'        => $request->amount,
                     'method'        => $request->method,
@@ -176,11 +178,16 @@ class PaymentsController extends Controller
         {
             DB::beginTransaction();
             payments::where('refID', $ref)->delete();
+            staffPayments::where('refID', $ref)->delete();
             transactions::where('refID', $ref)->delete();
             users_transactions::where('refID', $ref)->delete();
             currency_transactions::where('refID', $ref)->delete();
             method_transactions::where('refID', $ref)->delete();
             cheques::where('refID', $ref)->delete();
+
+            transactions_que::where('trefID', $ref)->update([
+                'status' => 'pending'
+            ]);
             DB::commit();
             session()->forget('confirmed_password');
             return redirect()->route('payments.index')->with('success', "Payment Deleted");

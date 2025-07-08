@@ -56,6 +56,7 @@ class userSeeder extends Seeder
             'password' => Hash::make("operator"),
             'role' => 'Operator',
             'contact' => "03451231238",
+            'cashable' => 'no',
             'branchID' => 1,
         ]);
 

@@ -10,6 +10,7 @@ use App\Models\method_transactions;
 use App\Models\sale_payments;
 use App\Models\sales;
 use App\Models\transactions;
+use App\Models\transactions_que;
 use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -86,6 +87,27 @@ class SalePaymentsController extends Controller
             }
             if($request->has('file')){
                 createAttachment($request->file('file'), $ref);
+            }
+
+            if(auth()->user()->role == 'Operator')
+            {
+                if($request->method != 'Cash')
+                {
+                    transactions_que::create(
+                        [
+                            'userID' => auth()->id(),
+                            'customerID' => $sale->customerID,
+                            'orderbookerID' => $sale->orderbookerID,
+                            'branchID' => auth()->user()->branchID,
+                            'method' => $request->method,
+                            'number' => $request->number,
+                            'bank' => $request->bank,
+                            'cheque_date' => $request->cheque_date,
+                            'amount' => $request->amount,
+                            'refID' => $ref,
+                        ]
+                    );
+                }
             }
 
             DB::commit();

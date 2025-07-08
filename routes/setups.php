@@ -31,5 +31,8 @@ Route::middleware(['auth', Admin_BranchAdmin::class])->group(function () {
     Route::resource('dc', productDCController::class);
     Route::get('products/index/{category}/{brand}', [ProductsController::class, 'index'])->name('products.index');
 
+
+    Route::get('getUnit/{id}', [UnitsController::class, 'getUnit']);
+
 });
 

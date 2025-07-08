@@ -67,4 +67,17 @@ class UnitsController extends Controller
     {
         //
     }
+
+    public function getUnit($id)
+    {
+        $unit = units::find($id);
+
+        return response()->json(
+            [
+                'unit_name' => $unit->name,
+                'unit_value' => $unit->value,
+                'unit_id' => $unit->id,
+            ]
+        );
+    }
 }
