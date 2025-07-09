@@ -23,6 +23,7 @@ return new class extends Migration
             $table->date('cheque_date')->nullable();
             $table->float('amount');
             $table->string('status')->default('pending');
+            $table->text('notes')->nullable();
             $table->bigInteger('refID');
             $table->bigInteger('trefID')->nullable();
             $table->timestamps();

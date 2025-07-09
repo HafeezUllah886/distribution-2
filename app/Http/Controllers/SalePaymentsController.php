@@ -104,6 +104,7 @@ class SalePaymentsController extends Controller
                             'bank' => $request->bank,
                             'cheque_date' => $request->cheque_date,
                             'amount' => $request->amount,
+                            'notes' => $notes,
                             'refID' => $ref,
                         ]
                     );
