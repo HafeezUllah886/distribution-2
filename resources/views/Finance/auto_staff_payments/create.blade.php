@@ -1,7 +1,7 @@
 @extends('layout.app')
 @section('content')
     <div class="row d-flex justify-content-center">
-        <div class="col-8">
+        <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Auto Staff Payments for {{ $staff->name }} Method : {{$method}}</h3>
@@ -13,6 +13,8 @@
                         <thead>
                             <tr>
                                 <th></th>
+                                <th>Customer</th>
+                                <th>Order Booker</th>
                                 <th>Number</th>
                                 <th>Bank</th>
                                 <th>Cheque Date</th>
@@ -23,6 +25,8 @@
                             @foreach ($transactions as $transaction)
                                 <tr>
                                     <td><input type="checkbox" checked name="transactions[]" value="{{ $transaction->id }}"></td>
+                                    <td>{{ $transaction->customer->title }}</td>
+                                    <td>{{ $transaction->orderbooker->name }}</td>
                                     <td>{{ $transaction->number }}</td>
                                     <td>{{ $transaction->bank }}</td>
                                     <td>{{ date('d-m-Y', strtotime($transaction->cheque_date)) }}</td>
