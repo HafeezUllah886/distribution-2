@@ -40,6 +40,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/balance', [OrderbookerBalanceController::class, 'balance']);
     Route::get('/account_statement', [OrderbookerBalanceController::class, 'account_statement']);
+    Route::get('/method_wise_balance', [OrderbookerBalanceController::class, 'method_wise_balance']);
+    
     Route::get('/product_stock', [OrdersController::class, 'stock']);
     Route::get('/pending_qty', [OrdersController::class, 'pendingQty']);
 

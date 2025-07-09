@@ -58,4 +58,24 @@ class OrderbookerBalanceController extends Controller
             ]
         ], 200);
     }
+
+    public function method_wise_balance(Request $request)
+    {
+
+        $methods = ['Cash', 'Cheque', 'Online', 'Other'];
+
+        foreach($methods as $method)
+        {
+            $balance = getMethodBalance($method, $request->user()->id);
+            $data[] = [
+                'method' => $method,
+                'balance' => $balance,
+            ];
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ], 200);
+    }
 }
