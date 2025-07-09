@@ -19,6 +19,7 @@
                                 <th>Bank</th>
                                 <th>Cheque Date</th>
                                 <th>Amount</th>
+                                <th>Notes</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -31,6 +32,7 @@
                                     <td>{{ $transaction->bank }}</td>
                                     <td>{{ date('d-m-Y', strtotime($transaction->cheque_date)) }}</td>
                                     <td>{{ $transaction->amount }}</td>
+                                    <td>{{ $transaction->notes }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
