@@ -62,7 +62,7 @@ class AutoStaffPaymentsController extends Controller
                     'number'        => $que->number,
                     'bank'          => $que->bank,
                     'cheque_date'   => $que->cheque_date,
-                    'notes'         => $request->notes,
+                    'notes'         => $que->notes,
                     'receivedBy'    => auth()->id(),
                     'refID'         => $ref,
                 ]
@@ -70,7 +70,7 @@ class AutoStaffPaymentsController extends Controller
             
             $user_name = auth()->user()->name;
             $staff = User::find($que->userID);
-            $notes = "Payment received from staff: $staff->name Method $que->method Notes : $request->notes";
+            $notes = $que->notes;
             $notes1 = "Payment submitted to $user_name Method $que->method Notes : $request->notes";
 
             createUserTransaction(auth()->id(), now(),$que->amount, 0, $notes, $ref);
