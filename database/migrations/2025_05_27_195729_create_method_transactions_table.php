@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('number')->nullable();
             $table->string('bank')->nullable();
             $table->date('cheque_date')->nullable();
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->bigInteger('refID');
             $table->timestamps();
         });

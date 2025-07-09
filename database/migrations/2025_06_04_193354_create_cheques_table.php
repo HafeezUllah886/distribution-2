@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('number');
             $table->string('bank');
             $table->enum('status', ['pending', 'cleared', 'bounced'])->default('pending');
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->bigInteger('refID');
             $table->timestamps();
         });

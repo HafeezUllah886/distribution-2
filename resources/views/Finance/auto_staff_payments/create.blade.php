@@ -14,9 +14,10 @@
                             <tr>
                                 <th></th>
                                 <th>Customer</th>
+                                <th>Area</th>
                                 <th>Order Booker</th>
-                                <th>Number</th>
                                 <th>Bank</th>
+                                <th>Number</th>
                                 <th>Cheque Date</th>
                                 <th>Amount</th>
                                 <th>Notes</th>
@@ -27,9 +28,10 @@
                                 <tr>
                                     <td><input type="checkbox" checked name="transactions[]" value="{{ $transaction->id }}"></td>
                                     <td>{{ $transaction->customer->title }}</td>
+                                    <td>{{ $transaction->customer->area->name }}</td>
                                     <td>{{ $transaction->orderbooker->name }}</td>
-                                    <td>{{ $transaction->number }}</td>
                                     <td>{{ $transaction->bank }}</td>
+                                    <td>{{ $transaction->number }}</td>
                                     <td>{{ date('d-m-Y', strtotime($transaction->cheque_date)) }}</td>
                                     <td>{{ $transaction->amount }}</td>
                                     <td>{{ $transaction->notes }}</td>
@@ -46,7 +48,7 @@
                                 <select name="account" id="account" class="selectize">
                                     <option value="">Select Account</option>
                                     @foreach ($accounts as $account)
-                                        <option value="{{$account->id}}">{{$account->title}}</option>
+                                        <option value="{{$account->id}}">{{$account->title}} - {{$account->address}}</option>
                                     @endforeach
                                 </select>
                             </div>

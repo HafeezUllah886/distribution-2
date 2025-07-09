@@ -33,7 +33,7 @@ class AutoStaffPaymentsController extends Controller
             return redirect()->back()->with('error', 'No transactions found');
         }
 
-        $accounts = accounts::whereIn('type', ['Business', 'Vendor'])->currentBranch()->get();
+        $accounts = accounts::where('type', $request->forward)->currentBranch()->get();
 
         $staff = User::find($staff);
 
@@ -81,7 +81,7 @@ class AutoStaffPaymentsController extends Controller
 
             if($que->method == 'Cheque')
             {
-                saveCheque($que->customerID, auth()->user()->id, $que->orderbookerID, $que->cheque_date, $que->amount, $que->number, $que->bank, $request->notes, $ref);
+                saveCheque($que->customerID, auth()->user()->id, $que->orderbookerID, $que->cheque_date, $que->amount, $que->number, $que->bank, $notes, $ref);
             }
 
             $que->update([
