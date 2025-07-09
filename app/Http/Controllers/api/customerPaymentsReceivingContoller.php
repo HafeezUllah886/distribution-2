@@ -72,6 +72,7 @@ class customerPaymentsReceivingContoller extends Controller
                             'bank' => $request->bank,
                             'cheque_date' => $request->cheque_date,
                             'amount' => $request->amount,
+                            'notes' => $request->notes,
                             'refID' => $ref,
                         ]
                     );
@@ -236,8 +237,9 @@ class customerPaymentsReceivingContoller extends Controller
                             'number' => $request->number,
                             'bank' => $request->bank,
                             'cheque_date' => $request->cheque_date,
-                            'amount' => $request->amount,
+                            'amount' => $total_amount,
                             'refID' => $ref,
+                            'notes' => $request->notes,
                         ]
                     );
                 }

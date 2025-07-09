@@ -51,12 +51,12 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-6">
+                        {{-- <div class="col-6">
                             <div class="form-group">
                                 <label for="notes">Notes</label>
                                 <textarea name="notes" id="notes" class="form-control"></textarea>
                             </div>
-                        </div>
+                        </div> --}}
                        </div>
                     </div>
                   
