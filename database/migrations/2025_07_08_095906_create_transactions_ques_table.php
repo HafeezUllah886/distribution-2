@@ -24,6 +24,7 @@ return new class extends Migration
             $table->float('amount');
             $table->string('status')->default('pending');
             $table->text('notes')->nullable();
+            $table->text('notes2')->nullable();
             $table->bigInteger('refID');
             $table->bigInteger('trefID')->nullable();
             $table->timestamps();

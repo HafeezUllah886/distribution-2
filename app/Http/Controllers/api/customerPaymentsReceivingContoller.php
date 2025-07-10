@@ -58,6 +58,8 @@ class customerPaymentsReceivingContoller extends Controller
                     'refID'         => $ref,
                 ]
             );
+            $depositer = accounts::find($request->customerID);
+            $user_name = $request->user()->name;
 
             if($request->method != 'Cash')
                 {
@@ -72,13 +74,13 @@ class customerPaymentsReceivingContoller extends Controller
                             'bank' => $request->bank,
                             'cheque_date' => $request->cheque_date,
                             'amount' => $request->amount,
-                            'notes' => $request->notes,
+                            'notes' => "Mobile - Payment deposited to $user_name : $request->notes",
+                            'notes2' => "Mobile - Payment deposited by $depositer->title : $request->notes",
                             'refID' => $ref,
                         ]
                     );
                 }
-            $depositer = accounts::find($request->customerID);
-            $user_name = $request->user()->name;
+           
             createTransaction($request->customerID, $request->date, 0, $request->amount, "Mobile - Payment deposited to $user_name : $request->notes", $ref, $request->user()->id);
             
             createMethodTransaction($request->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, "Mobile - Payment deposited by $depositer->title : $request->notes", $ref);
@@ -224,6 +226,8 @@ class customerPaymentsReceivingContoller extends Controller
                 'refID' => $ref,
                 'invoiceIDs' => $saleIDs
             ]); 
+            $user = $request->user()->name;
+            $customer = accounts::find($sale->customerID);
 
             if($request->method != 'Cash')
                 {
@@ -239,7 +243,8 @@ class customerPaymentsReceivingContoller extends Controller
                             'cheque_date' => $request->cheque_date,
                             'amount' => $total_amount,
                             'refID' => $ref,
-                            'notes' => $request->notes,
+                            'notes' => "Mobile - Bulk Payment of Inv No. $saleIDs Received by $user Method: $request->method - Notes : $request->notes",
+                            'notes2' => "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title Method: $request->method - Notes : $request->notes",
                         ]
                     );
                 }

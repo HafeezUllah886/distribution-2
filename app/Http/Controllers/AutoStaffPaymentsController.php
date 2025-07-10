@@ -72,17 +72,17 @@ class AutoStaffPaymentsController extends Controller
             $user_name = auth()->user()->name;
             $staff = User::find($que->userID);
             $notes = $que->notes;
-            $notes1 = "Payment submitted to $user_name Method $que->method Notes : $request->notes";
+            $notes1 = $que->notes2;
 
             createUserTransaction(auth()->id(), now(),$que->amount, 0, $notes, $ref);
             createUserTransaction($que->userID, now(),0, $que->amount, $notes1, $ref);
            
-            createMethodTransaction($que->userID,$que->method, 0, $que->amount, now(), $que->number, $que->bank, $que->cheque_date, $notes1, $ref);
-            createMethodTransaction(auth()->user()->id,$que->method, $que->amount, 0, now(), $que->number, $que->bank, $que->cheque_date, $notes, $ref);
+            createMethodTransaction($que->userID,$que->method, 0, $que->amount, now(), $que->number, $que->bank, $que->cheque_date, $notes, $ref);
+            createMethodTransaction(auth()->user()->id,$que->method, $que->amount, 0, now(), $que->number, $que->bank, $que->cheque_date, $notes1, $ref);
 
             if($que->method == 'Cheque')
             {
-                saveCheque($que->customerID, auth()->user()->id, $que->orderbookerID, $que->cheque_date, $que->amount, $que->number, $que->bank, $notes, $ref);
+                saveCheque($que->customerID, auth()->user()->id, $que->orderbookerID, $que->cheque_date, $que->amount, $que->number, $que->bank, $notes1, $ref);
             }
 
             $que->update([
@@ -94,7 +94,7 @@ class AutoStaffPaymentsController extends Controller
             {
                 payments::create(
                     [
-                        'receiverID'      => $request->account,
+                        'receiverID'     => $request->account,
                         'date'          => now(),
                         'amount'        => $que->amount,
                         'method'        => $que->method,
@@ -102,19 +102,19 @@ class AutoStaffPaymentsController extends Controller
                         'bank'          => $que->bank,
                         'cheque_date'   => $que->cheque_date,
                         'branchID'      => auth()->user()->branchID,
-                        'notes'         => $request->notes,
+                        'notes'         => $que->notes2,
                         'userID'        => auth()->user()->id,
                         'refID'         => $ref,
                     ]
                 );
                 $receiver = accounts::find($request->account);
                 $user_name = auth()->user()->name;
-                $notes = "Payment to $receiver->title Method $que->method Notes : $request->notes";
-    
-                createTransaction($request->account, now(), $que->amount, 0, $notes, $ref, $que->orderbookerID);
-                createMethodTransaction(auth()->user()->id,$que->method, 0, $que->amount, now(), $que->number, $que->bank, $que->cheque_date, $notes, $ref);
                
-                createUserTransaction(auth()->user()->id, now(),0, $que->amount, $notes, $ref);
+    
+                createTransaction($request->account, now(), $que->amount, 0, $notes1, $ref, $que->orderbookerID);
+                createMethodTransaction(auth()->user()->id,$que->method, 0, $que->amount, now(), $que->number, $que->bank, $que->cheque_date, $notes1, $ref);
+               
+                createUserTransaction(auth()->user()->id, now(),0, $que->amount, $notes1, $ref);
             }
            
         }
