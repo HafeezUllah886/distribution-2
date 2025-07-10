@@ -9,6 +9,7 @@ use App\Http\Controllers\api\nonFinanancialInfoController;
 use App\Http\Controllers\api\OrdersController;
 use App\Http\Controllers\api\SaleApiController;
 use App\Http\Controllers\api\OrderbookerBalanceController;
+use App\Http\Controllers\api\OrderBookerInvoices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,8 +46,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/product_stock', [OrdersController::class, 'stock']);
     Route::get('/pending_qty', [OrdersController::class, 'pendingQty']);
 
-
     Route::get('/daily_customer_wise_payments', [DailyCustomerWisePaymentsReport::class, 'index']);
     Route::get('/daily_products_order_report', [DailyProductsOrderReport::class, 'index']);
+
+    Route::get('/orderbookerinvoices', [OrderBookerInvoices::class, 'index']);
 
 });
