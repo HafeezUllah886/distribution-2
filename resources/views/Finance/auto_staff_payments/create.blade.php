@@ -8,6 +8,8 @@
                 </div>
                 <form action="{{ route('auto_staff_payments.store') }}" method="post">
                     @csrf
+                    <input type="hidden" id="staff" name="staff" value="{{ $staff->id }}">
+                    <input type="hidden" id="method" name="method" value="{{ $method }}">
                 <div class="card-body">
                     <table class="table">
                         <thead>
@@ -42,6 +44,15 @@
                     </div>
                     <div class="card-body">
                        <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="forward">Forward To Filter </label>
+                                <select name="forward" id="forward" onchange="refresh_page()" class="form-control">
+                                    <option value="Vendor" @selected($forward == 'Vendor')>Vendor</option>
+                                    <option value="Business" @selected($forward == 'Business')>Business</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="account">Forward To</label>
@@ -84,5 +95,14 @@
         
     });
 
+    function refresh_page() {
+        var forward = $("#forward").find("option:selected").val();
+        var method = $("#method").val();
+        var staff = $("#staff").val();
+        
+        window.location.href = "{{ url('/auto_staff_payments/create') }}?staff="+staff+"&method="+method+"&forward="+forward;
+    }
+
+  
     </script>
 @endsection

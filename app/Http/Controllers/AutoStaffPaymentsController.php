@@ -25,19 +25,20 @@ class AutoStaffPaymentsController extends Controller
     {
         $staff = $request->staff;
         $method = $request->method;
+        $forward = $request->forward ?? 'Vendor';
        
         $transactions = transactions_que::where('userID', $staff)->where('method', $method)->where('status', 'pending')->get();
 
         if($transactions->isEmpty())
         {
-            return redirect()->back()->with('error', 'No transactions found');
+            return redirect()->back()->with('error', "No transactions found $staff, $method, $forward");
         }
 
-        $accounts = accounts::where('type', $request->forward)->currentBranch()->get();
+        $accounts = accounts::where('type', $forward)->currentBranch()->get();
 
         $staff = User::find($staff);
 
-        return view('Finance.auto_staff_payments.create', compact('transactions', 'staff', 'method', 'accounts'));
+        return view('Finance.auto_staff_payments.create', compact('transactions', 'staff', 'method', 'accounts', 'forward'));
     }
 
     public function store(Request $request)

@@ -26,13 +26,6 @@
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
-                            <div class="form-group mt-2">
-                                <label for="forward">Forward To </label>
-                                <select name="forward" id="forward" class="form-control">
-                                    <option value="Vendor">Vendor</option>
-                                    <option value="Business">Business</option>
-                                </select>
-                            </div>
                        
                     </div>
                   

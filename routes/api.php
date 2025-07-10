@@ -10,6 +10,7 @@ use App\Http\Controllers\api\OrdersController;
 use App\Http\Controllers\api\SaleApiController;
 use App\Http\Controllers\api\OrderbookerBalanceController;
 use App\Http\Controllers\api\OrderBookerInvoices;
+use App\Http\Controllers\api\InvoicePaymentsHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -50,5 +51,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/daily_products_order_report', [DailyProductsOrderReport::class, 'index']);
 
     Route::get('/orderbookerinvoices', [OrderBookerInvoices::class, 'index']);
+    Route::get('/invoicepayments', [InvoicePaymentsHistory::class, 'index']);
 
 });
