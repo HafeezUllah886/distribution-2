@@ -17,7 +17,7 @@
                                 <th>Area</th>
                                 <th>Order Booker</th>
                                 <th>Bank</th>
-                                <th>Number</th>
+                                <th>Cheque / Slip No.</th>
                                 <th>Cheque Date</th>
                                 <th>Amount</th>
                                 <th>Notes</th>
