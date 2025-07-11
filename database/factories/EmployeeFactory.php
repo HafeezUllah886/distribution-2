@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
  */
-class EmployeeFactory extends Factory
+class employeeFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
