@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
        $this->call(userSeeder::class);
        $this->call(currencies_seeder::class);
        $this->call(warehouseSeeder::class);
+       $this->call(employeeSeeder::class);
 
     }
 }

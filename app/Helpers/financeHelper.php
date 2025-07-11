@@ -3,6 +3,7 @@
 use App\Models\attachment;
 use App\Models\cheques;
 use App\Models\currency_transactions;
+use App\Models\employee_ledger;
 use App\Models\method_transactions;
 use App\Models\ref;
 use App\Models\transactions;
@@ -28,6 +29,18 @@ function createUserTransaction($userID, $date, $cr, $db, $notes, $ref){
     users_transactions::create(
         [
             'userID' => $userID,
+            'date' => $date,
+            'cr' => $cr,
+            'db' => $db,
+            'notes' => $notes,
+            'refID' => $ref,
+        ]
+    );
+}
+function createEmployeeTransaction($employeeID, $date, $cr, $db, $notes, $ref){
+    employee_ledger::create(
+        [
+            'employeeID' => $employeeID,
             'date' => $date,
             'cr' => $cr,
             'db' => $db,
