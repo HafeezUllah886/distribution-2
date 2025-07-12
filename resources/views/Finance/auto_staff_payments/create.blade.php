@@ -47,7 +47,7 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="forward">Forward To Filter </label>
-                                <select name="forward" id="forward" onchange="refresh_page()" class="form-control">
+                                <select name="forward" id="forward" @readonly($method == 'Cheque') onchange="refresh_page()" class="form-control">
                                     <option value="Vendor" @selected($forward == 'Vendor')>Vendor</option>
                                     <option value="Business" @selected($forward == 'Business')>Business</option>
                                 </select>
@@ -56,7 +56,7 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="account">Forward To</label>
-                                <select name="account" id="account" class="selectize">
+                                <select name="account" id="account" @readonly($method == 'Cheque') class="selectize">
                                     <option value="">Select Account</option>
                                     @foreach ($accounts as $account)
                                         <option value="{{$account->id}}">{{$account->title}} - {{$account->address}}</option>

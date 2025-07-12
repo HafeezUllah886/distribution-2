@@ -41,6 +41,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group mt-2">
+                                        <label for="department">Department</label>
+                                        <input type="text" name="department" required id="department" class="form-control" value="{{ $employee->department }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mt-2">
                                         <label for="contact">Contact</label>
                                        <input type="text" name="contact" id="contact" class="form-control" value="{{ $employee->contact }}">
                                     </div>

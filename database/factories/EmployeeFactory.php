@@ -29,6 +29,7 @@ class employeeFactory extends Factory
             'name' => fake()->name(),
             'fname' => fake()->name(),
             'designation' => fake()->jobTitle(),
+            'department' => fake()->company(),
             'contact' => fake()->phoneNumber(),
             'address' => fake()->address(),
             'salary' => fake()->numberBetween(10000, 50000),

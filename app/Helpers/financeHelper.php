@@ -136,6 +136,16 @@ function getAccountBalance($id){
     return $balance;
 }
 
+function getEmployeeBalance($id){
+    $transactions  = employee_ledger::where('employeeID', $id);
+
+    $cr = $transactions->sum('cr');
+    $db = $transactions->sum('db');
+    $balance = $cr - $db;
+
+    return $balance;
+}
+
 function getAccountBalanceOrderbookerWise($accountID, $orderbookerID){
     $transactions  = transactions::where('accountID', $accountID)->where('orderbookerID', $orderbookerID);
 

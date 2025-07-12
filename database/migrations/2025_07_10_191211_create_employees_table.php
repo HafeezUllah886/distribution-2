@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('fname');
             $table->string('designation');
+            $table->string('department');
             $table->string('contact')->nullable();
             $table->string('address')->nullable();
             $table->float('salary');

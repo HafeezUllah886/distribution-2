@@ -53,6 +53,10 @@ class PaymentsController extends Controller
         $areas = area::currentBranch()->get();
 
         $currencies = currencymgmt::all();
+        foreach($currencies as $currency)
+        {
+            $currency->qty = getCurrencyBalance($currency->id, auth()->user()->id);
+        }
         $type = $request->type;
         $orderbookers = User::orderbookers()->currentBranch()->get();
         return view('Finance.payments.index', compact('payments', 'receivers', 'currencies', 'areas', 'type', 'area', 'orderbookers', 'start', 'end'));

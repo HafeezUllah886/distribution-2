@@ -71,8 +71,8 @@ class AutoStaffPaymentsController extends Controller
             
             $user_name = auth()->user()->name;
             $staff = User::find($que->userID);
-            $notes = $que->notes;
-            $notes1 = $que->notes2;
+            $notes = "User: $staff->name - $que->notes";
+            $notes1 = "User: $staff->name - $que->notes2";
 
             createUserTransaction(auth()->id(), now(),$que->amount, 0, $notes, $ref);
             createUserTransaction($que->userID, now(),0, $que->amount, $notes1, $ref);

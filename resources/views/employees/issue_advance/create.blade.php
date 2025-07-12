@@ -4,7 +4,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3>Issue Salary</h3>
+                    <h3>Issue Advance</h3>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -16,7 +16,7 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{ route('issue_salary.store') }}" enctype="multipart/form-data" method="post">
+                    <form action="{{ route('issue_advance.store') }}" enctype="multipart/form-data" method="post">
                         @csrf
 
                         <div class="row">
@@ -39,15 +39,11 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="salary">Monthly Salary</label>
-                                            <input type="number" name="salary" id="salary" value="{{ $employee->salary }}" readonly class="form-control">
+                                            <label for="limit">Limit</label>
+                                            <input type="number" name="limit" id="limit" value="{{ $employee->limit }}" readonly class="form-control">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group mt-2">
-                                <label for="month">Salary Month</label>
-                                <input type="month" name="month" value="{{ $month }}" readonly class="form-control">
                             </div>
                             <div class="form-group mt-2">
                                 <label for="date">Date</label>
@@ -60,7 +56,7 @@
                            
                            </div>
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary w-100 mt-4">Issue Salary</button>
+                                <button type="submit" class="btn btn-primary w-100 mt-4">Issue Advance</button>
                             </div>
                         </div>
                        

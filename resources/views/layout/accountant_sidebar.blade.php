@@ -192,12 +192,17 @@
                                 <a href="{{ route('employees.index') }}" class="nav-link"
                                     data-key="t-input-masks">List</a>
                             </li> 
-                            
-                        </ul>
-                        <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a href="{{ route('generate_salary.index') }}" class="nav-link"
                                     data-key="t-input-masks">Generate Salary</a>
+                            </li> 
+                            <li class="nav-item">
+                                <a href="{{ route('issue_salary.index') }}" class="nav-link"
+                                    data-key="t-input-masks">Issue Salary</a>
+                            </li> 
+                            <li class="nav-item">
+                                <a href="{{ route('issue_advance.index') }}" class="nav-link"
+                                    data-key="t-input-masks">Issue Advance</a>
                             </li> 
                         </ul>
                     </div>

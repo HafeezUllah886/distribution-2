@@ -32,6 +32,10 @@ class ExpensesController extends Controller
             $expenses = expenses::currentBranch()->whereBetween('date', [$from, $to])->where('categoryID', $categoryID)->orderby('id', 'desc')->get();
         }
         $currencies = currencymgmt::all();
+        foreach($currencies as $currency)
+        {
+            $currency->qty = getCurrencyBalance($currency->id, auth()->user()->id);
+        }
         $categories = expense_categories::all();
         return view('Finance.expense.index', compact('expenses', 'currencies', 'categories', 'from', 'to', 'categoryID'));
     }
@@ -115,6 +119,7 @@ class ExpensesController extends Controller
     {
         $expense = expenses::find($id);
         $currencies = currencymgmt::all();
+
         if($expense->method == "Cash")
         {
           

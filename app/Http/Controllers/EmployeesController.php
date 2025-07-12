@@ -11,10 +11,22 @@ class EmployeesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $employees = employee::currentBranch()->get();
-        return view('employees.index', compact('employees'));
+        $desig = $request->designation ?? "All";
+        $dept = $request->department ?? "All";   
+        $employees = employee::currentBranch();
+        if($desig != "All"){
+            $employees = $employees->where('designation', $desig);
+        }
+        if($dept != "All"){
+            $employees = $employees->where('department', $dept);
+        }
+        $employees = $employees->get();
+
+        $designations = employee::currentBranch()->get()->unique('designation')->pluck('designation')->toArray();
+        $departments = employee::currentBranch()->get()->unique('department')->pluck('department')->toArray();
+        return view('employees.index', compact('employees', 'designations', 'departments', 'desig', 'dept'));
     }
 
     /**
@@ -35,6 +47,7 @@ class EmployeesController extends Controller
             'name' => $request->name,
             'fname' => $request->fname,
             'designation' => $request->designation,
+            'department' => $request->department,
             'contact' => $request->contact,
             'address' => $request->address,
             'salary' => $request->salary,
@@ -71,6 +84,7 @@ class EmployeesController extends Controller
             'name' => $request->name,
             'fname' => $request->fname,
             'designation' => $request->designation,
+            'department' => $request->department,
             'contact' => $request->contact,
             'address' => $request->address,
             'salary' => $request->salary,
