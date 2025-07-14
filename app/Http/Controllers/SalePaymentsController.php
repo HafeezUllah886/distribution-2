@@ -125,8 +125,22 @@ class SalePaymentsController extends Controller
     public function show($id)
     {
         $payment = sale_payments::find($id);
+        $currencies = currencymgmt::all();
 
-        return view('sales.receipt', compact('payment'));
+        if($payment->method == "Cash")
+        {
+          
+            foreach($currencies as $currency)
+            {
+                $currenyTransaction = currency_transactions::where('currencyID', $currency->id)->where('refID', $payment->refID)->first();
+
+                $currency->qty = $currenyTransaction->cr ?? 0;
+            }
+
+        }
+
+
+        return view('sales.receipt', compact('payment', 'currencies'));
     }
 
     /**

@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\EmployeeLedgerController;
 use App\Http\Controllers\EmployeesController;
+use App\Http\Controllers\EmployeesPaymentCatsController;
 use App\Http\Controllers\GenerateSalaryController;
 use App\Http\Controllers\IssueAdvanceController;
+use App\Http\Controllers\IssueMiscController;
 use App\Http\Controllers\IssueSalaryController;
 use App\Http\Middleware\Admin_BranchAdmin_AccountantCheck;
 use App\Http\Middleware\confirmPassword;
@@ -21,6 +23,11 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
 
    Route::resource('issue_advance', IssueAdvanceController::class);
    Route::get('issue_advance/delete/{ref}', [IssueAdvanceController::class, 'delete'])->name('issue_advance.delete')->middleware(confirmPassword::class);
+
+   Route::resource('issue_misc', IssueMiscController::class);
+   Route::get('issue_misc/delete/{ref}', [IssueMiscController::class, 'delete'])->name('issue_misc.delete')->middleware(confirmPassword::class);
+
+   Route::resource('issue_misc_cats', EmployeesPaymentCatsController::class);
 });
 
 
