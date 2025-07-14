@@ -28,5 +28,10 @@ class order_delivery extends Model
         return $this->belongsTo(warehouses::class, 'warehouseID');
     }
 
+    public function unit()
+    {
+        return $this->belongsTo(product_units::class, 'unitID');
+    }
+
    
 }

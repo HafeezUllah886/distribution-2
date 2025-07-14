@@ -72,7 +72,10 @@ class OrderbookerBalanceController extends Controller
                 'balance' => $balance,
             ];
         }
-
+        $data[] = [
+            'method' => 'Total',
+            'balance' => getUserAccountBalance($request->user()->id),
+        ];
         return response()->json([
             'status' => 'success',
             'data' => $data

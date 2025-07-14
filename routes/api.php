@@ -53,4 +53,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orderbookerinvoices', [OrderBookerInvoices::class, 'index']);
     Route::get('/invoicepayments', [InvoicePaymentsHistory::class, 'index']);
 
+    Route::get('/order/show', [OrdersController::class, 'show']);
+
 });

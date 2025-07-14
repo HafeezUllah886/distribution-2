@@ -422,5 +422,60 @@ class OrdersController extends Controller
         ], 200);
     }
 
+    public function show(Request $request)
+    {
+        $order = orders::with('details.product')->find($request->orderID);
+
+        $data = [
+            'id' => $order->id,
+            'date' => $order->date,
+            'customer' => $order->customer->title,
+            'customerID' => $order->customerID,
+            'orderbooker' => $order->orderbooker->title,
+            'orderbookerID' => $order->orderbookerID,
+            'orderdate' => $order->orderdate,
+            'bilty' => $order->bilty,
+            'transporter' => $order->transporter,
+            'net' => $order->net,
+            'status' => $order->status,
+            'notes' => $order->notes,
+            'products' => $order->details()->with(['product', 'unit'])->get()->map(function($detail) {
+                return [
+                    'product_name' => $detail->product->name ?? null,
+                    'unit_name' => $detail->unit->unit_name ?? null,
+                    'pack_size' => $detail->unit->value ?? null,
+                    'pack_qty' => $detail->qty,
+                    'loose' => $detail->loose,
+                    'bonus' => $detail->bonus,
+                    'price' => $detail->price,
+                    'discount' => $detail->discount,
+                    'discount_percentage' => $detail->discountp,
+                    'discount_percentage_value' => $detail->discountvalue,
+                    'fright' => $detail->fright,
+                    'labor' => $detail->labor,
+                    'claim' => $detail->claim,
+                    'net_price' => $detail->netprice,
+                    'amount' => $detail->amount
+                ];
+            }),
+            'delivered_items' => $order->details()->with(['product', 'unit'])->get()->map(function($detail) {
+                return [
+                    'product_name' => $detail->product->name ?? null,
+                    'unit_name' => $detail->unit->unit_name ?? null,
+                    'pack_size' => $detail->unit->value ?? null,
+                    'total_ordered' => packInfoWithOutName($detail->unit->value, $detail->pc),
+                    'delivered' => packInfoWithOutName($detail->unit->value, $detail->delivered()),
+                    'remaining' => packInfoWithOutName($detail->unit->value, $detail->remaining())
+                ];
+            }),
+        ];
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Order retrieved successfully',
+            'data' => $data
+        ], 200);
+    }
+
     
 }
