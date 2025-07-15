@@ -12,6 +12,7 @@ use App\Http\Controllers\reports\invoicePaymentsReportController;
 use App\Http\Controllers\reports\loadsheetController;
 use App\Http\Controllers\reports\OrderbookerPerformanceReportController;
 use App\Http\Controllers\reports\OrderbookerWiseCustomerBalanceReport;
+use App\Http\Controllers\reports\OrdersReportController;
 use App\Http\Controllers\reports\ProductsSummaryReportController;
 use App\Http\Controllers\reports\purchaseReportController;
 use App\Http\Controllers\reports\salesReportController;
@@ -37,6 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/sales', [salesReportController::class, 'index'])->name('reportSales');
     Route::get('/reports/salesFilter', [salesReportController::class, 'filter'])->name('reportSalesFilter');
     Route::get('/reports/salesData', [salesReportController::class, 'data'])->name('reportSalesData');
+    
+    Route::get('/reports/orders', [OrdersReportController::class, 'index'])->name('reportOrders');
+    Route::get('/reports/ordersFilter', [OrdersReportController::class, 'filter'])->name('reportOrdersFilter');
+    Route::get('/reports/ordersData', [OrdersReportController::class, 'data'])->name('reportOrdersData');
 
     Route::get('/reports/purchases', [purchaseReportController::class, 'index'])->name('reportPurchases');
     Route::get('/reports/purchasesData', [purchaseReportController::class, 'data'])->name('reportPurchasesData');
