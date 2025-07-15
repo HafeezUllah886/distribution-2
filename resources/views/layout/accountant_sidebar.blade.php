@@ -274,6 +274,10 @@
                                 <a href="{{ route('reportBranchStock') }}" class="nav-link"
                                     data-key="t-basic-elements">Branch Stock Report</a>
                             </li>
+                           <li class="nav-item">
+                                <a href="{{ route('reportExpense') }}" class="nav-link"
+                                    data-key="t-basic-elements">Expense Report</a>
+                            </li>
                         </ul>
                     </div>
                 </li> 
