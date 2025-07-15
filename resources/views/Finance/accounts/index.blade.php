@@ -14,7 +14,7 @@
                             @if ($filter == 'Business')
                                 <th>Category</th>
                             @endif
-                            @if ($filter == 'Vendor')
+                            @if ($filter == 'Vendor' || $filter == 'Business')
                                 <th>Address</th>
                             @endif
 
@@ -34,7 +34,7 @@
                                     @if ($filter == 'Business')
                                         <td>{{ $account->category }}</td>
                                     @endif
-                                    @if ($filter == 'Vendor')
+                                    @if ($filter == 'Vendor' || $filter == 'Business')
                                         <td>{{ $account->address }}</td>
                                     @endif
                                     @if ($filter == 'Customer')

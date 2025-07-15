@@ -90,7 +90,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-6 mt-2 customer vendor">
+                            <div class="col-6 mt-2 customer vendor business">
                                 <div class="form-group ">
                                     <label for="address">Address</label>
                                     <input type="text" name="address" id="address" value="{{ old('address') }}" class="form-control">
@@ -164,6 +164,10 @@
             if(type === "Vendor")
             {
                 $(".vendor").show();
+            }
+            if(type === "Business")
+            {
+                $(".business").show();
             }
             else
             {

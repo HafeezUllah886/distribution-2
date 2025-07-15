@@ -70,7 +70,7 @@
                                 </div>
                             </div>
                             @endif
-                            @if ($account->type == 'Customer' || $account->type == 'Vendor')
+                            @if ($account->type == 'Customer' || $account->type == 'Vendor' || $account->type == 'Business')
                             <div class="col-6 mt-2 customer">
                                 <div class="form-group ">
                                     <label for="address">Address</label>

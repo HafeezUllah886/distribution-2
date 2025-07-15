@@ -113,6 +113,7 @@ class AccountsController extends Controller
                             'email' => $request->email,
                             'branchID'  => $request->branch,
                             'category' => $request->category,
+                            'address' => $request->address,
                             'areaID' => 1,
                         ]
                     );    
