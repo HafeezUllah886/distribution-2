@@ -67,6 +67,7 @@
                             <th>Name</th>
                             <th>Designation</th>
                             <th>Department</th>
+                            <th>Address</th>
                             <th>Advance</th>
                             <th>Date</th>
                             <th>Action</th>
@@ -79,6 +80,7 @@
                                     <td>{{ $advance->employee->name }}</td>
                                     <td>{{ $advance->employee->designation }}</td>
                                     <td>{{ $advance->employee->department }}</td>
+                                    <td>{{ $advance->employee->address }}</td>
                                     <td>{{ number_format($advance->advance) }}</td>
                                     <td>{{ date('d-m-Y', strtotime($advance->date)) }}</td>
                                     <td>

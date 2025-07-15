@@ -72,6 +72,7 @@
                             <th>Name</th>
                             <th>Designation</th>
                             <th>Department</th>
+                            <th>Address</th>
                             <th>Amount</th>
                             <th>Category</th>
                             <th>Date</th>
@@ -85,6 +86,7 @@
                                     <td>{{ $misc->employee->name }}</td>
                                     <td>{{ $misc->employee->designation }}</td>
                                     <td>{{ $misc->employee->department }}</td>
+                                    <td>{{ $misc->employee->address }}</td>
                                     <td>{{ number_format($misc->amount) }}</td>
                                     <td>{{ $misc->cat->name }}</td>
                                     <td>{{ date('d-m-Y', strtotime($misc->date)) }}</td>

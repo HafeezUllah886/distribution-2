@@ -61,6 +61,7 @@
                             <th>Name</th>
                             <th>Designation</th>
                             <th>Department</th>
+                            <th>Address</th>
                             <th>Salary</th>
                             <th>Date</th>
                             <th>Salary Month</th>
@@ -75,6 +76,7 @@
                                     <td>{{ $salary->employee->name }}</td>
                                     <td>{{ $salary->employee->designation }}</td>
                                     <td>{{ $salary->employee->department }}</td>
+                                    <td>{{ $salary->employee->address }}</td>
                                     <td>{{ number_format($salary->salary) }}</td>
                                     <td>{{ date('d-m-Y', strtotime($salary->date)) }}</td>
                                     <td>{{ date('M Y', strtotime($salary->month)) }}</td>
