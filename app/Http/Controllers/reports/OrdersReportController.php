@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\area;
 use App\Models\branches;
+use App\Models\order_details;
 use App\Models\orders;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -71,7 +72,7 @@ class OrdersReportController extends Controller
 
             foreach($customers as $customer)
             {
-                $orders = orders::with('customer', 'orderbooker')->whereBetween('date', [$from, $to])->where('customerID', $customer->id);
+                $orders = order_details::whereBetween('date', [$from, $to])->where('customerID', $customer->id);
                 if($request->orderbooker)
                 {
                     $orders = $orders->whereIn('orderbookerID', $request->orderbooker);

@@ -161,6 +161,8 @@ class OrdersController extends Controller
                 $orderDetail = order_details::create([
                     'orderID' => $order->id,
                     'productID' => $id,
+                    'customerID' => $request->customerID,
+                    'orderbookerID' => $request->user()->id,
                     'price' => $price,
                     'branchID' => $request->user()->branchID,
                     'discount' => $discount,
@@ -284,6 +286,8 @@ class OrdersController extends Controller
                 $orderDetail = order_details::create([
                     'orderID' => $order->id,
                     'productID' => $id,
+                    'customerID' => $order->customerID,
+                    'orderbookerID' => $order->orderbookerID,
                     'price' => $price,
                     'discount' => $discount,
                     'discountp' => $discountp,

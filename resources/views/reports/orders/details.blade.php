@@ -51,31 +51,42 @@
                         <div class="col-lg-12">
                             <div class="card-body p-4">
                                 <div class="table-responsive">
-                                    <table class="table table-borderless text-center table-nowrap align-middle mb-0">
+                                    <table class="table table-bordered text-center table-nowrap align-middle mb-0" style="border: 1px solid #000000;">
                                         <thead>
-                                            <tr class="table-active">
-                                                <th scope="col" style="width: 50px;">#</th>
-                                                <th scope="col" class="text-start">Branch</th>
-                                                <th scope="col" class="text-start">Customer Name</th>
-                                                <th scope="col" class="text-start">Order Booker</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Qty</th>
-                                                <th scope="col">Disc</th>
-                                                <th scope="col">Fright</th>
-                                                <th scope="col">Labor</th>
-                                                <th scope="col">Claim</th>
-                                                <th scope="col">Amount</th>
+                                            <tr class="table-active" style="border: 1px solid #000000 !important;">
+                                                <th scope="col" class="p-1" colspan="8">Ordered</th>
+                                                <th scope="col" class="p-1" colspan="4">Delivered</th>
+                                                <th scope="col" class="p-1" colspan="3">Pending</th>
+                                            </tr>
+                                            <tr class="table-active" style="border: 1px solid #000000 !important;">
+                                                <th scope="col" class="p-1" style="width: 50px;">Order #</th>
+                                                <th scope="col" class="text-start p-1">Product</th>
+                                                <th scope="col" class="text-start p-1">Unit</th>
+                                                <th scope="col" class="text-start p-1">Pack Size</th>
+                                                <th scope="col" class="text-start p-1">Order Date</th>
+                                                <th scope="col" class="text-start p-1">Qty</th>
+                                                <th scope="col" class="text-start p-1">Loose</th>
+                                                <th scope="col" class="p-1">Amount</th>
+                                                <th scope="col" class="p-1">Date</th>
+                                                <th scope="col" class="text-start p-1">Qty</th>
+                                                <th scope="col" class="text-start p-1">Loose</th>
+                                                <th scope="col" class="p-1">Amount</th>
+                                                <th scope="col" class="text-start p-1">Qty</th>
+                                                <th scope="col" class="text-start p-1">Loose</th>
+                                                <th scope="col" class="p-1">Amount</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @php
-                                                $GrandtotalQty = 0;
-                                                $GrandtotalLoose = 0;
-                                                $GrandtotalDisc = 0;
-                                                $GrandtotalFright = 0;
-                                                $GrandtotalLabor = 0;
-                                                $GrandtotalClaim = 0;
-                                                $GrandtotalAmount = 0;
+                                                $GrandOrderQty = 0;
+                                                $GrandOrderLoose = 0;
+                                                $GrandOrderAmount = 0;
+                                                $GrandDeliveredQty = 0;
+                                                $GrandDeliveredLoose = 0;
+                                                $GrandDeliveredAmount = 0;
+                                                $GrandPendingQty = 0;
+                                                $GrandPendingLoose = 0;
+                                                $GrandPendingAmount = 0;
                                             @endphp
                                             @foreach ($areas as $key => $area)
                                             @php
@@ -88,90 +99,128 @@
                                             @endforeach
 
                                             @if($count > 0)
-                                            <tr class="table-active">
-                                                <th scope="row" class="text-start" colspan="11">{{ $area->name}}</th>
+                                            <tr class="table-active" style="border: 1px solid #000000 !important;">
+                                                <th scope="row" class="text-start p-1" style="border: 1px solid #000000 !important;" colspan="15">{{ $area->name}}</th>
                                             </tr>
                                             @php
-                                                $areaTotalQty = 0;
-                                                $areaTotalLoose = 0;
-                                                $areaTotalDisc = 0;
-                                                $areaTotalFright = 0;
-                                                $areaTotalLabor = 0;
-                                                $areaTotalClaim = 0;
-                                                $areaTotalAmount = 0;
+                                                $areaTotalOrderQty = 0;
+                                                $areaTotalOrderLoose = 0;
+                                                $areaTotalOrderAmount = 0;
+                                                $areaTotalDeliveredQty = 0;
+                                                $areaTotalDeliveredLoose = 0;
+                                                $areaTotalDeliveredAmount = 0;
+                                                $areaTotalPendingQty = 0;
+                                                $areaTotalPendingLoose = 0;
+                                                $areaTotalPendingAmount = 0;
                                             @endphp
                                                 @foreach ($area->customers as $customer)
 
-                                                <tr class="table-active">
-                                                    <th scope="row" class="text-start" colspan="11">{{ $customer->title }}</th>
+                                                <tr class="table-active" style="border: 1px solid #000000 !important;">
+                                                    <th scope="row" class="text-start p-1" style="border: 1px solid #000000 !important;" colspan="15">{{ $customer->title }}</th>
                                                 </tr>
                                                 @php
-                                                    $totalQty = 0;
-                                                    $totalLoose = 0;
-                                                    $totalDisc = 0;
-                                                    $totalFright = 0;
-                                                    $totalLabor = 0;
-                                                    $totalClaim = 0;
-                                                    $totalAmount = 0;
+                                                    $totalOrderQty = 0;
+                                                    $totalOrderLoose = 0;
+                                                    $totalOrderAmount = 0;
+                                                    $totalDeliveredQty = 0;
+                                                    $totalDeliveredLoose = 0;
+                                                    $totalDeliveredAmount = 0;
+                                                    $totalPendingQty = 0;
+                                                    $totalPendingLoose = 0;
+                                                    $totalPendingAmount = 0;
                                                 @endphp
                                                     @foreach ($customer->orders as $order)
                                                     @php
-                                                        $totalQty += $order->details->sum('qty');
-                                                        $totalLoose += $order->details->sum('loose');
-                                                        $totalDisc += $order->details->sum('discount') + $order->details->sum('discountvalue');
-                                                        $totalFright += $order->details->sum('fright');
-                                                        $totalLabor += $order->details->sum('labor');
-                                                        $totalClaim += $order->details->sum('claim');
-                                                        $totalAmount += $order->details->sum('amount');
 
-                                                        $areaTotalQty += $order->details->sum('qty');
-                                                        $areaTotalLoose += $order->details->sum('loose');
-                                                        $areaTotalDisc += $order->details->sum('discount') + $order->details->sum('discountvalue');
-                                                        $areaTotalFright += $order->details->sum('fright');
-                                                        $areaTotalLabor += $order->details->sum('labor');
-                                                        $areaTotalClaim += $order->details->sum('claim');
-                                                        $areaTotalAmount += $order->details->sum('amount');
+                                                    $orderQty = $order->sum('qty');
+                                                    $orderLoose = $order->sum('loose');
+                                                    $orderAmount = $order->sum('amount');
 
-                                                        $GrandtotalQty += $order->details->sum('qty');
-                                                        $GrandtotalLoose += $order->details->sum('loose');
-                                                        $GrandtotalDisc += $order->details->sum('discount') + $order->details->sum('discountvalue');
-                                                        $GrandtotalFright += $order->details->sum('fright');
-                                                        $GrandtotalLabor += $order->details->sum('labor');
-                                                        $GrandtotalClaim += $order->details->sum('claim');
-                                                        $GrandtotalAmount += $order->details->sum('amount');
+                                                    $delivered = App\Models\order_delivery::where('orderID', $order->orderID)->where('productID', $order->productID)->get();
+
+                                                    $deliveredQty = $delivered->sum('qty');
+                                                    $deliveredLoose = $delivered->sum('loose');
+                                                    $deliveredAmount = $order->deliveredAmount();
+
+                                                    $pendingQty = $orderQty - $deliveredQty;
+                                                    $pendingLoose = $orderLoose - $deliveredLoose;
+                                                    $pendingAmount = $orderAmount - $deliveredAmount;
+
+                                                    $totalOrderQty += $orderQty;
+                                                    $totalOrderLoose += $orderLoose;
+                                                    $totalOrderAmount += $orderAmount;
+                                                    $totalDeliveredQty += $deliveredQty;
+                                                    $totalDeliveredLoose += $deliveredLoose;
+                                                    $totalDeliveredAmount += $deliveredAmount;
+                                                    $totalPendingQty += $pendingQty;
+                                                    $totalPendingLoose += $pendingLoose;
+                                                    $totalPendingAmount += $pendingAmount;
+
+                                                    $areaTotalOrderQty += $orderQty;
+                                                    $areaTotalOrderLoose += $orderLoose;
+                                                    $areaTotalOrderAmount += $orderAmount;
+                                                    $areaTotalDeliveredQty += $deliveredQty;
+                                                    $areaTotalDeliveredLoose += $deliveredLoose;
+                                                    $areaTotalDeliveredAmount += $deliveredAmount;
+                                                    $areaTotalPendingQty += $pendingQty;
+                                                    $areaTotalPendingLoose += $pendingLoose;
+                                                    $areaTotalPendingAmount += $pendingAmount;
+
+                                                    $GrandOrderQty += $orderQty;
+                                                    $GrandOrderLoose += $orderLoose;
+                                                    $GrandOrderAmount += $orderAmount;
+                                                    $GrandDeliveredQty += $deliveredQty;
+                                                    $GrandDeliveredLoose += $deliveredLoose;
+                                                    $GrandDeliveredAmount += $deliveredAmount;
+                                                    $GrandPendingQty += $pendingQty;
+                                                    $GrandPendingLoose += $pendingLoose;
+                                                    $GrandPendingAmount += $pendingAmount;
+                                                       
                                                     @endphp
                                                     <tr>
-                                                        <td scope="row" class="text-start ">{{ $loop->iteration }}</td>
-                                                        <td class="text-start">{{ $order->branch->name }}</td>
-                                                        <td class="text-start">{{ $order->customer->title }}</td>
-                                                        <td class="text-start">{{ $order->orderbooker->name }}</td>
-                                                        <td class="text-start">{{ date('d M Y', strtotime($order->date)) }}</td>
-                                                        <td class="text-start">{{ $order->details->sum('qty') }}, {{$order->details->sum('loose')}}</td>
-                                                        <td class="text-start">{{ $order->details->sum('discount') + $order->details->sum('discountvalue') }}</td>
-                                                        <td class="text-start">{{ $order->details->sum('fright') }}</td>
-                                                        <td class="text-start">{{ $order->details->sum('labor') }}</td>
-                                                        <td class="text-start">{{ $order->details->sum('claim') }}</td>
-                                                        <td class="text-start">{{ $order->details->sum('amount') }}</td>
+                                                        <td scope="row" class="text-start p-1">{{ $order->orderID }}</td>
+                                                        <td class="text-start p-1">{{ $order->product->name }}</td>
+                                                        <td class="text-start p-1">{{ $order->unit->unit_name }}</td>
+                                                        <td class="text-start p-1">{{ $order->unit->value }}</td>
+                                                        <td class="text-start p-1">{{ date('d M Y', strtotime($order->date)) }}</td>
+                                                        <td class="text-start p-1">{{ number_format($orderQty) }}</td>
+                                                        <td class="text-start p-1">{{ number_format($orderLoose) }}</td>
+                                                        <td class="text-start p-1">{{ number_format($orderAmount) }}</td>
+                                                        <td class="text-start p-1">{{ date('d M Y', strtotime($order->lastDelivery())) }}</td>
+                                                        <td class="text-start p-1">{{ number_format($deliveredQty) }}</td>
+                                                        <td class="text-start p-1">{{ number_format($deliveredLoose) }}</td>
+                                                        <td class="text-start p-1">{{ number_format($deliveredAmount) }}</td>
+                                                        <td class="text-start p-1">{{ number_format($pendingQty) }}</td>
+                                                        <td class="text-start p-1">{{ number_format($pendingLoose) }}</td>
+                                                        <td class="text-start p-1">{{ number_format($pendingAmount) }}</td>
                                                     </tr>
                                                     @endforeach
                                                     <tr class="table-active text-success">
-                                                        <th colspan="5" class="text-end">Total of {{ $customer->title }}</th>
-                                                        <th class="text-start">{{ $totalQty }}, {{$totalLoose}}</th>
-                                                        <th class="text-start">{{ $totalDisc }}</th>
-                                                        <th class="text-start">{{ $totalFright }}</th>
-                                                        <th class="text-start">{{ $totalLabor }}</th>
-                                                        <th class="text-start">{{ $totalClaim }}</th>
-                                                        <th class="text-start">{{ $totalAmount }}</th>
+                                                        <th colspan="5" class="text-end p-1">Total of {{ $customer->title }}</th>
+                                                        <th class="text-start p-1">{{ number_format($totalOrderQty) }}</th>
+                                                        <th class="text-start p-1">{{ number_format($totalOrderLoose) }}</th>
+                                                        <th class="text-start p-1">{{ number_format($totalOrderAmount) }}</th>
+                                                        <th class="text-start p-1"></th>
+                                                        <th class="text-start p-1">{{ number_format($totalDeliveredQty) }}</th>
+                                                        <th class="text-start p-1">{{ number_format($totalDeliveredLoose) }}</th>
+                                                        <th class="text-start p-1">{{ number_format($totalDeliveredAmount) }}</th>
+                                                        <th class="text-start p-1">{{ number_format($totalPendingQty) }}</th>
+                                                        <th class="text-start p-1">{{ number_format($totalPendingLoose) }}</th>
+                                                        <th class="text-start p-1">{{ number_format($totalPendingAmount) }}</th>
                                                     </tr>
                                                 @endforeach
                                                 <tr class="table-active text-primary">
-                                                    <td colspan="5" class="text-end">Total of {{ $area->name }}</td>
-                                                    <th class="text-start">{{ $areaTotalQty }}, {{$areaTotalLoose}}</th>
-                                                    <th class="text-start">{{ $areaTotalDisc }}</th>
-                                                    <th class="text-start">{{ $areaTotalFright }}</th>
-                                                    <th class="text-start">{{ $areaTotalLabor }}</th>
-                                                    <th class="text-start">{{ $areaTotalClaim }}</th>
-                                                    <th class="text-start">{{ $areaTotalAmount }}</th>
+                                                    <th colspan="5" class="text-end p-1">Total of {{ $area->name }}</th>
+                                                    <th class="text-start p-1">{{ number_format($areaTotalOrderQty) }}</th>
+                                                    <th class="text-start p-1">{{ number_format($areaTotalOrderLoose) }}</th>
+                                                    <th class="text-start p-1">{{ number_format($areaTotalOrderAmount) }}</th>
+                                                    <th class="text-start p-1"></th>
+                                                    <th class="text-start p-1">{{ number_format($areaTotalDeliveredQty) }}</th>
+                                                    <th class="text-start p-1">{{ number_format($areaTotalDeliveredLoose) }}</th>
+                                                    <th class="text-start p-1">{{ number_format($areaTotalDeliveredAmount) }}</th>
+                                                    <th class="text-start p-1">{{ number_format($areaTotalPendingQty) }}</th>
+                                                    <th class="text-start p-1">{{ number_format($areaTotalPendingLoose) }}</th>
+                                                    <th class="text-start p-1">{{ number_format($areaTotalPendingAmount) }}</th>
                                                 </tr>
                                                 @endif
                                             @endforeach
@@ -179,13 +228,17 @@
                                         </tbody>
                                         <tfoot>
                                             <tr class="table-active text-danger">
-                                                <th colspan="5" class="text-end">Grand Total</th>
-                                                <th class="text-start">{{ $GrandtotalQty }}, {{$GrandtotalLoose}}</th>
-                                                <th class="text-start">{{ $GrandtotalDisc }}</th>
-                                                <th class="text-start">{{ $GrandtotalFright }}</th>
-                                                <th class="text-start">{{ $GrandtotalLabor }}</th>
-                                                <th class="text-start">{{ $GrandtotalClaim }}</th>
-                                                <th class="text-start">{{ $GrandtotalAmount }}</th>
+                                                <th colspan="5" class="text-end p-1">Grand Total</th>
+                                                <th class="text-start p-1">{{ number_format($GrandOrderQty) }}</th>
+                                                <th class="text-start p-1">{{ number_format($GrandOrderLoose) }}</th>
+                                                <th class="text-start p-1">{{ number_format($GrandOrderAmount) }}</th>
+                                                <th class="text-start p-1"></th>
+                                                <th class="text-start p-1">{{ number_format($GrandDeliveredQty) }}</th>
+                                                <th class="text-start p-1">{{ number_format($GrandDeliveredLoose) }}</th>
+                                                <th class="text-start p-1">{{ number_format($GrandDeliveredAmount) }}</th>
+                                                <th class="text-start p-1">{{ number_format($GrandPendingQty) }}</th>
+                                                <th class="text-start p-1">{{ number_format($GrandPendingLoose) }}</th>
+                                                <th class="text-start p-1">{{ number_format($GrandPendingAmount) }}</th>
                                             </tr>
                                         </tfoot>
                                     </table><!--end table-->
