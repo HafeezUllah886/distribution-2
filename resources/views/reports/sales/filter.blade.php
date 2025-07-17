@@ -34,6 +34,7 @@
                         </select>
                     </div>
                     <input type="hidden" name="branch" value="{{$branch}}">
+                    <input type="hidden" name="area" value="{{$area}}">
                     <div class="form-group mt-2">
                         <button class="btn btn-success w-100" id="viewBtn">View Report</button>
                     </div>

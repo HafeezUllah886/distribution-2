@@ -42,8 +42,18 @@ class salesReportController extends Controller
        $orderbookers = User::orderbookers()->where('branchID', $request->branch)->get();
 
        $branch = $request->branch;
-        
-        return view('reports.sales.filter', compact('customers', 'orderbookers', 'branch'));
+
+       $area = "";
+            if($request->area)
+            {
+                $area = implode(',', $request->area);
+            }
+            else
+            {
+                $area = "All";
+            }
+     
+        return view('reports.sales.filter', compact('customers', 'orderbookers', 'branch', 'area'));
     }
 
     public function data(Request $request)
@@ -68,6 +78,43 @@ class salesReportController extends Controller
             $sales = $sales->get();
             $branch = branches::find($request->branch);
             $branch = $branch->name;
-        return view('reports.sales.details', compact('from', 'to', 'sales', 'branch'));
+            
+            $area = "";
+            if($request->area == "All")
+            {
+                $area = "All";
+            }
+            else
+            {
+                $areas = explode(',', $request->area);
+                $area = area::whereIn('id', $areas)->pluck('name')->toArray();
+                $area = implode(',', $area);
+            }
+
+            $orderbookers = "";
+            if($request->orderbooker)
+            {
+                $orderbookers = User::whereIn('id', $request->orderbooker)->pluck('name')->toArray();
+                $orderbookers = implode(',', $orderbookers);
+            }
+            else
+            {
+                $orderbookers = "All";
+            }
+
+            $customers = "";
+            if($request->customer)
+            {
+                $customers = accounts::customer()->where('branchID', $request->branch)->whereIn('id', $request->customer)->pluck('title')->toArray();
+                $customers = implode(',', $customers);
+            }
+            else
+            {
+                $customers = "All";
+            }
+           
+
+           
+        return view('reports.sales.details', compact('from', 'to', 'sales', 'branch', 'area', 'orderbookers', 'customers'));
     }
 }

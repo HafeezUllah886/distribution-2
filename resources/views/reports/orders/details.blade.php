@@ -32,6 +32,18 @@
                                         <h5 class="fs-14 mb-0">{{ date('d M Y', strtotime($to)) }}</h5>
                                     </div>
                                     <div class="col-lg-3 col-6">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Areas</p>
+                                        <h5 class="fs-14 mb-0">{{ $area1 }}</h5>
+                                    </div>
+                                    <div class="col-lg-3 col-6">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Orderbookers</p>
+                                        <h5 class="fs-14 mb-0">{{ $orderbookers }}</h5>
+                                    </div>
+                                    <div class="col-lg-3 col-6">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Customers</p>
+                                        <h5 class="fs-14 mb-0">{{ $customers }}</h5>
+                                    </div>
+                                    <div class="col-lg-3 col-6">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Branch</p>
                                         <h5 class="fs-14 mb-0">{{ $branch }}</h5>
                                     </div>

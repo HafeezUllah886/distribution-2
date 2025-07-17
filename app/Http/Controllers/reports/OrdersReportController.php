@@ -43,8 +43,18 @@ class OrdersReportController extends Controller
        $orderbookers = User::orderbookers()->where('branchID', $request->branch)->get();
 
        $branch = $request->branch;
+
+       $area = "";
+            if($request->area)
+            {
+                $area = implode(',', $request->area);
+            }
+            else
+            {
+                $area = "All";
+            }
         
-        return view('reports.orders.filter', compact('customers', 'orderbookers', 'branch'));
+        return view('reports.orders.filter', compact('customers', 'orderbookers', 'branch', 'area'));
     }
 
     public function data(Request $request)
@@ -85,6 +95,41 @@ class OrdersReportController extends Controller
            
             $branch = branches::find($request->branch);
             $branch = $branch->name;
-        return view('reports.orders.details', compact('from', 'to', 'areas', 'branch'));
+
+            $area1 = "";
+            if($request->area == "All")
+            {
+                $area1 = "All";
+            }
+            else
+            {
+                $areas1 = explode(',', $request->area);
+                $area1 = area::whereIn('id', $areas1)->pluck('name')->toArray();
+                $area1 = implode(',', $area1);
+            }
+
+            $orderbookers = "";
+            if($request->orderbooker)
+            {
+                $orderbookers = User::whereIn('id', $request->orderbooker)->pluck('name')->toArray();
+                $orderbookers = implode(',', $orderbookers);
+            }
+            else
+            {
+                $orderbookers = "All";
+            }
+
+            $customers = "";
+            if($request->customer)
+            {
+                $customers = accounts::customer()->where('branchID', $request->branch)->whereIn('id', $request->customer)->pluck('title')->toArray();
+                $customers = implode(',', $customers);
+            }
+            else
+            {
+                $customers = "All";
+            }
+           
+        return view('reports.orders.details', compact('from', 'to', 'areas', 'branch', 'area1', 'orderbookers', 'customers'));
     }
 }
