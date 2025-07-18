@@ -144,9 +144,9 @@
                                                     @foreach ($customer->orders as $order)
                                                     @php
 
-                                                    $orderQty = $order->sum('qty');
-                                                    $orderLoose = $order->sum('loose');
-                                                    $orderAmount = $order->sum('amount');
+                                                    $orderQty = $order->qty;
+                                                    $orderLoose = $order->loose;
+                                                    $orderAmount = $order->amount;
 
                                                     $delivered = App\Models\order_delivery::where('orderID', $order->orderID)->where('productID', $order->productID)->get();
 

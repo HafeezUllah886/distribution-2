@@ -129,6 +129,7 @@ class OrdersReportController extends Controller
             {
                 $customers = "All";
             }
+
            
         return view('reports.orders.details', compact('from', 'to', 'areas', 'branch', 'area1', 'orderbookers', 'customers'));
     }
