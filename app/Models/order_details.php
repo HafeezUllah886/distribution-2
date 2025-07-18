@@ -58,7 +58,7 @@ class order_details extends Model
 
     public function lastDelivery()
     {
-        return order_delivery::where('orderID', $this->orderID)->where('productID', $this->productID)->orderBy('id', 'desc')->first()->created_at ?? $this->order->date;
+        return order_delivery::where('orderID', $this->orderID)->where('productID', $this->productID)->orderBy('id', 'desc')->first()->created_at ?? null;
     }
 
 }

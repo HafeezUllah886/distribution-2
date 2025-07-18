@@ -198,7 +198,7 @@
                                                         <td class="text-start p-1">{{ number_format($orderQty) }}</td>
                                                         <td class="text-start p-1">{{ number_format($orderLoose) }}</td>
                                                         <td class="text-start p-1">{{ number_format($orderAmount) }}</td>
-                                                        <td class="text-start p-1">{{ date('d M Y', strtotime($order->lastDelivery())) }}</td>
+                                                        <td class="text-start p-1">{{ $order->lastDelivery() ? date('d M Y', strtotime($order->lastDelivery())) : "-" }}</td>
                                                         <td class="text-start p-1">{{ number_format($deliveredQty) }}</td>
                                                         <td class="text-start p-1">{{ number_format($deliveredLoose) }}</td>
                                                         <td class="text-start p-1">{{ number_format($deliveredAmount) }}</td>
