@@ -169,14 +169,14 @@
             {
                 $(".business").show();
             }
-            else
+           /*  else
             {
                 $(".vendor").hide();
                 if(type === "Customer")
                 {
                     $(".customer").show();
                 }
-            }
+            } */
         }
         checkType();
     </script>
