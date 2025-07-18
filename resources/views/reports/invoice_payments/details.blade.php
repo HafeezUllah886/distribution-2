@@ -91,7 +91,7 @@
                                     @endphp
                                     @if ($countArea > 0)
                                         <tr class="table-active text-success">
-                                            <th class="text-start" colspan="7">{{$key}}</th>
+                                            <th class="text-start p-1" colspan="7">{{$key}}</th>
                                         </tr>
                                         @php
                                             $areaTotalAmount = 0;
@@ -105,7 +105,7 @@
                                         @endphp
                                         @if ($countCustomer > 0)
                                             <tr class="table-active text-primary ">
-                                                <th class="text-start" colspan="7">{{$customer->title}}</th>
+                                                <th class="text-start p-1" colspan="7">{{$customer->title}}</th>
                                             </tr>
                                             <tr>
                                                 <th class="p-1">#</th>
@@ -217,9 +217,9 @@
                                                 <th class="p-1">{{$customerTotalInv}}</th>
                                                 <th></th>
                                                 <th></th>
-                                                <th>{{number_format($customerTotalAmount)}}</th>
-                                                <th>{{number_format($customerTotalPaid)}}</th>
-                                                <th>{{number_format($customerTotalDue)}}</th>
+                                                <th class="p-1">{{number_format($customerTotalAmount)}}</th>
+                                                <th class="p-1">{{number_format($customerTotalPaid)}}</th>
+                                                <th class="p-1">{{number_format($customerTotalDue)}}</th>
                                             </tr>
                                         @endif
                                         @endforeach
@@ -228,9 +228,9 @@
                                             <th class="p-1">{{$areaTotalInv}}</th>
                                             <th></th>
                                             <th></th>
-                                            <th>{{number_format($areaTotalAmount)}}</th>
-                                            <th>{{number_format($areaTotalPaid)}}</th>
-                                            <th>{{number_format($areaTotalDue)}}</th>
+                                            <th class="p-1">{{number_format($areaTotalAmount)}}</th>
+                                            <th class="p-1">{{number_format($areaTotalPaid)}}</th>
+                                            <th class="p-1">{{number_format($areaTotalDue)}}</th>
                                         </tr>
                                     @endif
                                  
@@ -243,9 +243,9 @@
                                             <th class="p-1">{{$totalInv}}</th>
                                             <th></th>
                                             <th></th>
-                                            <th>{{number_format($totalAmount)}}</th>
-                                            <th>{{number_format($totalPaid)}}</th>
-                                            <th>{{number_format($totalDue)}}</th>
+                                            <th class="p-1">{{number_format($totalAmount)}}</th>
+                                            <th class="p-1">{{number_format($totalPaid)}}</th>
+                                            <th class="p-1">{{number_format($totalDue)}}</th>
                                         </tr>
                                     </tfoot>
                               

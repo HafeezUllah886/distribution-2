@@ -42,7 +42,7 @@
                         </tbody>
                     </table>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body @if($method == 'Cheque') d-none @endif">
                        <div class="row">
                         <div class="col-6">
                             <div class="form-group">
@@ -64,12 +64,6 @@
                                 </select>
                             </div>
                         </div>
-                        {{-- <div class="col-6">
-                            <div class="form-group">
-                                <label for="notes">Notes</label>
-                                <textarea name="notes" id="notes" class="form-control"></textarea>
-                            </div>
-                        </div> --}}
                        </div>
                     </div>
                   
