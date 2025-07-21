@@ -15,9 +15,7 @@ class OrdersReportController extends Controller
 {
     public function index(Request $request)
     {
-
         $branch = $request->branch ?? auth()->user()->branchID;
-
         if(auth()->user()->role == "Admin")
         {
             $branches = branches::all();
@@ -26,9 +24,7 @@ class OrdersReportController extends Controller
         {
             $branches = branches::where('id', auth()->user()->branchID)->get();
         }
-
         $areas = area::where('branchID', $branch)->get();
-        
         return view('reports.orders.index', compact('branches', 'areas', 'branch'));
     }
 
@@ -62,10 +58,15 @@ class OrdersReportController extends Controller
         $from = $request->from;
         $to = $request->to;
 
+
         $areas = accounts::customer()->where('branchID', $request->branch);
         if($request->customer)
         {
             $areas = $areas->whereIn('id', $request->customer);
+        }
+        if($request->area)
+        {
+            $areas = $areas->where('areaID', $request->area);
         }
         $areas = $areas->pluck('areaID')->toArray();
 

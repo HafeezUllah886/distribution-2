@@ -78,6 +78,9 @@
                                         $totalPaidFullNum = 0;
                                         $totalPaidFull = 0;
 
+                                        $totalPartialyDue = 0;
+                                        $totalPartialyDueNum = 0;
+
                                         $totalUntouchedNum = 0;
                                         $totalUntouched = 0;
                                     @endphp
@@ -143,6 +146,8 @@
                                                 {
                                                     $totalPartialyPaidNum += 1;
                                                     $totalPartialyPaid += $sale->paid();
+                                                    $totalPartialyDueNum += 1;
+                                                    $totalPartialyDue += $sale->due();
                                                 }
 
                                                 if($sale->due() == 0)
@@ -213,10 +218,7 @@
                                                 </tr>
                                             @endforeach
                                             <tr class="table-active text-primary">
-                                                <th class="p-1"></th>
-                                                <th class="p-1">{{$customerTotalInv}}</th>
-                                                <th></th>
-                                                <th></th>
+                                                <th class="p-1 text-end" colspan="4">Total of {{$customer->title}} - {{$customerTotalInv}} Inv(s)</th>
                                                 <th class="p-1">{{number_format($customerTotalAmount)}}</th>
                                                 <th class="p-1">{{number_format($customerTotalPaid)}}</th>
                                                 <th class="p-1">{{number_format($customerTotalDue)}}</th>
@@ -224,10 +226,7 @@
                                         @endif
                                         @endforeach
                                         <tr class="table-active text-success">
-                                            <th class="p-1"></th>
-                                            <th class="p-1">{{$areaTotalInv}}</th>
-                                            <th></th>
-                                            <th></th>
+                                            <th class="p-1 text-end" colspan="4">Total of {{$key}} - {{$areaTotalInv}} Inv(s)</th>
                                             <th class="p-1">{{number_format($areaTotalAmount)}}</th>
                                             <th class="p-1">{{number_format($areaTotalPaid)}}</th>
                                             <th class="p-1">{{number_format($areaTotalDue)}}</th>
@@ -239,10 +238,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr class="table-active text-danger">
-                                            <th class="p-1"></th>
-                                            <th class="p-1">{{$totalInv}}</th>
-                                            <th></th>
-                                            <th></th>
+                                            <th class="p-1 text-end" colspan="4">Grand Total - {{$totalInv}} Inv(s)</th>
                                             <th class="p-1">{{number_format($totalAmount)}}</th>
                                             <th class="p-1">{{number_format($totalPaid)}}</th>
                                             <th class="p-1">{{number_format($totalDue)}}</th>
@@ -287,6 +283,7 @@
                                     <th class="text-center">Total Inv</th>
                                     <th class="text-center">Fully Paid</th>
                                     <th class="text-center">Partially Paid</th>
+                                    <th class="text-center">Partially Due</th>
                                     <th class="text-center">Untouched</th>
                                     
                                 </tr>
@@ -296,6 +293,7 @@
                                     <td class="text-center">{{ $totalInv }}</td>
                                     <td class="text-center">{{ $totalPaidFullNum }}</td>
                                     <td class="text-center">{{ $totalPartialyPaidNum }}</td>
+                                    <td class="text-center">{{ $totalPartialyDueNum }}</td>
                                     <td class="text-center">{{ $totalUntouchedNum }}</td>
 
                                 </tr>
@@ -303,6 +301,7 @@
                                     <td class="text-center">{{ number_format($totalAmount) }}</td>
                                     <td class="text-center">{{ number_format($totalPaidFull) }}</td>
                                     <td class="text-center">{{ number_format($totalPartialyPaid) }}</td>
+                                    <td class="text-center">{{ number_format($totalPartialyDue) }}</td>
                                     <td class="text-center">{{ number_format($totalUntouched) }}</td>
                                    
 

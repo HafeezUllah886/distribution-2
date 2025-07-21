@@ -62,6 +62,7 @@
                     <table class="table" id="buttons-datatables">
                         <thead>
                             <th>#</th>
+                            <th>Order #</th>
                             <th>Order Booker</th>
                             <th>Customer</th>
                             <th>Date</th>
@@ -73,6 +74,7 @@
                             @foreach ($orders as $key => $order)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
+                                    <td>{{ $order->id }}</td>
                                     <td>{{ $order->orderbooker->name }}</td>
                                     <td>{{ $order->customer->title }}</td>
                                     <td>{{ date('d M Y', strtotime($order->date)) }}</td>
