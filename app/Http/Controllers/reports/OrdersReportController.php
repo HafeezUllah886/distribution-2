@@ -62,7 +62,8 @@ class OrdersReportController extends Controller
         $areas = accounts::customer()->where('branchID', $request->branch);
         if($request->area != "All")
         {
-            $areas = $areas->whereIn('areaID', $request->area);
+            $area = explode(',', $request->area);
+            $areas = $areas->whereIn('areaID', $area);
         }
         if($request->customer)
         {
