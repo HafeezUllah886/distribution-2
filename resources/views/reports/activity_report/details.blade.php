@@ -474,6 +474,7 @@
                                             <tr class="table-active" style="border: 1px solid #000000;">
                                                 <th class="p-1">#</th>
                                                 <th class="p-1">Ref #</th>
+                                                <th class="p-1 text-start">Employee</th>
                                                 <th class="p-1">Date</th>
                                                 <th class="p-1">Method</th>
                                                 <th class="p-1">Number</th>
@@ -493,12 +494,13 @@
                                            $totalEmpMisc += $emp_payment_cat->trans->sum('amount');
                                            @endphp
                                            <tr>
-                                                <th colspan="9" class="p-1 text-start">{{$emp_payment_cat->name}}</th>
+                                                <th colspan="10" class="p-1 text-start">{{$emp_payment_cat->name}}</th>
                                             </tr>
                                         @foreach ($emp_payment_cat->trans as $payment)
                                             <tr>
                                                 <td class="p-1">{{$loop->iteration}}</td>
                                                 <td class="p-1">{{$payment->refID}}</td>    
+                                                <td class="p-1 text-start">{{$payment->employee->name}}</td>    
                                                 <td class="p-1">{{date('d M Y', strtotime($payment->date))}}</td>
                                                 <td class="p-1">{{$payment->method}}</td>
                                                 <td class="p-1">{{$payment->number}}</td>
@@ -509,14 +511,14 @@
                                             </tr>
                                         @endforeach
                                         <tr>
-                                            <th colspan="8" class="text-end p-1">Total of {{$emp_payment_cat->name}}</th>
+                                            <th colspan="9" class="text-end p-1">Total of {{$emp_payment_cat->name}}</th>
                                             <th class="text-end p-1">{{number_format($emp_payment_cat->trans->sum('amount'), 2)}}</th>
                                         </tr>
                                                
                                            @endif
                                           @endforeach
                                           <tr>
-                                            <th colspan="8" class="text-end p-1">Total Employee Misc Payments</th>
+                                            <th colspan="9" class="text-end p-1">Total Employee Misc Payments</th>
                                             <th class="text-end p-1">{{number_format($totalEmpMisc, 2)}}</th>
                                         </tr>
                                         </tbody>
