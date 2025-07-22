@@ -85,13 +85,46 @@ class OrdersReportController extends Controller
 
             foreach($customers as $customer)
             {
-                $orders = order_details::whereBetween('date', [$from, $to])->where('customerID', $customer->id);
+
+                $orders = orders::whereBetween('date', [$from, $to])->where('customerID', $customer->id);
                 if($request->orderbooker)
                 {
                     $orders = $orders->whereIn('orderbookerID', $request->orderbooker);
                 }
-                $orders = $orders->get();
-                $customer->orders = $orders;
+                $orders = $orders->withSum('details', 'pc')->withSum('delivered_items', 'pc')->get();
+
+                $completedOrderIDs = $orders->map(function($order){
+                    return $order->details_sum_pc == $order->delivered_items_sum_pc ? $order->id : null;
+                })->toArray();
+
+                $pendingOrderIDs = $orders->map(function($order){
+                    return  $order->delivered_items_sum_pc < $order->details_sum_pc ? $order->id : null;
+                })->toArray();
+
+                $allOrderIDs = $orders->pluck('id')->toArray();
+
+                $customer->orders = null;
+
+                if($request->status == "All")
+                {
+                    $orderDetails = order_details::whereIn('orderID', $allOrderIDs);
+                }
+                else if($request->status == "Completed")
+                {
+                    $orderDetails = order_details::whereIn('orderID', $completedOrderIDs);
+                }
+                else if($request->status == "Pending")
+                {
+                    $orderDetails = order_details::whereIn('orderID', $pendingOrderIDs);
+                }
+
+                    if($request->orderbooker)
+                    {
+                        $orderDetails = $orderDetails->whereIn('orderbookerID', $request->orderbooker);
+                    }
+                    $orderDetails = $orderDetails->get();
+    
+                    $customer->orders = $orderDetails;
             }
             $area->customers = $customers;
         }
@@ -133,7 +166,8 @@ class OrdersReportController extends Controller
                 $customers = "All";
             }
 
+            $status = $request->status;
            
-        return view('reports.orders.details', compact('from', 'to', 'areas', 'branch', 'area1', 'orderbookers', 'customers'));
+        return view('reports.orders.details', compact('from', 'to', 'areas', 'branch', 'area1', 'orderbookers', 'customers', 'status'));
     }
 }

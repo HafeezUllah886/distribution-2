@@ -33,6 +33,14 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="form-group mt-2">
+                        <label for="status">Status</label>
+                        <select name="status" class="form-control">
+                            <option value="All">All</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
                     <input type="hidden" name="branch" value="{{$branch}}">
                     <input type="hidden" name="area" value="{{$area}}">
                     <div class="form-group mt-2">
