@@ -19,4 +19,9 @@ class sale_payments extends Model
     {
         return $this->belongsTo(User::class, 'userID');
     }
+
+    public function orderBooker()
+    {
+        return $this->belongsTo(User::class, 'orderBookerID');
+    }
 }

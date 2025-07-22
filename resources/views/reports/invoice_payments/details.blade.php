@@ -250,59 +250,59 @@
                         </div>
                         <!--end card-body-->
                     </div><!--end col-->
-                    <div class="col-lg-12 p-4">
+                    <div class="col-lg-12 p-4 pt-2">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th class="text-center">Collection</th>
-                                    <th class="text-center">Cash</th>
-                                    <th class="text-center">Online</th>
-                                    <th class="text-center">Cheque</th>
-                                    <th class="text-center">Others</th>
-                                    <th class="text-center">Total</th>
+                                    <th class="text-center p-1">Collection</th>
+                                    <th class="text-center p-1">Cash</th>
+                                    <th class="text-center p-1">Online</th>
+                                    <th class="text-center p-1">Cheque</th>
+                                    <th class="text-center p-1">Others</th>
+                                    <th class="text-center p-1">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="text-center">Amount</td>
-                                    <td class="text-center">{{ number_format($totalCash) }}</td>
-                                    <td class="text-center">{{ number_format($totalOnline) }}</td>
-                                    <td class="text-center">{{ number_format($totalCheque) }}</td>
-                                    <td class="text-center">{{ number_format($totalOthers) }}</td>
-                                    <td class="text-center">
+                                    <td class="text-center p-1">Amount</td>
+                                    <td class="text-center p-1">{{ number_format($totalCash) }}</td>
+                                    <td class="text-center p-1">{{ number_format($totalOnline) }}</td>
+                                    <td class="text-center p-1">{{ number_format($totalCheque) }}</td>
+                                    <td class="text-center p-1">{{ number_format($totalOthers) }}</td>
+                                    <td class="text-center p-1">
                                         {{ number_format($totalCash + $totalOnline + $totalCheque + $totalOthers) }}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div> 
                     
-                    <div class="col-lg-12 p-4">
+                    <div class="col-lg-12 p-4 pt-1">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th class="text-center">Total Inv</th>
-                                    <th class="text-center">Fully Paid</th>
-                                    <th class="text-center">Partially Paid</th>
-                                    <th class="text-center">Partially Due</th>
-                                    <th class="text-center">Untouched</th>
+                                    <th class="text-center p-1">Total Inv</th>
+                                    <th class="text-center p-1">Fully Paid</th>
+                                    <th class="text-center p-1">Partially Paid</th>
+                                    <th class="text-center p-1">Partially Due</th>
+                                    <th class="text-center p-1">Untouched</th>
                                     
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="text-center">{{ $totalInv }}</td>
-                                    <td class="text-center">{{ $totalPaidFullNum }}</td>
-                                    <td class="text-center">{{ $totalPartialyPaidNum }}</td>
-                                    <td class="text-center">{{ $totalPartialyDueNum }}</td>
-                                    <td class="text-center">{{ $totalUntouchedNum }}</td>
+                                    <td class="text-center p-1">{{ $totalInv }}</td>
+                                    <td class="text-center p-1">{{ $totalPaidFullNum }}</td>
+                                    <td class="text-center p-1">{{ $totalPartialyPaidNum }}</td>
+                                    <td class="text-center p-1">{{ $totalPartialyDueNum }}</td>
+                                    <td class="text-center p-1">{{ $totalUntouchedNum }}</td>
 
                                 </tr>
                                 <tr>
-                                    <td class="text-center">{{ number_format($totalAmount) }}</td>
-                                    <td class="text-center">{{ number_format($totalPaidFull) }}</td>
-                                    <td class="text-center">{{ number_format($totalPartialyPaid) }}</td>
-                                    <td class="text-center">{{ number_format($totalPartialyDue) }}</td>
-                                    <td class="text-center">{{ number_format($totalUntouched) }}</td>
+                                    <td class="text-center p-1">{{ number_format($totalAmount) }}</td>
+                                    <td class="text-center p-1">{{ number_format($totalPaidFull) }}</td>
+                                    <td class="text-center p-1">{{ number_format($totalPartialyPaid) }}</td>
+                                    <td class="text-center p-1">{{ number_format($totalPartialyDue) }}</td>
+                                    <td class="text-center p-1">{{ number_format($totalUntouched) }}</td>
                                    
 
                                 </tr>

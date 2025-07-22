@@ -55,6 +55,7 @@
                             <th>#</th>
                             <th>Inv No.</th>
                             <th>Customer</th>
+                            <th>Area</th>
                             <th>Order Booker</th>
                             <th>Date</th>
                             <th>Amount</th>
@@ -73,6 +74,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $sale->id }}</td>
                                     <td>{{ $sale->customer->title }}</td>
+                                    <td>{{ $sale->area->name }}</td>
                                     <td>{{ $sale->orderbooker->name }}</td>
                                     <td>{{ date('d M Y', strtotime($sale->date)) }}</td>
                                     <td>{{ number_format($amount) }}</td>

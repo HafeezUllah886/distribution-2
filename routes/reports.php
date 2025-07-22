@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\reports\ActivityReportController;
 use App\Http\Controllers\reports\BranchStockReportController;
 use App\Http\Controllers\reports\profitController;
 use App\Http\Controllers\reports\balanceSheetReport;
@@ -93,6 +94,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/reports/expense', [ExpenseReportController::class, 'index'])->name('reportExpense');
     Route::get('/reports/expensedata', [ExpenseReportController::class, 'details'])->name('reportExpenseData');
+
+    Route::get('/reports/activity', [ActivityReportController::class, 'index'])->name('reportActivity');
+    Route::get('/reports/activitydata', [ActivityReportController::class, 'data'])->name('reportActivityData');
 
     Route::get('/get-orderbookers-by-customer/{customer}', [OrderbookerWiseCustomerBalanceReport::class, 'getOrderbookersByCustomer'])->name('get-orderbookers-by-customer');
 });

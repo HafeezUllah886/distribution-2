@@ -65,6 +65,7 @@
                             <th>Order #</th>
                             <th>Order Booker</th>
                             <th>Customer</th>
+                            <th>Area</th>
                             <th>Date</th>
                             <th>Amount</th>
                             <th>Status</th>
@@ -77,6 +78,7 @@
                                     <td>{{ $order->id }}</td>
                                     <td>{{ $order->orderbooker->name }}</td>
                                     <td>{{ $order->customer->title }}</td>
+                                    <td>{{ $order->area->name }}</td>
                                     <td>{{ date('d M Y', strtotime($order->date)) }}</td>
                                     <td>{{ number_format($order->details->sum('amount'), 2) }}</td>
                                     <td>{{ $order->status }}</td>
