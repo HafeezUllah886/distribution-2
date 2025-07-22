@@ -33,7 +33,7 @@ class OrdersReportController extends Controller
        $customers = accounts::customer()->where('branchID', $request->branch);
        if($request->area)
        {
-           $customers = $customers->where('areaID', $request->area);
+           $customers = $customers->whereIn('areaID', $request->area);
        }
        $customers = $customers->get();
        $orderbookers = User::orderbookers()->where('branchID', $request->branch)->get();
