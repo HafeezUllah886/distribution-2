@@ -58,16 +58,16 @@ class OrdersReportController extends Controller
         $from = $request->from;
         $to = $request->to;
 
-
         $areas = accounts::customer()->where('branchID', $request->branch);
-        if($request->customer)
-        {
-            $areas = $areas->whereIn('id', $request->customer);
-        }
         if($request->area)
         {
             $areas = $areas->where('areaID', $request->area);
         }
+        if($request->customer)
+        {
+            $areas = $areas->whereIn('id', $request->customer);
+        }
+        
         $areas = $areas->pluck('areaID')->toArray();
 
         $areas = area::whereIn('id', $areas)->select('id', 'name')->get();
