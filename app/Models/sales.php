@@ -77,4 +77,5 @@ class sales extends Model
     return (int) Carbon::parse($this->date)->diffInDays(now());
 }
 
+
 }

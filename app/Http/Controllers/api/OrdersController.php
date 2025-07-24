@@ -22,8 +22,8 @@ class OrdersController extends Controller
 
     public function index(Request $request)
     {
-        $from = $request->from ?? now()->toDateString();
-        $to = $request->to ?? now()->toDateString();
+        $from = $request->from ?? firstDayOfMonth();
+        $to = $request->to ?? lastDayOfMonth();
         
        
         $data = orders::with('customer.area', 'details.product', 'details.unit')->where('orderbookerID', $request->user()->id)->whereBetween("date", [$from, $to])->orderBy('id', 'desc')->get();
@@ -77,7 +77,7 @@ class OrdersController extends Controller
                 'status' => $order->status,
                 'notes' => $order->notes,
                 'branch' => $order->branch->name,
-                'customer' => ['title' => $order->customer->title, 'area' => $order->customer->area->name, 'contact' => $order->customer->contact, 'email' => $order->customer->email, 'credit_limit' => $order->customer->credit_limit],
+                'customer' => ['id' => $order->customerID, 'title' => $order->customer->title, 'area' => $order->customer->area->name, 'contact' => $order->customer->contact, 'email' => $order->customer->email, 'credit_limit' => $order->customer->credit_limit],
                 'products' => $orderProducts,
                 'delivered_items' => $delivered_items
             ];
