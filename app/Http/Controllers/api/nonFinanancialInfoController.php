@@ -23,11 +23,12 @@ class nonFinanancialInfoController extends Controller
             {
                 continue;
             }
+            $discountValue = $product->product->price * $product->product->discountp / 100;
             $products[] = [
                 'id' => $product->product->id,
                 'name' => $product->product->name,
                 'name_urdu' => $product->product->nameurdu,
-                'price' => $product->product->price,
+                'price' => ($product->product->price - $product->product->discount - $discountValue - $product->product->sclaim) + $product->product->sfright,
                 'units' => $product->product->units()->select('id', 'unit_name', 'value')->get(),
             ];
         }
