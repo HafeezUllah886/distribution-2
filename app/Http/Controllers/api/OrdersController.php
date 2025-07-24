@@ -59,6 +59,17 @@ class OrdersController extends Controller
                 ];
             }
 
+            $delivered_items =  $order->details()->with(['product', 'unit'])->get()->map(function($detail) {
+                return [
+                    'product_name' => $detail->product->name ?? null,
+                    'unit_name' => $detail->unit->unit_name ?? null,
+                    'pack_size' => $detail->unit->value ?? null,
+                    'total_ordered' => packInfoWithOutName($detail->unit->value, $detail->pc),
+                    'delivered' => packInfoWithOutName($detail->unit->value, $detail->delivered()),
+                    'remaining' => packInfoWithOutName($detail->unit->value, $detail->remaining())
+                ];
+            });
+
             $orders[] = [
                 'order_id' => $order->id,
                 'date' => $order->date,
@@ -67,7 +78,8 @@ class OrdersController extends Controller
                 'notes' => $order->notes,
                 'branch' => $order->branch->name,
                 'customer' => ['title' => $order->customer->title, 'area' => $order->customer->area->name, 'contact' => $order->customer->contact, 'email' => $order->customer->email, 'credit_limit' => $order->customer->credit_limit],
-                'products' => $orderProducts
+                'products' => $orderProducts,
+                'delivered_items' => $delivered_items
             ];
         }
       
