@@ -74,7 +74,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $sale->id }}</td>
                                     <td>{{ $sale->customer->title }}</td>
-                                    <td>{{ $sale->area->name }}</td>
+                                    <td>{{ $sale->customer->area->name }}</td>
                                     <td>{{ $sale->orderbooker->name }}</td>
                                     <td>{{ date('d M Y', strtotime($sale->date)) }}</td>
                                     <td>{{ number_format($amount) }}</td>
