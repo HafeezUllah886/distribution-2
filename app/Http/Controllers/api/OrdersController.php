@@ -300,6 +300,7 @@ class OrdersController extends Controller
                     'productID' => $id,
                     'customerID' => $order->customerID,
                     'orderbookerID' => $order->orderbookerID,
+                    'branchID' => $order->branchID,
                     'price' => $price,
                     'discount' => $discount,
                     'discountp' => $discountp,
