@@ -21,7 +21,7 @@ class OrderBookerInvoices extends Controller
             $data[] = [
                 'salesID' => $invoice->id,
                 'customer' => $invoice->customer->title,
-                'area' => $invoice->customer->area->name
+                'area' => $invoice->customer->area->name,
                 'supply_man' => $invoice->supplyman->title,
                 'orderID' => $invoice->orderID,
                 'invoice_date' => $invoice->date,
