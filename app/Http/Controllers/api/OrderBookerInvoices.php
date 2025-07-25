@@ -39,14 +39,14 @@ class OrderBookerInvoices extends Controller
                         'pack_qty' => $detail->qty,
                         'loose' => $detail->loose,
                         'bonus' => $detail->bonus,
-                        'price' => $detail->price,
-                        'discount' => $detail->discount,
-                        'discount_percentage' => $detail->discountp,
-                        'discount_percentage_value' => $detail->discountvalue,
-                        'fright' => $detail->fright,
-                        'labor' => $detail->labor,
-                        'claim' => $detail->claim,
-                        'net_price' => $detail->netprice,
+                        'price' => $detail->price * $detail->unit->value,
+                        'discount' => $detail->discount * $detail->pc,
+                        'discount_percentage' => $detail->discountp * $detail->pc,
+                        'discount_percentage_value' => $detail->discountvalue * $detail->pc,
+                        'fright' => $detail->fright * $detail->pc,
+                        'labor' => $detail->labor * $detail->pc,
+                        'claim' => $detail->claim * $detail->pc,
+                        'net_price' => $detail->netprice * $detail->unit->value,
                         'amount' => $detail->amount
                     ];
                 })
