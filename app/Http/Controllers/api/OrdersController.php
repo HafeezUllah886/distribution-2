@@ -48,7 +48,7 @@ class OrdersController extends Controller
                     'bonus_qty' => $product->bonus,
                     'total_pieces' => $product->pc,
                     'price' => $product->price * $product->unit->value,
-                    'discount' => $product->discount * $product->pc,
+                    'discount' => round($product->discount * $product->pc, 0),
                     'discount_percentage' => round($product->discountp, 0),
                     'discount_percentage_value' => round($product->discountvalue * $product->pc, 0),
                     'fright' => $product->fright * $product->pc,
