@@ -57,6 +57,8 @@ class OrdersController extends Controller
                     'net_price' => $product->netprice * $product->unit->value,
                     'amount' => $product->amount,
                 ];
+
+                $orderProducts;
             }
 
             $delivered_items =  $order->details()->with(['product', 'unit'])->get()->map(function($detail) {
@@ -192,7 +194,27 @@ class OrdersController extends Controller
                     'unitID' => $request->unit[$key]
                 ]);
 
-                $orderDetails[] = $orderDetail;
+                $orderDetails[] = [
+                    'order_id' => $order->id,
+                    'product_id' => $id,
+                    'customer_id' => $request->customerID,
+                    'orderbooker_id' => $request->user()->id,
+                    'price' => $price * $unit->value,
+                    'branch_id' => $request->user()->branchID,
+                    'discount' => $discount * $qty,
+                    'discountp' => $discountp,
+                    'discountvalue' => $discountpValue * $qty,
+                    'qty' => $request->pack_qty[$key],
+                    'loose' => $request->loose_qty[$key],
+                    'pc' => $qty,
+                    'fright' => $fright * $qty,
+                    'labor' => $labor * $qty,
+                    'claim' => $claim * $qty,
+                    'netprice' => ($price - $discount - $discountpValue - $claim + $fright) * $unit->value,
+                    'amount' => $amount,
+                    'date' => $request->date,
+                    'unit_id' => $request->unit[$key]
+                ];
             }
 
             $order->update([
