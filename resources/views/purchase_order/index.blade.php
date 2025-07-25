@@ -65,6 +65,7 @@
                         <thead>
                             <th>#</th>
                             <th>Vendor</th>
+                            <th>Address</th>
                             <th>Date</th>
                             <th>Vehicle</th>
                             <th>Bilty</th>
@@ -80,6 +81,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $order->vendor->title }}</td>
+                                    <td>{{ $order->vendor->address }}</td>
                                     <td>{{ date('d M Y', strtotime($order->date)) }}</td>
                                     <td>{{ $order->vehicle }}</td>
                                     <td>{{ $order->bilty }}</td>

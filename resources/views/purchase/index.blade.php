@@ -65,6 +65,7 @@
                             <th>#</th>
                             <th>Inv #</th>
                             <th>Vendor</th>
+                            <th>Address</th>
                             <th>Receving Date</th>
                             <th>Amount</th>
                             <th>Status</th>
@@ -76,6 +77,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $purchase->inv }}</td>
                                     <td>{{ $purchase->vendor->title }}</td>
+                                    <td>{{ $purchase->vendor->address }}</td>
                                     <td>{{ date('d M Y', strtotime($purchase->recdate)) }}</td>
                                     <td>{{ number_format($purchase->net) }}</td>
                                     <td>{{$purchase->status}}</td>

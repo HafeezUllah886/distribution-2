@@ -32,7 +32,7 @@ class purchaseReportController extends Controller
         $branch = $request->branch;
         if($branch == "All")
         {
-            $purchases = purchase::with('vendor', 'details', 'branch')->whereBetween('orderdate', [$from, $to]);
+            $purchases = purchase::with('vendor', 'details', 'branch')->whereBetween('recdate', [$from, $to]);
             if($request->vendor)
             {
                 $purchases = $purchases->whereIn('vendorID', $request->vendor);

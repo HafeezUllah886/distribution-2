@@ -57,7 +57,7 @@
                         </div>
                         <!--end card-body-->
                     </div><!--end col-->
-                    <div class="col-lg-12">
+                    <div class="col-lg-12 pb-0 mb-0">
                         <div class="card-body p-4">
                             <div class="table-responsive">
                                 <table class="table table-bordered text-center table-nowrap align-middle mb-0">
@@ -250,7 +250,7 @@
                         </div>
                         <!--end card-body-->
                     </div><!--end col-->
-                    <div class="col-lg-12 p-4 pt-2">
+                    <div class="col-lg-12 p-4 pt-0 pb-0 mb-0 mt-0">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -276,7 +276,7 @@
                         </table>
                     </div> 
                     
-                    <div class="col-lg-12 p-4 pt-1">
+                    <div class="col-lg-12 p-4 pt-0 mt-0">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
