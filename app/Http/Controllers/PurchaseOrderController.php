@@ -28,7 +28,7 @@ class PurchaseOrderController extends Controller
     {
         $start = $request->start ?? now()->toDateString();
         $end = $request->end ?? now()->toDateString();
-        $vendorID = $request->vendor ?? 'All';
+        $vendorID = $request->vendorID ?? 'All';
         $status = $request->status ?? 'All';
 
         $orders = purchase_order::whereBetween("date", [$start, $end])->where('branchID', auth()->user()->branchID)->orderby('id', 'desc');
