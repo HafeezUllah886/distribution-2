@@ -438,7 +438,7 @@ class OrdersController extends Controller
         $product = products::find($request->productID);
         $customer = accounts::find($request->customerID);
 
-        $orders = orders::where('customerID', $customer->id)
+        $orders = orders::where('customerID', $customer->id)->where('orderbookerID', $user->id)
             ->where('status', '!=', 'Completed')
             ->pluck('id')->toArray();
 
