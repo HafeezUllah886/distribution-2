@@ -250,9 +250,9 @@ class customerPaymentsReceivingContoller extends Controller
                 }
             $user = $request->user()->name;
             $customer = accounts::find($sale->customerID);
-            createTransaction($request->customerID, $request->date,0, $total_amount, "Mobile - Bulk Payment of Inv No. $saleIDs Received by $user Method: $request->method", $ref, $sale->orderbookerID);
-            createUserTransaction($request->user()->id, $request->date,$total_amount, 0, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title Method: $request->method", $ref);
-           createMethodTransaction($request->user()->id, $request->method, $total_amount,0, $request->date, $request->number, $request->bank, $request->cheque_date, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title Method: $request->method", $ref);
+            createTransaction($request->customerID, $request->date,0, $total_amount, "Mobile - Bulk Payment of Inv No. $saleIDs Received by $user Method: $request->method - Notes : $request->notes", $ref, $sale->orderbookerID);
+            createUserTransaction($request->user()->id, $request->date,$total_amount, 0, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title Method: $request->method - Notes : $request->notes", $ref);
+           createMethodTransaction($request->user()->id, $request->method, $total_amount,0, $request->date, $request->number, $request->bank, $request->cheque_date, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title Method: $request->method - Notes : $request->notes", $ref);
             
             if($request->has('file'))
             {
