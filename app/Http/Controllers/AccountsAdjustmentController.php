@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\accountsAdjustment;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\area;
 use App\Models\transactions;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,24 +20,34 @@ class AccountsAdjustmentController extends Controller
     {
         $start = $request->start ?? firstDayOfMonth();
         $end = $request->end ?? lastDayOfMonth();
-        $accountID = $request->accountID ?? "All";
         $type = $request->type ?? 'All';
-
+        $area = $request->area ?? 'All';
+        
         $accountsAdjustments = accountsAdjustment::currentBranch()->whereBetween('date', [$start, $end]);
-        if($accountID != "All")
-        {
-            $accountsAdjustments->where('accountID', $accountID);
-        }
         if($type != "All")
         {
-            $accountsAdjustments->where('type', $type);
+            $accounts = accounts::where('type', $type)->currentBranch()->active()->get();
+            $accountsAdjustments->whereIn('accountID', $accounts->pluck('id'));
+            $type = [$type];
         }
+        else
+        {
+            $type = ['Business', 'Vendor', 'Supply Man', 'Unloader', 'Customer'];
+        }
+        
         $accountsAdjustments = $accountsAdjustments->get();
-        $accounts = accounts::currentBranch()->get();
+        $accounts = accounts::whereIn('type', $type)->currentBranch()->active();
+        if($area != 'All')
+        {
+            $accounts = $accounts->where('areaID', $area);
+        }
+        $accounts = $accounts->get();
 
+        $type = $request->type;
         $orderbookers = User::orderbookers()->currentBranch()->get();
+        $areas = area::currentBranch()->get();
 
-        return view('Finance.accounts_adjustments.index', compact('accountsAdjustments', 'accounts', 'start', 'end', 'accountID', 'type', 'orderbookers'));
+        return view('Finance.accounts_adjustments.index', compact('accountsAdjustments', 'accounts', 'start', 'end', 'type', 'area', 'orderbookers', 'areas'));
     }
 
     /**

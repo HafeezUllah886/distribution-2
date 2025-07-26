@@ -18,22 +18,25 @@
                     </div>
                     <div class="col-md-2">
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">Account</span>
-                            <select name="accountID" id="accountID" class="form-control">
-                                <option value="">All</option>
-                                @foreach ($accounts as $account)
-                                    <option value="{{$account->id}}" @selected($account->id == $accountID)>{{$account->title}}</option>
-                                @endforeach
+                            <span class="input-group-text" id="basic-addon1">Account Type</span>
+                            <select name="type" id="type" class="form-control">
+                                <option @selected($type == 'All') value="All">All</option>
+                                <option @selected($type == 'Business') value="Business">Business</option>
+                                <option @selected($type == 'Customer') value="Customer">Customer</option>
+                                <option @selected($type == 'Vendor') value="Vendor">Vendor</option>
+                                <option @selected($type == 'Unloader') value="Unloader">Unloader</option>
+                                <option @selected($type == 'Supply Man') value="Supply Man">Supply Man</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">Type</span>
-                            <select name="type" id="type" class="form-control">
-                                <option value="">All</option>
-                                <option value="debit" @selected($type == 'debit')>Debit</option>
-                                <option value="credit" @selected($type == 'credit')>Credit</option>
+                            <span class="input-group-text" id="basic-addon1">Area</span>
+                            <select name="area" id="area" class="form-control">
+                                <option @selected($area == 'All') value="All">All</option>
+                               @foreach ($areas as $are)
+                                   <option @selected($area == $are->id) value="{{$are->id}}">{{$are->name}}</option>
+                               @endforeach
                             </select>
                         </div>
                     </div>
