@@ -32,16 +32,13 @@ class DailyProductsOrderReport extends Controller
     
             $totalAmount = order_details::whereIn('orderID', $orders)->where('productID', $product->id)->sum('amount');
 
-            if($packQty > 0 || $looseQty > 0 || $totalAmount > 0)
-            {
             $productData[$product->name] = [
-                'totalQty'      => $packQty,
+                'totalQty' => $packQty,
                 'totalLooseQty' => $looseQty,
-                'totalAmount'   => $totalAmount,
-                'unit'          => $product->units[0]->unit_name,
-                'packSize'      => $unit_value,
+                'totalAmount' => $totalAmount,
+                'unit' => $product->units[0]->unit_name,
+                'packSize' => $unit_value,
             ];
-            }
         }
 
         return response()->json([
