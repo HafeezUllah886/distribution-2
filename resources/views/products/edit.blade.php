@@ -127,9 +127,9 @@
                                                                     $ser += 1;
                                                                 @endphp
                                                                 <tr class="p-0" id="row_{{$ser}}">
-                                                                <td width="70%" class="p-0"><input type="text" class="form-control form-control-sm" name="unit_names[]" value="{{$unit->unit_name}}"></td>
-                                                                <td class="p-0"><input type="number" step="any" class="form-control form-control-sm text-center" name="unit_values[]" value="{{$unit->value}}"></td>
-                                                                <td class="p-0"> <span class="btn btn-sm btn-danger" onclick="deleteRow({{$ser}})">X</span></td>
+                                                                <td width="70%" class="p-0"><input type="text" class="form-control form-control-sm" readonly name="unit_name[]" value="{{$unit->unit_name}}"></td>
+                                                                <td class="p-0"><input type="number" step="any" class="form-control form-control-sm text-center" readonly name="unit_value[]" value="{{$unit->value}}"></td>
+                                                                <td class="p-0"> {{-- <span class="btn btn-sm btn-danger" onclick="deleteRow({{$ser}})">X</span> --}}</td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>

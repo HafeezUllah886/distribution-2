@@ -119,10 +119,6 @@ class ProductsController extends Controller
         $product = products::find($id);
         $product->update($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim', 'sfright', 'sclaim', 'discountp']));
 
-        foreach($product->units as $unit)
-        {
-            $unit->delete();
-        }
 
         $units = $request->unit_names;
 
