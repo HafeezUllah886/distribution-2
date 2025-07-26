@@ -76,6 +76,7 @@ class PaymentsReceivingController extends Controller
             paymentsReceiving::create(
                 [
                     'depositerID'   => $request->depositerID,
+                    'orderbookerID' => $request->orderbookerID,
                     'date'          => $request->date,
                     'amount'        => $request->amount,
                     'method'        => $request->method,

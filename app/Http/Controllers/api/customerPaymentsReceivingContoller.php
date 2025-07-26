@@ -289,8 +289,8 @@ class customerPaymentsReceivingContoller extends Controller
         ], 422);
     }
 
-    $sale_payment_date = sale_payments::where('customerID', $request->customerID)->orderBy('id', 'desc')->pluck('date');
-    $payment_receiving_date = paymentsReceiving::where('depositerID', $request->customerID)->orderBy('id', 'desc')->pluck('date');
+    $sale_payment_date = sale_payments::where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->pluck('date');
+    $payment_receiving_date = paymentsReceiving::where('depositerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->pluck('date');
 
     //newest date
     $newest_date = $sale_payment_date->max();

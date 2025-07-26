@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('depositerID')->constrained('accounts', 'id');
             $table->foreignId('userID')->constrained('users', 'id');
+            $table->foreignId('orderbookerID')->constrained('users', 'id');
             $table->foreignId('branchID')->constrained('branches', 'id');
             $table->float('amount');
             $table->enum('method', ['Cash', 'Online', 'Cheque', 'Other']);
