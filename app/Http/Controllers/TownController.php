@@ -38,7 +38,8 @@ class TownController extends Controller
 
         town::create(
             [
-                'name' => $request->name
+                'name' => $request->name,
+                'branchID' => Auth()->user()->branchID,
             ]
         );
 
@@ -75,6 +76,7 @@ class TownController extends Controller
         $town->update(
             [
                 'name' => $request->name,
+                'branchID' => Auth()->user()->branchID,
             ]
         );
 
