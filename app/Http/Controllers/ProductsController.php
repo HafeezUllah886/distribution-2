@@ -122,16 +122,21 @@ class ProductsController extends Controller
 
         $units = $request->unit_names;
 
-        foreach($units as $key => $unit)
+        if($units != null)
         {
-            product_units::create(
-                [
-                    'productID' => $product->id,
-                    'unit_name' => $unit,
-                    'value' =>  $request->unit_values[$key],
-                ]
-            );
+            foreach($units as $key => $unit)
+            {
+                product_units::create(
+                    [
+                        'productID' => $product->id,
+                        'unit_name' => $unit,
+                        'value' =>  $request->unit_values[$key],
+                    ]
+                );
+            }
         }
+
+       
 
         return back()->with('success', 'Product Updated');
     }
