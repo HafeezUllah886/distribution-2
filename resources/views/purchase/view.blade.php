@@ -114,11 +114,11 @@
                                                         <td class="text-end m-1 p-1">{{number_format($product->qty)}}</td>
                                                         <td class="text-end m-1 p-1">{{number_format($product->loose)}}</td>
                                                         <td class="text-end m-1 p-1">{{number_format($product->bonus)}}</td>
-                                                        <td class="text-end p-1 m-1">{{number_format($product->price * $product->qty, 2)}}</td>
+                                                        <td class="text-end p-1 m-1">{{number_format($product->price * $qty, 2)}}</td>
                                                         <td class="text-end p-1 m-1">{{number_format($product->discount)}} | {{number_format($discount)}}</td>
                                                         <td class="text-end p-1 m-1">{{$product->discountp}}% | {{number_format($product->discountvalue)}} | {{number_format($discountvalue)}}</td>
                                                         <td class="text-end p-1 m-1">{{number_format($product->claim)}} | {{number_format($claim)}}</td>
-                                                        <td class="text-end p-1 m-1">{{number_format($product->netprice * $product->qty, 2)}}</td>
+                                                        <td class="text-end p-1 m-1">{{number_format($product->netprice * $qty, 2)}}</td>
                                                         <td class="text-end p-1 m-1">{{number_format($product->fright)}} | {{number_format($fright)}}</td>
                                                         <td class="text-end p-1 m-1">{{number_format($product->labor)}} | {{number_format($labor)}}</td>
                                                         <td class="text-end p-1 m-1">{{number_format($product->amount,2)}}</td>
