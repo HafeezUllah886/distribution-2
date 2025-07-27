@@ -94,6 +94,8 @@
                                                    $qty = $product->pc;
                                                    $discount = $product->discount * $qty;
                                                    $discountvalue = $product->discountvalue * $qty;
+                                                   $price = $product->price * $product->unit->value;
+                                                   $netprice = $product->netprice * $product->unit->value;
                                                    $claim = $product->claim * $qty;
                                                    $fright = $product->fright * $qty;
                                                    $labor = $product->labor * $qty;
@@ -114,7 +116,7 @@
                                                         <td class="text-end m-1 p-1">{{number_format($product->qty)}}</td>
                                                         <td class="text-end m-1 p-1">{{number_format($product->loose)}}</td>
                                                         <td class="text-end m-1 p-1">{{number_format($product->bonus)}}</td>
-                                                        <td class="text-end p-1 m-1">{{number_format($product->price * $qty, 2)}}</td>
+                                                        <td class="text-end p-1 m-1">{{number_format($price, 2)}}</td>
                                                         <td class="text-end p-1 m-1">{{number_format($product->discount)}} | {{number_format($discount)}}</td>
                                                         <td class="text-end p-1 m-1">{{$product->discountp}}% | {{number_format($product->discountvalue)}} | {{number_format($discountvalue)}}</td>
                                                         <td class="text-end p-1 m-1">{{number_format($product->claim)}} | {{number_format($claim)}}</td>
