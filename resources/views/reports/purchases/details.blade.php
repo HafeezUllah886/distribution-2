@@ -86,6 +86,7 @@
                                             $fright = $product->fright * $qty;
                                             $claim = $product->claim * $qty;
                                             $labor = $product->labor * $qty;
+                                            $discount = ($product->discount + $product->discountvalue) * $qty;
                                             $totalFright += $fright;
                                             $totalClaim += $claim;
                                             $totalLabor += $labor;
@@ -94,7 +95,7 @@
                                         @php
                                             $netQty += $item->details->sum('qty');
                                             $netLoose += $item->details->sum('loose');
-                                            $netDiscount += $item->details->sum('discount') + $item->details->sum('discountvalue');
+                                            $netDiscount += $discount;
                                             $netFright += $totalFright;
                                             $netClaim += $totalClaim;
                                             $netLabor += $totalLabor;
@@ -106,7 +107,7 @@
                                                 <td class="text-start">{{ $item->vendor->title }}</td>
                                                 <td class="text-start">{{ date("d M Y", strtotime($item->recdate))}}</td>
                                                 <td class="text-end">{{ number_format($item->details->sum('qty'), 0) }}, {{ $item->details->sum('loose') }}</td>
-                                                <td class="text-end">{{ number_format($item->details->sum('discount') + $item->details->sum('discountvalue'), 0) }}</td>
+                                                <td class="text-end">{{ number_format($discount, 0) }}</td>
                                                 <td class="text-end">{{ number_format($totalFright, 0) }}</td>
                                                 <td class="text-end">{{ number_format($totalLabor, 0) }}</td>
                                                 <td class="text-end">{{ number_format($totalClaim, 0) }}</td>
