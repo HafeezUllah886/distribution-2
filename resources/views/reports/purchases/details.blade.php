@@ -94,7 +94,7 @@
                                         @php
                                             $netQty += $item->details->sum('qty');
                                             $netLoose += $item->details->sum('loose');
-                                            $netDiscount += $item->details->sum('discount') + $item->details->sum('discountValue');
+                                            $netDiscount += $item->details->sum('discount') + $item->details->sum('discountvalue');
                                             $netFright += $totalFright;
                                             $netClaim += $totalClaim;
                                             $netLabor += $totalLabor;
@@ -106,7 +106,7 @@
                                                 <td class="text-start">{{ $item->vendor->title }}</td>
                                                 <td class="text-start">{{ date("d M Y", strtotime($item->recdate))}}</td>
                                                 <td class="text-end">{{ number_format($item->details->sum('qty'), 0) }}, {{ $item->details->sum('loose') }}</td>
-                                                <td class="text-end">{{ number_format($item->details->sum('discount') + $item->details->sum('discountValue'), 0) }}</td>
+                                                <td class="text-end">{{ number_format($item->details->sum('discount') + $item->details->sum('discountvalue'), 0) }}</td>
                                                 <td class="text-end">{{ number_format($totalFright, 0) }}</td>
                                                 <td class="text-end">{{ number_format($totalLabor, 0) }}</td>
                                                 <td class="text-end">{{ number_format($totalClaim, 0) }}</td>
