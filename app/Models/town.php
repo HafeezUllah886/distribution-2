@@ -16,4 +16,14 @@ class town extends Model
     {
         return $this->hasMany(area::class, 'townID');
     }
+
+    public function branch()
+    {
+        return $this->belongsTo(branches::class, 'branchID');
+    }
+    
+    public function scopeCurrentBranch($query)
+        {
+            return $query->where('branchID', auth()->user()->branchID);
+        }
 }
