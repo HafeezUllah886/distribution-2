@@ -62,13 +62,14 @@ class ExpenseCategoriesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, expense_categories $cat)
+    public function update(Request $request, $id)
     {
         $request->validate(
             [
-                'name' => 'required|unique:expense_categories,name,' . $cat->id
+                'name' => 'required'
             ]
         );
+        $cat = expense_categories::find($id);
         $cat->name = $request->name;
         $cat->save();
 
