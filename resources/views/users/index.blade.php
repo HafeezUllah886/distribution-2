@@ -94,6 +94,10 @@
                                                                   @method("patch")
                                                                          <div class="modal-body">
                                                                              <div class="form-group mt-2">
+                                                                                    <label for="userName">Name</label>
+                                                                                    <input type="text" name="name" value="{{$user->name}}" required id="userName" class="form-control">
+                                                                             </div>
+                                                                             <div class="form-group mt-2">
                                                                                     <label for="contact">Contact</label>
                                                                                     <input type="text" name="contact" value="{{$user->contact}}" required id="contact" class="form-control">
                                                                              </div>

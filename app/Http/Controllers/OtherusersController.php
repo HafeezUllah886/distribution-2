@@ -131,6 +131,7 @@ class OtherusersController extends Controller
         $user = User::find($id);
         $user->update(
             [
+                'name'      => $request->name,
                 'contact'      => $request->contact,
                 'branchID'      => $request->branchID,
             ]
