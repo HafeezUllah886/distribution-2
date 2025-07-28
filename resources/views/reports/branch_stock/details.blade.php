@@ -86,9 +86,7 @@
                                                     <h4 class="fs-14 mb-0 text-start">{{ $vendor->title }}</h4>
                                                 </td>
                                             </tr>
-                                            @php
-                                                $tQty = 0;
-                                            @endphp
+                                           
                                                 @foreach ($vendor->vendor_products as $key => $product)
                                                 @php
                                                 if ($product->stock > 0) {
