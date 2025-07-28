@@ -66,7 +66,7 @@
                                                 <th scope="col" style="width: 50px;">#</th>
                                                 <th scope="col" class="text-start">Product</th>
                                                 <th scope="col" class="text-start">Unit</th>
-                                                <th scope="col" class="text-start">Pack Size</th>
+                                                <th scope="col" class="text-start">Pack <br> Size</th>
                                                 <th scope="col" class="text-end">Qty</th>
                                                 <th scope="col" class="text-end">Loose</th>
                                                 <th scope="col" class="text-end">Bonus</th>
