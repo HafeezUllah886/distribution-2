@@ -44,6 +44,14 @@
                                                                                        <label for="value">Value</label>
                                                                                        <input type="number" name="value" required value="{{$unit->value}}" min="1" id="value" class="form-control">
                                                                                 </div>
+                                                                                <div class="form-group mt-2">
+                                                                                    <label for="branchID">Branch</label>
+                                                                                    <select name="branchID" id="branchID" class="form-control">
+                                                                                        @foreach ($branches as $branch)
+                                                                                            <option value="{{$branch->id}}" @if ($unit->branchID == $branch->id) selected @endif>{{$branch->name}}</option>
+                                                                                        @endforeach
+                                                                                    </select>
+                                                                                </div>
                                                                          </div>
                                                                          <div class="modal-footer">
                                                                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>

@@ -45,8 +45,6 @@ class SalesController extends Controller
             $sales = sales::with('payments')->whereBetween("date", [$start, $end])->where('branchID', auth()->user()->branchID)->where('orderbookerID', $bookerID)->orderby('id', 'desc')->get();
         }
 
-       
-
         $warehouses = warehouses::currentBranch()->get();
         $customers = accounts::customer()->currentBranch()->get();
 
@@ -68,10 +66,10 @@ class SalesController extends Controller
             $product->stock = $stock;
            
         }
-        $units = units::all();
+        $units = units::currentBranch()->get();
         $orderbooker = User::find($request->orderbookerID);
         $warehouse = warehouses::find($request->warehouseID);
-        $supplymen = accounts::supplyMen()->get();
+        $supplymen = accounts::supplyMen()->currentBranch()->get();
         return view('sales.create', compact('products', 'units', 'customer', 'orderbooker', 'warehouse', 'supplymen'));
     }
 
@@ -218,11 +216,11 @@ class SalesController extends Controller
             $pro->stock1 = round((getStock($pro->productID) + $pro->pc + $pro->bonus + $pro->loose));
 
         }
-        $units = units::all();
+        $units = units::currentBranch()->get();
        
         $orderbooker = User::find($sale->orderbookerID);
         $warehouse = warehouses::find($sale->warehouseID);
-        $supplymen = accounts::supplyMen()->get();
+        $supplymen = accounts::supplyMen()->currentBranch()->get();
         return view('sales.edit', compact('products', 'units', 'customer', 'sale', 'orderbooker', 'warehouse', 'supplymen'));
     }
 

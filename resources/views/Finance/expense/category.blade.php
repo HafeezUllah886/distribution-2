@@ -53,6 +53,16 @@
                             <input type="text" name="name" required id="name" value="{{ $category->name }}"
                                 class="form-control">
                         </div>
+                        <div class="form-group mt-2">
+                            <label for="branchID">Branch</label>
+                            <select name="branchID" id="branchID" class="form-control">
+                                @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}" {{ $branch->id == $category->branchID ? 'selected' : '' }}>
+                                        {{ $branch->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>

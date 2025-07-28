@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\branches;
 use App\Models\units;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,10 @@ class UnitsController extends Controller
      */
     public function index()
     {
-        $units = units::all();
+        $units = units::orderBy('name', 'asc')->currentBranch()->get();
+        $branches = branches::orderBy('name', 'asc')->get();
 
-        return view('products.units', compact('units'));
+        return view('products.units', compact('units', 'branches'));
     }
 
     /**
@@ -30,7 +32,7 @@ class UnitsController extends Controller
      */
     public function store(Request $request)
     {
-        units::create($request->all());
+        units::create($request->all() + ['branchID' => auth()->user()->branchID]);
         return back()->with('success', 'Unit Created');
     }
 
@@ -56,7 +58,7 @@ class UnitsController extends Controller
     public function update(Request $request, $id)
     {
         $unit = units::find($id);
-        $unit->update($request->only('name', 'value'));
+        $unit->update($request->all());
         return back()->with('success', "Unit Updated");
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\branches;
 use App\Models\brands;
 use App\Models\categories;
 use App\Models\product_units;
@@ -40,10 +41,10 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        $cats = categories::orderBy('name', 'asc')->get();
-        $brands = brands::orderBy('name', 'asc')->get();
-        $units = units::all();
-        $vendors = accounts::vendor()->get();
+        $cats = categories::orderBy('name', 'asc')->currentBranch()->get();
+        $brands = brands::orderBy('name', 'asc')->currentBranch()->get();
+        $units = units::currentBranch()->get();
+        $vendors = accounts::vendor()->currentBranch()->get();
 
         return view('products.create', compact('cats', 'brands', 'units', 'vendors'));
     }
@@ -62,7 +63,7 @@ class ProductsController extends Controller
             ]
         );
 
-        $product = products::create($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim', 'sfright', 'sclaim', 'discountp']));
+        $product = products::create($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim', 'sfright', 'sclaim', 'discountp']) + ['branchID' => auth()->user()->branchID]);
 
         $units = $request->unit_names;
 
@@ -94,12 +95,13 @@ class ProductsController extends Controller
      */
     public function edit(products $product)
     {
-        $cats = categories::orderBy('name', 'asc')->get();
-        $brands = brands::orderBy('name', 'asc')->get();
-        $units = units::all();
-        $vendors = accounts::vendor()->get();
+        $cats = categories::orderBy('name', 'asc')->currentBranch()->get();
+        $brands = brands::orderBy('name', 'asc')->currentBranch()->get();
+        $units = units::currentBranch()->get();
+        $vendors = accounts::vendor()->currentBranch()->get();
+        $branches = branches::orderBy('name', 'asc')->get();
 
-        return view('products.edit', compact('cats', 'brands', 'units', 'product', 'vendors'));
+        return view('products.edit', compact('cats', 'brands', 'units', 'product', 'vendors', 'branches'));
     }
 
     /**
@@ -117,7 +119,7 @@ class ProductsController extends Controller
         );
 
         $product = products::find($id);
-        $product->update($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim', 'sfright', 'sclaim', 'discountp']));
+        $product->update($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim', 'sfright', 'sclaim', 'discountp', 'branchID']));
 
 
         $units = $request->unit_names;
@@ -135,10 +137,7 @@ class ProductsController extends Controller
                 );
             }
         }
-
-       
-
-        return back()->with('success', 'Product Updated');
+        return to_route('product.index')->with('success', 'Product Updated');
     }
 
     /**

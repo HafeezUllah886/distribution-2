@@ -14,4 +14,14 @@ class categories extends Model
     {
         return $this->hasMany(products::class, 'catID');
     }
+
+    public function branch()
+    {
+        return $this->belongsTo(branches::class, 'branchID', 'id');
+    }
+
+    public function scopeCurrentBranch($query)
+    {
+        return $query->where('branchID', auth()->user()->branchID);
+    }
 }

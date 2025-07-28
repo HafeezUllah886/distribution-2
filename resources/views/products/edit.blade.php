@@ -156,6 +156,14 @@
                                         <label for="sclaim">Claim</label>
                                         <input type="number" step="any" name="sclaim" required value="{{$product->sclaim}}" min="0" id="sclaim" class="form-control">
                                     </div>
+                                    <div class="form-group mt-2">
+                                        <label for="branchID">Branch</label>
+                                        <select name="branchID" id="branchID" class="selectize">
+                                            @foreach ($branches as $branch)
+                                                <option value="{{$branch->id}}" @selected($branch->id == $product->branchID)>{{$branch->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                    
                                     <div class="row">
                                         <div class="col-6">

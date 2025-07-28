@@ -51,18 +51,14 @@ class products extends Model
         return $this->hasMany(product_dc::class, 'productID');
     }
 
+    public function branch()
+    {
+        return $this->belongsTo(branches::class, 'branchID', 'id');
+    }
+
     public function scopeCurrentBranch($query)
     {
-        if(auth()->user()->role != 'Admin')
-        {
-            $vendors = accounts::vendor()->currentBranch()->pluck('id')->toArray();
-            return $query->whereIn('vendorID', $vendors);
-        }
-        else
-        {
-            return $query;
-        }
-       
+        return $query->where('branchID', auth()->user()->branchID);
     }
 
     public function vendor()

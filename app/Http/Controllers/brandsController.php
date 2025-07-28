@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\branches;
 use App\Models\brands;
 use Illuminate\Http\Request;
 
@@ -10,9 +11,10 @@ class brandsController extends Controller
 {
     public function index()
     {
-        $brands = brands::orderBy('name', 'asc')->get();
+        $brands = brands::orderBy('name', 'asc')->currentBranch()->get();
+        $branches = branches::all();
 
-        return view('products.brands', compact('brands'));
+        return view('products.brands', compact('brands', 'branches'));
     }
 
     /**
@@ -28,7 +30,7 @@ class brandsController extends Controller
      */
     public function store(Request $request)
     {
-        brands::create($request->all());
+        brands::create($request->all() + ['branchID' => auth()->user()->branchID]);
         return back()->with('msg', 'Brand Created');
     }
 

@@ -48,10 +48,10 @@ class PurchaseController extends Controller
     public function create(Request $request)
     {
         $products = products::active()->vendor($request->vendorID)->orderby('name', 'asc')->get();
-        $units = units::all();
+        $units = units::currentBranch()->get();
         $vendor = $request->vendorID;
         $warehouses = warehouses::currentBranch()->get();
-        $unloaders = accounts::unloader()->get();
+        $unloaders = accounts::unloader()->currentBranch()->get();
         return view('purchase.create', compact('products', 'units', 'vendor', 'warehouses', 'unloaders'));
     }
 
@@ -172,10 +172,10 @@ class PurchaseController extends Controller
             return back()->with('error', "This purchase can not be edited");
         }
         $products = products::active()->vendor($purchase->vendorID)->orderby('name', 'asc')->get();
-        $units = units::all();
-        $accounts = accounts::business()->get();
-        $warehouses = warehouses::all();
-        $unloaders = accounts::unloader()->get();
+        $units = units::currentBranch()->get();
+        $accounts = accounts::business()->currentBranch()->get();
+        $warehouses = warehouses::currentBranch()->get();
+        $unloaders = accounts::unloader()->currentBranch()->get();
         return view('purchase.edit', compact('products', 'units', 'accounts', 'purchase', 'warehouses', 'unloaders'));
     }
 

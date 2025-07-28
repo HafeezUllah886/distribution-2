@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\branches;
 use App\Models\categories;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\BackupGlobals;
@@ -13,9 +14,10 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $cats = categories::orderBy('name', 'asc')->get();
+        $cats = categories::orderBy('name', 'asc')->currentBranch()->get();
+        $branches = branches::orderBy('name', 'asc')->get();
 
-        return view('products.categories', compact('cats'));
+        return view('products.categories', compact('cats', 'branches'));
     }
 
     /**
@@ -31,7 +33,7 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        categories::create($request->all());
+        categories::create($request->all() + ['branchID' => auth()->user()->branchID]);
         return back()->with('msg', 'Category Created');
     }
 

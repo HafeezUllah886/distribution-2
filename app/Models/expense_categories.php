@@ -17,4 +17,14 @@ class expense_categories extends Model
         return $this->hasMany(expenses::class, 'categoryID');
     }
 
+    public function branch()
+    {
+        return $this->belongsTo(branches::class, 'branchID', 'id');
+    }
+
+    public function scopeCurrentBranch($query)
+    {
+        return $query->where('branchID', auth()->user()->branchID);
+    }
+
 }

@@ -38,6 +38,14 @@
                                                                                     <label for="name">Name</label>
                                                                                     <input type="text" name="name" required value="{{$brand->name}}" id="name" class="form-control">
                                                                                 </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="branchID">Branch</label>
+                                                                                    <select name="branchID" id="branchID" class="form-control">
+                                                                                        @foreach ($branches as $branch)
+                                                                                            <option value="{{$branch->id}}" @if ($brand->branchID == $branch->id) selected @endif>{{$branch->name}}</option>
+                                                                                        @endforeach
+                                                                                    </select>
+                                                                                </div>
                                                                          </div>
                                                                          <div class="modal-footer">
                                                                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>

@@ -53,14 +53,14 @@ class OrderbookerProductsController extends Controller
         $product = $orderbooker_products->pluck('productID')->toArray();
         if($vendor == "All")
         {
-            $products = products::whereNotIn('id', $product)->get();
+            $products = products::whereNotIn('id', $product)->currentBranch()->get();
         }
         else
         {
-            $products = products::where('vendorID', $vendor)->whereNotIn('id', $product)->get();
+            $products = products::where('vendorID', $vendor)->whereNotIn('id', $product)->currentBranch()->get();
         }
 
-        $vendors = accounts::vendor()->get();
+        $vendors = accounts::vendor()->currentBranch()->get();
         
         
         $orderbooker = User::find($orderbooker);
