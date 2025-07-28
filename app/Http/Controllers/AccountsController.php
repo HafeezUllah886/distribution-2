@@ -65,13 +65,12 @@ class AccountsController extends Controller
     {
         $request->validate(
             [
-                'title' => 'required|unique:accounts,title',
+                'title' => 'required',
                 'limit' => 'required_if:type,Customer',
                 'area' => 'required_if:type,Customer',
             ],
             [
                 'title.required' => "Please Enter Account Title",
-                'title.unique'  => "Account with this title already exists",
                 'limit' => "Credit Limites are required for Customer",
                 'area' => "Area is required for Customer",
             ]
@@ -210,11 +209,10 @@ class AccountsController extends Controller
     {
         $request->validate(
             [
-                'title' => "required|unique:accounts,title,". $request->accountID,
+                'title' => "required",
             ],
             [
                 'title.required' => "Please Enter Account Title",
-                'title.unique'  => "Account with this title already exists"
             ]
         );
         $account = accounts::find($request->accountID)->update(
@@ -267,7 +265,6 @@ class AccountsController extends Controller
     {
 
         $transactions = method_transactions::where('userID', $user)->where('method', $method)->whereBetween('date', [$from, $to])->get();
-
         $pre_cr = method_transactions::where('userID', $user)->where('method', $method)->whereDate('date', '<', $from)->sum('cr');
         $pre_db = method_transactions::where('userID', $user)->where('method', $method)->whereDate('date', '<', $from)->sum('db');
         $pre_balance = $pre_cr - $pre_db;

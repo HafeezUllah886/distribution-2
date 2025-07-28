@@ -46,11 +46,6 @@ class AreaController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(
-            [
-                'name' => 'required|unique:areas,name'
-            ]
-        );
 
         area::create(
             [
@@ -84,12 +79,6 @@ class AreaController extends Controller
      */
     public function update(Request $request, area $area)
     {
-        $request->validate(
-            [
-                'name' => 'required|unique:areas,name,' . $area->id,
-            ]
-        );
-
         $area->update(
             [
                 'townID' => $request->townID,

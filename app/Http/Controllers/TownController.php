@@ -30,12 +30,6 @@ class TownController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(
-            [
-                'name' => 'required|unique:towns,name'
-            ]
-        );
-
         town::create(
             [
                 'name' => $request->name,
@@ -67,11 +61,6 @@ class TownController extends Controller
      */
     public function update(Request $request, town $town)
     {
-        $request->validate(
-            [
-                'name' => 'required|unique:towns,name,' . $town->id,
-            ]
-        );
 
         $town->update(
             [

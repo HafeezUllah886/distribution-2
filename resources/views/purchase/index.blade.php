@@ -47,7 +47,10 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Purchases</h3>
+                    @if (auth()->user()->role == 'Operator')
                     <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create New</button>
+                    @endif
+                   
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
