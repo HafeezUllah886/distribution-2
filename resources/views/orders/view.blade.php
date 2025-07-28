@@ -60,7 +60,7 @@
                                                 <th scope="col" style="width: 50px;">#</th>
                                                 <th scope="col" class="text-start">Product</th>
                                                 <th scope="col" class="text-start">Unit</th>
-                                                <th scope="col" class="text-start">Pack Size</th>
+                                                <th scope="col" class="text-start">Pack <br> Size</th>
                                                 <th scope="col" class="text-end">Qty</th>
                                                 <th scope="col" class="text-end">Loose</th>
                                                 <th scope="col" class="text-end">Bonus</th>
@@ -103,7 +103,7 @@
                                             @endphp
                                                <tr>
                                                 <td class="p-1 m-1">{{$key+1}}</td>
-                                                <td class="text-start p-1 m-1">{{$product->product->name}} | {{$product->product->nameurdu}}</td>
+                                                <td class="text-start p-1 m-1">{{$product->product->name}} <br> {{$product->product->nameurdu}}</td>
                                                 <td class="text-start m-1 p-1">{{$product->unit->unit_name}}</td>
                                                 <td class="text-center m-1 p-1">{{$product->unit->value}}</td>
                                                 <td class="text-center m-1 p-1">{{number_format($product->qty)}}</td>
