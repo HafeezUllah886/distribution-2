@@ -79,6 +79,7 @@ class AreaController extends Controller
      */
     public function update(Request $request, area $area)
     {
+   
         $area->update(
             [
                 'townID' => $request->townID,

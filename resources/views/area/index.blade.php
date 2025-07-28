@@ -128,11 +128,11 @@
                                                                              </div>
                                                                              <form action="{{ route('areas.update', $area->id) }}" method="Post">
                                                                                @csrf
-                                                                               @method("patch")
+                                                                               @method("put")
                                                                                       <div class="modal-body">
                                                                                              <div class="form-group">
                                                                                                     <label for="townID">Town</label>
-                                                                                                    <select name="townID" class="selectize" id="townID">
+                                                                                                    <select name="townID" class="form-control" id="townID">
                                                                                                         @foreach ($towns as $town)
                                                                                                             <option value="{{$town->id}}" @selected($town->id == $area->townID)>{{$town->name}}</option>
                                                                                                         @endforeach
@@ -140,7 +140,7 @@
                                                                                                 </div>
                                                                                              <div class="form-group">
                                                                                                     <label for="branchID">Branch</label>
-                                                                                                    <select name="branchID" class="selectize" id="branchID">
+                                                                                                    <select name="branchID" class="form-control" id="branchID">
                                                                                                         @foreach ($branches as $branch)
                                                                                                             <option value="{{$branch->id}}" @selected($branch->id == $area->branchID)>{{$branch->name}}</option>
                                                                                                         @endforeach
@@ -206,6 +206,7 @@
 <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
 <script>
     $(".selectize").selectize();
+    $(".selectize1").selectize();
 </script>
 @endsection
 
