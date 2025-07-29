@@ -137,7 +137,7 @@ class ProductsController extends Controller
                 );
             }
         }
-        return to_route('product.index')->with('success', 'Product Updated');
+        return redirect()->back()->with('success', 'Product Updated');
     }
 
     /**
