@@ -68,9 +68,9 @@
                                                 <th scope="col" class="text-start">Product</th>
                                                 <th scope="col" class="text-start">Unit</th>
                                                 <th scope="col" class="text-start">Pack Size</th>
-                                                <th scope="col" class="text-end">Qty</th>
-                                                <th scope="col" class="text-end">Loose</th>
-                                                <th scope="col" class="text-end">Bonus</th>
+                                                <th scope="col" class="text-center">Qty</th>
+                                                <th scope="col" class="text-center">Loose</th>
+                                                <th scope="col" class="text-center">Bonus</th>
                                             </tr>
                                         </thead>
                                         <tbody id="products-list">
@@ -92,9 +92,9 @@
                                                 <td class="text-start p-1 m-1">{{$product->product->name}} | {{$product->product->nameurdu}}</td>
                                                 <td class="text-start m-1 p-1">{{$product->unit->unit_name}}</td>
                                                 <td class="text-start m-1 p-1">{{$product->unit->value}}</td>
-                                                <td class="text-end m-1 p-1">{{number_format($product->qty)}}</td>
-                                                <td class="text-end m-1 p-1">{{number_format($product->loose)}}</td>
-                                                <td class="text-end m-1 p-1">{{number_format($product->bonus)}}</td>
+                                                <td class="text-center m-1 p-1">{{number_format($product->qty)}}</td>
+                                                <td class="text-center m-1 p-1">{{number_format($product->loose)}}</td>
+                                                <td class="text-center m-1 p-1">{{number_format($product->bonus)}}</td>
                                                
                                                </tr>
                                            @endforeach
@@ -102,9 +102,9 @@
                                         <tfoot>
                                             <tr>
                                                 <th colspan="4" class="text-end">Total</th>
-                                                <th class="text-end">{{number_format($totalQty)}}</th>
-                                                <th class="text-end">{{number_format($totalLoose)}}</th>
-                                                <th class="text-end">{{number_format($totalBonus)}}</th>
+                                                <th class="text-center">{{number_format($totalQty)}}</th>
+                                                <th class="text-center">{{number_format($totalLoose)}}</th>
+                                                <th class="text-center">{{number_format($totalBonus)}}</th>
                                                
                                             </tr> 
                                         </tfoot>

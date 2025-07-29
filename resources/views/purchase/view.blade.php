@@ -130,9 +130,9 @@
                                                 <tfoot>
                                                     <tr>
                                                         <th colspan="4" class="text-end">Total</th>
-                                                        <th class="text-end">{{number_format($totalQty)}}</th>
-                                                        <th class="text-end">{{number_format($totalLoose)}}</th>
-                                                        <th class="text-end">{{number_format($totalBonus)}}</th>
+                                                        <th class="text-center">{{number_format($totalQty)}}</th>
+                                                        <th class="text-center">{{number_format($totalLoose)}}</th>
+                                                        <th class="text-center">{{number_format($totalBonus)}}</th>
                                                         <th></th>
                                                         <th class="text-end">{{number_format($totalDiscount)}}</th>
                                                         <th class="text-end">{{number_format($totalDiscountValue)}}</th>

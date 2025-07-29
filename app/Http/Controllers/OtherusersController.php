@@ -41,11 +41,8 @@ class OtherusersController extends Controller
         DB::beginTransaction();
         $request->validate(
             [
-                'name' => "unique:users,name|required",
+                'name' => "required",
             ],
-            [
-                'name.unique' => "User Name Already Used",
-            ]
         );
 
         if($type == 'Order Booker' || $type == 'Operator')

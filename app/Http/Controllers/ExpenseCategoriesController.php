@@ -36,7 +36,7 @@ class ExpenseCategoriesController extends Controller
     {
         $request->validate(
             [
-                'name' => 'required|unique:expense_categories,name'
+                'name' => 'required'
             ]
         );
 
