@@ -47,7 +47,7 @@ class BranchStockReportController extends Controller
                 }
             }
         }
-        
+        dd($vendors);
         $branch = branches::find($branch);
         $branch = $branch->name;
 
