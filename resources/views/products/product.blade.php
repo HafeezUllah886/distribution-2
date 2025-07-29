@@ -62,7 +62,7 @@
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->brand->name }}</td>
                                     <td>{{ $item->category->name }}</td>
-                                    <td>{{ $item->vendor->name }}</td>
+                                    <td>{{ $item->vendor->title }}</td>
                                     <td>{{ $item->pprice }}</td>
                                     <td>{{ $item->price }}</td>
                                     <td>{{ $item->discount }}</td>
