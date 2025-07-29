@@ -49,7 +49,7 @@
                                                                             </a>
                                                                         </li>
                                                                         @endif
-                                                                        @if(auth()->user()->role == 'Branch Admin')
+                                                                        @if(auth()->user()->role == 'Branch Admin' || auth()->user()->role == 'Admin')
                                                                           <li>
                                                                               <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit_{{$user->id}}">
                                                                                   <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
