@@ -63,8 +63,8 @@
                                     <td>{{ $item->brand->name }}</td>
                                     <td>{{ $item->category->name }}</td>
                                     <td>{{ $item->vendor->title }}</td>
-                                    <td>{{ $item->pprice }}</td>
-                                    <td>{{ $item->price }}</td>
+                                    <td>{{ number_format($item->pprice,0) }}</td>
+                                    <td>{{ number_format($item->price,0) }}</td>
                                     <td>{{ $item->discount }}</td>
                                     <td>
                                         <div class="dropdown">
