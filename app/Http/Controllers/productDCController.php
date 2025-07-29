@@ -39,7 +39,7 @@ class productDCController extends Controller
      */
     public function show($id)
     {
-        $areas = area::all();
+        $areas = area::currentBranch()->get();
         $product = products::findOrFail($id);
         foreach ($areas as $area)
         {   
