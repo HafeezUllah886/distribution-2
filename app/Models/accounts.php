@@ -119,10 +119,8 @@ class accounts extends Model
     return $this->belongsTo(branches::class, 'branchID');
 }
 
-public function vendor_products()
-{
-    return $this->hasMany(products::class, 'vendorID');
-}
-
-
+    public function vendor_products()
+    {
+        return $this->hasMany(products::class, 'vendorID');
+    }
 }

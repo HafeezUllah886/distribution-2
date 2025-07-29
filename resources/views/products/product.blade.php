@@ -48,6 +48,7 @@
                             <th>Name</th>
                             <th>Brand</th>
                             <th>Category</th>
+                            <th>Vendor</th>
                             <th>P Price</th>
                             <th>S Price</th>
                             <th>Discount</th>
@@ -61,6 +62,7 @@
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->brand->name }}</td>
                                     <td>{{ $item->category->name }}</td>
+                                    <td>{{ $item->vendor->name }}</td>
                                     <td>{{ $item->pprice }}</td>
                                     <td>{{ $item->price }}</td>
                                     <td>{{ $item->discount }}</td>
