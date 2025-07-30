@@ -30,8 +30,8 @@ class ProductsController extends Controller
 
         $items = $products->get();
 
-        $cats = categories::orderBy('name', 'asc')->get();
-        $brands = brands::orderBy('name', 'asc')->get();
+        $cats = categories::orderBy('name', 'asc')->currentBranch()->get();
+        $brands = brands::orderBy('name', 'asc')->currentBranch()->get();
 
         return view('products.product', compact('items', 'cats', 'brands', 's_cat', 's_brand'));
     }

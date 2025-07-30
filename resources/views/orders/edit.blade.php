@@ -227,7 +227,6 @@
             var loose = parseFloat($('#loose_' + id).val());
             var bonus = parseFloat($('#bonus_' + id).val());
             var unit = $('#unit_' + id).find(':selected').data('unit');
-            
 
             var unit_qty = unit * qty;
             var totalQty = unit_qty + loose + bonus;
