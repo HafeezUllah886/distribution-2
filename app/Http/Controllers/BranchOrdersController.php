@@ -108,7 +108,7 @@ class BranchOrdersController extends Controller
                 $fright = $product->sfright;
                 $claim = $product->sclaim;
                 $dc = product_dc::where('productID', $product->id)->where('areaID', $order->customer->areaID)->first();
-                $labor = $dc->dc ?? 0;
+                $labor = $request->labor[$key];
 
                 $amount = (($price - $discount - $discountpValue - $claim) + $fright) * $qty;
                 $net += $amount;
