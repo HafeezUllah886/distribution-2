@@ -45,7 +45,8 @@ class customerPaymentsReceivingContoller extends Controller
             $ref = getRef();
             $payment = paymentsReceiving::create(
                 [
-                    'depositerID'      => $request->customerID,
+                    'depositerID'   => $request->customerID,
+                    'orderbookerID' => $request->user()->id,
                     'date'          => $request->date,
                     'amount'        => $request->amount,
                     'method'        => $request->method,
