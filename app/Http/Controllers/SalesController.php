@@ -418,12 +418,12 @@ class SalesController extends Controller
 
         foreach($customers as $customer)
         {
-            $data = [
+            $data []= [
                 'value' => $customer->customerID,
                 'text' => $customer->customer->title . " - " . $customer->customer->area->name
             ];
         }
-dd($data);
+
         return response()->json($data);
     }
 }
