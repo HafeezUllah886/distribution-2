@@ -69,6 +69,7 @@
                             <th>Adjusted By</th>
                             <th>Account</th>
                             <th>Area</th>
+                            <th>Order Booker</th>
                             <th>Type</th>
                             <th>Date</th>
                             <th>Notes</th>
@@ -83,6 +84,7 @@
                                     <td>{{ $tran->user->name }}</td>
                                     <td>{{ $tran->account->title }}</td>
                                     <td>{{ $tran->account->type == 'Customer' ? $tran->account->area->name : '-'}}</td>
+                                    <td>{{ $tran->account->type == 'Customer' ? $tran->orderbooker() : '-'}}</td>
                                     <td>{{ $tran->type }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->date)) }}</td>
                                     <td>{{ $tran->notes }}</td>

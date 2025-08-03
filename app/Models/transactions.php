@@ -13,4 +13,9 @@ class transactions extends Model
     {
         return $this->belongsTo(accounts::class, 'accountID');
     }
+
+    public function orderbooker()
+    {
+        return $this->belongsTo(User::class, 'orderbookerID');
+    }
 }

@@ -24,4 +24,10 @@ class accountsAdjustment extends Model
     {
         return $query->where('branchID', auth()->user()->branchID);
     }
+
+    public function orderbooker()
+    {
+        $transaction = transactions::where('refID', $this->refID)->first();
+        return $transaction->orderbooker->name;
+    }
 }
