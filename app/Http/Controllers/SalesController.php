@@ -163,8 +163,8 @@ class SalesController extends Controller
                 ]
             );
 
-            createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id", $ref, $request->orderbookerID);
-            createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer", $ref, $request->orderbookerID);
+            createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id Notes: $request->notes", $ref, $request->orderbookerID);
+            createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer Notes: $request->notes", $ref, $request->orderbookerID);
 
             DB::commit();
             return back()->with('success', "Sale Created");
@@ -326,9 +326,9 @@ class SalesController extends Controller
                 ]
             );
 
-            createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id", $ref, $sale->orderbookerID);
+            createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id Notes: $request->notes", $ref, $sale->orderbookerID);
            
-           createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer", $ref, $sale->orderbookerID);
+           createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer Notes: $request->notes", $ref, $sale->orderbookerID);
 
             DB::commit();
             return back()->with('success', "Sale Updated");
