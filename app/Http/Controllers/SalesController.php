@@ -50,7 +50,8 @@ class SalesController extends Controller
         $customers = accounts::customer()->currentBranch()->get();
 
         $orderbookers = User::orderbookers()->currentBranch()->get();
-        return view('sales.index', compact('sales', 'start', 'end', 'warehouses', 'customers', 'orderbookers', 'bookerID'));
+        $supplymen = accounts::supplyMen()->currentBranch()->get();
+        return view('sales.index', compact('sales', 'start', 'end', 'warehouses', 'customers', 'orderbookers', 'bookerID', 'supplymen'));
     }
 
     /**
@@ -425,5 +426,37 @@ class SalesController extends Controller
         }
 
         return response()->json($data);
+    }
+
+    public function minor_edit(Request $request)
+    {
+      
+        $sale = sales::find($request->saleID);
+        $oldSupplymanID = $sale->supplymanID;
+        $supplymanID = $request->supplymanID;
+        $bilty = $request->bilty;
+        $transporter = $request->transporter;
+        $ref = $sale->refID;
+        try
+        {
+ 
+            transactions::where('refID', $ref)->where('accountID', $oldSupplymanID)->update(
+                [
+                    'accountID' => $supplymanID,
+                ]
+            );
+            $sale->update(
+                [
+                    'supplymanID'   => $supplymanID,
+                    'bilty'         => $bilty,
+                    'transporter'   => $transporter,
+                ]
+            );
+        return back()->with('success', "Sale Updated");
+        }
+        catch(\Exception $e)
+        {
+            return back()->with('error', $e->getMessage());
+        }
     }
 }

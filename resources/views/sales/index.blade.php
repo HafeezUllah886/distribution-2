@@ -113,7 +113,14 @@
                                                         Edit
                                                     </a>
                                                 </li>
+                                               
                                                 @endif
+                                                <li>
+                                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#minorEditModal_{{$sale->id}}">
+                                                        <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        Minor Edit
+                                                    </a>
+                                                </li>
                                                <li>
                                                     <a class="dropdown-item" onclick="newWindow('{{route('salePayment.index', $sale->id)}}')">
                                                         <i class="ri-money-dollar-circle-fill align-bottom me-2 text-muted"></i>
@@ -132,6 +139,42 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <div id="minorEditModal_{{$sale->id}}" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="myModalLabel">Minor Edit</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                                            </div>
+                                            <form action="{{ route('sale.minor_edit') }}" method="get">
+                                              <input type="hidden" name="saleID" value="{{$sale->id}}">
+                                                     <div class="modal-body">
+                                                            <div class="form-group">
+                                                                   <label for="warehouseID">Bilty</label>
+                                                                   <input type="text" name="bilty" value="{{$sale->bilty}}" id="bilty" class="form-control">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                   <label for="warehouseID">Transporter</label>
+                                                                   <input type="text" name="transporter" value="{{$sale->transporter}}" id="transporter" class="form-control">
+                                                            </div>
+                                                            <div class="form-group mt-2">
+                                                                <label for="supplyMan">Supply Man</label>
+                                                                <select name="supplymanID" id="supplyMan" class="form-control">
+                                                                   <option value="">Select Supply Man</option>
+                                                                    @foreach ($supplymen as $supplyman)
+                                                                        <option value="{{$supplyman->id}}" @selected($supplyman->id == $sale->supplymanID)>{{$supplyman->title}}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                     </div>
+                                                     <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Update</button>
+                                                     </div>
+                                              </form>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
                             @endforeach
                         </tbody>
                     </table>
@@ -219,7 +262,6 @@
             url: '/orderbooker/getcustomers/' + orderbookerID,
             type: 'GET',
             success: function (data) {
-                console.log(data);
                 
                 // Clear previous options 
                 customerSelectize.clearOptions();

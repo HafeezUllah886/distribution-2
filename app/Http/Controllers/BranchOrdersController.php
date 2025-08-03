@@ -55,8 +55,7 @@ class BranchOrdersController extends Controller
     public function edit($id)
     {
         $this->validateOrder($id);
-        $products = products::all();
-    
+        $products = products::currentBranch()->get();
 
         $order = orders::with('customer', 'details.product', 'details.unit')->findOrFail($id);
 
