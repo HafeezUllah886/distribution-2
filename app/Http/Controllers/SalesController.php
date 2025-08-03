@@ -413,6 +413,7 @@ class SalesController extends Controller
     public function orderbooker_customers($orderbookerID)
     {
         $customers = orderbooker_customers::where('orderbookerID', $orderbookerID)->get();
+        dd($customers);
         $data = [];
 
         foreach($customers as $customer)
