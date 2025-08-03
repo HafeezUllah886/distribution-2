@@ -199,7 +199,8 @@ class AccountsController extends Controller
      */
     public function edit(accounts $account)
     {
-        return view('Finance.accounts.edit', compact('account'));
+        $areas = area::where('branchID', Auth()->user()->branchID)->get();
+        return view('Finance.accounts.edit', compact('account', 'areas'));
     }
 
     /**
