@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\accounts;
 use App\Models\expenses;
 use App\Models\order_delivery;
+use App\Models\orderbooker_customers;
 use App\Models\orderbooker_products;
 use App\Models\orders;
 use App\Models\product_dc;
@@ -407,5 +408,17 @@ class SalesController extends Controller
            return $product->id;
         }
         return "Not Found";
+    }
+
+    public function orderbooker_customers(Request $request)
+    {
+        $orderbookerID = $request->orderbookerID;
+        $customerIDs = orderbooker_customers::where('orderbookerID', $orderbookerID)->pluck('customerID')->toArray();
+        $accounts = accounts::whereIn('id', $customerIDs)->currentBranch()->get();
+        return response()->json(
+            [
+                'customers' => $accounts
+            ]
+        );
     }
 }

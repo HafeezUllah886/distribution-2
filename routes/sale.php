@@ -25,4 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::get('salepayment/delete/{id}/{ref}', [SalePaymentsController::class, 'destroy'])->name('salePayment.delete')->middleware(confirmPassword::class);
     Route::resource('sale_payment', SalePaymentsController::class);
 
+
+    Route::get('orderbooker/getCustomers', [SalesController::class, 'getCustomers'])->name('orderbooker.getCustomers');
 });
