@@ -413,7 +413,7 @@ class SalesController extends Controller
     public function orderbooker_customers($orderbookerID)
     {
         $customers = orderbooker_customers::where('orderbookerID', $orderbookerID)->get();
-        dd($customers);
+        
         $data = [];
 
         foreach($customers as $customer)
@@ -423,7 +423,7 @@ class SalesController extends Controller
                 'text' => $customer->customer->title . " - " . $customer->customer->area->name
             ];
         }
-
+dd($data);
         return response()->json($data);
     }
 }
