@@ -6,6 +6,7 @@ use App\Http\Controllers\brandsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\productDCController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\ProductUnitsController;
 use App\Http\Controllers\TownController;
 use App\Http\Controllers\UnitsController;
 use App\Http\Controllers\WarehousesController;
@@ -30,7 +31,8 @@ Route::middleware(['auth', Admin_BranchAdmin::class])->group(function () {
     Route::resource('product', ProductsController::class);
     Route::resource('dc', productDCController::class);
     Route::get('products/index/{category}/{brand}', [ProductsController::class, 'index'])->name('products.index');
-
+    
+    Route::resource('product_units', ProductUnitsController::class);
 
     Route::get('getUnit/{id}', [UnitsController::class, 'getUnit']);
 

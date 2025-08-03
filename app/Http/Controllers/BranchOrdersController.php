@@ -40,7 +40,7 @@ class BranchOrdersController extends Controller
         }
         $orders = $orders->get();
 
-        $warehouses = warehouses::all();
+        $warehouses = warehouses::currentBranch()->get();
         $orderbookers = User::orderbookers()->currentBranch()->get();
 
         return view('orders.index', compact('orders', 'from', 'to', 'status', 'warehouses', 'bookerID', 'orderbookers'));

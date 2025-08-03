@@ -410,15 +410,19 @@ class SalesController extends Controller
         return "Not Found";
     }
 
-    public function orderbooker_customers(Request $request)
+    public function orderbooker_customers($orderbookerID)
     {
-        $orderbookerID = $request->orderbookerID;
-        $customerIDs = orderbooker_customers::where('orderbookerID', $orderbookerID)->pluck('customerID')->toArray();
-        $accounts = accounts::whereIn('id', $customerIDs)->currentBranch()->get();
-        return response()->json(
-            [
-                'customers' => $accounts
-            ]
-        );
+        $customers = orderbooker_customers::where('orderbookerID', $orderbookerID)->get();
+        $data = [];
+
+        foreach($customers as $customer)
+        {
+            $data = [
+                'value' => $customer->customerID,
+                'text' => $customer->customer->title . " - " . $customer->customer->area->name
+            ];
+        }
+
+        return response()->json($data);
     }
 }

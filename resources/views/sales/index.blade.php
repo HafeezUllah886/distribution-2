@@ -162,6 +162,7 @@
                                 <div class="form-group mt-2">
                                     <label for="orderbookerID">Order Booker</label>
                                     <select name="orderbookerID" id="orderbookerID" onchange="getCustomers(this.value)" class="form-control">
+                                       <option value="">Select Order Booker</option>
                                         @foreach ($orderbookers as $orderbooker)
                                             <option value="{{$orderbooker->id}}">{{$orderbooker->name}}</option>
                                         @endforeach
@@ -170,9 +171,7 @@
                                 <div class="form-group mt-2">
                                     <label for="customerID">Customer</label>
                                     <select name="customerID" id="customerID" class="selectize">
-                                        @foreach ($customers as $customer)
-                                            <option value="{{$customer->id}}">{{$customer->title}} - {{$customer->area->name}}</option>
-                                        @endforeach
+                                       <option value="">Select Customer</option>
                                     </select>
                                 </div>
                          </div>
@@ -209,47 +208,34 @@
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
 
-    $('#customerID').selectize();
-        function getCustomers(orderbookerID) {
-            $.ajax({
-                url: "{{ route('orderbooker.getCustomers') }}",
-                type: "GET",
-                data: {
-                    orderbookerID: orderbookerID
-                },
-                success: function (response) {
-                    $('#customerID').selectize().destroy();
-                    $('#customerID').selectize({
-                        valueField: 'id',
-                        labelField: 'title',
-                        searchField: 'title',
-                        options: response.customers,
-                        create: false,
-                        sortField: 'title',
-                        sortDirection: 'asc',
-                        hideSelected: true,
-                        placeholder: 'Select Customer',
-                        dropdownParent: 'body',
-                        maxItems: 1,
-                        onItemAdd: function (value, $item) {
-                            $('#customerID').selectize().selectize().destroy();
-                            $('#customerID').selectize({
-                                valueField: 'id',
-                                labelField: 'title',
-                                searchField: 'title',
-                                options: response.customers,
-                                create: false,
-                                sortField: 'title',
-                                sortDirection: 'asc',
-                                hideSelected: true,
-                                placeholder: 'Select Customer',
-                                dropdownParent: 'body',
-                                maxItems: 1,
-                            });
-                        }
-                    });
-                }
-            });
-        }
-    </script>
+        $('#customerID').selectize();
+
+        function getCustomers(orderbookerID)
+        {
+            var customerSelectize = $('#customerID')[0].selectize; // Access the selectize instance
+            if (orderbookerID) {
+        // Make an AJAX call to fetch sectors for selected town
+        $.ajax({
+            url: '/orderbooker/getcustomers/' + orderbookerID,
+            type: 'GET',
+            success: function (data) {
+                console.log(data);
+                
+                // Clear previous options 
+                customerSelectize.clearOptions();
+
+                // Add new options
+                customerSelectize.addOption(data); // data should be an array of {value: '', text: ''}
+                customerSelectize.refreshOptions(false);
+            }
+        });
+    }
+    else
+    {
+        customerSelectize.clearOptions();
+    }
+}
+
+
+   </script>
 @endsection

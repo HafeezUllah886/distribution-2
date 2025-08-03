@@ -97,11 +97,10 @@ class ProductsController extends Controller
     {
         $cats = categories::orderBy('name', 'asc')->currentBranch()->get();
         $brands = brands::orderBy('name', 'asc')->currentBranch()->get();
-        $units = units::currentBranch()->get();
         $vendors = accounts::vendor()->currentBranch()->get();
         $branches = branches::orderBy('name', 'asc')->get();
 
-        return view('products.edit', compact('cats', 'brands', 'units', 'product', 'vendors', 'branches'));
+        return view('products.edit', compact('cats', 'brands', 'product', 'vendors', 'branches'));
     }
 
     /**
@@ -121,22 +120,6 @@ class ProductsController extends Controller
         $product = products::find($id);
         $product->update($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim', 'sfright', 'sclaim', 'discountp', 'branchID']));
 
-
-        $units = $request->unit_names;
-
-        if($units != null)
-        {
-            foreach($units as $key => $unit)
-            {
-                product_units::create(
-                    [
-                        'productID' => $product->id,
-                        'unit_name' => $unit,
-                        'value' =>  $request->unit_values[$key],
-                    ]
-                );
-            }
-        }
         return redirect()->back()->with('success', 'Product Updated');
     }
 

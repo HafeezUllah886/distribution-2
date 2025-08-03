@@ -48,6 +48,8 @@
                                                 <thead>
                                                        <th>#</th>
                                                        <th>Customer</th>
+                                                       <th>Town</th>
+                                                       <th>Area</th>
                                                        <th>Action</th>
                                                 </thead>
                                                 <tbody>
@@ -55,6 +57,8 @@
                                                               <tr>
                                                                      <td>{{$key+1}}</td>
                                                                      <td>{{$customer->customer->title}}</td>
+                                                                     <td>{{$customer->customer->area->town->name}}</td>
+                                                                     <td>{{$customer->customer->area->name}}</td>
                                                                      <td>
                                                                             <a href="{{ route('orderbookercustomer.delete', $customer->id) }}" class="btn btn-danger" >Remove</a>
                                                                      </td>

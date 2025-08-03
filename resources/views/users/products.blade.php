@@ -48,6 +48,7 @@
                                                 <thead>
                                                        <th>#</th>
                                                        <th>Product</th>
+                                                       <th>Vendor</th>
                                                        <th>Action</th>
                                                 </thead>
                                                 <tbody>
@@ -55,6 +56,7 @@
                                                               <tr>
                                                                      <td>{{$key+1}}</td>
                                                                      <td>{{$product->product->name}}</td>
+                                                                     <td>{{$product->product->vendor->title}}</td>
                                                                      <td>
                                                                             <a href="{{ route('orderbookerproduct.delete', $product->id) }}" class="btn btn-danger" >Remove</a>
                                                                      </td>

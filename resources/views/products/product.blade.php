@@ -80,6 +80,12 @@
                                                        </a>
                                                    </li>
                                                    <li>
+                                                       <a class="dropdown-item" href="{{route('product_units.show', $item->id)}}">
+                                                           <i class="ri-list-check align-bottom me-2 text-muted"></i>
+                                                           Units
+                                                       </a>
+                                                   </li>
+                                                   <li>
                                                        <a class="dropdown-item" href="{{route('dc.show', $item->id)}}">
                                                            <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                            Delivery Charges

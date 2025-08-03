@@ -8,10 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
 
-Route::get("sales/getproduct/{id}/{warehouse}/{area}", [SalesController::class, 'getSignleProduct']);
-
-});
-Route::middleware('auth')->group(function () {
+    Route::get("sales/getproduct/{id}/{warehouse}/{area}", [SalesController::class, 'getSignleProduct']);
 
     Route::resource('sale', SalesController::class);
     Route::get("sale/{id}/urdu", [SalesController::class, 'showUrdu'])->name('sale.showUrdu');
@@ -25,6 +22,5 @@ Route::middleware('auth')->group(function () {
     Route::get('salepayment/delete/{id}/{ref}', [SalePaymentsController::class, 'destroy'])->name('salePayment.delete')->middleware(confirmPassword::class);
     Route::resource('sale_payment', SalePaymentsController::class);
 
-
-    Route::get('orderbooker/getCustomers', [SalesController::class, 'getCustomers'])->name('orderbooker.getCustomers');
+    Route::get('orderbooker/getcustomers/{id}', [SalesController::class, 'orderbooker_customers'])->name('sale.getCustomers');
 });
