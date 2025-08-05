@@ -172,6 +172,7 @@ class SalePaymentsController extends Controller
             currency_transactions::where('refID', $ref)->delete();
             users_transactions::where('refID', $ref)->delete();
             method_transactions::where('refID', $ref)->delete();
+            transactions_que::where('refID', $ref)->delete();
             cheques::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');

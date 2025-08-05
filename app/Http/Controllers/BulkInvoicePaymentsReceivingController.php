@@ -12,6 +12,7 @@ use App\Models\method_transactions;
 use App\Models\sale_payments;
 use App\Models\sales;
 use App\Models\transactions;
+use App\Models\transactions_que;
 use App\Models\User;
 use App\Models\users_transactions;
 use Illuminate\Http\Request;
@@ -187,6 +188,7 @@ class BulkInvoicePaymentsReceivingController extends Controller
             currency_transactions::where('refID', $ref)->delete();
             users_transactions::where('refID', $ref)->delete();
             method_transactions::where('refID', $ref)->delete();
+            transactions_que::where('refID', $ref)->delete();
             cheques::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');

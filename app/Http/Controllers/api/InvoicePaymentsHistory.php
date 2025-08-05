@@ -8,6 +8,7 @@ use App\Models\currency_transactions;
 use App\Models\method_transactions;
 use App\Models\sale_payments;
 use App\Models\transactions;
+use App\Models\transactions_que;
 use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -72,6 +73,7 @@ class InvoicePaymentsHistory extends Controller
             currency_transactions::where('refID', $request->refID)->delete();
             users_transactions::where('refID', $request->refID)->delete();
             method_transactions::where('refID', $request->refID)->delete();
+            transactions_que::where('refID', $request->refID)->delete();
             cheques::where('refID', $request->refID)->delete();
             DB::commit();
             return response()->json([

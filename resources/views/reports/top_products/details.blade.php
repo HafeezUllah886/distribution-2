@@ -89,7 +89,7 @@
                                                 <td class="text-start">{{ $product['name']}}</td>
                                                 <td class="text-start">{{ $product['unit_name']}}</td>
                                                 <td class="text-start">{{ $product['unit_value']}}</td>
-                                                <td class="text-end">{{ number_format($product['price'],2)}}</td>
+                                                <td class="text-end">{{ number_format($product['price'] * $product['unit_value'],2)}}</td>
                                                 <td class="text-end">{{ packInfoWithOutName($product['unit_value'], $product['stock'])}}</td>
                                                 <td class="text-end">{{packInfoWithOutName($product['unit_value'], $product['sold'])}} </td>
                                                 <td class="text-end">{{ number_format($product['amount'],2) }}</td>
