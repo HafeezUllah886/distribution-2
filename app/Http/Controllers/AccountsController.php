@@ -157,7 +157,7 @@ class AccountsController extends Controller
         {
             $transactions = $transactions->where('orderbookerID', $orderbooker);
         }
-        $transactions = $transactions->get();
+        $transactions = $transactions->orderBy('date', 'asc')->get();
 
         $pre_cr = transactions::where('accountID', $id)->whereDate('date', '<', $from);
         if($orderbooker != 0)

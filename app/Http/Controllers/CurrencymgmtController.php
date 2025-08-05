@@ -26,7 +26,7 @@ class CurrencymgmtController extends Controller
         $currency = currencymgmt::find($id);
         $user = User::find($user);
 
-        $transactions = currency_transactions::where(['currencyID' => $id, 'userID' => $user->id])->whereBetween('date', [$from, $to])->get();
+        $transactions = currency_transactions::where(['currencyID' => $id, 'userID' => $user->id])->whereBetween('date', [$from, $to])->orderBy('date', 'asc')->get();
 
         $pre_cr = currency_transactions::where(['currencyID' => $id, 'userID' => $user->id])->whereDate('date', '<', $from)->sum('cr');
         $pre_db = currency_transactions::where(['currencyID' => $id, 'userID' => $user->id])->whereDate('date', '<', $from)->sum('db');

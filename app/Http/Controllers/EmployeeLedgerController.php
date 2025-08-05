@@ -13,7 +13,7 @@ class EmployeeLedgerController extends Controller
     {
         $employee = employee::find($id);
 
-        $transactions = employee_ledger::where('employeeID', $id)->whereBetween('date', [$from, $to])->get();
+        $transactions = employee_ledger::where('employeeID', $id)->whereBetween('date', [$from, $to])->orderBy('date', 'asc')->get();
 
         $pre_cr = employee_ledger::where('employeeID', $id)->whereDate('date', '<', $from)->sum('cr');
         $pre_db = employee_ledger::where('employeeID', $id)->whereDate('date', '<', $from)->sum('db');

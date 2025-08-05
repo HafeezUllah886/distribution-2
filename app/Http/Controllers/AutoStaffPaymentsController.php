@@ -53,11 +53,13 @@ class AutoStaffPaymentsController extends Controller
         {
             $que = transactions_que::find($transaction);
 
+            $date = $que->method == 'Online' ? $que->date : now();
+
             $ref = getRef();
             staffPayments::create(
                 [
                     'fromID'        => $que->userID,
-                    'date'          => now(),
+                    'date'          => $date,
                     'amount'        => $que->amount,
                     'method'        => $que->method,
                     'number'        => $que->number,
@@ -74,11 +76,11 @@ class AutoStaffPaymentsController extends Controller
             $notes = "User: $staff->name - $que->notes";
             $notes1 = "User: $staff->name - $que->notes2";
 
-            createUserTransaction(auth()->id(), now(),$que->amount, 0, $notes, $ref);
-            createUserTransaction($que->userID, now(),0, $que->amount, $notes1, $ref);
+            createUserTransaction(auth()->id(), $date,$que->amount, 0, $notes, $ref);
+            createUserTransaction($que->userID, $date,0, $que->amount, $notes1, $ref);
            
-            createMethodTransaction($que->userID,$que->method, 0, $que->amount, now(), $que->number, $que->bank, $que->cheque_date, $notes, $ref);
-            createMethodTransaction(auth()->user()->id,$que->method, $que->amount, 0, now(), $que->number, $que->bank, $que->cheque_date, $notes1, $ref);
+            createMethodTransaction($que->userID,$que->method, 0, $que->amount, $date, $que->number, $que->bank, $que->cheque_date, $notes, $ref);
+            createMethodTransaction(auth()->user()->id,$que->method, $que->amount, 0, $date, $que->number, $que->bank, $que->cheque_date, $notes1, $ref);
 
             if($que->method == 'Cheque')
             {
@@ -95,7 +97,7 @@ class AutoStaffPaymentsController extends Controller
                 payments::create(
                     [
                         'receiverID'     => $request->account,
-                        'date'          => now(),
+                        'date'          => $date,
                         'amount'        => $que->amount,
                         'method'        => $que->method,
                         'number'        => $que->number,
@@ -111,10 +113,10 @@ class AutoStaffPaymentsController extends Controller
                 $user_name = auth()->user()->name;
                
     
-                createTransaction($request->account, now(), $que->amount, 0, $notes1, $ref, $que->orderbookerID);
-                createMethodTransaction(auth()->user()->id,$que->method, 0, $que->amount, now(), $que->number, $que->bank, $que->cheque_date, $notes1, $ref);
+                createTransaction($request->account, $date, $que->amount, 0, $notes1, $ref, $que->orderbookerID);
+                createMethodTransaction(auth()->user()->id,$que->method, 0, $que->amount, $date, $que->number, $que->bank, $que->cheque_date, $notes1, $ref);
                
-                createUserTransaction(auth()->user()->id, now(),0, $que->amount, $notes1, $ref);
+                createUserTransaction(auth()->user()->id, $date,0, $que->amount, $notes1, $ref);
             }
            
         }

@@ -102,7 +102,7 @@ class OtherusersController extends Controller
     {
         $user = User::find($id);
 
-        $transactions = users_transactions::where('userID', $id)->whereBetween('date', [$from, $to])->get();
+        $transactions = users_transactions::where('userID', $id)->whereBetween('date', [$from, $to])->orderBy('date', 'asc')->get();
 
         $pre_cr = users_transactions::where('userID', $id)->whereDate('date', '<', $from)->sum('cr');
         $pre_db = users_transactions::where('userID', $id)->whereDate('date', '<', $from)->sum('db');
