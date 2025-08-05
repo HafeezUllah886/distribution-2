@@ -30,6 +30,14 @@
                                     <!--end col-->
                                     <!--end col-->
                                     <div class="col-lg-3 col-6">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">From</p>
+                                        <h5 class="fs-14 mb-0"><span id="total-amount">{{ $from }}</span></h5>
+                                    </div>
+                                    <div class="col-lg-3 col-6">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">To</p>
+                                        <h5 class="fs-14 mb-0"><span id="total-amount">{{ $to }}</span></h5>
+                                    </div>
+                                    <div class="col-lg-3 col-6">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Printed On</p>
                                         <h5 class="fs-14 mb-0"><span id="total-amount">{{ date("d M Y") }}</span></h5>
                                         {{-- <h5 class="fs-14 mb-0"><span id="total-amount">{{ \Carbon\Carbon::now()->format('h:i A') }}</span></h5> --}}

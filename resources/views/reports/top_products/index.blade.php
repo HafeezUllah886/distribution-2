@@ -21,6 +21,14 @@
                         </select>
                     </div>
                     <div class="form-group mt-2">
+                        <label for="from">From</label>
+                        <input type="date" name="from" id="from" value="{{firstDayOfMonth()}}" class="form-control">
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="to">To</label>
+                        <input type="date" name="to" id="to" value="{{lastDayOfMonth()}}" class="form-control">
+                    </div>
+                    <div class="form-group mt-2">
                         <label for="vendor">Vendors</label>
                         <select name="vendor[]" id="vendor" class="selectize" multiple>
                             @foreach ($vendors as $vendor)
