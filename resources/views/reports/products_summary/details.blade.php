@@ -67,16 +67,30 @@
                                         </thead>
                                         <tbody>
                                             @php
-                                                $totalSold = 0;
+                                                $totalSoldQty = 0;
+                                                $totalSoldLoose = 0;
+
                                                 $totalProfit = 0;
-                                                $totalStock = 0;
+
+                                                $totalStockQty = 0;
+                                                $totalStockLoose = 0;
                                                 $totalAmount = 0;
                                             @endphp
                                         @foreach ($topProductsArray as $key => $product)
                                         @php
-                                            $totalSold += $product['sold'];
+                                            $sold = PackInfoWithoutName($product['unitValue'], $product['sold']);
+                                            [$soldQty, $soldLoose] = explode(",", $sold);
+
+                                            $totalSoldQty += (int) $soldQty;
+                                            $totalSoldLoose += (int) $soldLoose;
+
+                                            $stock = PackInfoWithoutName($product['unitValue'], $product['stock']);
+                                            [$stockQty, $stockLoose] = explode(",", $stock);
+
+                                            $totalStockQty += (int) $stockQty;
+                                            $totalStockLoose += (int) $stockLoose;
+
                                             $totalProfit += $product['profit'];
-                                            $totalStock += $product['stock'];
                                             $totalAmount += $product['amount'];
                                         @endphp
                                             <tr>
@@ -85,7 +99,7 @@
                                                 <td class="text-end">{{ $product['unit']}}</td>
                                                 <td class="text-end">{{ $product['unitValue']}}</td>
                                                 <td class="text-end">{{ number_format($product['pprice'],2) }}</td>
-                                                <td class="text-end">{{ number_format($product['price'],2)}}</td>
+                                                <td class="text-end">{{ number_format($product['price'] * $product['unitValue'],2)}}</td>
                                                 <td class="text-end">{{packInfoWithOutName($product['unitValue'], $product['sold'])}} </td>
                                                 <td class="text-end">{{ number_format($product['profit'],2) }}</td>
                                                 <td class="text-end">{{packInfoWithOutName($product['unitValue'], $product['stock'])}} </td>
@@ -96,9 +110,9 @@
                                         <tfoot>
                                             <tr>
                                                 <th colspan="6" class="text-end">Total</th>
-                                                <th class="text-end">{{ number_format($totalSold) }}</th>
+                                                <th class="text-end">{{ number_format($totalSoldQty) }}, {{ number_format($totalSoldLoose) }}</th>
                                                 <th class="text-end">{{ number_format($totalProfit) }}</th>
-                                                <th class="text-end">{{ number_format($totalStock) }}</th>
+                                                <th class="text-end">{{ number_format($totalStockQty) }}, {{ number_format($totalStockLoose) }}</th>
                                                 <th class="text-end">{{ number_format($totalAmount) }}</th>
                                             </tr>
                                         </tfoot>

@@ -48,7 +48,7 @@ class OrderbookerPerformanceReportController extends Controller
                 $customer_balance = 0;
                 foreach($customers as $customer)
                 {
-                    $customer_balance += getAccountBalance($customer->customerID);
+                    $customer_balance += getAccountBalanceOrderbookerWise($customer->customerID, $orderbooker->id);
                 }
                 $orderbooker->customer_balance = $customer_balance;
             }

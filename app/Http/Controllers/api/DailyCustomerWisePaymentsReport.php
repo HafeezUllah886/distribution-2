@@ -22,7 +22,7 @@ class DailyCustomerWisePaymentsReport extends Controller
         $methodData = [];
         foreach($customers as $customer)
         {
-            $customerTitle = accounts::find($customer)->title;
+            $customerTitle = $customer . "-" .accounts::find($customer)->title;
             $sales_payment = sale_payments::where('customerID', $customer)->where('orderbookerID', $request->user()->id)->whereBetween('date', [$from, $to])->where('userID', $request->user()->id)->sum('amount');
             $payment_receiving = paymentsReceiving::where('depositerID', $customer)->where('orderbookerID', $request->user()->id)->whereBetween('date', [$from, $to])->where('userID', $request->user()->id)->sum('amount');
 

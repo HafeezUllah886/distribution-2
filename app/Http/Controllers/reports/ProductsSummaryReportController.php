@@ -30,111 +30,45 @@ class ProductsSummaryReportController extends Controller
     {
         $from = $request->from;
         $to = $request->to;
-        $branch = $request->branch;
-       
-        if($branch == "All")
+        $branch = $request->branch ?? "All";
+        $vendor = $request->vendor ?? "All";
+
+        $products = products::with('units')->whereHas('saleDetails', function($query) use ($from, $to) {
+               
+            $query->whereBetween('date', [$from, $to]);
+        })
+        ->withSum(['saleDetails' => function($query) use ($from, $to) {
+
+            $query->whereBetween('date', [$from, $to]);
+        }], 'pc')
+        ->withSum(['saleDetails' => function($query) use ($from, $to) {
+            $query->whereBetween('date', [$from, $to]);
+        }], 'amount');
+
+        if($branch != "All")
         {
-            if($request->vendor)
-            {
-                $topProducts = products::with('units')->whereIn('vendorID', $request->vendor)->whereHas('saleDetails', function($query) use ($from, $to) {
-               
-                    $query->whereBetween('date', [$from, $to]);
-                })
-                ->withSum(['saleDetails' => function($query) use ($from, $to) {
-    
-                    $query->whereBetween('date', [$from, $to]);
-                }], 'qty')
-                ->withSum(['saleDetails' => function($query) use ($from, $to) {
-                    $query->whereBetween('date', [$from, $to]);
-                }], 'amount')
-                ->orderByDesc('sale_details_sum_qty')
-                ->get();
-            }
-            else
-            {
-                $topProducts = products::with('units')->whereHas('saleDetails', function($query) use ($from, $to) {
-               
-                    $query->whereBetween('date', [$from, $to]);
-                })
-                ->withSum(['saleDetails' => function($query) use ($from, $to) {
-    
-                    $query->whereBetween('date', [$from, $to]);
-                }], 'qty')
-                ->withSum(['saleDetails' => function($query) use ($from, $to) {
-                    $query->whereBetween('date', [$from, $to]);
-                }], 'amount')
-                ->orderByDesc('sale_details_sum_qty')
-                ->get();
-            }
-           
-    
-            $topProductsArray = [];
-    
-            foreach($topProducts as $product)
-            {
-                $stock = getStock($product->id);
-                $price = avgSalePrice($from, $to,'all', $product->id);
-            $pprice = avgPurchasePrice($from, $to, 'all', $product->id);
-                
-                $ppu = $price - $pprice;
-                $profit = $ppu * $product->sale_details_sum_qty;
-                $stockValue = stockValue($product->id);
-
-                $topProductsArray[] = ['name' => $product->name, 'unit' => $product->units[0]->unit_name, 'unitValue' => $product->units[0]->value, 'price' => $price, 'pprice' => $pprice, 'profit' => $profit, 'stock' => $stock, 'stockValue' => $stockValue, 'amount' => $product->sale_details_sum_amount, 'sold' => $product->sale_details_sum_qty];
-            }
+            $products->where('branchID', $branch);
         }
-       else
-       {
-            $sales = sales::where('branchID', $branch)->get()->pluck('id')->toArray();
-            if($request->vendor)
-            {
-                $topProducts = products::with('units')->whereIn('vendorID', $request->vendor)->whereHas('saleDetails', function($query) use ($sales, $from, $to) {
-                    $query->whereIn('saleID', $sales);
-                    $query->whereBetween('date', [$from, $to]);
-                })
-                ->withSum(['saleDetails' => function($query) use ($sales, $from, $to) {
-                    $query->whereIn('saleID', $sales);
-                    $query->whereBetween('date', [$from, $to]);
-                }], 'qty')
-                ->withSum(['saleDetails' => function($query) use ($sales, $from, $to) {
-                    $query->whereIn('saleID', $sales);
-                    $query->whereBetween('date', [$from, $to]);
-                }], 'amount')
-                ->orderByDesc('sale_details_sum_qty')
-                ->get();
-            }
-            else
-            {
-                $topProducts = products::with('units')->whereHas('saleDetails', function($query) use ($sales, $from, $to) {
-                    $query->whereIn('saleID', $sales);
-                    $query->whereBetween('date', [$from, $to]);
-                })
-                ->withSum(['saleDetails' => function($query) use ($sales, $from, $to) {
-                    $query->whereIn('saleID', $sales);
-                    $query->whereBetween('date', [$from, $to]);
-                }], 'qty')
-                ->withSum(['saleDetails' => function($query) use ($sales, $from, $to) {
-                    $query->whereIn('saleID', $sales);
-                    $query->whereBetween('date', [$from, $to]);
-                }], 'amount')
-                ->orderByDesc('sale_details_sum_qty')
-                ->get();
-            }
-            $topProductsArray = [];
-
-            foreach($topProducts as $product)
-            {
-                $stock = getBranchProductStock($product->id, $branch);
-                $price = avgSalePrice($from, $to,$branch, $product->id);
-            $pprice = avgPurchasePrice($from, $to, $branch, $product->id);
+        if($vendor != "All")
+        {
+            $products->where('vendorID', $vendor);
+        }
+        $products = $products->orderByDesc('sale_details_sum_pc')->get();
+       
+        $topProductsArray = [];
+    
+        foreach($products as $product)
+        {
+            $stock = getStock($product->id);
+            $price = $product->sale_details_sum_amount / $product->sale_details_sum_pc;
+            $pprice = avgPurchasePrice($from, $to, 'all', $product->id);
             
             $ppu = $price - $pprice;
-            $profit = $ppu * $product->sale_details_sum_qty;
-            $stockValue = getBranchProductStock($product->id, $branch) * $pprice;
+            $profit = $ppu * $product->sale_details_sum_pc;
+            $stockValue = stockValue($product->id);
 
-            $topProductsArray[] = ['name' => $product->name, 'unit' => $product->units[0]->unit_name, 'unitValue' => $product->units[0]->value, 'price' => $price, 'pprice' => $pprice, 'profit' => $profit, 'stock' => $stock, 'stockValue' => $stockValue, 'amount' => $product->sale_details_sum_amount, 'sold' => $product->sale_details_sum_qty];
-        } 
-       }
+            $topProductsArray[] = ['name' => $product->name, 'unit' => $product->units[0]->unit_name, 'unitValue' => $product->units[0]->value, 'price' => $price, 'pprice' => $pprice, 'profit' => $profit, 'stock' => $stock, 'stockValue' => $stockValue, 'amount' => $product->sale_details_sum_amount, 'sold' => $product->sale_details_sum_pc];
+        }
 
        if($branch != "All")
        {
