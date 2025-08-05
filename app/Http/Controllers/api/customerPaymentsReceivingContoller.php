@@ -326,4 +326,43 @@ class customerPaymentsReceivingContoller extends Controller
         'data' => $methodData
     ], 200);
    }
+
+   public function orderbookerPendingInvoices(Request $request)
+   {
+      
+    $customers = orderbooker_customers::where('orderbookerID', $request->user()->id)->get();
+
+    $data = [];
+    foreach($customers as $customer)
+    {
+       $invoices = sales::with('payments')->where('customerID', $customer->customerID)->where('orderbookerID', $request->user()->id)->unpaidOrPartiallyPaid()->get();
+       $customerData = accounts::find($customer->customerID);
+       $invoicesData = [];
+       foreach($invoices as $invoice)
+       {
+           $payment = $invoice->payments->sum('amount');
+           
+           $invoicesData[] = [
+               'salesID' => $invoice->id,
+               'total_bill' => $invoice->net,
+               'paid' => $payment,
+               'due' => $invoice->net - $payment,
+               'date' => $invoice->date,
+               'age' => $invoice->age(),
+               'payments' => $invoice->payments()->select('method', 'number', 'bank', 'cheque_date', 'amount', 'date', 'notes')->get(),
+           ];
+       }
+       $data[] = [
+           'customerID' => $customer->customerID,
+           'customerName' => $customerData->title,
+           'invoices' => $invoicesData
+       ];
+    }
+    return response()->json([
+        'status' => 'success',
+        'data' => $data
+    ], 200);
+   }
+
 }
+
