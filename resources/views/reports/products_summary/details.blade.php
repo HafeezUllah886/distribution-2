@@ -57,10 +57,8 @@
                                                 <th scope="col" class="text-start">Product</th>
                                                 <th scope="col" class="text-end">Unit</th>
                                                 <th scope="col" class="text-end">Pack Size</th>
-                                                <th scope="col" class="text-end">P-Price</th>
                                                 <th scope="col" class="text-end">S-Price</th>
                                                 <th scope="col" class="text-end">Sold</th>
-                                                <th scope="col" class="text-end">Profit</th>
                                                 <th scope="col" class="text-end">Stock</th>
                                                 <th scope="col" class="text-end">Amount</th>
                                             </tr>
@@ -98,10 +96,8 @@
                                                 <td class="text-start">{{ $product['name']}}</td>
                                                 <td class="text-end">{{ $product['unit']}}</td>
                                                 <td class="text-end">{{ $product['unitValue']}}</td>
-                                                <td class="text-end">{{ number_format($product['pprice'],2) }}</td>
                                                 <td class="text-end">{{ number_format($product['price'] * $product['unitValue'],2)}}</td>
                                                 <td class="text-end">{{packInfoWithOutName($product['unitValue'], $product['sold'])}} </td>
-                                                <td class="text-end">{{ number_format($product['profit'],2) }}</td>
                                                 <td class="text-end">{{packInfoWithOutName($product['unitValue'], $product['stock'])}} </td>
                                                 <td class="text-end">{{ number_format($product['amount'],2) }}</td>
                                             </tr>
@@ -109,9 +105,8 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="6" class="text-end">Total</th>
+                                                <th colspan="5" class="text-end">Total</th>
                                                 <th class="text-end">{{ number_format($totalSoldQty) }}, {{ number_format($totalSoldLoose) }}</th>
-                                                <th class="text-end">{{ number_format($totalProfit) }}</th>
                                                 <th class="text-end">{{ number_format($totalStockQty) }}, {{ number_format($totalStockLoose) }}</th>
                                                 <th class="text-end">{{ number_format($totalAmount) }}</th>
                                             </tr>

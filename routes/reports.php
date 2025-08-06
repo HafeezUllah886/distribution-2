@@ -54,10 +54,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/balanceSheet/{type}/{from}/{to}/{branch}', [balanceSheetReport::class, 'data'])->name('reportBalanceSheetData');
 
     Route::get('/reports/warehousestockreport', [WarehouseStockReportController::class, 'index'])->name('reportWarehouseStock');
-    Route::get('/reports/warehousestockreport/{warehouse}/{value}/{vendors}', [WarehouseStockReportController::class, 'data'])->name('reportWarehouseStockData');
+    Route::get('/reports/warehousestockreport/{warehouse}/{value}/{vendors?}', [WarehouseStockReportController::class, 'data'])->name('reportWarehouseStockData');
 
     Route::get('/reports/branchstockreport', [BranchStockReportController::class, 'index'])->name('reportBranchStock');
-    Route::get('/reports/branchstockreport/{branch}/{value}/{vendors}', [BranchStockReportController::class, 'data'])->name('reportBranchStockData');
+    Route::get('/reports/branchstockreport/{branch}/{value}/{vendors?}', [BranchStockReportController::class, 'data'])->name('reportBranchStockData');
 
     Route::get('/reports/topcustomersreport', [TopCustomersReportController::class, 'index'])->name('reportTopCustomers');
     Route::get('/reports/topcustomersreportData', [TopCustomersReportController::class, 'data'])->name('reportTopCustomersData');

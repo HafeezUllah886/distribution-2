@@ -23,10 +23,18 @@ class BranchStockReportController extends Controller
         return view('reports.branch_stock.index', compact('branches', 'vendors'));
     }  
 
-    public function data($branch, $value, $vendor)
+    public function data($branch, $value, $vendor = 'All')
     {
-        $vendorIds = array_map('intval', explode(',', $vendor));
-        $vendors = accounts::with('vendor_products')->whereIn('id', $vendorIds)->get();
+        if($vendor != "All")
+        {
+            $vendorIds = array_map('intval', explode(',', $vendor));
+
+            $vendors = accounts::with('vendor_products')->whereIn('id', $vendorIds)->get();
+        }
+        else
+        {
+            $vendors = accounts::vendor()->currentBranch()->get();
+        }
         foreach($vendors as $vendor)
         {
             foreach($vendor->vendor_products as $product)

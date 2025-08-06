@@ -22,11 +22,19 @@ class WarehouseStockReportController extends Controller
         return view('reports.warehouse_stock.index', compact('warehouses', 'vendors'));
     }
 
-    public function data($warehouse, $value, $vendor)
+    public function data($warehouse, $value, $vendor = 'All')
     {
-        $vendorIds = array_map('intval', explode(',', $vendor));
+        if($vendor != "All")
+        {
+            $vendorIds = array_map('intval', explode(',', $vendor));
 
-        $vendors = accounts::with('vendor_products')->whereIn('id', $vendorIds)->get();
+            $vendors = accounts::with('vendor_products')->whereIn('id', $vendorIds)->get();
+        }
+        else
+        {
+            $vendors = accounts::vendor()->currentBranch()->get();
+        }
+       
         foreach($vendors as $vendor)
         {
             $products = products::currentBranch()->where('vendorID', $vendor)->get();
