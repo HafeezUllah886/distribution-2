@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\staffAmountAdjustment;
 use App\Http\Controllers\Controller;
+use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\method_transactions;
