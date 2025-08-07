@@ -53,7 +53,7 @@ class AutoStaffPaymentsController extends Controller
         {
             $que = transactions_que::find($transaction);
 
-            $date = $que->method == 'Online' ? $que->date : now();
+            $date = $que->method == 'Online' ? $que->cheque_date : now();
 
             $ref = getRef();
             staffPayments::create(
