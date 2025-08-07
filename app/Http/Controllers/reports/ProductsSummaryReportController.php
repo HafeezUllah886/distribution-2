@@ -51,7 +51,7 @@ class ProductsSummaryReportController extends Controller
         }
         if($vendor != "All")
         {
-            $products->where('vendorID', $vendor);
+            $products->whereIn('vendorID', $vendor);
         }
         $products = $products->orderByDesc('sale_details_sum_pc')->get();
        
@@ -67,7 +67,7 @@ class ProductsSummaryReportController extends Controller
             $profit = $ppu * $product->sale_details_sum_pc;
             $stockValue = stockValue($product->id);
 
-            $topProductsArray[] = ['name' => $product->name, 'unit' => $product->units[0]->unit_name, 'unitValue' => $product->units[0]->value, 'price' => $price, 'pprice' => $pprice, 'profit' => $profit, 'stock' => $stock, 'stockValue' => $stockValue, 'amount' => $product->sale_details_sum_amount, 'sold' => $product->sale_details_sum_pc];
+            $topProductsArray[] = ['name' => $product->name, 'vendor' => $product->vendor->title, 'unit' => $product->units[0]->unit_name, 'unitValue' => $product->units[0]->value, 'price' => $price, 'pprice' => $pprice, 'profit' => $profit, 'stock' => $stock, 'stockValue' => $stockValue, 'amount' => $product->sale_details_sum_amount, 'sold' => $product->sale_details_sum_pc];
         }
 
        if($branch != "All")

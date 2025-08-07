@@ -55,6 +55,7 @@
                                             <tr class="table-active">
                                                 <th scope="col" style="width: 50px;">#</th>
                                                 <th scope="col" class="text-start">Product</th>
+                                                <th scope="col" class="text-start">Vendor</th>
                                                 <th scope="col" class="text-end">Unit</th>
                                                 <th scope="col" class="text-end">Pack Size</th>
                                                 <th scope="col" class="text-end">S-Price</th>
@@ -94,6 +95,7 @@
                                             <tr>
                                                 <td>{{ $key+1}}</td>
                                                 <td class="text-start">{{ $product['name']}}</td>
+                                                <td class="text-start">{{ $product['vendor']}}</td>
                                                 <td class="text-end">{{ $product['unit']}}</td>
                                                 <td class="text-end">{{ $product['unitValue']}}</td>
                                                 <td class="text-end">{{ number_format($product['price'] * $product['unitValue'],2)}}</td>
@@ -105,7 +107,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="5" class="text-end">Total</th>
+                                                <th colspan="6" class="text-end">Total</th>
                                                 <th class="text-end">{{ number_format($totalSoldQty) }}, {{ number_format($totalSoldLoose) }}</th>
                                                 <th class="text-end">{{ number_format($totalStockQty) }}, {{ number_format($totalStockLoose) }}</th>
                                                 <th class="text-end">{{ number_format($totalAmount) }}</th>
