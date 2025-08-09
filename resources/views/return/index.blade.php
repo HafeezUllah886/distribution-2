@@ -129,22 +129,21 @@
                 <form action="{{ route('return.create') }}" method="get">
                   @csrf
                          <div class="modal-body">
-                                <div class="form-group mt-2">
-                                    <label for="customerID">Customer</label>
-                                    <select name="customerID" id="customerID" class="form-control">
-                                        @foreach ($customers as $customer)
-                                            <option value="{{$customer->id}}">{{$customer->title}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group mt-2">
-                                    <label for="orderbookerID">Order Booker</label>
-                                    <select name="orderbookerID" id="orderbookerID" class="form-control">
-                                        @foreach ($orderbookers as $orderbooker)
-                                            <option value="{{$orderbooker->id}}">{{$orderbooker->name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <div class="form-group mt-2">
+                                <label for="orderbookerID">Order Booker</label>
+                                <select name="orderbookerID" id="orderbookerID" onchange="getCustomers(this.value)" class="form-control">
+                                   <option value="">Select Order Booker</option>
+                                    @foreach ($orderbookers as $orderbooker)
+                                        <option value="{{$orderbooker->id}}">{{$orderbooker->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="customerID">Customer</label>
+                                <select name="customerID" id="customerID" class="selectize">
+                                   <option value="">Select Customer</option>
+                                </select>
+                            </div>
                          </div>
                          <div class="modal-footer">
                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
@@ -163,6 +162,7 @@
 <link rel="stylesheet" href="{{ asset('assets/libs/datatable/responsive.bootstrap.min.css') }}" />
 
 <link rel="stylesheet" href="{{ asset('assets/libs/datatable/buttons.dataTables.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
 @endsection
 @section('page-js')
     <script src="{{ asset('assets/libs/datatable/jquery.dataTables.min.js')}}"></script>
@@ -176,4 +176,37 @@
     <script src="{{ asset('assets/libs/datatable/jszip.min.js')}}"></script>
 
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
+    <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
+
+    <script>
+
+        $('#customerID').selectize();
+
+        function getCustomers(orderbookerID)
+        {
+            var customerSelectize = $('#customerID')[0].selectize; // Access the selectize instance
+            if (orderbookerID) {
+        // Make an AJAX call to fetch sectors for selected town
+        $.ajax({
+            url: '/orderbooker/getcustomers/' + orderbookerID,
+            type: 'GET',
+            success: function (data) {
+                
+                // Clear previous options 
+                customerSelectize.clearOptions();
+
+                // Add new options
+                customerSelectize.addOption(data); // data should be an array of {value: '', text: ''}
+                customerSelectize.refreshOptions(false);
+            }
+        });
+    }
+    else
+    {
+        customerSelectize.clearOptions();
+    }
+}
+
+
+   </script>
 @endsection
