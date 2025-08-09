@@ -95,44 +95,38 @@ class BranchOrdersController extends Controller
             $net = 0;
             foreach($request->id as $key => $id) {
                 $unit = product_units::find($request->unit[$key]);
-                $pc = $request->qty[$key] * $unit->value;
-
-                $product = products::find($id);
-                $qty = $pc + $request->loose[$key];
-
-                $price = $product->price;
-                $discount = $product->discount;
-                $discountp = $product->discountp;
-                $discountpValue = $discountp * $price / 100;
-                $fright = $product->sfright;
-                $claim = $product->sclaim;
-                $dc = product_dc::where('productID', $product->id)->where('areaID', $order->customer->areaID)->first();
-                $labor = $request->labor[$key];
-
-                $amount = (($price - $discount - $discountpValue - $claim) + $fright) * $qty;
-                $net += $amount;
+                $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
+                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                $price = $request->price[$key];
+                $discount = $request->discount[$key];
+                $claim = $request->claim[$key];
+                $frieght = $request->fright[$key];
+                $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
+                $netPrice = ($price - $discount - $discountvalue - $claim) + $frieght;
+                $amount = $netPrice * $pc;
+               
             
                 $orderDetail = order_details::create([
                     'orderID' => $order->id,
                     'productID' => $id,
                     'customerID' => $order->customerID,
                     'orderbookerID' => $order->orderbookerID,
-                    'price' => $price,
-                    'discount' => $discount,
                     'branchID' => Auth()->user()->branchID,
-                    'discountp' => $discountp,
-                    'discountvalue' => $discountpValue,
-                    'qty' => $request->qty[$key],
-                    'loose' => $request->loose[$key],
-                    'bonus' => $request->bonus[$key],
-                    'pc' => $qty,
-                    'fright' => $fright,
-                    'labor' => $labor,
-                    'claim' => $claim,
-                    'netprice' => $price - $discount - $discountpValue - $claim + $fright,
-                    'amount' => $amount,
                     'date' => $order->date,
-                    'unitID' => $request->unit[$key]
+                    'price'         => $price,
+                    'discount'      => $discount,
+                    'discountp'     => $request->discountp[$key],
+                    'discountvalue' => $discountvalue,
+                    'qty'           => $request->qty[$key],
+                    'pc'            => $pc,
+                    'loose'         => $request->loose[$key],
+                    'netprice'      => $netPrice,
+                    'amount'        => $amount,
+                    'bonus'         => $request->bonus[$key],
+                    'labor'         => $request->labor[$key],
+                    'fright'        => $request->fright[$key],
+                    'claim'         => $claim,
+                    'unitID'        => $unit->id,
                 ]);
 
             }

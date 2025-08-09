@@ -34,11 +34,11 @@ class ReturnsController extends Controller
 
         if($bookerID == null)
         {
-            $returns = returns::whereBetween('date', [$start, $end])->orderBy('date', 'desc')->get();
+            $returns = returns::whereBetween('date', [$start, $end])->currentBranch()->orderBy('date', 'desc')->get();
         }
         else
         {
-            $returns = returns::whereBetween('date', [$start, $end])->where('orderbookerID', $bookerID)->orderBy('date', 'desc')->get();
+            $returns = returns::whereBetween('date', [$start, $end])->where('orderbookerID', $bookerID)->currentBranch()->orderBy('date', 'desc')->get();
         }
         $customers = accounts::customer()->currentBranch()->get();
         $orderbookers = User::orderbookers()->currentBranch()->get();
