@@ -48,6 +48,10 @@ class DailyCustomerWisePaymentsReport extends Controller
                 $totalMethodData[$method] += $customer[$method];
             }
         }
+
+        if (empty($methodData)) {
+            $methodData = (object)[]; // Forces it to be returned as {}
+        }
        
         return response()->json([
             'status' => 'success',
