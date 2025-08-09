@@ -28,7 +28,7 @@ class InvoicePaymentsHistory extends Controller
             $data[] = [
                 'salesID' => $payment->salesID,
                 'paymentID' => $payment->id,
-                'customer' => $payment->bill->first()->customer->title,
+                'customer' => $payment->bill->customer->title,
                 'method' => $payment->method,
                 'number' => $payment->number,
                 'bank' => $payment->bank,
