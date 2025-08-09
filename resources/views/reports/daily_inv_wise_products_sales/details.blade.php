@@ -114,8 +114,7 @@
                                                         <td class="text-end p-1 m-0">{{ number_format($detail->amount,2) }}</td>
                                                     </tr>
                                                     @endforeach
-                                                    </tbody>
-                                                    <tfoot>
+                                                   
                                                         <tr class="table-active text-success">
                                                             <th colspan="4" class="text-end">Total</th>
                                                             <th class="text-end">{{ number_format($sale->details->sum('qty')) }}</th>
@@ -123,19 +122,19 @@
                                                             <th class="text-end">{{ number_format($sale->details->sum('bonus')) }}</th>
                                                             <th class="text-end">{{ number_format($sale->details->sum('amount'),2) }}</th>
                                                         </tr>
-                                                    </tfoot>
+                                                    </tbody>
+                                                   
                                                 </table>
                                                 <hr>
                                             </td>
                                         </tr>
                                         @endforeach
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="table-active text-success">
-                                                <th colspan="7" class="text-start">Grand Total:    QTY: {{ number_format($totalQty) }} ----- LOOSE: {{ number_format($totalLoose) }} ----- BONUS: {{ number_format($totalBonus) }} ----- AMOUNT: {{ number_format($totalAmount,2) }}</th>
-                                              
-                                            </tr>
-                                        </tfoot>
+                                       
+                                        <tr class="table-active text-success">
+                                            <th colspan="7" class="text-start">Grand Total:    QTY: {{ number_format($totalQty) }} ----- LOOSE: {{ number_format($totalLoose) }} ----- BONUS: {{ number_format($totalBonus) }} ----- AMOUNT: {{ number_format($totalAmount,2) }}</th>
+                                          
+                                        </tr>
+                                    </tbody>
                                     </table><!--end table-->
                                 </div>
 

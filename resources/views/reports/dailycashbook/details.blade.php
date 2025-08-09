@@ -127,13 +127,12 @@
                                                 <td class="text-end m-0 p-0">{{ number_format($db_tran->db,2) }}</td>
                                             </tr>
                                         @endforeach
+                                        <tr class="table-active">
+                                            <th colspan="4" class="text-end">Total Debits</th>
+                                            <th class="text-end">{{number_format($db_trans->sum('db'), 2)}}</th>
+                                        </tr>
                                         </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th colspan="4" class="text-end">Total Debits</th>
-                                                <th class="text-end">{{number_format($db_trans->sum('db'), 2)}}</th>
-                                            </tr>
-                                        </tfoot>
+                                        
                                     </table><!--end table-->
                                 </div>
 

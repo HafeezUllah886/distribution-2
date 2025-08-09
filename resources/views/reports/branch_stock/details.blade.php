@@ -122,14 +122,12 @@
                                             @endif
                                         @endforeach
 
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
+                                        <tr class="table-active">
                                             <th colspan="5" class="text-end p-1 m-0">Grand Total</th>
                                             <th class="text-end p-1 m-0">{{ number_format($totalQty, 2) }}</th>
                                             <th class="text-end p-1 m-0">{{ number_format($totalAmount, 2) }}</th>
                                         </tr>
-                                    </tfoot>
+                                </tbody>
                                 </table><!--end table-->
                             </div>
                         </div>

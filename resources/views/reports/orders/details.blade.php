@@ -240,9 +240,6 @@
                                                 </tr>
                                                 @endif
                                             @endforeach
-                                           
-                                        </tbody>
-                                        <tfoot>
                                             <tr class="table-active text-danger">
                                                 <th colspan="5" class="text-end p-1">Grand Total</th>
                                                 <th class="text-start p-1">{{ number_format($GrandOrderQty) }}</th>
@@ -256,7 +253,7 @@
                                                 <th class="text-start p-1">{{ number_format($GrandPendingLoose) }}</th>
                                                 <th class="text-start p-1">{{ number_format($GrandPendingAmount) }}</th>
                                             </tr>
-                                        </tfoot>
+                                        </tbody>
                                     </table><!--end table-->
                                 </div>
 

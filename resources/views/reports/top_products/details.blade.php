@@ -103,15 +103,14 @@
                                                 <td class="text-end">{{ number_format($product['amount'],2) }}</td>
                                             </tr>
                                         @endforeach
+                                        <tr>
+                                            <th colspan="5" class="text-end">Total</th>
+                                            <th class="text-end">{{ $totalStockQty }}, {{ $totalStockLoose }}</th>
+                                            <th class="text-end">{{ $totalSoldQty }}, {{ $totalSoldLoose }}</th>
+                                            <th class="text-end">{{ number_format($totalAmount,2) }}</th>
+                                        </tr>
                                         </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th colspan="5" class="text-end">Total</th>
-                                                <th class="text-end">{{ $totalStockQty }}, {{ $totalStockLoose }}</th>
-                                                <th class="text-end">{{ $totalSoldQty }}, {{ $totalSoldLoose }}</th>
-                                                <th class="text-end">{{ number_format($totalAmount,2) }}</th>
-                                            </tr>
-                                        </tfoot>
+                                       
                                     </table><!--end table-->
                                 </div>
 

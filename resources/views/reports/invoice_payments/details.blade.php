@@ -234,16 +234,14 @@
                                     @endif
                                  
                                     @endforeach
-                                    
-                                    </tbody>
-                                    <tfoot>
                                         <tr class="table-active text-danger">
                                             <th class="p-1 text-end" colspan="4">Grand Total - {{$totalInv}} Inv(s)</th>
                                             <th class="p-1">{{number_format($totalAmount)}}</th>
                                             <th class="p-1">{{number_format($totalPaid)}}</th>
                                             <th class="p-1">{{number_format($totalDue)}}</th>
                                         </tr>
-                                    </tfoot>
+                                   
+                                </tbody>
                               
                                 </table><!--end table-->
                             </div>

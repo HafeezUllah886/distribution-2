@@ -28,6 +28,11 @@
         input:invalid {
         border-color: red;  /* Change the border to red for invalid fields */
         }
+        @media print {
+  tfoot {
+    display: table-row-group; /* Prevent browser from treating it as a repeating footer */
+  }
+}
     </style>
     @yield('page-css')
 

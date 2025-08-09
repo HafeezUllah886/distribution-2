@@ -205,9 +205,6 @@
                                             </tr>
                                         @endif
                                         @endforeach
-                                        
-                                    </tbody>
-                                    <tfoot>
                                         <tr class="table-active bg-success bg-opacity-25">
                                             <th colspan="4" class="text-end p-1 m-0">Total</th>
                                             <th class="text-end p-1 m-0">{{ $totalOpeningQty }}, {{ $totalOpeningLoose }}</th>
@@ -222,7 +219,7 @@
                                             <th class="text-end p-1 m-0">{{ $totalClosingQty }}, {{ $totalClosingLoose }}</th>
                                             <th class="text-end p-1 m-0">{{ $totalCurrentQty }}, {{ $totalCurrentLoose }}</th>
                                         </tr>
-                                    </tfoot>
+                                    </tbody>
                                     </table><!--end table-->
 
                                 </div>

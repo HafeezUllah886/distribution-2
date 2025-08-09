@@ -87,16 +87,14 @@
                                                 <td class="text-end">{{ number_format($sale->due(), 0) }}</td>
                                             </tr>
                                         @endforeach
-                                        </tbody>
-                                        <tfoot>
                                         <tr>
-                                                <th colspan="3" class="text-end">Total</th>
-                                               
-                                               <th class="text-end">{{number_format($totalAmount, 0)}}</th>
-                                               <th class="text-end">{{number_format($totalPaid, 0)}}</th>
-                                                <th class="text-end">{{number_format($totalDue, 0)}}</th>
-                                            </tr> 
-                                        </tfoot>
+                                            <th colspan="3" class="text-end">Total</th>
+                                           
+                                           <th class="text-end">{{number_format($totalAmount, 0)}}</th>
+                                           <th class="text-end">{{number_format($totalPaid, 0)}}</th>
+                                            <th class="text-end">{{number_format($totalDue, 0)}}</th>
+                                        </tr> 
+                                        </tbody>
                                     </table><!--end table-->
                                 </div>
 

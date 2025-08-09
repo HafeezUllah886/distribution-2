@@ -74,14 +74,12 @@
                                                     <td class="text-end">{{ number_format($productDetails['total_qty'] / $productDetails['pack_size'], 2)}} {{$productDetails['pack_size'] > 1 ? "Box" : "Nos"}}</td>
                                                     {{-- <td class="text-end">{{ number_format($productDetails['total_amount'], 2) }}</td>  </tr> --}}
                                                 @endforeach
+                                                <tr>
+                                                    <th colspan="2" class="text-end">Total</th>
+                                                    <th class="text-end">{{number_format($total_qty, 2)}}</th>
+                                                    <th class="text-end">{{number_format($total_ctn, 2)}}</th>
+                                                </tr>
                                         </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th colspan="2" class="text-end">Total</th>
-                                                <th class="text-end">{{number_format($total_qty, 2)}}</th>
-                                                <th class="text-end">{{number_format($total_ctn, 2)}}</th>
-                                            </tr>
-                                        </tfoot>
                                     </table><!--end table-->
                                 </div>
 

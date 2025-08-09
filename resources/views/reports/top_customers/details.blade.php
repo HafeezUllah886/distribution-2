@@ -71,14 +71,13 @@
                                                 <td class="text-end">{{ number_format($customer->balance,2) }}</td>
                                             </tr>
                                         @endforeach
+                                        <tr class="table-active">
+                                            <th colspan="4" class="text-end">Total</th>
+                                            <th class="text-end">{{ number_format($customers->sum('sales'),2) }}</th>
+                                            <th class="text-end">{{ number_format($customers->sum('balance'),2) }}</th>
+                                        </tr>
                                         </tbody>
-                                        <tfoot>
-                                            <tr class="table-active">
-                                                <th colspan="4" class="text-end">Total</th>
-                                                <th class="text-end">{{ number_format($customers->sum('sales'),2) }}</th>
-                                                <th class="text-end">{{ number_format($customers->sum('balance'),2) }}</th>
-                                            </tr>
-                                        </tfoot>
+                                       
                                     </table><!--end table-->
                                 </div>
 

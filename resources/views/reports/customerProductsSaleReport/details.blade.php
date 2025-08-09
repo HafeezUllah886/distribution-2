@@ -118,15 +118,12 @@
                                                 <td class="text-end fw-bold">{{ number_format($vendorTotal) }}</td>
                                             </tr>
                                         @endforeach
-                                       
-                                    </tbody>
-                                    <tfoot>
                                         <tr class="table-active bg-success bg-opacity-25">
                                             <th colspan="6" class="text-end">Grand Total </th>
                                             <th class="text-end">{{$totalQty}}, {{ $totalLoose }}</th>
                                             <th class="text-end">{{ number_format($sale_details->sum('total_amount')) }}</th>
                                         </tr>
-                                    </tfoot>
+                                </tbody>
                                 </table>
                             </div>
                         </div>

@@ -149,21 +149,19 @@
                                                 <td class="text-end">{{ number_format($due, 0) }}</td>
                                             </tr>
                                         @endforeach
-                                        </tbody>
-                                        <tfoot>
                                         <tr>
-                                                <th colspan="6" class="text-end">Total</th>
-                                                <th class="text-end">{{number_format($netQty)}}, {{ number_format($netLoose) }}</th>
-                                                <th class="text-end">{{number_format($netDiscount, 0)}}</th>
-                                                <th class="text-end">{{number_format($netFright, 0)}}</th>
-                                                <th class="text-end">{{number_format($netLabor, 0)}}</th>
-                                                <th class="text-end">{{number_format($netClaim, 0)}}</th>
-                                               
-                                                <th class="text-end">{{number_format($sales->sum('net'), 0)}}</th>
-                                               <th class="text-end">{{number_format($totalPaid, 0)}}</th>
-                                                <th class="text-end">{{number_format($totalDue, 0)}}</th>
-                                            </tr> 
-                                        </tfoot>
+                                            <th colspan="6" class="text-end">Total</th>
+                                            <th class="text-end">{{number_format($netQty)}}, {{ number_format($netLoose) }}</th>
+                                            <th class="text-end">{{number_format($netDiscount, 0)}}</th>
+                                            <th class="text-end">{{number_format($netFright, 0)}}</th>
+                                            <th class="text-end">{{number_format($netLabor, 0)}}</th>
+                                            <th class="text-end">{{number_format($netClaim, 0)}}</th>
+                                           
+                                            <th class="text-end">{{number_format($sales->sum('net'), 0)}}</th>
+                                           <th class="text-end">{{number_format($totalPaid, 0)}}</th>
+                                            <th class="text-end">{{number_format($totalDue, 0)}}</th>
+                                        </tr> 
+                                        </tbody>
                                     </table><!--end table-->
                                 </div>
 

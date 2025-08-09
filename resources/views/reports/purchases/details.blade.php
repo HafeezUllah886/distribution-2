@@ -116,18 +116,17 @@
                                                 <td class="text-end">{{ number_format($item->net, 0) }}</td>
                                             </tr>
                                         @endforeach
+                                        <tr class="table-active">
+                                            <th colspan="5" class="text-end">Total</th>
+                                            <th class="text-end">{{number_format($netQty)}}, {{ number_format($netLoose) }}</th>
+                                            <th class="text-end">{{number_format($netDiscount, 0)}}</th>
+                                            <th class="text-end">{{number_format($netFright, 0)}}</th>
+                                            <th class="text-end">{{number_format($netLabor, 0)}}</th>
+                                            <th class="text-end">{{number_format($netClaim, 0)}}</th>
+                                            <th class="text-end">{{number_format($purchases->sum('net'), 2)}}</th>
+                                        </tr>
                                         </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th colspan="5" class="text-end">Total</th>
-                                                <th class="text-end">{{number_format($netQty)}}, {{ number_format($netLoose) }}</th>
-                                                <th class="text-end">{{number_format($netDiscount, 0)}}</th>
-                                                <th class="text-end">{{number_format($netFright, 0)}}</th>
-                                                <th class="text-end">{{number_format($netLabor, 0)}}</th>
-                                                <th class="text-end">{{number_format($netClaim, 0)}}</th>
-                                                <th class="text-end">{{number_format($purchases->sum('net'), 2)}}</th>
-                                            </tr>
-                                        </tfoot>
+                                        
                                     </table><!--end table-->
                                 </div>
 
