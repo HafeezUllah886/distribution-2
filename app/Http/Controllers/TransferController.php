@@ -114,7 +114,6 @@ class TransferController extends Controller
             transactions::where('refID', $ref)->delete();
             currency_transactions::where('refID', $ref)->delete();
 
-            deleteAttachment($ref);
             DB::commit();
             session()->forget('confirmed_password');
             return redirect()->route('transfers.index')->with('success', "Transfer Deleted");
