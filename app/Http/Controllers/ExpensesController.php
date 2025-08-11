@@ -36,7 +36,7 @@ class ExpensesController extends Controller
         {
             $currency->qty = getCurrencyBalance($currency->id, auth()->user()->id);
         }
-        $categories = expense_categories::all();
+        $categories = expense_categories::currentBranch()->get();
         return view('Finance.expense.index', compact('expenses', 'currencies', 'categories', 'from', 'to', 'categoryID'));
     }
 
