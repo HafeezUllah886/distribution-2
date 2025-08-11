@@ -55,6 +55,7 @@
                             <th>#</th>
                             <th>Customer</th>
                             <th>Area</th>
+                            <th>Order Booker</th>
                             <th>Date</th>
                             <th>Amount</th>
                             <th>Status</th>
@@ -66,6 +67,7 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $return->customer->title }}</td>
                                     <td>{{ $return->customer->area->name }}</td>
+                                    <td>{{ $return->orderbooker->name }}</td>
                                     <td>{{ date('d M Y', strtotime($return->date)) }}</td>
                                     <td>{{ number_format($return->net) }}</td>
                                     <td>
