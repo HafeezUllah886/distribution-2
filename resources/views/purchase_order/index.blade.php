@@ -74,6 +74,7 @@
                             <th>Received Qty</th>
                             <th>Remaining Qty</th>
                             <th>Status</th>
+                            <th>Notes</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
@@ -90,6 +91,7 @@
                                     <td>{{ $order->totalReceivedQty() }}</td>
                                     <td>{{ $order->totalPendingQty() }}</td>
                                     <td>{{ $order->status }}</td>
+                                    <td>{{ $order->notes }}</td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
