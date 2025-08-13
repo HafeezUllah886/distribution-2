@@ -4,8 +4,11 @@ namespace App\Http\Controllers\reports;
 
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\area;
 use App\Models\branches;
+use App\Models\orderbooker_customers;
 use App\Models\transactions;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class balanceSheetReport extends Controller
@@ -20,22 +23,28 @@ class balanceSheetReport extends Controller
         {
             $branches = branches::where('id', auth()->user()->branchID)->get();
         }
-        return view('reports.balanceSheet.index', compact('branches'));
+        $areas = area::currentBranch()->get();
+        $orderbookers = User::orderbookers()->currentBranch()->get();
+        return view('reports.balanceSheet.index', compact('branches', 'areas', 'orderbookers'));
     }
 
-    public function data($type, $from, $to, $branch)    
+    public function data($type, $from, $to, $branch, $area, $orderbooker)    
     {
-        if($branch == "All")
-        {
-            $ids = accounts::where('type', $type)->pluck('id')->toArray();
-        }
-        else
-        {
-            $ids = accounts::where('type', $type)->where('branchID', $branch)->pluck('id')->toArray();
+            $ids = accounts::where('type', $type)->where('branchID', $branch);
+            if($area != "All")
+            {
+                $ids = $ids->where('areaID', $area);
+            }
+
+            if($orderbooker != "All")
+            {
+                $orderbooker_customers = orderbooker_customers::where('orderbookerID', $orderbooker)->pluck('customerID')->toArray();
+                $ids = $ids->whereIn('id', $orderbooker_customers);
+            }
+            $ids = $ids->pluck('id')->toArray();
+
             $branch = branches::find($branch);
             $branch = $branch->name;
-        }
-
         $transactions = transactions::with('account')->whereIn('accountID', $ids)->whereBetween('date', [$from, $to])->get();
 
         $pre_cr = transactions::whereIn('accountID', $ids)->whereDate('date', '<', $from)->sum('cr');

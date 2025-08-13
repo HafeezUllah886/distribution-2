@@ -7,6 +7,7 @@
                     <h3>View Balance Sheet Report</h3>
                 </div>
                 <div class="card-body">
+                    
                     <div class="form-group mt-2">
                         <label for="type">Account Type</label>
                         <select name="type" id="type" class="form-control">
@@ -16,11 +17,26 @@
                         </select>
                     </div>
                     <div class="form-group mt-2">
+                        <label for="areaID">Area</label>
+                        <select name="areaID" id="areaID" class="form-control">
+                           <option value="All">Select Area</option>
+                            @foreach ($areas as $area)
+                                <option value="{{$area->id}}">{{$area->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="orderbookerID">Order Booker</label>
+                        <select name="orderbookerID" id="orderbookerID" class="form-control">
+                           <option value="All">Select Order Booker</option>
+                            @foreach ($orderbookers as $orderbooker)
+                                <option value="{{$orderbooker->id}}">{{$orderbooker->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
                         <label for="branch">Branch</label>
                         <select name="branch" id="branch" class="form-control">
-                            @if(auth()->user()->role == "Admin")
-                            <option value="All">All</option>
-                            @endif
                             @foreach ($branches as $branch)
                                 <option value="{{$branch->id}}">{{$branch->name}}</option>
                             @endforeach
@@ -52,11 +68,15 @@
             var to = $("#to").val();
             var type = $("#type").find(':selected').val();
             var branch = $("#branch").find(':selected').val();
-            var url = "{{ route('reportBalanceSheetData', ['from' => ':from', 'to' => ':to', 'type' => ':type', 'branch' => ':branch']) }}"
+            var area = $("#areaID").find(':selected').val();
+            var orderbooker = $("#orderbookerID").find(':selected').val();
+            var url = "{{ route('reportBalanceSheetData', ['from' => ':from', 'to' => ':to', 'type' => ':type', 'branch' => ':branch', 'area' => ':area', 'orderbooker' => ':orderbooker']) }}"
         .replace(':from', from)
         .replace(':to', to)
         .replace(':type', type)
-        .replace(':branch', branch);
+        .replace(':branch', branch)
+        .replace(':area', area)
+        .replace(':orderbooker', orderbooker);
             window.open(url, "_blank", "width=1000,height=800");
         });
     </script>
