@@ -7,10 +7,12 @@ use App\Models\accounts;
 use App\Models\order_delivery;
 use App\Models\order_details;
 use App\Models\orders;
+use App\Models\paymentsReceiving;
 use App\Models\product_dc;
 use App\Models\product_units;
 use App\Models\products;
 use App\Models\sale_details;
+use App\Models\sale_payments;
 use App\Models\sales;
 use App\Models\User;
 use App\Models\warehouses;
@@ -59,7 +61,40 @@ class BranchOrdersController extends Controller
 
         $order = orders::with('customer', 'details.product', 'details.unit')->findOrFail($id);
 
-        return view('orders.edit', compact('order', 'products'));
+        $orderbooker = $order->orderbookerID;
+        $customer = $order->customerID;
+        
+            $sale_payment_date = sale_payments::where('customerID', $customer)->where('orderbookerID', $orderbooker)->orderBy('id', 'desc')->pluck('date');
+            $payment_receiving_date = paymentsReceiving::where('depositerID', $customer)->where('orderbookerID', $orderbooker)->orderBy('id', 'desc')->pluck('date');
+        
+            //newest date
+            $newest_date = $sale_payment_date->max();
+            if($payment_receiving_date->max() > $newest_date)
+            {
+                $newest_date = $payment_receiving_date->max();
+            }
+            
+            $methods = ['Cash', 'Cheque', 'Online', 'Other'];
+            $methodData = [];
+            $methodData['date'] = $newest_date;
+           foreach($methods as $method)
+           {
+            $sales_payment = sale_payments::where('customerID', $customer)->where('date', $newest_date)->where('method', $method)->sum('amount');
+            $payment_receiving = paymentsReceiving::where('depositerID', $customer)->where('date', $newest_date)->where('method', $method)->sum('amount');
+        
+            $total = $sales_payment + $payment_receiving;
+            $methodData[$method] = round($total, 2);
+           }
+        
+           $last_sale = sales::where('customerID', $customer)->orderBy('id', 'desc')->first()->date;
+           $last_sale_amount = sales::where('customerID', $customer)->orderBy('id', 'desc')->first()->net;
+           $last_balance = getAccountBalanceOrderbookerWise($customer, $orderbooker);
+        
+           $methodData['last_sale'] = $last_sale;
+           $methodData['last_sale_amount'] = round($last_sale_amount, 2);
+           $methodData['last_balance'] = round($last_balance, 2);
+
+        return view('orders.edit', compact('order', 'products', 'methodData'));
     }
 
     public function update(Request $request, $id)
