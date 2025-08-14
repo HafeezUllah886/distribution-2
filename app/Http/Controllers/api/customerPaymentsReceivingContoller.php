@@ -312,6 +312,8 @@ class customerPaymentsReceivingContoller extends Controller
     $methodData[$method] = round($total, 2);
    }
 
+   
+
    $last_sale = sales::where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->first();
    if($last_sale)
    {
