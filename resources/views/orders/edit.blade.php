@@ -235,7 +235,7 @@
                         </div>
                         <div class="col-3">
                             <h5>Last Sale Date</h5>
-                            <p>{{ date('Y-m-d', strtotime($methodData['last_sale'])) }}</p>
+                            <p>{{ $methodData['last_sale'] ? date('Y-m-d', strtotime($methodData['last_sale'])) : 'N/A' }}</p>
                         </div>
                         <div class="col-3">
                             <h5>Last Sale Amount</h5>
