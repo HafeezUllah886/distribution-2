@@ -86,8 +86,8 @@ class BranchOrdersController extends Controller
             $methodData[$method] = round($total, 2);
            }
         
-           $last_sale = sales::where('customerID', $customer)->orderBy('id', 'desc')->first()->date;
-           $last_sale_amount = sales::where('customerID', $customer)->orderBy('id', 'desc')->first()->net;
+           $last_sale = sales::where('customerID', $customer)->where('orderbookerID', $orderbooker)->orderBy('id', 'desc')->first()->date;
+           $last_sale_amount = sales::where('customerID', $customer)->where('orderbookerID', $orderbooker)->orderBy('id', 'desc')->first()->net;
            $last_balance = getAccountBalanceOrderbookerWise($customer, $orderbooker);
         
            $methodData['last_sale'] = $last_sale;
