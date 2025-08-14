@@ -312,8 +312,8 @@ class customerPaymentsReceivingContoller extends Controller
     $methodData[$method] = round($total, 2);
    }
 
-   $last_sale = sales::where('customerID', $request->customerID)->orderBy('id', 'desc')->first()->date;
-   $last_sale_amount = sales::where('customerID', $request->customerID)->orderBy('id', 'desc')->first()->net;
+   $last_sale = sales::where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->first()->date;
+   $last_sale_amount = sales::where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->first()->net;
    $last_balance = getAccountBalanceOrderbookerWise($request->customerID, $request->user()->id);
 
    $methodData['last_sale'] = $last_sale;
