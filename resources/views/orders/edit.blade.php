@@ -261,6 +261,18 @@
                             <h5>Other</h5>
                             <p>{{ number_format($methodData['Other'], 0) }}</p>
                         </div>
+                        <div class="col-3">
+                            <h5>Total Receivings</h5>
+                            <p>{{ number_format($methodData['Cash'] + $methodData['Cheque'] + $methodData['Online'] + $methodData['Other'], 0) }}</p>
+                        </div>
+                        <div class="col-3">
+                            <h5>This Order</h5>
+                            <p>{{ number_format($order->net, 0) }}</p>
+                        </div>
+                        <div class="col-3">
+                            <h5>Net Balance</h5>
+                            <p>{{ number_format($methodData['last_balance'] + $order->net, 0) }}</p>
+                        </div>
                     </div>
                 </div>
                 @endif
