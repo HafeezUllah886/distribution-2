@@ -57,6 +57,7 @@
                                                 <td scope="col" class="p-1 m-0" style="width: 50px;">#</td>
                                                 <td scope="col" class="p-1 m-0" style="width: 50px;">Inv #</td>
                                                 <td scope="col" class="text-start p-1 m-0">Customer</td>
+                                                <td scope="col" class="text-start p-1 m-0">Area</td>
                                                 <td scope="col" class="p-1 m-0">Date</td>
                                                 <td scope="col" class="p-1 m-0">Orderbooker</td>
                                                 <td scope="col" class="p-1 m-0">Supplyman</td>
@@ -81,13 +82,14 @@
                                             <th class="p-1 m-0">{{ $key+1 }}</th>
                                             <th class="p-1 m-0">{{ $sale->id }}</th>
                                             <th class="text-start p-1 m-0">{{ $sale->customer->title }}</th>
+                                            <th class="text-start p-1 m-0">{{ $sale->customer->area->name }}</th>
                                             <th class="p-1 m-0">{{ date('d M Y', strtotime($sale->date)) }}</th>
                                             <th class="p-1 m-0">{{ $sale->orderbooker->name }}</th>
                                             <th class="p-1 m-0">{{ $sale->supplyman->title }}</th>
                                             <th class="p-1 m-0">{{ number_format($sale->net,2)}}</th>
                                         </tr>
                                         <tr>
-                                            <td colspan="7">
+                                            <td colspan="8">
                                                 <table class="table table-bordered table-nowrap align-middle mb-0">
                                                     <thead>
                                                         <tr class="table-active">
