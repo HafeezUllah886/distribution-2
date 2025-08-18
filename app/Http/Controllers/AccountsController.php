@@ -175,21 +175,15 @@ class AccountsController extends Controller
 
         $pre_balance = $pre_cr - $pre_db;
 
-        $cur_cr = transactions::where('accountID', $id);
+        
         if($orderbooker != 0)
         {
-            $cur_cr = $cur_cr->where('orderbookerID', $orderbooker);
+           $cur_balance = getAccountBalanceOrderbookerWise($id, $orderbooker);
         }
-        $cur_cr = $cur_cr->sum('cr');
-
-        $cur_db = transactions::where('accountID', $id);
-        if($orderbooker != 0)
+        else
         {
-            $cur_db = $cur_db->where('orderbookerID', $orderbooker);
+            $cur_balance = getAccountBalance($id);
         }
-        $cur_db = $cur_db->sum('db');
-
-        $cur_balance = $cur_cr - $cur_db;
 
         return view('Finance.accounts.statment', compact('account', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to', 'orderbooker'));
     }
