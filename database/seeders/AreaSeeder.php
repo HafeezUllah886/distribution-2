@@ -15,8 +15,8 @@ class AreaSeeder extends Seeder
     public function run(): void
     {
         $data = [
-            ['name' => "Town 1"],
-            ['name' => "Town 2"],
+            ['name' => "Town 1", "branchID" => 1],
+            ['name' => "Town 2", "branchID" => 1],
         ];
         town::insert($data);
 

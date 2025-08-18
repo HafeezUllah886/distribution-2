@@ -99,25 +99,34 @@
                                     <input type="hidden" name="orderbookerID" value="{{$orderbooker->id}}">
                                 </div>
                             </div>
-                            <div class="col-4 mt-2">
+                            <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="date">Sale Date</label>
                                     <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}" class="form-control">
                                 </div>
                             </div>
                            
-                            <div class="col-4 mt-2">
+                            <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="customer">Customer</label>
                                     <input type="text" value="{{$customer->title}}" class="form-control" readonly>
                                     <input type="hidden" name="customerID" value="{{$customer->id}}">
                                 </div>
                             </div>
-                            <div class="col-4 mt-2">
+                            <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="warehouseID">Warehouse</label>
                                     <input type="text" value="{{$warehouse->name}}" class="form-control" readonly>
                                     <input type="hidden" name="warehouseID" value="{{$warehouse->id}}">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="payment">Payment</label>
+                                   <select name="payment" class="form-control">
+                                    <option value="Pending">Pending</option>
+                                    <option value="Advance">Paid In Advance</option>
+                                   </select>
                                 </div>
                             </div>
                            

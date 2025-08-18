@@ -163,9 +163,77 @@ class SalesController extends Controller
                 ]
             );
 
-            createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id Notes: $request->notes", $ref, $request->orderbookerID);
+           
             createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer Notes: $request->notes", $ref, $request->orderbookerID);
 
+            if($request->payment == "Advance")
+            {
+                $account_balance = getAccountBalance($request->customerID);
+                if($account_balance >= 0)
+                {
+                    
+                    createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id Notes: $request->notes", $ref, $request->orderbookerID);
+                    DB::commit();
+                    return back()->with('success', "Sale Created But Invoice is not marked as Paid as Customer Balance is not enough");
+                }
+                else
+                {
+                    $balance = abs($account_balance);
+                    $difference = $balance - $net;
+                    if($difference >= 0)
+                    {
+                        sale_payments::create(
+                            [
+                                'salesID'       => $sale->id,
+                                'orderbookerID' => $sale->orderbookerID,
+                                'branchID'      => auth()->user()->branchID,
+                                'customerID'    => $sale->customerID,
+                                'method'        => "Cash",
+                                'number'        => "Advance",
+                                'bank'          => "Advance",
+                                'cheque_date'   => $request->date,
+                                'date'          => $request->date,
+                                'amount'        => $net,
+                                'notes'         => "Advance Payment of Sale No. $sale->id",
+                                'userID'        => auth()->id(),
+                                'refID'         => $ref,
+                            ]
+                        );
+                        createTransaction($request->customerID, $request->date, $net, 0, "Sale No. $sale->id Adjusted as Already Paid Notes: $request->notes", $ref, $request->orderbookerID);
+                        
+                        DB::commit();
+                        return back()->with('success', "Sale Created and marked as paid");
+                    }
+                    else
+                    {
+                        $diff = abs($difference);
+                        sale_payments::create(
+                            [
+                                'salesID'       => $sale->id,
+                                'orderbookerID' => $sale->orderbookerID,
+                                'branchID'      => auth()->user()->branchID,
+                                'customerID'    => $sale->customerID,
+                                'method'        => "Cash",
+                                'number'        => "Advance",
+                                'bank'          => "Advance",
+                                'cheque_date'   => $request->date,
+                                'date'          => $request->date,
+                                'amount'        => $diff,
+                                'notes'         => "Advance Payment of Sale No. $sale->id",
+                                'userID'        => auth()->id(),
+                                'refID'         => $ref,
+                            ]
+                        );
+                        createTransaction($request->customerID, $request->date, $diff, 0, "Partial Payment of Sale No. $sale->id as already paid Notes: $request->notes", $ref, $request->orderbookerID);
+                        DB::commit();
+                        return back()->with('success', "Sale Created and Rs. $diff is marked as paid");
+                    }
+                }
+            }
+            else
+            {
+                createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id Notes: $request->notes", $ref, $request->orderbookerID);
+            }
             DB::commit();
             return back()->with('success', "Sale Created");
         }

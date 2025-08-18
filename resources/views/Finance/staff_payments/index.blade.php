@@ -7,13 +7,13 @@
                     <div class="col-md-3">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">From</span>
-                            <input type="date" name="start" value="{{$start}}" class="form-control">
+                            <input type="date" name="start" value="{{ $start }}" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">To</span>
-                            <input type="date" name="end" value="{{$end}}" class="form-control">
+                            <input type="date" name="end" value="{{ $end }}" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -22,7 +22,8 @@
                             <select name="from" id="from" class="form-control">
                                 <option @selected($from == 'All') value="All">All</option>
                                 @foreach ($users as $user)
-                                    <option @selected($from == $user->id) value="{{$user->id}}">{{$user->name}}</option>
+                                    <option @selected($from == $user->id) value="{{ $user->id }}">{{ $user->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -40,7 +41,7 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                       <input type="submit" value="Filter" class="btn btn-success w-100">
+                        <input type="submit" value="Filter" class="btn btn-success w-100">
                     </div>
                 </div>
             </form>
@@ -52,14 +53,14 @@
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
                     <table class="table" id="buttons-datatables">
                         <thead>
@@ -98,14 +99,16 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <button class="dropdown-item" onclick="newWindow('{{route('staff_payments.show', $tran->id)}}')"
+                                                    <button class="dropdown-item"
+                                                        onclick="newWindow('{{ route('staff_payments.show', $tran->id) }}')"
                                                         onclick=""><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         View
                                                     </button>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item text-danger" href="{{route('staff_payments.delete', $tran->refID)}}">
+                                                    <a class="dropdown-item text-danger"
+                                                        href="{{ route('staff_payments.delete', $tran->refID) }}">
                                                         <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
                                                         Delete
                                                     </a>
@@ -136,8 +139,8 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-6">
-                               @include('layout.payment')
-                               <div class="form-group mt-2 check_customer d-none">
+                                @include('layout.payment')
+                                <div class="form-group mt-2 check_customer d-none">
                                     <label for="customerID">Check From</label>
                                     <select name="customerID" id="customerID" required class="selectize">
                                         @foreach ($customers as $customer)
@@ -156,22 +159,31 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-group mt-2">
-                                    <label for="fromID">From (Balance: <span id="accountBalance">0</span>) <span class="text-primary" id="viewBalance">View Balance</span></label>
-                            <select name="fromID" id="fromID" onchange="getBalance()" required class="selectize">
-                                <option value=""></option>
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->role }})</option>
-                                @endforeach
-                            </select>
+                                    <label for="fromID">From (Balance: <span id="accountBalance">0</span>) <span
+                                            class="text-primary" id="viewBalance">View Balance</span></label>
+                                    <select name="fromID" id="fromID" onchange="getBalance()" required
+                                        class="selectize">
+                                        <option value=""></option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }}
+                                                ({{ $user->role }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="date">Date</label>
+                                    <input type="date" name="date" required id="date"
+                                        value="{{ date('Y-m-d') }}" class="form-control">
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="notes">Notes</label>
+                                    <textarea name="notes" required id="notes" cols="30" class="form-control" rows="5"></textarea>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group mt-2">
-                            <label for="date">Date</label>
-                            <input type="date" name="date" required id="date" value="{{ date('Y-m-d') }}"
-                                class="form-control">
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="notes">Notes</label>
-                            <textarea name="notes" required id="notes" cols="30" class="form-control" rows="5"></textarea>
+                        <div class="row">
+                            
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -184,16 +196,16 @@
     </div><!-- /.modal -->
 @endsection
 @section('page-css')
-<link rel="stylesheet" href="{{ asset('assets/libs/datatable/datatable.bootstrap5.min.css') }}" />
-<!--datatable responsive css-->
-<link rel="stylesheet" href="{{ asset('assets/libs/datatable/responsive.bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/datatable.bootstrap5.min.css') }}" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/responsive.bootstrap.min.css') }}" />
 
-<link rel="stylesheet" href="{{ asset('assets/libs/datatable/buttons.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/buttons.dataTables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
 @endsection
 
 @section('page-js')
-<script src="{{ asset('assets/libs/datatable/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/dataTables.buttons.min.js') }}"></script>
@@ -209,21 +221,17 @@
     <script>
         $(".selectize").selectize();
 
-        function getBalance()
-        {
+        function getBalance() {
             var id = $("#fromID").find(":selected").val();
             $.ajax({
                 url: "{{ url('/userbalance/') }}/" + id,
                 method: 'GET',
                 success: function(response) {
                     $("#accountBalance").html(response.data);
-                    if(response.data > 0)
-                    {
+                    if (response.data > 0) {
                         $("#accountBalance").addClass('text-success');
                         $("#accountBalance").removeClass('text-danger');
-                    }
-                    else
-                    {
+                    } else {
                         $("#accountBalance").addClass('text-danger');
                         $("#accountBalance").removeClass('text-success');
                     }
@@ -234,10 +242,9 @@
             });
         }
         $("#viewBalance").click(function() {
-           var user = $("#fromID").find(":selected").val();
-           var url = "{{ url('/staff_balance/') }}/" + user;
-           window.open(url, "_blank", "width=600,height=800");
+            var user = $("#fromID").find(":selected").val();
+            var url = "{{ url('/staff_balance/') }}/" + user;
+            window.open(url, "_blank", "width=600,height=800");
         });
     </script>
-
 @endsection
