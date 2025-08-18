@@ -157,7 +157,7 @@ class AccountsController extends Controller
         {
             $transactions = $transactions->where('orderbookerID', $orderbooker);
         }
-        $transactions = $transactions->orderBy('date', 'asc')->get();
+        $transactions = $transactions->orderBy('date', 'asc')->orderBy('refID', 'asc')->get();
 
         $pre_cr = transactions::where('accountID', $id)->whereDate('date', '<', $from);
         if($orderbooker != 0)
@@ -265,7 +265,7 @@ class AccountsController extends Controller
     public function methodStatement($user, $method, $from, $to)
     {
 
-        $transactions = method_transactions::where('userID', $user)->where('method', $method)->whereBetween('date', [$from, $to])->get();
+        $transactions = method_transactions::where('userID', $user)->where('method', $method)->whereBetween('date', [$from, $to])->orderBy('date', 'asc')->orderBy('refID', 'asc')->get();
         $pre_cr = method_transactions::where('userID', $user)->where('method', $method)->whereDate('date', '<', $from)->sum('cr');
         $pre_db = method_transactions::where('userID', $user)->where('method', $method)->whereDate('date', '<', $from)->sum('db');
         $pre_balance = $pre_cr - $pre_db;

@@ -61,7 +61,7 @@ class StockController extends Controller
 
         if($warehouse == 'all')
         {
-            $stocks = stock::where('productID', $id)->whereBetween('date', [$from, $to])->orderBy('date', 'asc')->get();
+            $stocks = stock::where('productID', $id)->whereBetween('date', [$from, $to])->orderBy('date', 'asc')->orderBy('refID', 'asc')->get();
 
             $pre_cr = stock::where('productID', $id)->whereDate('date', '<', $from)->sum('cr');
             $pre_db = stock::where('productID', $id)->whereDate('date', '<', $from)->sum('db');
