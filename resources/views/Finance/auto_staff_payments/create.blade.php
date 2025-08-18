@@ -18,6 +18,7 @@
                                 <th>Customer</th>
                                 <th>Area</th>
                                 <th>Order Booker</th>
+                                <th>Date</th>
                                 <th>Bank</th>
                                 <th>Cheque / Slip No.</th>
                                 <th>Cheque Date</th>
@@ -32,6 +33,7 @@
                                     <td>{{ $transaction->customer->title }}</td>
                                     <td>{{ $transaction->customer->area->name }}</td>
                                     <td>{{ $transaction->orderbooker->name }}</td>
+                                    <td>{{ date('d-m-Y', strtotime($transaction->date)) }}</td>
                                     <td>{{ $transaction->bank }}</td>
                                     <td>{{ $transaction->number }}</td>
                                     <td>{{ date('d-m-Y', strtotime($transaction->cheque_date)) }}</td>
@@ -85,9 +87,7 @@
 
 <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
 <script>
-    $(".selectize").selectize({
-        
-    });
+    $(".selectize").selectize();
 
     function refresh_page() {
         var forward = $("#forward").find("option:selected").val();
