@@ -127,15 +127,12 @@ function createAttachment($file, $ref)
 }
 
 function getAccountBalance($id){
-    $transactions  = transactions::where('accountID', $id);
-
-    $cr = $transactions->sum('cr');
-    $db = $transactions->sum('db');
-    $balance = $cr - $db;
-
-    return $balance;
+    $cr = transactions::where('accountID', $id)
+            ->selectRaw('CAST(SUM(cr) AS DECIMAL(15,2)) as total')->value('total');
+    $db = transactions::where('accountID', $id)
+            ->selectRaw('CAST(SUM(db) AS DECIMAL(15,2)) as total')->value('total');
+    return $cr - $db;
 }
-
 function getEmployeeBalance($id){
     $transactions  = employee_ledger::where('employeeID', $id);
 
