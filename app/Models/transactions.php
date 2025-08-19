@@ -18,9 +18,4 @@ class transactions extends Model
     {
         return $this->belongsTo(User::class, 'orderbookerID');
     }
-
-    protected $casts = [
-        'cr' => 'decimal:2',
-        'db' => 'decimal:2',
-    ];
 }
