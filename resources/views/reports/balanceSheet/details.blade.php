@@ -60,7 +60,8 @@
                                             <tr class="table-active">
                                                 <th scope="col" style="width: 50px;">#</th>
                                                 <th scope="col" style="width: 50px;">Ref#</th>
-                                                <th scope="col" style="width: 50px;">Account</th>
+                                                <th scope="col" >Account</th>
+                                                <th scope="col" >Order Booker</th>
                                                 <th scope="col">Date</th>
                                                 <th scope="col" class="text-start">Notes</th>
                                                 <th scope="col" class="text-end">Credit</th>
@@ -80,7 +81,8 @@
                                             <tr>
                                                 <td>{{ $key+1 }}</td>
                                                 <td>{{ $trans->refID }}</td>
-                                                <td>{{ $trans->account->title }}</td>
+                                                <td class="text-start">{{ $trans->account->title }}</td>
+                                                <td class="text-start">{{ $trans->orderbooker->name }}</td>
                                                 <td>{{ date('d M Y', strtotime($trans->date)) }}</td>
                                                 <td class="text-start" style="max-width: 200px;overflow-wrap: break-word; white-space: normal;">{{ $trans->notes }}</td>
                                                 <td class="text-end">{{ number_format($trans->cr) }}</td>

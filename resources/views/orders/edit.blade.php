@@ -244,6 +244,7 @@
                         <div class="col-3">
                             <h5>Last Balance</h5>
                             <p>{{ number_format($methodData['last_balance'], 0) }}</p>
+                            <input type="hidden" id="last_balance" value="{{ $methodData['last_balance'] }}">
                         </div>
                         <div class="col-3">
                             <h5>Cash</h5>
@@ -267,11 +268,11 @@
                         </div>
                         <div class="col-3">
                             <h5>This Order</h5>
-                            <p>{{ number_format($order->net, 0) }}</p>
+                            <p id="this_order"></p>
                         </div>
                         <div class="col-3">
                             <h5>Net Balance</h5>
-                            <p>{{ number_format($methodData['last_balance'] + $order->net, 0) }}</p>
+                            <p id="net_balance"></p>
                         </div>
                     </div>
                 </div>
@@ -513,6 +514,14 @@
                 var net = total - claim;
 
                 $("#net").val(net.toFixed(2));
+
+                var last_balance = $("#last_balance").val();
+             
+                var net_balance = parseFloat(last_balance) + total;
+
+                $("#this_order").text(total.toFixed(0));
+
+                $("#net_balance").text(parseFloat(net_balance.toFixed(0)));
             }
 
             function deleteRow(id) {
@@ -527,39 +536,6 @@
                 updateChanges({{ $product->productID }});
             @endforeach
 
-            function reminder(id) {
-                $.ajax({
-                    url: "{{ url('reminder/store/') }}/" + id,
-                    method: "GET",
-                    success: function(msg) {
-                        if (msg.msg == 'exists') {
-                            Toastify({
-                                text: "Order Reminder Already Exists",
-                                className: "error",
-                                close: true,
-                                gravity: "top", // `top` or `bottom`
-                                position: "center", // `left`, `center` or `right`
-                                stopOnFocus: true, // Prevents dismissing of toast on hover
-                                style: {
-                                    background: "linear-gradient(to right, #FF5733, #E70000)",
-                                }
-                            }).showToast();
-                        }
-                        if (msg.msg == 'created') {
-                            Toastify({
-                                text: "Order Reminder Created",
-                                className: "success",
-                                close: true,
-                                gravity: "top", // `top` or `bottom`
-                                position: "center", // `left`, `center` or `right`
-                                stopOnFocus: true, // Prevents dismissing of toast on hover
-                                style: {
-                                    background: "linear-gradient(to right, #01CB3E, #96c93d)",
-                                }
-                            }).showToast();
-                        }
-                    }
-                });
-            }
+           
         </script>
     @endsection
