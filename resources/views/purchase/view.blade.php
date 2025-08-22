@@ -116,14 +116,14 @@
                                                         <td class="text-center m-1 p-1">{{number_format($product->qty)}}</td>
                                                         <td class="text-center m-1 p-1">{{number_format($product->loose)}}</td>
                                                         <td class="text-center m-1 p-1">{{number_format($product->bonus)}}</td>
-                                                        <td class="text-end p-1 m-1">{{number_format($price, 2)}}</td>
+                                                        <td class="text-end p-1 m-1">{{number_format($price, 0)}}</td>
                                                         <td class="text-end p-1 m-1">{{number_format($product->discount)}} | {{number_format($discount)}}</td>
                                                         <td class="text-end p-1 m-1">{{$product->discountp}}% | {{number_format($product->discountvalue)}} | {{number_format($discountvalue)}}</td>
                                                         <td class="text-end p-1 m-1">{{number_format($product->claim)}} | {{number_format($claim)}}</td>
-                                                        <td class="text-end p-1 m-1">{{number_format($netprice, 2)}}</td>
+                                                        <td class="text-end p-1 m-1">{{number_format($netprice, 0)}}</td>
                                                         <td class="text-end p-1 m-1">{{number_format($product->fright)}} | {{number_format($fright)}}</td>
                                                         <td class="text-end p-1 m-1">{{number_format($product->labor)}} | {{number_format($labor)}}</td>
-                                                        <td class="text-end p-1 m-1">{{number_format($product->amount,2)}}</td>
+                                                        <td class="text-end p-1 m-1">{{number_format($product->amount,0)}}</td>
                                                        </tr>
                                                    @endforeach
                                                 </tbody>
@@ -140,7 +140,7 @@
                                                         <th></th>
                                                         <th class="text-end">{{number_format($totalFright)}}</th>
                                                         <th class="text-end">{{number_format($totalLabor)}}</th>
-                                                        <th class="text-end">{{number_format($purchase->details->sum('amount'), 2)}}</th>
+                                                        <th class="text-end">{{number_format($purchase->details->sum('amount'), 0)}}</th>
                                                     </tr>
                                                 </tfoot>
                                             </table><!--end table-->
