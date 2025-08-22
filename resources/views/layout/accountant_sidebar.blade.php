@@ -208,6 +208,10 @@
                                 <a href="{{ route('issue_misc.index') }}" class="nav-link"
                                     data-key="t-input-masks">Issue Miscellaneous</a>
                             </li> 
+                            <li class="nav-item">
+                                <a href="{{ route('employee_adjustments.index') }}" class="nav-link"
+                                    data-key="t-input-masks">Ledger Adjustments</a>
+                            </li> 
                         </ul>
                     </div>
                 </li>  

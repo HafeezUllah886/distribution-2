@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmployeeLedgerAdjustmentController;
 use App\Http\Controllers\EmployeeLedgerController;
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\EmployeesPaymentCatsController;
@@ -28,6 +29,8 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
    Route::get('issue_misc/delete/{ref}', [IssueMiscController::class, 'delete'])->name('issue_misc.delete')->middleware(confirmPassword::class);
 
    Route::resource('issue_misc_cats', EmployeesPaymentCatsController::class);
+   Route::resource('employee_adjustments', EmployeeLedgerAdjustmentController::class);
+   Route::get('employee_adjustments/delete/{ref}', [EmployeeLedgerAdjustmentController::class, 'delete'])->name('employee_adjustments.delete')->middleware(confirmPassword::class);
 });
 
 
