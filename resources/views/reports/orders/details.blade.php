@@ -130,7 +130,10 @@
                                                 $areaTotalPendingAmount = 0;
                                             @endphp
                                                 @foreach ($area->customers as $customer)
-
+                                                @php
+                                                    $countCustomer = $customer->orders->count();
+                                                @endphp
+                                                @if($countCustomer > 0)
                                                 <tr class="table-active" style="border: 1px solid #000000 !important;">
                                                     <th scope="row" class="text-start p-1" style="border: 1px solid #000000 !important;" colspan="15">{{ $customer->title }}</th>
                                                 </tr>
@@ -224,6 +227,7 @@
                                                         <th class="text-start p-1">{{ number_format($totalPendingLoose) }}</th>
                                                         <th class="text-start p-1">{{ number_format($totalPendingAmount) }}</th>
                                                     </tr>
+                                                    @endif
                                                 @endforeach
                                                 <tr class="table-active text-primary">
                                                     <th colspan="5" class="text-end p-1">Total of {{ $area->name }}</th>
