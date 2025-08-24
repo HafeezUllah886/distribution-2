@@ -89,7 +89,7 @@
                                     <td>{{ $tran->number }}</td>
                                     <td>{{ $tran->bank }}</td>
                                     <td>{{ $tran->notes }}</td>
-                                    <td>{{ $tran->status }}</td>
+                                    <td>{{ $tran->status }} @if($tran->forwardedTo != null)<br> {{ $tran->forwarded->title }} @endif</td>
                                     <td>
                                         @if($tran->status == 'pending')
                                         <div class="dropdown">
@@ -98,6 +98,12 @@
                                                 <i class="ri-more-fill align-middle"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
+
+                                                <li>
+                                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#forwardModal_{{ $tran->id }}"><i class="ri-check-fill align-bottom me-2 text-muted"></i>
+                                                        Forwarded To
+                                                    </a>
+                                                </li>
                                                 <li>
                                                     <a class="dropdown-item" href="{{ route('cheques.status', ['id' => $tran->id, 'status' => 'cleared']) }}"><i class="ri-check-fill align-bottom me-2 text-muted"></i>
                                                         Mark as Cleared
@@ -114,6 +120,36 @@
                                         @endif
                                     </td>
                                 </tr>
+                                @if($tran->status == 'pending')
+                                <div class="modal fade" id="forwardModal_{{ $tran->id }}" tabindex="-1" aria-labelledby="forwardModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="forwardModalLabel">Forward Cheque</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form id="forwardForm" method="get">
+                                            <div class="modal-body">
+                                            
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Forward To</label>
+                                                        <select name="account" id="account" class="selectize">
+                                                            @foreach ($accounts as $account)
+                                                                <option value="{{$account->id}}">{{$account->title}} - {{$account->type}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <input type="hidden" name="id" id="cheque_id" value="{{ $tran->id }}">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Forward</button>
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                             @endforeach
                         </tbody>
                     </table>
@@ -147,5 +183,56 @@
     <script src="{{ asset('assets/libs/datatable/jszip.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
+
+    <script>
+        /* $(document).ready(function() {
+            
+            $('div[id^="forwardModal_"]').on('show.bs.modal', function() {
+ 
+                console.log('Modal opened');
+                $(this).find('.selectize').selectize({
+                    create: false,
+                    sortField: 'text'
+                });
+            });
+        });
+        */
+
+
+        $(document).ready(function() {
+            $(".selectize").selectize();
+            $("#forwardForm").submit(function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var url = "{{ route('cheques.forward') }}";
+               
+                var selectize = $("#account").find(":selected").val();
+                var id = $("#cheque_id").val();
+                console.log(selectize);
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    data: {
+                        id: id,
+                        account: selectize
+                    },
+                    success: function(response) {
+                        if(response.success) {
+                            form.trigger("reset");
+                            $("#forwardModal").modal("hide");
+                          alert(response.message);
+                          location.reload();
+                        } else {
+                          alert(response.message);
+                        }
+                    },
+                    error: function(response) {
+                        alert(response.responseJSON.message);
+                    }
+                });
+            });
+        });
+
+    </script>
     
 @endsection

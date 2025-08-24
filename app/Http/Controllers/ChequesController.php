@@ -33,7 +33,9 @@ class ChequesController extends Controller
         $cheques = $cheques->get();
         $orderbookers = User::orderbookers()->currentBranch()->get();
 
-        return view('Finance.cheques.index', compact('cheques', 'start', 'end', 'orderbooker', 'status', 'orderbookers'));
+        $accounts = accounts::currentBranch()->get();
+
+        return view('Finance.cheques.index', compact('cheques', 'start', 'end', 'orderbooker', 'status', 'orderbookers', 'accounts'));
     }
 
     /**
@@ -98,5 +100,17 @@ class ChequesController extends Controller
     public function destroy(cheques $cheques)
     {
         //
+    }
+
+    public function forward(Request $request)
+    {
+        $cheque = cheques::findOrFail($request->id);
+        $cheque->update([
+            'forwardedTo' => $request->account,
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Cheque forwarded successfully',
+        ]);
     }
 }
