@@ -140,7 +140,7 @@
                          <div class="modal-body">
                                 <div class="form-group">
                                        <label for="customerID">Customers</label>
-                                       <select name="customerID" id="customerID" class="form-control">
+                                       <select name="customerID" id="customerID" class="selectize">
                                         @foreach ($customers as $customer)
                                             <option value="{{$customer->id}}">{{$customer->title}} - {{$customer->area->name}}</option>
                                         @endforeach
@@ -171,6 +171,7 @@
 <link rel="stylesheet" href="{{ asset('assets/libs/datatable/responsive.bootstrap.min.css') }}" />
 
 <link rel="stylesheet" href="{{ asset('assets/libs/datatable/buttons.dataTables.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
 @endsection
 @section('page-js')
     <script src="{{ asset('assets/libs/datatable/jquery.dataTables.min.js')}}"></script>
@@ -184,4 +185,12 @@
     <script src="{{ asset('assets/libs/datatable/jszip.min.js')}}"></script>
 
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
+
+    <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.selectize').selectize();
+        });
+    </script>
 @endsection
