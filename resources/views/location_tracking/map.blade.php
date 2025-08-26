@@ -30,7 +30,7 @@
                             </div>
                             <select name="end" id="end" class="form-control">
                                 @foreach ($times as $time)
-                                    <option value="{{$time}}">{{$time}}</option>
+                                    <option value="{{$time}}" @if($loop->last) selected @endif>{{$time}}</option>
                                 @endforeach
                             </select>
                           </div>
