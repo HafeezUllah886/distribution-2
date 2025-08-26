@@ -173,6 +173,11 @@
                     </a>
                 </li> 
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('orderbooker.location') }}">
+                        <i class="ri-map-pin-line"></i> <span data-key="t-my_balance">Location Tracking</span>
+                    </a>
+                </li> 
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#products" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-apps-2-line"></i> <span data-key="t-apps">Products</span>

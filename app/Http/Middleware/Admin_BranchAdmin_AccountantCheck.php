@@ -22,7 +22,7 @@ class Admin_BranchAdmin_AccountantCheck
         }
         else
         {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'Admin, Branch Admin & Accountant is Allowed to Access This Page');
         }
     }
 }

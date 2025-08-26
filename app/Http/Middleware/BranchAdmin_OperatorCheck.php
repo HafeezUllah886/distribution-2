@@ -21,7 +21,7 @@ class BranchAdmin_OperatorCheck
         }
         else
         {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'Only Branch Admin and Operator is Allowed to Access This Page');
         }
     }
 }

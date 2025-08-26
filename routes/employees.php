@@ -8,15 +8,21 @@ use App\Http\Controllers\GenerateSalaryController;
 use App\Http\Controllers\IssueAdvanceController;
 use App\Http\Controllers\IssueMiscController;
 use App\Http\Controllers\IssueSalaryController;
+use App\Http\Controllers\LocationTrackingController;
 use App\Http\Middleware\Admin_BranchAdmin_AccountantCheck;
 use App\Http\Middleware\confirmPassword;
 use Illuminate\Support\Facades\Route;
 
+// API endpoint for getting user locations (no auth required)
+Route::get('/get-user-locations', [LocationTrackingController::class, 'getLocations'])->name('get.locations');
+
+// Protected routes
 Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(function () {
    Route::resource('employees', EmployeesController::class);
    Route::resource('generate_salary', GenerateSalaryController::class);
    Route::get('generate_salary/delete/{ref}', [GenerateSalaryController::class, 'delete'])->name('generate_salary.delete')->middleware(confirmPassword::class);
-
+   Route::get('/locationtracking', [LocationTrackingController::class, 'index'])->name('orderbooker.location');
+   Route::get('/locationtracking/view', [LocationTrackingController::class, 'tracking'])->name('orderbooker.location.view');
    Route::get('employee/statement/{id}/{from}/{to}', [EmployeeLedgerController::class, 'statement'])->name('employee.statement');
 
    Route::resource('issue_salary', IssueSalaryController::class);

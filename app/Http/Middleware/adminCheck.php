@@ -17,7 +17,7 @@ class adminCheck
     public function handle(Request $request, Closure $next)
     {
         if (Auth::user()->role != 'Admin') {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'Only Admin is Allowed to Access This Page');
         }
 
         return $next($request);
