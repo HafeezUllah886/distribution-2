@@ -57,7 +57,6 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::get('auto_staff_payments/create', [AutoStaffPaymentsController::class, 'create'])->name('auto_staff_payments.create');
     Route::post('auto_staff_payments/store', [AutoStaffPaymentsController::class, 'store'])->name('auto_staff_payments.store');
 
-
     Route::resource('accounts_adjustments', AccountsAdjustmentController::class);
     Route::get('accounts_adjustments/delete/{ref}', [AccountsAdjustmentController::class, 'delete'])->name('accounts_adjustments.delete')->middleware(confirmPassword::class);
 
@@ -99,4 +98,5 @@ Route::middleware('auth')->group(function () {
     
     Route::get('my_balance', [MyBalanceController::class, 'index'])->name('my_balance');
     Route::get('method/statement/{user}/{method}/{from}/{to}', [AccountsController::class, 'methodStatement'])->name('methodStatement');
+    Route::get('/get-customers-by-area/{area}', [BulkInvoicePaymentsReceivingController::class, 'getCustomersByArea'])->name('get-customers-by-area');
 });

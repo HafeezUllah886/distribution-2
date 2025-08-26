@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\area;
 use App\Models\bulk_payments;
 use App\Models\cheques;
 use App\Models\currency_transactions;
@@ -33,6 +34,8 @@ class BulkInvoicePaymentsReceivingController extends Controller
         $customers = accounts::customer()->currentBranch()->get();
         $orderBookers = User::orderbookers()->currentBranch()->get();
 
+        $areas = area::currentBranch()->get();
+
         $payments = bulk_payments::currentBranch()->orderBy('id', 'desc')->whereBetween('date', [$start, $end]);
         if($customerID)
         {
@@ -44,7 +47,7 @@ class BulkInvoicePaymentsReceivingController extends Controller
         }
         $payments = $payments->get();
 
-        return view('Finance.bulk_payment.index', compact('customers', 'orderBookers', 'payments', 'start', 'end', 'customerID', 'method'));
+        return view('Finance.bulk_payment.index', compact('customers', 'orderBookers', 'areas', 'payments', 'start', 'end', 'customerID', 'method'));
     }
 
     /**
@@ -200,5 +203,14 @@ class BulkInvoicePaymentsReceivingController extends Controller
             session()->forget('confirmed_password');
             return to_route('bulk_payment.index')->with('error', $e->getMessage());
         }
+
+    }
+
+    public function getCustomersByArea($area)
+    {
+        $customers = accounts::customer()->where('areaID', $area)->select('id as value', 'title as text')->get();
+
+        return response()->json($customers);
+
     }
 }

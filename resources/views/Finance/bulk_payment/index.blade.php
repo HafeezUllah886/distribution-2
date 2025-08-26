@@ -139,8 +139,16 @@
                   @csrf
                          <div class="modal-body">
                                 <div class="form-group">
+                                       <label for="areaID">Areas</label>
+                                       <select name="areaID" id="areaID" class="selectize">
+                                        @foreach ($areas as $area)
+                                            <option value="{{$area->id}}">{{$area->name}}</option>
+                                        @endforeach
+                                       </select>
+                                </div>
+                                <div class="form-group">
                                        <label for="customerID">Customers</label>
-                                       <select name="customerID" id="customerID" class="selectize">
+                                       <select name="customerID" id="customerID1" class="selectize">
                                         @foreach ($customers as $customer)
                                             <option value="{{$customer->id}}">{{$customer->title}} - {{$customer->area->name}}</option>
                                         @endforeach
@@ -148,7 +156,7 @@
                                 </div>
                                 <div class="form-group mt-2">
                                     <label for="orderbookerID">Order Bookers</label>
-                                    <select name="orderbookerID" id="orderbookerID" class="form-control">
+                                    <select name="orderbookerID" id="orderbookerID" class="selectize">
                                         @foreach ($orderBookers as $orderbooker)
                                             <option value="{{$orderbooker->id}}">{{$orderbooker->name}}</option>
                                         @endforeach
@@ -189,8 +197,43 @@
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
 
     <script>
-        $(document).ready(function() {
-            $('.selectize').selectize();
+        $(document).ready(function () {
+        let customerSelect = $('#customerID1').selectize();
+        let areaSelect = $('#areaID').selectize();
+        let orderbookerSelect = $('#orderbookerID').selectize();
+
+        customerSelect[0].selectize.on('change', function(value) {
+            if (value) {
+                // fetch products
+                $.ajax({
+                    url: '/get-orderbookers-by-customer/' + value,
+                    type: 'GET',
+                    success: function (data) {
+                        console.log(data);
+                        let selectize = orderbookerSelect[0].selectize;
+                        selectize.clearOptions();
+                        selectize.addOption(data);
+                        selectize.refreshOptions();
+                    }
+                });
+            }
         });
+        areaSelect[0].selectize.on('change', function(value) {
+            if (value) {
+                // fetch products
+                $.ajax({
+                    url: '/get-customers-by-area/' + value,
+                    type: 'GET',
+                    success: function (data) {
+                        console.log(data);
+                        let selectize1 = customerSelect[0].selectize;
+                        selectize1.clearOptions();
+                        selectize1.addOption(data);
+                        selectize1.refreshOptions();
+                    }
+                });
+            }
+        });
+    });  
     </script>
 @endsection

@@ -99,4 +99,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/activitydata', [ActivityReportController::class, 'data'])->name('reportActivityData');
 
     Route::get('/get-orderbookers-by-customer/{customer}', [OrderbookerWiseCustomerBalanceReport::class, 'getOrderbookersByCustomer'])->name('get-orderbookers-by-customer');
+   
 });
