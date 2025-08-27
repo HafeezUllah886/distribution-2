@@ -63,7 +63,7 @@
                                         <tbody id="products-list">
                                           
                                         @foreach ($accounts as $key => $account)
-                                        @if($account->balance > 0)
+                                        @if($account->balance != 0)
                                             <tr>
                                                 <td>{{ $key+1 }}</td>
                                                 <td class="text-start">{{ $account->title }}</td>
