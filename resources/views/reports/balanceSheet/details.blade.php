@@ -63,13 +63,21 @@
                                         <tbody id="products-list">
                                           
                                         @foreach ($accounts as $key => $account)
+                                        @if($account->balance > 0)
                                             <tr>
                                                 <td>{{ $key+1 }}</td>
                                                 <td class="text-start">{{ $account->title }}</td>
                                                 <td class="text-end">{{ number_format($account->balance) }}</td>
                                             </tr>
+                                            @endif
                                         @endforeach
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="2" class="text-end">Total:</th>
+                                                <th class="text-end">{{ number_format($accounts->sum('balance')) }}</th>
+                                            </tr>
+                                        </tfoot>
                                     </table><!--end table-->
                                 </div>
 
