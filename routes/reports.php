@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/dailycashbook/{date}', [dailycashbookController::class, 'details'])->name('reportCashbookData');
 
     Route::get('/reports/balanceSheet', [balanceSheetReport::class, 'index'])->name('reportBalanceSheet');
-    Route::get('/reports/balanceSheet/{type}/{from}/{to}/{branch}/{area}/{orderbooker}', [balanceSheetReport::class, 'data'])->name('reportBalanceSheetData');
+    Route::get('/reports/balanceSheet/{type}/{area}/{orderbooker}', [balanceSheetReport::class, 'data'])->name('reportBalanceSheetData');
 
     Route::get('/reports/warehousestockreport', [WarehouseStockReportController::class, 'index'])->name('reportWarehouseStock');
     Route::get('/reports/warehousestockreport/{warehouse}/{value}/{vendors?}', [WarehouseStockReportController::class, 'data'])->name('reportWarehouseStockData');

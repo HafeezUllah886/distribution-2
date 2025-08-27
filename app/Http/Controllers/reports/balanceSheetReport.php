@@ -28,34 +28,55 @@ class balanceSheetReport extends Controller
         return view('reports.balanceSheet.index', compact('branches', 'areas', 'orderbookers'));
     }
 
-    public function data($type, $from, $to, $branch, $area, $orderbooker)    
+    public function data($type, $area, $orderbooker)    
     {
-            $ids = accounts::where('type', $type)->where('branchID', $branch);
-            if($area != "All")
+            $ids = accounts::where('type', $type)->where('branchID', auth()->user()->branchID);
+            if($type == 'Customer' && $area != "All")
             {
                 $ids = $ids->where('areaID', $area);
             }
 
-            if($orderbooker != "All")
+            if($type == "Customer" && $orderbooker != "All")
             {
                 $orderbooker_customers = orderbooker_customers::where('orderbookerID', $orderbooker)->pluck('customerID')->toArray();
                 $ids = $ids->whereIn('id', $orderbooker_customers);
             }
             $ids = $ids->pluck('id')->toArray();
 
-            $branch = branches::find($branch);
-            $branch = $branch->name;
-        $transactions = transactions::with('account')->whereIn('accountID', $ids)->whereBetween('date', [$from, $to])->get();
+            $accounts = accounts::whereIn('id', $ids)->get();
 
-        $pre_cr = transactions::whereIn('accountID', $ids)->whereDate('date', '<', $from)->sum('cr');
-        $pre_db = transactions::whereIn('accountID', $ids)->whereDate('date', '<', $from)->sum('db');
-        $pre_balance = $pre_cr - $pre_db;
+            foreach($accounts as $account)
+            {
+                if($type != "Customer")
+                {
+                    $balance = getAccountBalance($account->id);
+                }
+                else
+                {
+                    if($orderbooker != "All")
+                    {
+                        $balance = getAccountBalanceOrderbookerWise($account->id, $orderbooker);
+                    }
+                    else
+                    {
+                        $balance = getAccountBalance($account->id);
+                    }
+                }
 
-        $cur_cr = transactions::whereIn('accountID', $ids)->sum('cr');
-        $cur_db = transactions::whereIn('accountID', $ids)->sum('db');
+                $account->balance = $balance;
+            }
 
-        $cur_balance = $cur_cr - $cur_db;
+            if($area != "All")
+            {
+                $area = area::find($area)->name;
+            }
 
-        return view('reports.balanceSheet.details', compact('type', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to', 'branch'));
+            if($orderbooker != "All")
+            {
+                $orderbooker = User::find($orderbooker)->name;
+            }
+
+
+        return view('reports.balanceSheet.details', compact('type', 'area', 'orderbooker', 'accounts'));
     }
 }
