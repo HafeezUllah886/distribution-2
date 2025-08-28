@@ -57,6 +57,7 @@
                                             <tr class="table-active">
                                                 <th scope="col" style="width: 50px;">#</th>
                                                 <th scope="col" class="text-start">Account</th>
+                                                <th scope="col" class="text-start">Address</th>
                                                 <th scope="col" class="text-end">Balance</th>
                                             </tr>
                                         </thead>
@@ -67,6 +68,7 @@
                                             <tr>
                                                 <td>{{ $key+1 }}</td>
                                                 <td class="text-start">{{ $account->title }}</td>
+                                                <td class="text-start">{{ $account->address }}</td>
                                                 <td class="text-end">{{ number_format($account->balance) }}</td>
                                             </tr>
                                             @endif
@@ -74,7 +76,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="2" class="text-end">Total:</th>
+                                                <th colspan="3" class="text-end">Total:</th>
                                                 <th class="text-end">{{ number_format($accounts->sum('balance')) }}</th>
                                             </tr>
                                         </tfoot>
