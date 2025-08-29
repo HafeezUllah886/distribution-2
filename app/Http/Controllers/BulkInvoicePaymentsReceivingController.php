@@ -208,8 +208,15 @@ class BulkInvoicePaymentsReceivingController extends Controller
 
     public function getCustomersByArea($area)
     {
-        $customers = accounts::customer()->where('areaID', $area)->select('id as value', 'title as text')->get();
-
+        if($area == 'All')
+        {
+            $customers = accounts::customer()->currentBranch()->select('id as value', 'title as text')->get();
+        }
+        else
+        {
+            $customers = accounts::customer()->where('areaID', $area)->select('id as value', 'title as text')->get();
+        }
+        
         return response()->json($customers);
 
     }

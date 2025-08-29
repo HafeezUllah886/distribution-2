@@ -27,7 +27,7 @@ class customerProductsSaleReport extends Controller
     {
         $from = $request->from;
         $to = $request->to;
-        $customer = $request->customer;
+        $customer = $request->customer ?? 'All';
         $vendor = $request->vendor ?? 'All';
         $area = $request->area ?? 'All';
         $orderbooker = $request->orderbooker ?? 'All';

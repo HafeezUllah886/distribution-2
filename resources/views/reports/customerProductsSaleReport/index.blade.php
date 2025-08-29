@@ -17,21 +17,24 @@
                         <input type="date" name="to" id="to" value="{{lastDayOfMonth()}}" class="form-control">
                     </div>
                     <div class="form-group mt-2">
-                        <label for="customer">Customer</label>
-                        <select name="customer" id="customer" class="selectize">
-                            @foreach ($customers as $customer)
-                                <option value="{{$customer->id}}">{{$customer->title}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group mt-2">
                         <label for="area">Area</label>
-                        <select name="area[]" id="area" class="selectize" multiple>
+                        <select name="area[]" id="area" class="selectize">
+                            <option value='All'>All</option>
                             @foreach ($areas as $area)
                                 <option value="{{$area->id}}">{{$area->name}}</option>
                             @endforeach
                         </select>
                     </div>
+                    <div class="form-group mt-2">
+                        <label for="customer">Customer</label>
+                        <select name="customer" id="customer" class="selectize">
+                            <option value='All'>All</option>
+                            @foreach ($customers as $customer)
+                                <option value="{{$customer->id}}">{{$customer->title}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                  
                     <div class="form-group mt-2">
                         <label for="orderbooker">Order Booker</label>
                         <select name="orderbooker[]" id="orderbooker" class="selectize" multiple>
@@ -76,4 +79,45 @@
     });
 
     </script>
+
+<script>
+    $(document).ready(function () {
+    let customerSelect = $('#customer').selectize();
+    let areaSelect = $('#area').selectize();
+    let orderbookerSelect = $('#orderbooker').selectize();
+
+    customerSelect[0].selectize.on('change', function(value) {
+        if (value) {
+            // fetch products
+            $.ajax({
+                url: '/get-orderbookers-by-customer/' + value,
+                type: 'GET',
+                success: function (data) {
+                    console.log(data);
+                    let selectize = orderbookerSelect[0].selectize;
+                    selectize.clearOptions();
+                    selectize.addOption(data);
+                    selectize.refreshOptions();
+                }
+            });
+        }
+    });
+    areaSelect[0].selectize.on('change', function(value) {
+        if (value) {
+            // fetch products
+            $.ajax({
+                url: '/get-customers-by-area/' + value,
+                type: 'GET',
+                success: function (data) {
+                    console.log(data);
+                    let selectize1 = customerSelect[0].selectize;
+                    selectize1.clearOptions();
+                    selectize1.addOption(data);
+                    selectize1.refreshOptions();
+                }
+            });
+        }
+    });
+});  
+</script>
 @endsection
