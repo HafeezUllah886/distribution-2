@@ -17,8 +17,8 @@ class TransferController extends Controller
      */
     public function index(Request $request)
     {
-        $start = $request->start ?? firstDayOfMonth();
-        $end = $request->end ?? lastDayOfMonth();
+        $start = $request->start ?? date('Y-m-d');
+        $end = $request->end ?? date('Y-m-d');
         $transfers = transfer::orderby('id', 'desc')->currentBranch()->whereBetween('date', [$start, $end])->get();
         $accounts = accounts::business()->currentBranch()->get();
         return view('Finance.transfer.index', compact('transfers', 'accounts', 'start', 'end'));

@@ -25,8 +25,8 @@ class PaymentsReceivingController extends Controller
      */
     public function index(Request $request)
     {
-        $start = $request->start ?? firstDayOfMonth();
-        $end = $request->end ?? now()->toDateString();
+        $start = $request->start ?? date('Y-m-d');
+        $end = $request->end ?? date('Y-m-d');
         $type = $request->type ?? 'All';
         $area = $request->area ?? 'All';
 

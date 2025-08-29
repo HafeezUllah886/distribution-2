@@ -19,8 +19,8 @@ class StockAdjustmentController extends Controller
      */
     public function index(Request $request)
     {
-        $from = $request->start ?? firstDayOfMonth();
-        $to = $request->end ?? lastDayOfMonth();
+        $from = $request->start ?? date('Y-m-d');
+        $to = $request->end ?? date('Y-m-d');
         $adjustments = stockAdjustment::currentBranch()->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
         return view('stock.adjustment.index', compact('adjustments', 'from', 'to'));
     }

@@ -19,8 +19,8 @@ class StockTransferController extends Controller
      */
     public function index(Request $request)
     {
-        $from = $request->start ?? firstDayOfMonth();
-        $to = $request->end ?? lastDayOfMonth();
+        $from = $request->start ?? date('Y-m-d');
+        $to = $request->end ?? date('Y-m-d');
         $stockTransfers = StockTransfer::with('details')->where('branchID', auth()->user()->branchID)->whereBetween('date', [$from, $to])->get();
         $warehouses = warehouses::currentBranch()->get();
        
