@@ -14,7 +14,7 @@ class EmployeeLedgerAdjustmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $start = $request->start ?? date('Y-m-d');
         $end = $request->end ?? date('Y-m-d');
