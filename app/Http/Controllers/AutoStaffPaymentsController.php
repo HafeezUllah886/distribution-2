@@ -62,7 +62,7 @@ class AutoStaffPaymentsController extends Controller
                 $date = now();
             }
 
-            $ref = getRef();
+            $ref = $que->refID;
             staffPayments::create(
                 [
                     'fromID'        => $que->userID,
