@@ -146,6 +146,11 @@
                                     data-key="t-basic-elements">Create Account</a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ route('accountsList', 'Business') }}" class="nav-link"
+                                    data-key="t-form-select">
+                                    Business Accounts </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('accountsList', 'Customer') }}" class="nav-link"
                                     data-key="t-checkboxs-radios">Customer Accounts</a>
                             </li>
