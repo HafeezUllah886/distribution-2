@@ -69,7 +69,7 @@
     }
 
     function check_method() {
-        $("#amount").val(0);
+        
         if ($("#method").val() == "Cash") {
             $(".non-cash").addClass("d-none");
             $(".cash").removeClass("d-none");
