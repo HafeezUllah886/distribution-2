@@ -18,8 +18,8 @@ class ObsoleteStockController extends Controller
      */
     public function index(request $request)
     {
-        $from = $request->start ?? firstDayOfMonth();
-        $to = $request->end ?? now()->toDateString();
+        $from = $request->start ?? date('Y-m-d');
+        $to = $request->end ?? date('Y-m-d');
         $reason = $request->reason ?? "All";
         $obsoletes = obsolete_stock::currentBranch()->whereBetween("date", [$from, $to])->orderBy('id', 'desc');
         if($reason != "All")

@@ -14,10 +14,10 @@ class EmployeeLedgerAdjustmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $start = $request->start ?? firstDayOfMonth();
-        $end = $request->end ?? lastDayOfMonth();
+        $start = $request->start ?? date('Y-m-d');
+        $end = $request->end ?? date('Y-m-d');
         $type = $request->type ?? 'All';
         
         $adjustments = employee_ledger_adjustment::currentBranch()->whereBetween('date', [$start, $end]);

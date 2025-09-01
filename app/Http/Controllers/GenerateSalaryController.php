@@ -16,8 +16,8 @@ class GenerateSalaryController extends Controller
      */
     public function index(Request $request)
     {
-        $startDate = $request->from ?? firstDayOfMonth();
-        $endDate = $request->to ?? lastDayOfMonth();
+        $startDate = $request->from ?? date('Y-m-d');
+        $endDate = $request->to ?? date('Y-m-d');
         $salaries = generate_salary::whereBetween('date', [$startDate, $endDate])->currentBranch()->get();
         return view('employees.generate_salary.index', compact('salaries', 'startDate', 'endDate'));
     }

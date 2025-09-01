@@ -32,8 +32,8 @@ class SalesController extends Controller
     public function index(Request $request)
     {
 
-        $start = $request->start ?? firstDayOfMonth();
-        $end = $request->end ?? now()->toDateString();
+        $start = $request->start ?? date('Y-m-d');
+        $end = $request->end ?? date('Y-m-d');
 
         $bookerID = $request->orderbookerID ?? null;
 

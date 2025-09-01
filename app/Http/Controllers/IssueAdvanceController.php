@@ -23,8 +23,8 @@ class IssueAdvanceController extends Controller
      */
     public function index(Request $request)
     {
-        $start = $request->from ?? firstDayOfMonth();
-        $end = $request->to ?? lastDayOfMonth();
+        $start = $request->from ?? date('Y-m-d');
+        $end = $request->to ?? date('Y-m-d');
         $desig = $request->designation ?? "All";
         $dept = $request->department ?? "All";   
         $advance = issue_advance::currentBranch()->whereBetween('date', [$start, $end]);

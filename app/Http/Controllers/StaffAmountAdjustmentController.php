@@ -20,8 +20,8 @@ class StaffAmountAdjustmentController extends Controller
      */
     public function index(Request $request)
     {
-        $start = $request->start ?? firstDayOfMonth();
-        $end = $request->end ?? lastDayOfMonth();
+        $start = $request->start ?? date('Y-m-d');
+        $end = $request->end ?? date('Y-m-d');
         $staffID = $request->staffID ?? "All";
         $type = $request->type ?? 'All';
         $staffAdjustments = staffAmountAdjustment::currentBranch()->whereBetween('date', [$start, $end]);

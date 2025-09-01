@@ -26,8 +26,8 @@ class PurchaseOrderController extends Controller
      */
     public function index(Request $request)
     {
-        $start = $request->start ?? now()->toDateString();
-        $end = $request->end ?? now()->toDateString();
+        $start = $request->start ?? date('Y-m-d');
+        $end = $request->end ?? date('Y-m-d');
         $vendorID = $request->vendorID ?? 'All';
         $status = $request->status ?? 'All';
 

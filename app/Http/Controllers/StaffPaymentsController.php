@@ -23,8 +23,8 @@ class StaffPaymentsController extends Controller
      */
     public function index(Request $request)
     {
-        $start = $request->start ?? firstDayOfMonth();
-        $end = $request->end ?? lastDayOfMonth();
+        $start = $request->start ?? date('Y-m-d');
+        $end = $request->end ?? date('Y-m-d');
         $from = $request->from ?? 'All';
         $method = $request->method ?? 'All';
 
