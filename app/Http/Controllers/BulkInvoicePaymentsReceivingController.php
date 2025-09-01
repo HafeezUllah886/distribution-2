@@ -216,7 +216,6 @@ class BulkInvoicePaymentsReceivingController extends Controller
         {
             $customers = accounts::customer()->where('areaID', $area)->select('id as value', 'title as text')->get();
         }
-        
         return response()->json($customers);
 
     }
