@@ -12,14 +12,26 @@
                                           <th>#</th>
                                           <th>Currency</th>
                                           <th>Balance</th>
+                                          <th>Amount</th>
                                         {{--   <th>Action</th> --}}
                                    </thead>
                                    <tbody>
+                                          @php
+                                                 $totalBalance = 0;
+                                                 $totalAmount = 0;
+                                          @endphp
                                           @foreach ($currencies as $key => $currency)
+                                          @php
+                                                 $currencyBalance = getCurrencyBalance($currency->id, $user->id);
+                                                 $currencyAmount = $currencyBalance * $currency->value;
+                                                 $totalBalance += $currencyBalance;
+                                                 $totalAmount += $currencyAmount;
+                                          @endphp
                                                  <tr>
                                                         <td>{{$key+1}}</td>
                                                         <td>{{$currency->title}}</td>
-                                                        <td>{{getCurrencyBalance($currency->id, $user->id)}}</td>
+                                                        <td>{{$currencyBalance}}</td>
+                                                        <td>{{number_format($currencyAmount, 2)}}</td>
 
                                                         <td>
                                                                <button class="btn btn-info" href="javascript:void(0);"
@@ -30,6 +42,11 @@
                                                  </tr>
                                                    
                                           @endforeach
+                                          <tr>
+                                                 <td colspan="2" class="text-end">Total</td>
+                                                 <td>{{number_format($totalBalance, 2)}}</td>
+                                                 <td>{{number_format($totalAmount, 2)}}</td>
+                                          </tr>
                                    </tbody>
                             </table>
                      </div>
