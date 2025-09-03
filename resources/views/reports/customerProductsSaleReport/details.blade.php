@@ -61,7 +61,20 @@
                         <div class="card-body p-4">
                             <div class="table-responsive">
                                 <table class="table table-borderless text-center table-nowrap align-middle mb-0">
-                                    <thead>
+                                    
+                                    <tbody>
+                                        @php
+                                            $totalQty = 0;
+                                            $totalAmount = 0;
+                                            $customer_total_qty = 0;
+                                            $customer_total_amount = 0;
+                                        @endphp
+                                        @php
+                                            $rowNumber = 1;
+                                        @endphp
+                                        @foreach ($customers as $customer)
+                                        
+                                        @if($customer->sales->count() > 0)
                                         <tr class="table-active">
                                             <th scope="col" style="width: 50px;">#</th>
                                             <th scope="col" class="text-start">Product</th>
@@ -72,57 +85,58 @@
                                             <th scope="col" class="text-end">Sold Qty</th>
                                             <th scope="col" class="text-end">Total Amount</th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $totalQty = 0;
-                                            $totalLoose = 0;
-                                        @endphp
-                                        @php
-                                            $rowNumber = 1;
-                                        @endphp
-                                        @foreach ($vendor_wise as $vendorId => $products)
-                                            @php
-                                                $vendor = \App\Models\accounts::find($vendorId);
-                                                $vendorTotal = 0;
-                                                $VendorTotalQty = 0;
-                                                $VendorTotalLoose = 0;
-                                            @endphp
+                                        <tr class="table-active bg-light">
+                                            <th colspan="8" class="text-start text-success">{{ $customer->title }}</th>
+                                        </tr>
+                                       
+                                        
+                                        @foreach($customer->sales as $vendor => $products)
                                             <tr class="table-active bg-light">
-                                                <th colspan="8" class="text-start">{{ $vendor ? $vendor->title : 'Unknown Vendor' }}</th>
+                                                <th colspan="8" class="text-start text-warning">{{ $vendor }}</th>
                                             </tr>
-                                            @foreach ($products as $product)
-                                                @php
-                                                    $qty = packInfoWithOutName($product->unit_value, $product->total_pc);
-                                                    [$Qty, $Loose] = explode(',', $qty);
-                                                    $totalQty += (int)$Qty;
-                                                    $totalLoose += (int)$Loose;
-                                                    $vendorTotal += $product->total_amount;
-                                                    $VendorTotalQty += (int)$Qty;
-                                                    $VendorTotalLoose += (int)$Loose;
-                                                @endphp
+                                            @php
+                                            $vendor_total_qty = 0;
+                                            $vendor_total_amount = 0;
+                                        @endphp
+                                            @foreach($products as $product)
+                                            @php
+                                                $vendor_total_qty += $product->total_qty;
+                                                $vendor_total_amount += $product->total_amount;
+                                                $customer_total_qty += $product->total_qty;
+                                                $customer_total_amount += $product->total_amount;
+                                                $totalQty += $product->total_qty;
+                                                $totalAmount += $product->total_amount;
+                                            @endphp
                                                 <tr>
                                                     <td>{{ $rowNumber++ }}</td>
                                                     <td class="text-start">{{ $product->name }}</td>
                                                     <td class="text-start">{{ $product->brand }}</td>
                                                     <td class="text-start">{{ $product->category }}</td>
                                                     <td class="text-start">{{ $product->unit }}</td>
-                                                    <td class="text-end">{{ number_format($product->unit_value) }}</td>
-                                                    <td class="text-end">{{ packInfoWithOutName($product->unit_value, $product->total_pc) }}</td>
+                                                    <td class="text-end">{{ $product->unit_value }}</td>
+                                                    <td class="text-end">{{ $product->total_qty }}</td>
                                                     <td class="text-end">{{ number_format($product->total_amount) }}</td>
                                                 </tr>
                                             @endforeach
-                                            <tr class="table-active">
-                                                <td colspan="6" class="text-end fw-bold">Vendor Total:</td>
-                                                <td class="text-end fw-bold">{{ $VendorTotalQty }}, {{ $VendorTotalLoose }}</td>
-                                                <td class="text-end fw-bold">{{ number_format($vendorTotal) }}</td>
+                                            <tr class="table-active text-warning">
+                                                <th colspan="6" class="text-end">Total of {{ $vendor }}</th>
+                                                <th class="text-end">{{ number_format($vendor_total_qty) }}</th>
+                                                <th class="text-end">{{ number_format($vendor_total_amount) }}</th>
                                             </tr>
                                         @endforeach
-                                        <tr class="table-active bg-success bg-opacity-25">
-                                            <th colspan="6" class="text-end">Grand Total </th>
-                                            <th class="text-end">{{$totalQty}}, {{ $totalLoose }}</th>
-                                            <th class="text-end">{{ number_format($sale_details->sum('total_amount')) }}</th>
+                                        <tr class="table-active text-success">
+                                            <th colspan="6" class="text-end">Total of {{ $customer->title }}</th>
+                                            <th class="text-end">{{ number_format($customer_total_qty) }}</th>
+                                            <th class="text-end">{{ number_format($customer_total_amount) }}</th>
                                         </tr>
+
+                                        @endif
+                                    @endforeach
+                                    <tr class="table-active text-danger">
+                                        <th colspan="6" class="text-end">Grand Total</th>
+                                        <th class="text-end">{{ number_format($totalQty) }}</th>
+                                        <th class="text-end">{{ number_format($totalAmount) }}</th>
+                                    </tr>
                                 </tbody>
                                 </table>
                             </div>

@@ -29,31 +29,31 @@ class customerProductsSaleReport extends Controller
         $to = $request->to;
         $customer = $request->customer ?? 'All';
         $vendor = $request->vendor ?? 'All';
-        $area = $request->area ?? 'All';
         $orderbooker = $request->orderbooker ?? 'All';
 
-        $customers = accounts::where('id', $customer)->pluck('id')->toArray();
-        $customer_titles = accounts::whereIn('id', $customers)->pluck('title')->toArray();
-
-        if($area != "All")
+        if($customer == 'All')
         {
-            $customers = accounts::where('type', 'Customer')->whereIn('areaID', $area)->pluck('id')->toArray();
-            $customer_titles = accounts::where('type', 'Customer')->whereIn('areaID', $area)->pluck('title')->toArray();
-            $area = area::whereIn('id', $area)->pluck('name')->toArray();
-
+            $customers = accounts::where('type', 'Customer')->currentBranch();
         }
+        else
+        {
+            $customers = accounts::whereIn('id', $customer);
+        }
+
+        $customers = $customers->get();
+
 
         foreach($customers as $customer1)
         {
             if($orderbooker == 'All')
             {
-                $sales = sales::where('customerID', $customer1)->whereBetween('date', [$from, $to])->pluck('id')->toArray();
-                $orderbookerIDs = sales::where('customerID', $customer1)->whereBetween('date', [$from, $to])->pluck('orderbookerID')->toArray();
+                $sales = sales::where('customerID', $customer1->id)->whereBetween('date', [$from, $to])->pluck('id')->toArray();
+                $orderbookerIDs = sales::where('customerID', $customer1->id)->whereBetween('date', [$from, $to])->pluck('orderbookerID')->toArray();
                 $orderbooker_titles = User::whereIn('id', $orderbookerIDs)->pluck('name')->toArray();
             }
             else
             {
-                $sales = sales::where('customerID', $customer1)->whereBetween('date', [$from, $to])->whereIn('orderbookerID', $orderbooker)->pluck('id')->toArray();
+                $sales = sales::where('customerID', $customer1->id)->whereBetween('date', [$from, $to])->whereIn('orderbookerID', $orderbooker)->pluck('id')->toArray();
                 $orderbooker_titles = User::whereIn('id', $orderbooker)->pluck('name')->toArray();
             }
            
@@ -77,15 +77,17 @@ class customerProductsSaleReport extends Controller
                 $product->unit = $product1->units->first()->unit_name;
                 $product->unit_value = $product1->units->first()->value;
                 $product->total_pc = $product->total_pc;
+                $product->total_qty = $product->total_pc / $product->unit_value;
                 $product->total_amount = $product->total_amount;
-                $product->vendorID = $product1->vendorID;
+                $product->vendor = $product1->vendor->title;
             }
 
             // Group products by vendor while maintaining object structure
-            $vendor_wise = collect($sale_details)->groupBy('vendorID');
-        }
-        
+            $vendor_wise = collect($sale_details)->groupBy('vendor');
 
-       return view('reports.customerProductsSaleReport.details', compact('sale_details', 'from', 'to', 'vendor_wise', 'customer_titles', 'orderbooker_titles', 'area'));
+            $customer1->sales = $vendor_wise;
+        }
+
+       return view('reports.customerProductsSaleReport.details', compact('customers', 'from', 'to'));
     }
 }

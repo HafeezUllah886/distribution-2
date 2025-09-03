@@ -18,7 +18,7 @@
                     </div>
                     <div class="form-group mt-2">
                         <label for="area">Area</label>
-                        <select name="area[]" id="area" class="selectize">
+                        <select name="area" id="area" class="selectize">
                             <option value='All'>All</option>
                             @foreach ($areas as $area)
                                 <option value="{{$area->id}}">{{$area->name}}</option>
@@ -27,8 +27,7 @@
                     </div>
                     <div class="form-group mt-2">
                         <label for="customer">Customer</label>
-                        <select name="customer" id="customer" class="selectize">
-                            <option value='All'>All</option>
+                        <select name="customer[]" id="customer" class="selectize" multiple>
                             @foreach ($customers as $customer)
                                 <option value="{{$customer->id}}">{{$customer->title}}</option>
                             @endforeach
