@@ -21,7 +21,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" checked id="select-all"></th>
+                                    <th><input type="checkbox"  checked id="select-all"></th>
                                     <th>Employee Name</th>
                                     <th>Designation</th>
                                     <th>Salary</th>
@@ -33,7 +33,7 @@
                                         <td><input type="checkbox" name="employees[]" checked class="form-check-input employee-checkbox" value="{{ $employee->id }}"></td>
                                         <td>{{ $employee->name }}</td>
                                         <td>{{ $employee->designation }}</td>
-                                        <td><input type="number" class="form-control" name="salary[]" required min="0" value="{{ $employee->salary }}"></td>
+                                        <td><input type="number" class="form-control" name="salary[{{$employee->id}}]" required min="0" value="{{ $employee->salary }}"></td>
                                     </tr>
                                 @endforeach
                             </tbody>

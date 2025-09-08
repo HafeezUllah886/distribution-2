@@ -47,7 +47,6 @@
                             <th>Salary</th>
                             <th>Date</th>
                             <th>Salary Month</th>
-                          
                             <th>Action</th>
                         </thead>
                         <tbody>

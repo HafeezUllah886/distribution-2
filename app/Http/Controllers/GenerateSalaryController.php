@@ -57,12 +57,12 @@ class GenerateSalaryController extends Controller
             generate_salary::create([
                 'branchID' => auth()->user()->branchID,
                 'employeeID' => $employeeId,
-                'salary' => $request->salary[$index],
+                'salary' => $request->salary[$employeeId],
                 'month' => $month,
                 'date' => $request->date,
                 'refID' => $ref,
             ]);
-            createEmployeeTransaction($employeeId, $request->date, 0, $request->salary[$index], 'Salary generated for the month of ' . $month_name, $ref);
+            createEmployeeTransaction($employeeId, $request->date, 0, $request->salary[$employeeId], 'Salary generated for the month of ' . $month_name, $ref);
             $generated++;
         }
         DB::commit();
