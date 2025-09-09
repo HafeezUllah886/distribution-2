@@ -40,6 +40,17 @@ class customerPaymentsReceivingContoller extends Controller
             ], 422);
         }
 
+              
+        $check = paymentsReceiving::where('key', $request->key)->count();
+
+        if($check > 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Payment already punched'
+            ], 422);
+        }
+
+
         try{ 
             DB::beginTransaction();
             $ref = getRef();
@@ -57,6 +68,7 @@ class customerPaymentsReceivingContoller extends Controller
                     'notes'         => $request->notes,
                     'userID'        => $request->user()->id,
                     'refID'         => $ref,
+                    'key'           => $request->key
                 ]
             );
             $depositer = accounts::find($request->customerID);
@@ -174,6 +186,16 @@ class customerPaymentsReceivingContoller extends Controller
             'file' => 'nullable|file|mimes:jpg,png,jpeg',
         ]);
 
+        
+        $check = sale_payments::where('key', $request->key)->count();
+
+        if($check > 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Payment already punched'
+            ], 422);
+        }
+
 
         if ($validator->fails()) {
             return response()->json([
@@ -205,7 +227,8 @@ class customerPaymentsReceivingContoller extends Controller
                     'bank' => $request->bank,
                     'number' => $request->number,
                     'cheque_date' => $request->cheque_date,
-                    'refID' => $ref
+                    'refID' => $ref,
+                    'key' => $request->key
                 ]);
 
                 $saleIDs[] = $saleID;

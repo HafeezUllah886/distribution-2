@@ -24,8 +24,8 @@ class OrdersController extends Controller
     {
         $from = $request->from ?? firstDayOfMonth();
         $to = $request->to ?? lastDayOfMonth();
+
         
-       
         $data = orders::with('customer.area', 'details.product', 'details.unit')->where('orderbookerID', $request->user()->id)->whereBetween("date", [$from, $to])->orderBy('id', 'desc')->get();
 
         $orders = [];
@@ -126,6 +126,8 @@ class OrdersController extends Controller
                 'price.*' => 'numeric|min:0',
             ]);
 
+
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
@@ -140,6 +142,16 @@ class OrdersController extends Controller
                 ], 422);
             }
 
+            
+        $check = orders::where('key', $request->key)->count();
+
+        if($check > 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Order already exists'
+            ], 422);
+        }
+
             DB::beginTransaction();
 
             $customer = accounts::find($request->customerID);
@@ -149,6 +161,7 @@ class OrdersController extends Controller
                 'orderbookerID' => $request->user()->id,
                 'date' => $request->date,
                 'notes' => $request->notes,
+                'key' => $request->key
             ]);
 
             $orderDetails = [];
