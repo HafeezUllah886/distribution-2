@@ -200,10 +200,9 @@
                                 <a href="{{ route('reportUnloaderReport') }}" class="nav-link"
                                     data-key="t-basic-elements">Unloader Labour Charges</a>
                             </li>
-                           
-                           <li class="nav-item">
-                                <a href="{{ route('reportExpense') }}" class="nav-link"
-                                    data-key="t-basic-elements">Expense Report</a>
+                            <li class="nav-item">
+                                <a href="{{ route('reportOrders') }}" class="nav-link"
+                                    data-key="t-basic-elements">Orders Report</a>
                             </li>
                         </ul>
                     </div>
