@@ -25,7 +25,6 @@ class OrdersController extends Controller
         $from = $request->from ?? firstDayOfMonth();
         $to = $request->to ?? lastDayOfMonth();
 
-        
         $data = orders::with('customer.area', 'details.product', 'details.unit')->where('orderbookerID', $request->user()->id)->whereBetween("date", [$from, $to])->orderBy('id', 'desc')->get();
 
         $orders = [];
@@ -125,8 +124,6 @@ class OrdersController extends Controller
                 'price' => 'required|array',
                 'price.*' => 'numeric|min:0',
             ]);
-
-
 
             if ($validator->fails()) {
                 return response()->json([
@@ -237,7 +234,7 @@ class OrdersController extends Controller
                 DB::rollback();
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Customer credit limit exceeded'
+                    'message' => 'Customer credit limit exceeded Customer Name: '.$customer->title
                 ], 422);
             }
 
