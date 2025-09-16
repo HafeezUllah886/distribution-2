@@ -126,9 +126,9 @@
                             <li class="nav-item">
                                 <a href="{{ route('stockTransfers.index') }}" class="nav-link" data-key="t-chat">Stock Transfer</a>
                             </li>
-                            {{-- <li class="nav-item">
-                                <a href="{{ route('stockAdjustments.index') }}" class="nav-link" data-key="t-chat">Stock Adjustment</a>
-                            </li> --}}
+                            <li class="nav-item">
+                                <a href="{{ route('obsolete.index') }}" class="nav-link" data-key="t-chat">Obsolete Stock</a>
+                            </li> 
                         </ul>
                     </div>
                 </li>
