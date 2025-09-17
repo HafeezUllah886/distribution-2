@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\authController;
+use App\Http\Controllers\api\CustomerAdvancePaymentAPIController;
 use App\Http\Controllers\api\customerPaymentsReceivingContoller;
 use App\Http\Controllers\api\DailyCustomerWisePaymentsReport;
 use App\Http\Controllers\api\DailyProductsOrderReport;
@@ -57,6 +58,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/invoicepayments/delete', [InvoicePaymentsHistory::class, 'destroy']);
 
-    
+    Route::post('/advancepayment/store', [CustomerAdvancePaymentAPIController::class, 'store']);
 
 });
