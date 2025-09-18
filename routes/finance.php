@@ -7,6 +7,7 @@ use App\Http\Controllers\AutoStaffPaymentsController;
 use App\Http\Controllers\BulkInvoicePaymentsReceivingController;
 use App\Http\Controllers\ChequesController;
 use App\Http\Controllers\CurrencymgmtController;
+use App\Http\Controllers\CustomerAdvancePaymentController;
 use App\Http\Controllers\CustomerPaymentsController;
 use App\Http\Controllers\DepositWithdrawController;
 use App\Http\Controllers\ExpenseCategoriesController;
@@ -90,8 +91,11 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
         return response()->file(public_path($attachment->path));
     })->name('viewAttachment');
 
-  
 
+    Route::resource('customer_advances', CustomerAdvancePaymentController::class);
+    Route::get('customer_advance/pay/{id}', [CustomerAdvancePaymentController::class, 'pay'])->name('customer_advance.pay');
+    Route::get('customer_advance/delete/{id}', [CustomerAdvancePaymentController::class, 'delete'])->name('customer_advance.delete');
+    Route::get('customer_advance/getBills', [CustomerAdvancePaymentController::class, 'getBills'])->name('customer_advance.getBills');
 });
 
 Route::middleware('auth')->group(function () {

@@ -227,6 +227,11 @@
                     </a>
                 </li> 
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('customer_advances.index') }}">
+                        <i class="ri-cash-line"></i> <span data-key="t-customer_advances">Customer Advances</span>
+                    </a>
+                </li> 
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarOtherUsers" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarOtherUsers">
                         <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Other Users</span>
