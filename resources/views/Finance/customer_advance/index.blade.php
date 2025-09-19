@@ -73,8 +73,8 @@
                                     <td>{{ $tran->orderbooker->name }}</td>
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
-                                    <td>{{ number_format($tran->consumed) }}</td>
-                                    <td>{{ number_format($tran->balance) }}</td>
+                                    <td>{{ number_format($tran->consumedAmount()) }}</td>
+                                    <td>{{ number_format($tran->remainingAmount()) }}</td>
                                     <td>
                                         
                                         <div class="dropdown">
@@ -90,7 +90,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item text-danger" href="{{ route('customer_advance.delete', ['id' => $tran->id]) }}">
+                                                    <a class="dropdown-item text-danger" href="{{ route('customer_advance.delete', ['id' => $tran->refID]) }}">
                                                         <i class="ri-close-fill align-bottom me-2 text-danger"></i>
                                                         Delete
                                                     </a>

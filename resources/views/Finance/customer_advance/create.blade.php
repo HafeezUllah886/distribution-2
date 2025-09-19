@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <form action="{{ route('bulk_payment.store') }}" enctype="multipart/form-data" id="paymentForm" onsubmit="validateForm(event)" method="post">
+                <form action="{{ route('customer_advance.save_consumption') }}" enctype="multipart/form-data" id="paymentForm" onsubmit="validateForm(event)" method="post">
                 <div class="card-header row">
                     <div class="col-6"><h3> Use Advance Payment </h3></div>
                     <div class="col-6 d-flex flex-row-reverse"><a href="{{route('dashboard')}}" class="btn btn-danger">Close</a></div>
@@ -24,6 +24,28 @@
                                 @csrf
                                 <div class="modal-body">
                                    <input type="hidden" name="orderbookerID" value="{{$advance->orderbookerID}}">
+                                    <div class="form-group mt-2">
+                                        <label for="date">Receiving Orderbooker</label>
+                                        <input type="text" readonly value="{{$advance->orderbooker->name}}"
+                                            id="advance_orderbookerID" class="form-control">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="date">Consumption Orderbooker</label>
+                                        <input type="text" readonly value="{{$consumption_orderbooker->name}}"
+                                            id="consumption_orderbookerID" class="form-control">
+                                        <input type="hidden" name="consumption_orderbookerID" value="{{$consumption_orderbooker->id}}">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="date">Customer</label>
+                                        <input type="text" readonly value="{{$customer->title}}"
+                                            id="consumption_orderbookerID" class="form-control">
+                                            <input type="hidden" name="advanceID" value="{{$advance->id}}">
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        <label for="date">Advance Balance Amount</label>
+                                        <input type="text" readonly value="{{$advance->remainingAmount()}}"
+                                            id="consumption_orderbookerID" class="form-control">
+                                    </div>
                                     <div class="form-group mt-2">
                                         <label for="date">Date</label>
                                         <input type="date" name="date" required value="{{ date('Y-m-d') }}"
@@ -62,7 +84,7 @@
                                 <tfoot>
                                     <tr>
                                         <td colspan="5" class="text-end">Net Amount</td>
-                                        <td><input type="number" id="netAmount" name="netAmount" readonly value="0" class="form-control form-control-sm"></td>
+                                        <td><input type="number" id="netAmount" name="netAmount" readonly max="{{$advance->remainingAmount()}}" value="0" class="form-control form-control-sm"></td>
                                         <input type="hidden" name="customerID" value="{{ $_GET['customerID'] }}">
                                     </tr>
                                 </tfoot>
@@ -94,14 +116,7 @@
             });
             $("#netAmount").val(amount.toFixed(2));
         }
-
-        // Update selector to match the actual ID pattern 'currency_'
-        $(document).on('input', "input[id^='currency_']", function() {
-            divideAmount();
-        });
-        $("#amount").on("input", function() {
-            divideAmount();
-        });
+       
         function divideAmount() {
             var amount = parseFloat($("#amount").val());
             $("input[id^='amount_']").each(function() {

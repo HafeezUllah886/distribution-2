@@ -27,4 +27,18 @@ class CustomerAdvancePayment extends Model
         return $query->where('branchID', auth()->user()->branchID);
     }
     
+    public function consumption()
+    {
+        return $this->hasMany(customerAdvanceConsumption::class, 'customer_advanceID', 'id');
+    }
+
+    public function consumedAmount()
+    {
+        return $this->hasMany(customerAdvanceConsumption::class, 'customer_advanceID', 'id')->sum('amount');
+    }
+
+    public function remainingAmount()
+    {
+        return $this->amount - $this->consumedAmount();
+    }
 }
