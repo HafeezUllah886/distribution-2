@@ -14,8 +14,8 @@ class brandsSeeder extends Seeder
     public function run(): void
     {
         $brands = [
-            ['name' => 'Brand 1'],
-            ['name' => 'Brand 2'],
+            ['name' => 'Brand 1', 'branchID' => 1],
+            ['name' => 'Brand 2', 'branchID' => 1],
         ];
 
         brands::insert($brands);

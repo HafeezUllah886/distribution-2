@@ -15,16 +15,16 @@ class categorySeeder extends Seeder
     public function run(): void
     {
         $cats = [
-            ['name' => 'Category 1'],
-            ['name' => 'Category 2'],
+            ['name' => 'Category 1', 'branchID' => 1],
+            ['name' => 'Category 2', 'branchID' => 1],
         ];
 
         categories::insert($cats);
 
 
         $expenseCats = [
-            ['name' => 'Expense Category 1'],
-            ['name' => 'Expense Category 2'],
+            ['name' => 'Expense Category 1', 'branchID' => 1],
+            ['name' => 'Expense Category 2', 'branchID' => 1],
         ];
 
         expense_categories::insert($expenseCats);
