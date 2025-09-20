@@ -36,6 +36,8 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Customer Advance Payments</h3>
+                    <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create
+                        New</button>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -110,6 +112,60 @@
     </div>
     <!-- Default Modals -->
 
+    <div id="new" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+        style="display: none;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Create Receipt</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <form action="{{ route('customer_advances.store') }}" enctype="multipart/form-data" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-6">
+                               @include('layout.payment')
+                             
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="fromID">Customer (Balance: <span id="accountBalance">0</span>)</label>
+                            <select name="customerID" id="fromID" onchange="getBalance()" required class="selectize">
+                                <option value=""></option>
+                                @foreach ($customers as $customer)
+                                    <option value="{{ $customer->id }}">{{ $customer->title }} ({{ $customer->type }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                                <div class="form-group mt-2">
+                                    <label for="orderbookerID">Order Booker</label>
+                                    <select name="orderbookerID" id="orderbookerID" required class="selectize">
+                                        @foreach ($orderbookers as $orderbooker)
+                                            <option value="{{ $orderbooker->id }}">{{ $orderbooker->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                               
+                        <div class="form-group mt-2">
+                            <label for="date">Date</label>
+                            <input type="date" name="date" required id="date" value="{{ date('Y-m-d') }}"
+                                class="form-control">
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="notes">Notes</label>
+                            <textarea name="notes" required id="notes" cols="30" class="form-control" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
    
 @endsection
 @section('page-css')
@@ -182,6 +238,32 @@
                 });
             });
         });
+
+
+        function getBalance()
+        {
+            var id = $("#fromID").find(":selected").val();
+            $.ajax({
+                url: "{{ url('/accountbalance/') }}/" + id,
+                method: 'GET',
+                success: function(response) {
+                    $("#accountBalance").html(response.data.toFixed(0));
+                    if(response.data > 0)
+                    {
+                        $("#accountBalance").addClass('text-success');
+                        $("#accountBalance").removeClass('text-danger');
+                    }
+                    else
+                    {
+                        $("#accountBalance").addClass('text-danger');
+                        $("#accountBalance").removeClass('text-success');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
 
     </script>
     

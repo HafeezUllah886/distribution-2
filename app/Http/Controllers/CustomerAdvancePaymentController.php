@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\CustomerAdvancePayment;
 use App\Http\Controllers\Controller;
+use App\Models\accounts;
+use App\Models\area;
 use App\Models\cheques;
 use App\Models\currency_transactions;
+use App\Models\currencymgmt;
 use App\Models\customerAdvanceConsumption;
 use App\Models\method_transactions;
 use App\Models\orderbooker_customers;
@@ -15,8 +18,10 @@ use App\Models\transactions;
 use App\Models\transactions_que;
 use App\Models\User;
 use App\Models\users_transactions;
+use Dotenv\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator as FacadesValidator;
 
 class CustomerAdvancePaymentController extends Controller
 {
@@ -37,7 +42,13 @@ class CustomerAdvancePaymentController extends Controller
 
         $orderbookers = User::orderbookers()->currentBranch()->get();
 
-        return view('Finance.customer_advance.index', compact('advances', 'from', 'to', 'orderbooker', 'orderbookers'));
+        $customers = accounts::customer()->currentBranch()->active()->get();
+
+        $areas = area::currentBranch()->get();
+
+        $currencies = currencymgmt::all();
+
+        return view('Finance.customer_advance.index', compact('advances', 'from', 'to', 'orderbooker', 'orderbookers', 'customers', 'areas', 'currencies'));
        
     }
 
@@ -54,7 +65,55 @@ class CustomerAdvancePaymentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       
+
+        try{ 
+            DB::beginTransaction();
+            $ref = getRef();
+            $payment = CustomerAdvancePayment::create(
+                [
+                    'customerID'       => $request->customerID,
+                    'orderbookerID'    => $request->orderbookerID,
+                    'date'              => $request->date,
+                    'amount'            => $request->amount,
+                    'method'            => $request->method,
+                    'number'            => $request->number,
+                    'bank'              => $request->bank,
+                    'cheque_date'       => $request->cheque_date,
+                    'branchID'          => $request->user()->branchID,
+                    'notes'             => $request->notes,
+                    'refID'             => $ref,
+                ]
+            );
+            $depositer = accounts::find($request->customerID);
+            $user_name = $request->user()->name;
+
+           
+            createTransaction($request->customerID, $request->date, 0, $request->amount, "Advance Payment deposited to $user_name : $request->notes", $ref, $request->user()->id);
+            
+            createMethodTransaction($request->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, "Advance Payment deposited by $depositer->title : $request->notes", $ref);
+    
+            createUserTransaction($request->user()->id, $request->date, $request->amount, 0, "Advance Payment deposited by $depositer->title : $request->notes", $ref);
+            if($request->method == 'Cash')
+            {
+                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, "Advance Payment deposited by $depositer->title : $request->notes", $ref);
+            }
+
+            if($request->method == 'Cheque'){
+                saveCheque($request->customerID, auth()->user()->id, $request->orderbookerID, $request->cheque_date, $request->amount,$request->number,$request->bank,$request->notes,$ref);
+            }
+            if($request->has('file')){
+                createAttachment($request->file('file'), $ref);
+            }
+            
+          DB::commit();
+          return back()->with('success', "Payment Saved");
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        } 
     }
 
     /**
