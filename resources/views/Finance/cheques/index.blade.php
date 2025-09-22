@@ -101,7 +101,7 @@
 
                                                 <li>
                                                     <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#forwardModal_{{ $tran->id }}"><i class="ri-check-fill align-bottom me-2 text-muted"></i>
-                                                        Forwarded To
+                                                        Forward
                                                     </a>
                                                 </li>
                                                 <li>
@@ -128,7 +128,8 @@
                                                 <h5 class="modal-title" id="forwardModalLabel">Forward Cheque</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
-                                            <form id="forwardForm" method="get">
+                                            <form id="forwardForm" method="post" action="{{ route('cheques.forward') }}" enctype="multipart/form-data">
+                                                @csrf
                                             <div class="modal-body">
                                             
                                                     <div class="mb-3">
@@ -138,6 +139,18 @@
                                                                 <option value="{{$account->id}}">{{$account->title}} - {{$account->type}}</option>
                                                             @endforeach
                                                         </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Forward Date</label>
+                                                        <input type="date" name="forwardedDate" required value="{{ date('Y-m-d') }}" id="forwardedDate" class="form-control">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Forward Notes</label>
+                                                        <textarea name="forwardedNotes" id="forwardedNotes" class="form-control"></textarea>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Attachment</label>
+                                                        <input type="file" name="file" id="file" class="form-control">
                                                     </div>
                                                     <input type="hidden" name="id" id="cheque_id" value="{{ $tran->id }}">
                                             </div>
@@ -199,39 +212,9 @@
         */
 
 
-        $(document).ready(function() {
+    
             $(".selectize").selectize();
-            $("#forwardForm").submit(function(e) {
-                e.preventDefault();
-                var form = $(this);
-                var url = "{{ route('cheques.forward') }}";
-               
-                var selectize = $("#account").find(":selected").val();
-                var id = $("#cheque_id").val();
-                console.log(selectize);
-                $.ajax({
-                    url: url,
-                    type: "GET",
-                    data: {
-                        id: id,
-                        account: selectize
-                    },
-                    success: function(response) {
-                        if(response.success) {
-                            form.trigger("reset");
-                            $("#forwardModal").modal("hide");
-                          alert(response.message);
-                          location.reload();
-                        } else {
-                          alert(response.message);
-                        }
-                    },
-                    error: function(response) {
-                        alert(response.responseJSON.message);
-                    }
-                });
-            });
-        });
+        
 
     </script>
     

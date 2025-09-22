@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ChequesController extends Controller
 {
@@ -104,13 +105,37 @@ class ChequesController extends Controller
 
     public function forward(Request $request)
     {
+
+        dd($request->all());
         $cheque = cheques::findOrFail($request->id);
-        $cheque->update([
-            'forwardedTo' => $request->account,
-        ]);
-        return response()->json([
-            'success' => true,
-            'message' => 'Cheque forwarded successfully',
-        ]);
+        try {
+
+            DB::beginTransaction();
+            $ref = getRef();
+            $cheque->update([
+                'forwardedTo' => $request->account,
+                'forwardedDate' => $request->forwardedDate,
+                'forwardedNotes' => $request->forwardedNotes,
+                'forwarded' => 'Yes',
+                'forwardedRefID' => $ref,
+            ]);
+
+            $forwordingAccount = accounts::find($request->account)->title;
+
+            createTransaction($request->account, $request->forwardedDate, $cheque->amount, 0, "Cheque Forwarded Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date", $ref, $cheque->orderbookerID);
+
+            createUserTransaction(Auth()->id(), $request->forwardedDate,0 ,  $cheque->amount, "Cheque Forwarded to $forwordingAccount Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date", $ref);
+            createMethodTransaction(Auth()->id(), "Cheque", 0, $cheque->amount, $request->forwardedDate, $cheque->number, $cheque->bank, $cheque->cheque_date, "Cheque Forwarded to $forwordingAccount Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date", $ref);
+            
+            if($request->has('file')){
+                createAttachment($request->file('file'), $ref);
+            }
+            DB::commit();
+            return redirect()->back()->with('success', 'Cheque forwarded successfully');
+         
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }

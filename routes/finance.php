@@ -69,7 +69,7 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
 
     Route::resource('cheques', ChequesController::class);
     Route::get('cheques/status/{id}/{status}', [ChequesController::class, 'show'])->name('cheques.status');
-    Route::get('cheque/forward', [ChequesController::class, 'forward'])->name('cheques.forward');
+    Route::post('cheque/forward', [ChequesController::class, 'forward'])->name('cheques.forward');
 
     Route::get('staff_balance/{staff}', [MyBalanceController::class, 'staff_balance'])->name('staff_balance');
 
