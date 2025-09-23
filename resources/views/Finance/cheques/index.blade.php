@@ -35,7 +35,6 @@
                                 <option value="cleared" @selected($status == 'cleared')>Cleared</option>
                                 <option value="bounced" @selected($status == 'bounced')>Bounced</option>
                                 <option value="pending" @selected($status == 'pending')>Pending</option>
-
                             </select>
                         </div>
                     </div>
@@ -58,7 +57,6 @@
                         </ul>
                     </div>
                 @endif
-
                     <table class="table" id="buttons-datatables">
                         <thead>
                             <th>#</th>
@@ -91,7 +89,6 @@
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ $tran->forwarded == "Yes" ? "Forwarded" : $tran->status}}</td>
                                     <td>
-                                     
                                         <div class="dropdown">
                                             <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -116,14 +113,14 @@
                                                        View Attachment
                                                     </a>
                                                 </li>
-                                                @endif
+                                              
                                                 <li>
                                                     <a class="dropdown-item text-danger" href="{{ route('cheques.forwardClear', ['ref' => $tran->forwardedRefID]) }}"><i class="ri-loop-left-line align-bottom me-2 text-danger"></i>
                                                         Reset Forwarding
                                                     </a>
                                                 </li>
                                                 @endif
-
+                                                @endif
                                                 @if ($tran->forwarded == "No")
                                                 <li>
                                                     <a class="dropdown-item" href="{{ route('cheques.status', ['id' => $tran->id, 'status' => 'cleared']) }}"><i class="ri-check-fill align-bottom me-2 text-muted"></i>
@@ -137,35 +134,24 @@
                                                     </a>
                                                 </li>
                                                 @endif
-                                                
-                                                
                                             </ul>
                                         </div>
-                                      
                                     </td>
                                 </tr>
-                               
                             @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
-          
         </div>
     </div>
-    <!-- Default Modals -->
-
-   
 @endsection
 @section('page-css')
 <link rel="stylesheet" href="{{ asset('assets/libs/datatable/datatable.bootstrap5.min.css') }}" />
-<!--datatable responsive css-->
 <link rel="stylesheet" href="{{ asset('assets/libs/datatable/responsive.bootstrap.min.css') }}" />
-
 <link rel="stylesheet" href="{{ asset('assets/libs/datatable/buttons.dataTables.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
 @endsection
-
 @section('page-js')
 <script src="{{ asset('assets/libs/datatable/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/dataTables.bootstrap5.min.js') }}"></script>
@@ -178,12 +164,9 @@
     <script src="{{ asset('assets/libs/datatable/jszip.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
-
     <script>
         /* $(document).ready(function() {
-            
             $('div[id^="forwardModal_"]').on('show.bs.modal', function() {
- 
                 console.log('Modal opened');
                 $(this).find('.selectize').selectize({
                     create: false,
@@ -192,12 +175,6 @@
             });
         });
         */
-
-
-    
             $(".selectize").selectize();
-        
-
     </script>
-    
 @endsection
