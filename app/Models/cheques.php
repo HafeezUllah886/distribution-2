@@ -33,8 +33,8 @@ class cheques extends Model
         return $query->where('branchID', auth()->user()->branchID);
     }
 
-    public function forwarded()
+    public function forwarded_account()
     {
-        return $this->belongsTo(accounts::class, 'forwardedTo');
+        return $this->belongsTo(accounts::class, 'forwardedTo', "id");
     }
 }

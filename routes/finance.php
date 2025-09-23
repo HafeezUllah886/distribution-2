@@ -70,6 +70,9 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::resource('cheques', ChequesController::class);
     Route::get('cheques/status/{id}/{status}', [ChequesController::class, 'show'])->name('cheques.status');
     Route::post('cheque/forward', [ChequesController::class, 'forward'])->name('cheques.forward');
+    Route::get('cheque/forward/{id}', [ChequesController::class, 'forwardCreate'])->name('cheques.forwardCreate');
+    Route::get('cheque/forward/{id}/view', [ChequesController::class, 'forwardView'])->name('cheques.forwardView');
+    Route::get('cheque/forward/{ref}/clear', [ChequesController::class, 'forwardClear'])->name('cheques.forwardClear')->middleware(confirmPassword::class);
 
     Route::get('staff_balance/{staff}', [MyBalanceController::class, 'staff_balance'])->name('staff_balance');
 

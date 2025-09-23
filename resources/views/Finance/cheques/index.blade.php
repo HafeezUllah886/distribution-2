@@ -89,21 +89,40 @@
                                     <td>{{ $tran->number }}</td>
                                     <td>{{ $tran->bank }}</td>
                                     <td>{{ $tran->notes }}</td>
-                                    <td>{{ $tran->status }} @if($tran->forwardedTo != null)<br> {{ $tran->forwarded->title }} @endif</td>
+                                    <td>{{ $tran->forwarded == "Yes" ? "Forwarded" : $tran->status}}</td>
                                     <td>
-                                        @if($tran->status == 'pending')
+                                     
                                         <div class="dropdown">
                                             <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="ri-more-fill align-middle"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
-
+                                                @if ($tran->forwarded == "No" && $tran->status == "pending")
                                                 <li>
-                                                    <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#forwardModal_{{ $tran->id }}"><i class="ri-check-fill align-bottom me-2 text-muted"></i>
+                                                    <a class="dropdown-item" href="{{ route('cheques.forwardCreate', ['id' => $tran->id]) }}"><i class="ri-arrow-right-circle-line align-bottom me-2 text-muted"></i>
                                                         Forward
                                                     </a>
                                                 </li>
+                                                @else
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('cheques.forwardView', ['id' => $tran->id]) }}"><i class="ri-eye-2-line align-bottom me-2 text-muted"></i>
+                                                        View Forwarding
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="{{route('viewAttachment', $tran->forwardedRefID)}}"><i class="ri-eye-fill align-bottom me-2"></i>
+                                                       View Attachment
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item text-danger" href="{{ route('cheques.forwardClear', ['ref' => $tran->forwardedRefID]) }}"><i class="ri-loop-left-line align-bottom me-2 text-danger"></i>
+                                                        Reset Forwarding
+                                                    </a>
+                                                </li>
+                                                @endif
+
+                                                @if ($tran->forwarded == "No")
                                                 <li>
                                                     <a class="dropdown-item" href="{{ route('cheques.status', ['id' => $tran->id, 'status' => 'cleared']) }}"><i class="ri-check-fill align-bottom me-2 text-muted"></i>
                                                         Mark as Cleared
@@ -115,54 +134,15 @@
                                                         Mark as Bounced
                                                     </a>
                                                 </li>
+                                                @endif
+                                                
+                                                
                                             </ul>
                                         </div>
-                                        @endif
+                                      
                                     </td>
                                 </tr>
-                                @if($tran->status == 'pending')
-                                <div class="modal fade" id="forwardModal_{{ $tran->id }}" tabindex="-1" aria-labelledby="forwardModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="forwardModalLabel">Forward Cheque</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <form id="forwardForm" method="post" action="{{ route('cheques.forward') }}" enctype="multipart/form-data">
-                                                @csrf
-                                            <div class="modal-body">
-                                            
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Forward To</label>
-                                                        <select name="account" id="account" class="selectize">
-                                                            @foreach ($accounts as $account)
-                                                                <option value="{{$account->id}}">{{$account->title}} - {{$account->type}}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Forward Date</label>
-                                                        <input type="date" name="forwardedDate" required value="{{ date('Y-m-d') }}" id="forwardedDate" class="form-control">
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Forward Notes</label>
-                                                        <textarea name="forwardedNotes" id="forwardedNotes" class="form-control"></textarea>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Attachment</label>
-                                                        <input type="file" name="file" id="file" class="form-control">
-                                                    </div>
-                                                    <input type="hidden" name="id" id="cheque_id" value="{{ $tran->id }}">
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Forward</button>
-                                            </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
+                               
                             @endforeach
                         </tbody>
                     </table>
