@@ -69,7 +69,17 @@
                                     <th>Amount</th>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $totalNet = 0;
+                                        $totalPaid = 0;
+                                        $totalDue = 0;
+                                    @endphp
                                     @foreach ($invoices as $invoice)
+                                    @php
+                                        $totalNet += $invoice->net;
+                                        $totalPaid += $invoice->paid();
+                                        $totalDue += $invoice->due();
+                                    @endphp
                                         <tr>
                                             <td>{{ $invoice->id }}</td>
                                             <td>{{ date('d M Y', strtotime($invoice->date)) }}</td>
@@ -83,8 +93,11 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="5" class="text-end">Net Amount</td>
-                                        <td><input type="number" id="netAmount" name="netAmount" readonly max="{{$advance->remainingAmount()}}" value="0" class="form-control form-control-sm"></td>
+                                        <th colspan="2" class="text-end">Total</th>
+                                        <th class="text-start">{{number_format($totalNet, 2)}}</th>
+                                        <th class="text-start">{{number_format($totalPaid, 2)}}</th>
+                                        <th class="text-start">{{number_format($totalDue, 2)}}</th>
+                                        <th><input type="number" id="netAmount" name="netAmount" readonly max="{{$advance->remainingAmount()}}" value="0" class="form-control form-control-sm"></th>
                                         <input type="hidden" name="customerID" value="{{ $_GET['customerID'] }}">
                                     </tr>
                                 </tfoot>

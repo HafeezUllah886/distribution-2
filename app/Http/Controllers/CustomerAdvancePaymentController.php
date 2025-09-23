@@ -89,7 +89,7 @@ class CustomerAdvancePaymentController extends Controller
             $user_name = $request->user()->name;
 
            
-            createTransaction($request->customerID, $request->date, 0, $request->amount, "Advance Payment deposited to $user_name : $request->notes", $ref, $request->user()->id);
+            createTransaction($request->customerID, $request->date, 0, $request->amount, "Advance Payment deposited to $user_name : $request->notes", $ref, $request->orderbookerID);
             
             createMethodTransaction($request->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, "Advance Payment deposited by $depositer->title : $request->notes", $ref);
     
