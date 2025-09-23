@@ -241,6 +241,7 @@ class CustomerAdvancePaymentController extends Controller
                 $notes_for_orderbooker = "Advance Payment of Inv No. $saleIDs from " . $sale->customer->title . " transfered to " . $consumption_orderbooker->name . " notes : " . $request->notes;
                 createTransaction($sale->customerID, $request->date,$net, 0, $notes_for_orderbooker, $ref, $request->orderbookerID);
 
+                
                 $notes_for_consumption_orderbooker = "Advance Payment of " . $sale->customer->title . " transfered from " . $orderbooker->name . " notes : " . $request->notes;
                 createTransaction($sale->customerID, $request->date,0, $net, $notes_for_consumption_orderbooker, $ref, $request->consumption_orderbookerID);
             }
