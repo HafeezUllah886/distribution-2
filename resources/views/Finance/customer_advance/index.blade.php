@@ -58,6 +58,7 @@
                             <th>Customer</th>
                             <th>Area</th>
                             <th>Order Booker</th>
+                            <th>Method</th>
                             <th>Notes</th>
                             <th>Amount</th>
                             <th>Consumed</th>
@@ -73,6 +74,7 @@
                                     <td>{{ $tran->customer->title }}</td>
                                     <td>{{ $tran->customer->area->name }}</td>
                                     <td>{{ $tran->orderbooker->name }}</td>
+                                    <td>{{ $tran->method }}</td>
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
                                     <td>{{ number_format($tran->consumedAmount()) }}</td>

@@ -110,11 +110,13 @@
                                                         View Forwarding
                                                     </a>
                                                 </li>
+                                                @if ($tran->forwarded == "Yes")
                                                 <li>
                                                     <a class="dropdown-item" href="{{route('viewAttachment', $tran->forwardedRefID)}}"><i class="ri-eye-fill align-bottom me-2"></i>
                                                        View Attachment
                                                     </a>
                                                 </li>
+                                                @endif
                                                 <li>
                                                     <a class="dropdown-item text-danger" href="{{ route('cheques.forwardClear', ['ref' => $tran->forwardedRefID]) }}"><i class="ri-loop-left-line align-bottom me-2 text-danger"></i>
                                                         Reset Forwarding

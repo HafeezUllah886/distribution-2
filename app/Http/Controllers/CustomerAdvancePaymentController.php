@@ -72,8 +72,8 @@ class CustomerAdvancePaymentController extends Controller
             $ref = getRef();
             $payment = CustomerAdvancePayment::create(
                 [
-                    'customerID'       => $request->customerID,
-                    'orderbookerID'    => $request->orderbookerID,
+                    'customerID'        => $request->customerID,
+                    'orderbookerID'      => $request->orderbookerID,
                     'date'              => $request->date,
                     'amount'            => $request->amount,
                     'method'            => $request->method,
