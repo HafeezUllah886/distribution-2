@@ -100,6 +100,8 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::get('customer_advance/delete/{id}', [CustomerAdvancePaymentController::class, 'delete'])->name('customer_advance.delete')->middleware(confirmPassword::class);
     Route::get('customer_advance/getBills', [CustomerAdvancePaymentController::class, 'getBills'])->name('customer_advance.getBills');
     Route::post('customer_advance/save_consumption', [CustomerAdvancePaymentController::class, 'save_consumption'])->name('customer_advance.save_consumption');
+    Route::get('customer_advance/view_consumption/{id}', [CustomerAdvancePaymentController::class, 'view_consumption'])->name('customer_advance.view_consumption');
+    Route::get('customer_advance/delete_consumption/{ref}', [CustomerAdvancePaymentController::class, 'delete_consumption'])->name('customer_advance.delete_consumption')->middleware(confirmPassword::class);
 });
 
 Route::middleware('auth')->group(function () {

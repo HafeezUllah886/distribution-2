@@ -190,9 +190,15 @@ class CustomerAdvancePaymentController extends Controller
     {
 
         $advance = CustomerAdvancePayment::find($request->advanceID);
+
+        $remaining = $advance->remainingAmount();
+        if($remaining < $request->netAmount)
+        {
+            return back()->with('error', "Remaining Amount is less than the amount you want to consume");
+        }
         try{ 
             DB::beginTransaction();
-            $ref = $advance->refID;
+            $ref = getRef();
           
             foreach($request->invoiceID as $key => $invoiceID)
             {
@@ -257,5 +263,30 @@ class CustomerAdvancePaymentController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         } 
+    }
+
+    public function view_consumption($id)
+    {
+        $custonmer_advance = customerAdvanceConsumption::where('customer_advanceID', $id)->get();
+        return view('Finance.customer_advance.view_consumptions', compact('custonmer_advance'));
+    }
+
+    public function delete_consumption($ref)
+    {
+        try{
+            DB::beginTransaction();
+            customerAdvanceConsumption::where('refID', $ref)->delete();
+            transactions::where('refID', $ref)->delete();
+            sale_payments::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+            return to_route('customer_advances.index')->with('success', "Payment Deleted");
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+            return to_route('customer_advances.index')->with('error', $e->getMessage());
+        }
     }
 }

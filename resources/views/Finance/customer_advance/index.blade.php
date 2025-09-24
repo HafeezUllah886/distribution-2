@@ -93,6 +93,14 @@
                                                         Pay Bills
                                                     </a>
                                                 </li>
+
+                                                @if($tran->consumption()->count() > 0)
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('customer_advance.view_consumption', ['id' => $tran->id]) }}"><i class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        View Consumptions
+                                                    </a>
+                                                </li>
+                                                @endif
                                                 <li>
                                                     <a class="dropdown-item text-danger" href="{{ route('customer_advance.delete', ['id' => $tran->refID]) }}">
                                                         <i class="ri-close-fill align-bottom me-2 text-danger"></i>
