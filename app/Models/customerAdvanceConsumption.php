@@ -21,7 +21,7 @@ class customerAdvanceConsumption extends Model
 
     public function invoice()
     {
-        return $this->belongsTo(Sales::class, 'invoiceID', 'id');
+        return $this->belongsTo(sales::class, 'invoiceID', 'id');
     }
 
     public function customer()
