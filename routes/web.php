@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\UnitsController;
 use App\Http\Controllers\WarehousesController;
 use App\Http\Middleware\adminCheck;
+use App\Models\accounts;
 use Illuminate\Support\Facades\Route;
 
 
@@ -29,6 +30,13 @@ require __DIR__ . '/employees.php';
 Route::middleware('auth')->group(function () {
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard');
     Route::get('/admin/{branch?}/{from?}/{to?}', [adminDashboardController::class, 'index'])->name('admin.dashboard');
+
+
+    Route::get('accounts_by_type/{type}', function ($type) {
+        $accounts = accounts::where('type', $type)->currentBranch()->select('id as value', 'title as text')->get();
+
+        return response()->json($accounts);
+    })->name('accounts_by_type');
 
 });
 
