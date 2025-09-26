@@ -19,7 +19,37 @@
                 @endif
                     <div class="row">
                         <div class='col-md-6'>
-                            <dl class="row">
+                            <table class="table">
+                                <tr>
+                                    <td><b>Cheque Number</b></td>
+                                    <td>{{$cheque->number}}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Cheque Clearing Date</b></td>
+                                    <td>{{$cheque->cheque_date}}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Bank</b></td>
+                                    <td>{{$cheque->bank}}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Amount</b></td>
+                                    <td>{{$cheque->amount}}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Received From</b></td>
+                                    <td>{{$cheque->customer->title}}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Receiving Order Booker</b></td>
+                                    <td>{{$cheque->orderbooker->name}}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Receiving Notes</b></td>
+                                    <td>{{$cheque->notes}}</td>
+                                </tr>
+                            </table>
+                           {{--  <dl class="row">
                                 <dt class="col-sm-3">Cheque Number</dt>
                                 <dd class="col-sm-9">{{$cheque->number}}</dd>
                               
@@ -40,7 +70,7 @@
 
                                 <dt class="col-sm-3">Receiving Notes</dt>
                                 <dd class="col-sm-9">{{$cheque->notes}}</dd>
-                              </dl>
+                              </dl> --}}
                         </div>
                         <div class='col-md-6'>
                             <form id="forwardForm" method="post" action="{{ route('cheques.forward') }}" enctype="multipart/form-data">

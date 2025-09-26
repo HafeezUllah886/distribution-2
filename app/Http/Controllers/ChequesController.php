@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\cheques;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\area;
 use App\Models\transactions;
 use App\Models\users_transactions;
 use App\Models\method_transactions;
@@ -39,7 +40,8 @@ class ChequesController extends Controller
 
         $accounts = accounts::currentBranch()->get();
 
-        return view('Finance.cheques.index', compact('cheques', 'start', 'end', 'orderbooker', 'status', 'orderbookers', 'accounts'));
+        $areas = area::currentBranch()->get();
+        return view('Finance.cheques.index', compact('cheques', 'start', 'end', 'orderbooker', 'status', 'orderbookers', 'accounts', 'areas'));
     }
 
     /**
@@ -106,9 +108,9 @@ class ChequesController extends Controller
         //
     }
 
-    public function forwardCreate($id)
+    public function forwardCreate(Request $request)
     {
-        $cheque = cheques::findOrFail($id);
+        $cheque = cheques::findOrFail($request->id);
 
         if($cheque->forwarded == 'Yes')
         {
@@ -116,7 +118,12 @@ class ChequesController extends Controller
         }
 
         $orderbookers = User::orderbookers()->currentBranch()->get();
-        $accounts = accounts::currentBranch()->get();
+        $accounts = accounts::currentBranch()->where('type', $request->type);
+        if($request->areaID != null && $request->type == 'Customer')
+        {
+            $accounts->where('areaID', $request->areaID);
+        }
+        $accounts = $accounts->get();
         return view('Finance.cheques.forward', compact('cheque', 'accounts', 'orderbookers'));
     }
 
