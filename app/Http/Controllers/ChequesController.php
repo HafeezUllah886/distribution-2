@@ -30,9 +30,13 @@ class ChequesController extends Controller
         {
             $cheques->where('orderbookerID', $orderbooker);
         }
-        if($status != 'All')
+        if($status != 'All' && $status != 'forwarded')
         {
             $cheques->where('status', $status);
+        }
+        if($status == 'forwarded')
+        {
+            $cheques->where('forwarded', 'Yes');
         }
 
         $cheques = $cheques->get();
@@ -75,9 +79,9 @@ class ChequesController extends Controller
             {
                 $ref = getRef();
                 $customer = accounts::find($cheque->customerID);
-                createTransaction($cheque->customerID, now(), $cheque->amount, 0, "Cheque Bounced Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date", $ref, $cheque->orderbookerID);
-                createUserTransaction(Auth()->id(), now(), 0, $cheque->amount, "Cheque Bounced of $customer->title Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date", $ref);
-                createMethodTransaction(Auth()->id(), "Cheque", 0, $cheque->amount, now(), $cheque->number, $cheque->bank, $cheque->cheque_date, "Cheque Bounced of $customer->title", $ref);
+                createTransaction($cheque->customerID, now(), $cheque->amount, 0, "Cheque Bounced Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date notes: $cheque->notes", $ref, $cheque->orderbookerID);
+                createUserTransaction(Auth()->id(), now(), 0, $cheque->amount, "Cheque Bounced of $customer->title Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date notes: $cheque->notes", $ref);
+                createMethodTransaction(Auth()->id(), "Cheque", 0, $cheque->amount, now(), $cheque->number, $cheque->bank, $cheque->cheque_date, "Cheque Bounced of $customer->title notes: $cheque->notes", $ref);
             }
             return redirect()->back()->with('success', 'Cheque status updated successfully');
         }
@@ -144,10 +148,10 @@ class ChequesController extends Controller
 
             $forwordingAccount = accounts::find($request->account)->title;
 
-            createTransaction($request->account, $request->forwardedDate, $cheque->amount, 0, "Cheque Forwarded Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date Notes: $request->notes", $ref, $cheque->orderbookerID);
+            createTransaction($request->account, $request->forwardedDate, $cheque->amount, 0, "Cheque Forwarded Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date Notes: $request->forwardedNotes", $ref, $cheque->orderbookerID);
 
-            createUserTransaction(Auth()->id(), $request->forwardedDate,0 ,  $cheque->amount, "Cheque Forwarded to $forwordingAccount Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date Notes: $request->notes", $ref);
-            createMethodTransaction(Auth()->id(), "Cheque", 0, $cheque->amount, $request->forwardedDate, $cheque->number, $cheque->bank, $cheque->cheque_date, "Cheque Forwarded to $forwordingAccount Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date Notes: $request->notes", $ref);
+            createUserTransaction(Auth()->id(), $request->forwardedDate,0 ,  $cheque->amount, "Cheque Forwarded to $forwordingAccount Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date Notes: $request->forwardedNotes", $ref);
+            createMethodTransaction(Auth()->id(), "Cheque", 0, $cheque->amount, $request->forwardedDate, $cheque->number, $cheque->bank, $cheque->cheque_date, "Cheque Forwarded to $forwordingAccount Cheque No. $cheque->number, Bank: $cheque->bank, Clearing Date: $cheque->cheque_date Notes: $request->forwardedNotes", $ref);
             
             if($request->has('file')){
                 createAttachment($request->file('file'), $ref);

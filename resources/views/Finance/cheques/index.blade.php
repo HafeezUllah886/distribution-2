@@ -31,23 +31,13 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">Status</span>
-                            <select name="status" id="status1" class="form-control">
-                                <option value="">All</option>
-                                <option value="bounced" @selected($status == 'bounced')>Bounced</option>
-                                <option value="pending" @selected($status == 'pending')>Pending</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
                         <input type="submit" value="Filter" class="btn btn-success w-100">
                     </div>
                 </div>
             </form>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3>Cheques</h3>
+                    <h3> {{$status}} Cheques</h3>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())

@@ -222,10 +222,28 @@
                     </a>
                 </li> 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('cheques.index') }}">
-                        <i class="ri-cash-line"></i> <span data-key="t-cheques">Cheques</span>
+                    <a class="nav-link menu-link" href="#cheques" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarApps">
+                        <i class="ri-shopping-cart-fill"></i><span data-key="t-apps">Cheques</span>
                     </a>
-                </li> 
+                    <div class="collapse menu-dropdown" id="cheques">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('cheques.index', ['status' => 'All']) }}" class="nav-link" data-key="t-chat"> All</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('cheques.index', ['status' => 'pending']) }}" class="nav-link" data-key="t-chat"> Pending</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('cheques.index', ['status' => 'forwarded']) }}" class="nav-link" data-key="t-chat"> Forwarded</a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a href="{{ route('cheques.index', ['status' => 'bounced']) }}" class="nav-link" data-key="t-chat"> Bounced</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>  
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('customer_advances.index') }}">
                         <i class="ri-cash-line"></i> <span data-key="t-customer_advances">Customer Advances</span>
