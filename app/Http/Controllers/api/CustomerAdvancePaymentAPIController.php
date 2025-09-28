@@ -35,7 +35,7 @@ class CustomerAdvancePaymentAPIController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Payment already punched'
-            ], 422);
+            ], 201);
         }
 
 

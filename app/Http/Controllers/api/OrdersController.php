@@ -146,7 +146,7 @@ class OrdersController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Order already exists'
-            ], 422);
+            ], 201);
         }
 
             DB::beginTransaction();

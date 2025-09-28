@@ -47,7 +47,7 @@ class customerPaymentsReceivingContoller extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Payment already punched'
-            ], 422);
+            ], 201);
         }
 
 
@@ -193,7 +193,7 @@ class customerPaymentsReceivingContoller extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Payment already punched'
-            ], 422);
+            ], 201);
         }
 
 
