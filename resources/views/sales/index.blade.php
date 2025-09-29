@@ -58,6 +58,7 @@
                             <th>Area</th>
                             <th>Order Booker</th>
                             <th>Date</th>
+                            <th>Notes</th>
                             <th>Amount</th>
                             <th>Paid</th>
                             <th>Due</th> 
@@ -77,6 +78,7 @@
                                     <td>{{ $sale->customer->area->name }}</td>
                                     <td>{{ $sale->orderbooker->name }}</td>
                                     <td>{{ date('d M Y', strtotime($sale->date)) }}</td>
+                                    <td>{{ $sale->notes }}</td>
                                     <td>{{ number_format($amount) }}</td>
                                    <td>{{ number_format($paid) }}</td>
                                     <td>{{ number_format($due) }}</td>

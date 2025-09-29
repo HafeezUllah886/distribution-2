@@ -27,6 +27,9 @@
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Account Title</p>
                                         <h5 class="fs-14 mb-0">{{ $account->title }}</h5>
                                         <h5 class="fs-14 mb-0">{{ $account->type }}</h5>
+                                        @if($account->type == "Customer")
+                                        <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">Order Booker </small><span id="invoice-date">{{$orderbooker_name}}</span> </h5>
+                                        @endif
                                     </div>
                                     <!--end col-->
                                     <div class="col-lg-3 col-6">

@@ -147,45 +147,48 @@ class AccountsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id, $from, $to, $orderbooker = 0)
+    public function show($id, $from, $to, $orderbooker = "All")
     {
-        $orderbooker = $orderbooker ?? 0;
+        $orderbooker = $orderbooker ?? "All";
         $account = accounts::find($id);
 
         $transactions = transactions::where('accountID', $id)->whereBetween('date', [$from, $to]);
-        if($orderbooker != 0)
+        if($orderbooker !=  "All")
         {
             $transactions = $transactions->where('orderbookerID', $orderbooker);
         }
         $transactions = $transactions->orderBy('date', 'asc')->orderBy('refID', 'asc')->get();
 
         $pre_cr = transactions::where('accountID', $id)->whereDate('date', '<', $from);
-        if($orderbooker != 0)
+        if($orderbooker !=  "All")
         {
             $pre_cr = $pre_cr->where('orderbookerID', $orderbooker);
         }
         $pre_cr = $pre_cr->sum('cr');
 
         $pre_db = transactions::where('accountID', $id)->whereDate('date', '<', $from);
-        if($orderbooker != 0)
+        if($orderbooker !=  "All")
         {
             $pre_db = $pre_db->where('orderbookerID', $orderbooker);
         }
         $pre_db = $pre_db->sum('db');
 
         $pre_balance = $pre_cr - $pre_db;
-
         
-        if($orderbooker != 0)
+        if($orderbooker != "All")
         {
            $cur_balance = getAccountBalanceOrderbookerWise($id, $orderbooker);
+           $orderbooker = User::find($orderbooker);
+           $orderbooker_name = $orderbooker->name ?? "All"; 
         }
         else
         {
             $cur_balance = getAccountBalance($id);
+            $orderbooker_name = 'All';
         }
 
-        return view('Finance.accounts.statment', compact('account', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to', 'orderbooker'));
+
+        return view('Finance.accounts.statment', compact('account', 'transactions', 'pre_balance', 'cur_balance', 'from', 'to', 'orderbooker', 'orderbooker_name'));
     }
 
     /**
