@@ -43,6 +43,7 @@
                                         <option value="Business">Business</option>
                                         <option value="Supply Man">Supply Man</option>
                                         <option value="Unloader">Unloader</option>
+                                        <option value="Freight">Freight</option>
                                         @endif
                                     </select>
                                 </div>
