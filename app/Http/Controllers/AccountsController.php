@@ -147,27 +147,27 @@ class AccountsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id, $from, $to, $orderbooker = "All")
+    public function show($id, $from, $to, $orderbooker = 0)
     {
-        $orderbooker = $orderbooker ?? "All";
+        $orderbooker = $orderbooker ?? 0;
         $account = accounts::find($id);
 
         $transactions = transactions::where('accountID', $id)->whereBetween('date', [$from, $to]);
-        if($orderbooker !=  "All")
+        if($orderbooker !=  0)
         {
             $transactions = $transactions->where('orderbookerID', $orderbooker);
         }
         $transactions = $transactions->orderBy('date', 'asc')->orderBy('refID', 'asc')->get();
 
         $pre_cr = transactions::where('accountID', $id)->whereDate('date', '<', $from);
-        if($orderbooker !=  "All")
+        if($orderbooker !=  0)
         {
             $pre_cr = $pre_cr->where('orderbookerID', $orderbooker);
         }
         $pre_cr = $pre_cr->sum('cr');
 
         $pre_db = transactions::where('accountID', $id)->whereDate('date', '<', $from);
-        if($orderbooker !=  "All")
+        if($orderbooker !=  0)
         {
             $pre_db = $pre_db->where('orderbookerID', $orderbooker);
         }
@@ -175,7 +175,7 @@ class AccountsController extends Controller
 
         $pre_balance = $pre_cr - $pre_db;
         
-        if($orderbooker != "All")
+        if($orderbooker != 0)
         {
            $cur_balance = getAccountBalanceOrderbookerWise($id, $orderbooker);
            $orderbooker = User::find($orderbooker);
