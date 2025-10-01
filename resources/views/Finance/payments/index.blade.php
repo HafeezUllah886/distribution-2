@@ -26,6 +26,7 @@
                                 <option @selected($type == 'Vendor') value="Vendor">Vendor</option>
                                 <option @selected($type == 'Unloader') value="Unloader">Unloader</option>
                                 <option @selected($type == 'Supply Man') value="Supply Man">Supply Man</option>
+                                <option @selected($type == 'Freight') value="Freight">Freight</option>
                             </select>
                         </div>
                     </div>
