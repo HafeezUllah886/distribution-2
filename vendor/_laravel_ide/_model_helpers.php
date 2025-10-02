@@ -12315,7 +12315,6 @@ namespace App\Models {
     /**
      * App\Models\purchase
      *
-     * @property string|null $freight_notes
      * @property string $freight_status
      * @property int|null $expenseCategoryID
      * @property int|null $freightID
@@ -12369,7 +12368,6 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereFreightid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereExpensecategoryid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereFreightStatus($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereFreightNotes($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase query()
