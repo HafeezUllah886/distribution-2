@@ -72,30 +72,12 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label for="comp">Bilty No.</label>
-                                    <input type="text" name="bilty" id="bilty" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="comp">Transporter</label>
-                                    <input type="text" name="transporter" id="transporter" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="orderdate">Order Date</label>
-                                    <input type="date" name="orderdate" id="orderdate" value="{{ date('Y-m-d') }}" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-4 mt-2">
-                                <div class="form-group">
                                     <label for="date">Receiving Date</label>
                                     <input type="date" name="recdate" id="date" value="{{ date('Y-m-d') }}" class="form-control">
                                     <input type="hidden" name="vendorID" value="{{ $vendor }}">
                                 </div>
                             </div>
-                            <div class="col-4 mt-2">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <label for="warehouseID">Warehouse</label>
                                     <select name="warehouseID" id="warehouseID" class="form-control">
@@ -105,7 +87,13 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-4 mt-2">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="orderdate">Order Date</label>
+                                    <input type="date" name="orderdate" id="orderdate" value="{{ date('Y-m-d') }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="unloaderID">Unloader</label>
                                     <select name="unloaderID" id="unloaderID" class="form-control">
@@ -115,6 +103,66 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="comp">Bilty No.</label>
+                                    <input type="text" name="bilty" id="bilty" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="comp">Transporter</label>
+                                    <input type="text" name="transporter" id="transporter" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="comp">Driver</label>
+                                    <input type="text" name="driver" id="driver" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2 mt-2">
+                                <div class="form-group">
+                                    <label for="comp">Driver Contact</label>
+                                    <input type="text" name="driver_contact" id="driver_contact" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2 mt-2">
+                                <div class="form-group">
+                                    <label for="comp">Container No.</label>
+                                    <input type="text" name="container" id="container" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="freightID">Freight Account</label>
+                                    <select name="freightID" id="freightID" class="form-control">
+                                        @foreach ($freight_accounts as $freight_account)
+                                            <option value="{{$freight_account->id}}">{{$freight_account->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-2 mt-2">
+                                <div class="form-group">
+                                    <label for="freight_status">Freight Status</label>
+                                    <select name="freight_status" id="freight_status" class="form-control">
+                                        <option value="Paid">Paid</option>
+                                        <option value="Unpaid">Unpaid</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="expense_categoryID">Expense Category</label>
+                                    <select name="expense_categoryID" id="expense_categoryID" class="form-control">
+                                        @foreach ($exp_categories as $exp_category)
+                                            <option value="{{$exp_category->id}}">{{$exp_category->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                           
                             <div class="col-12 mt-2">
                                 <div class="form-group">
                                     <label for="notes">Notes</label>

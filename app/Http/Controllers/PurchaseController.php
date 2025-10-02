@@ -10,10 +10,12 @@ use App\Models\purchase_details;
 use App\Models\purchase_order;
 use App\Models\purchase_order_delivery;
 use App\Models\purchase_payments;
+use App\Models\expenses;
 use App\Models\stock;
 use App\Models\transactions;
 use App\Models\units;
 use App\Models\warehouses;
+use App\Models\expense_categories;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +41,7 @@ class PurchaseController extends Controller
         }
         $purchases = $purchases->orderby('id', 'desc')->get();
         $vendors = accounts::vendor()->currentBranch()->get();
+      
         return view('purchase.index', compact('purchases', 'start', 'end', 'vendors', 'vendorID', 'status'));
     }
 
@@ -52,7 +55,9 @@ class PurchaseController extends Controller
         $vendor = $request->vendorID;
         $warehouses = warehouses::currentBranch()->get();
         $unloaders = accounts::unloader()->currentBranch()->get();
-        return view('purchase.create', compact('products', 'units', 'vendor', 'warehouses', 'unloaders'));
+        $freight_accounts = accounts::freight()->currentBranch()->get();
+        $exp_categories = expense_categories::currentBranch()->get();
+        return view('purchase.create', compact('products', 'units', 'vendor', 'warehouses', 'unloaders', 'freight_accounts', 'exp_categories'));
     }
 
     /**
@@ -70,18 +75,24 @@ class PurchaseController extends Controller
             $ref = getRef();
             $purchase = purchase::create(
                 [
-                  'vendorID'        => $request->vendorID,
-                  'branchID'        => Auth()->user()->branchID,
-                  'warehouseID'     => $request->warehouseID,
-                  'unloaderID'      => $request->unloaderID,
-                  'orderdate'       => $request->orderdate,
-                  'recdate'         => $request->recdate,
-                  'notes'           => $request->notes,
-                  'bilty'           => $request->bilty,
-                  'transporter'     => $request->transporter,
-                  'status'          => "Pending",
-                  'inv'             => $request->inv,
-                  'refID'           => $ref,
+                  'vendorID'            => $request->vendorID,
+                  'branchID'            => Auth()->user()->branchID,
+                  'warehouseID'         => $request->warehouseID,
+                  'unloaderID'          => $request->unloaderID,
+                  'orderdate'           => $request->orderdate,
+                  'recdate'             => $request->recdate,
+                  'notes'               => $request->notes,
+                  'bilty'               => $request->bilty,
+                  'transporter'         => $request->transporter,
+                  'status'              => "Pending",
+                  'inv'                 => $request->inv,
+                  'driver_name'         => $request->driver_name,
+                  'driver_contact'      => $request->driver_contact,
+                  'cno'                 => $request->container,
+                  'freightID'           => $request->freightID,
+                  'expenseCategoryID'   => $request->expense_categoryID,
+                  'freight_status'      => $request->freight_status,
+                  'refID'               => $ref,
                 ]
             );
 
@@ -89,6 +100,7 @@ class PurchaseController extends Controller
 
             $total = 0;
             $totalLabor = 0;
+            $totalFreight = 0;
             $vendor = accounts::find($request->vendorID)->title;
             foreach($ids as $key => $id)
             {
@@ -104,6 +116,7 @@ class PurchaseController extends Controller
                 $price_amount = $price * $pc;
                 $total += $amount;
                 $totalLabor += $request->labor[$key] * $pc;
+                $totalFreight += $request->fright[$key] * $pc;
 
                 purchase_details::create(
                     [
@@ -134,7 +147,6 @@ class PurchaseController extends Controller
             }
 
             $net = round($total, 0);
-
             $totalLabor = round($totalLabor, 0);
 
             $purchase->update(
@@ -143,6 +155,30 @@ class PurchaseController extends Controller
                     'totalLabor' => $totalLabor,
                 ]
             );
+
+            if($request->freight_status == "Paid")
+            {
+
+                $fr_notes = "Freight Payment of Purchase ID: $purchase->id, Bilty: $request->bilty, Transporter: $request->transporter, Driver:  $request->driver_name, Container: $request->container";
+                expenses::create(
+                    [
+                        'userID'        => auth()->user()->id,
+                        'amount'        => $totalFreight,
+                        'branchID'      => auth()->user()->branchID,
+                        'categoryID'    => $request->expense_categoryID,
+                        'date'          => $request->recdate,
+                        'method'        => 'Other',
+                        'number'        => null,
+                        'bank'          => null,
+                        'cheque_date'   => $request->recdate,
+                        'notes'         => $fr_notes,
+                        'refID'         => $ref,
+                    ]
+                );
+
+                createTransaction($request->freightID, $request->recdate, 0, $totalFreight, $fr_notes, $ref, auth()->user()->id);
+    
+            }
 
             DB::commit();
             return back()->with('success', "Purchase Created");

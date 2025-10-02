@@ -1270,6 +1270,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts labor()
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts supplyMen()
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts unloader()
+     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts freight()
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts other()
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts active()
@@ -12314,6 +12315,13 @@ namespace App\Models {
     /**
      * App\Models\purchase
      *
+     * @property string|null $freight_notes
+     * @property string $freight_status
+     * @property int|null $expenseCategoryID
+     * @property int|null $freightID
+     * @property string|null $cno
+     * @property string|null $driver_contact
+     * @property string|null $driver_name
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property int $refID
@@ -12355,6 +12363,13 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereDriverName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereDriverContact($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereCno($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereFreightid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereExpensecategoryid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereFreightStatus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereFreightNotes($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase query()
@@ -17842,8 +17857,8 @@ namespace App\Models {
      * @property int|null $orderbookerID
      * @property int $refID
      * @property string $notes
-     * @property mixed $db
-     * @property mixed $cr
+     * @property float $db
+     * @property float $cr
      * @property string $date
      * @property int $accountID
      * @property int $id
@@ -19040,8 +19055,8 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property int $refID
      * @property string $notes
-     * @property mixed $db
-     * @property mixed $cr
+     * @property float $db
+     * @property float $cr
      * @property string $date
      * @property int $userID
      * @property int $id

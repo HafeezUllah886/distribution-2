@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('freightID')->nullable()->constrained('accounts', 'id');
             $table->foreignId('expenseCategoryID')->nullable()->constrained('expense_categories', 'id');
             $table->string('freight_status')->default('Unpaid');
-            $table->string('freight_notes')->nullable();
         });
     }
 
