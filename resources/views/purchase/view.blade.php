@@ -24,28 +24,40 @@
 
                             <div class="card-body p-4">
                                 <div class="row g-3">
-                                    <div class="col-lg-3 col-6">
+                                    <div class="col-3">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Invoice</p>
                                         <h5 class="fs-14 mb-0"><span class="text-muted">ID: </span>{{$purchase->id}}</h5>
                                         <h5 class="fs-14 mb-0"><span class="text-muted">Inv #: </span>{{$purchase->inv}}</h5>
                                     </div>
                                     <!--end col-->
-                                    <div class="col-lg-3 col-6">
+                                    <div class="col-3">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Dates</p>
                                         <h5 class="fs-14 mb-0"> <span class="text-muted">Order: </span>{{date("d M Y" ,strtotime($purchase->orderdate))}}</h5>
                                         <h5 class="fs-14 mb-0"> <span class="text-muted">Receiving: </span>{{date("d M Y" ,strtotime($purchase->recdate))}}</h5>
                                     </div>
                                     <!--end col-->
-                                    <div class="col-lg-3 col-6">
+                                    <div class="col-3">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Vendor</p>
                                         <h5 class="fs-14 mb-0">{{$purchase->vendor->title}}</h5>
                                     </div>
                                     <!--end col-->
-                                    <div class="col-lg-3 col-6">
+                                    <div class="col-3">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Transport</p>
                                         <h5 class="fs-14 mb-0"><span id="text-muted">Bilty #</span>{{$purchase->bilty}}</h5>
                                         <h5 class="fs-14 mb-0"><span id="text-muted">Transporter: </span>{{$purchase->transporter}}</h5>
                                         {{-- <h5 class="fs-14 mb-0"><span id="total-amount">{{ \Carbon\Carbon::now()->format('h:i A') }}</span></h5> --}}
+                                    </div>
+                                    <div class="col-3">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Unloader</p>
+                                        <h5 class="fs-14 mb-0">{{$purchase->unloader->title}}</h5>
+                                    </div>
+                                    <div class="col-3">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Vehicle No.</p>
+                                        <h5 class="fs-14 mb-0">{{$purchase->cno}}</h5>
+                                    </div>
+                                    <div class="col-3">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Freight Status</p>
+                                        <h5 class="fs-14 mb-0">{{$purchase->freight_status}}</h5>
                                     </div>
                                     <!--end col-->
                                 </div>

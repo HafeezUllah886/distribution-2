@@ -7,8 +7,11 @@
                     <div class="col-12">
                         <div class="card-header">
                             <div class="row">
-                                <div class="col-6"><h3> Create Purchase </h3></div>
-                                <div class="col-6 d-flex flex-row-reverse"><a href="{{route('purchase.index')}}" class="btn btn-danger">Close</a></div>
+                                <div class="col-6">
+                                    <h3> Create Purchase </h3>
+                                </div>
+                                <div class="col-6 d-flex flex-row-reverse"><a href="{{ route('purchase.index') }}"
+                                        class="btn btn-danger">Close</a></div>
                             </div>
                         </div>
                     </div>
@@ -49,7 +52,7 @@
                                     <tfoot>
                                         <tr>
                                             <th colspan="2" class="text-end">Total</th>
-                                           <th class="text-end" id="totalQty">0.00</th>
+                                            <th class="text-end" id="totalQty">0.00</th>
                                             <th></th>
                                             <th></th>
                                             <th></th>
@@ -72,49 +75,52 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <label for="date">Receiving Date</label>
-                                    <input type="date" name="recdate" id="date" value="{{ date('Y-m-d') }}" class="form-control">
-                                    <input type="hidden" name="vendorID" value="{{ $vendor }}">
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="warehouseID">Warehouse</label>
-                                    <select name="warehouseID" id="warehouseID" class="form-control">
-                                        @foreach ($warehouses as $warehouse)
-                                            <option value="{{$warehouse->id}}">{{$warehouse->name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="orderdate">Order Date</label>
-                                    <input type="date" name="orderdate" id="orderdate" value="{{ date('Y-m-d') }}" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-3 mt-2">
-                                <div class="form-group">
-                                    <label for="unloaderID">Unloader</label>
-                                    <select name="unloaderID" id="unloaderID" class="form-control">
-                                        @foreach ($unloaders as $unloader)
-                                            <option value="{{$unloader->id}}">{{$unloader->title}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-3 mt-2">
-                                <div class="form-group">
                                     <label for="comp">Bilty No.</label>
                                     <input type="text" name="bilty" id="bilty" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-3 mt-2">
+                            <div class="col-3">
                                 <div class="form-group">
                                     <label for="comp">Transporter</label>
                                     <input type="text" name="transporter" id="transporter" class="form-control">
                                 </div>
                             </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="unloaderID">Unloader</label>
+                                    <select name="unloaderID" id="unloaderID" class="form-control">
+                                        @foreach ($unloaders as $unloader)
+                                            <option value="{{ $unloader->id }}">{{ $unloader->title }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="orderdate">Order Date</label>
+                                    <input type="date" name="orderdate" id="orderdate" value="{{ date('Y-m-d') }}"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="date">Receiving Date</label>
+                                    <input type="date" name="recdate" id="date" value="{{ date('Y-m-d') }}"
+                                        class="form-control">
+                                    <input type="hidden" name="vendorID" value="{{ $vendor }}">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="warehouseID">Warehouse</label>
+                                    <select name="warehouseID" id="warehouseID" class="form-control">
+                                        @foreach ($warehouses as $warehouse)
+                                            <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="comp">Driver</label>
@@ -124,12 +130,13 @@
                             <div class="col-2 mt-2">
                                 <div class="form-group">
                                     <label for="comp">Driver Contact</label>
-                                    <input type="text" name="driver_contact" id="driver_contact" class="form-control">
+                                    <input type="text" name="driver_contact" id="driver_contact"
+                                        class="form-control">
                                 </div>
                             </div>
                             <div class="col-2 mt-2">
                                 <div class="form-group">
-                                    <label for="comp">Container No.</label>
+                                    <label for="comp">Vehicle No.</label>
                                     <input type="text" name="container" id="container" class="form-control">
                                 </div>
                             </div>
@@ -138,7 +145,8 @@
                                     <label for="freightID">Freight Account</label>
                                     <select name="freightID" id="freightID" class="form-control">
                                         @foreach ($freight_accounts as $freight_account)
-                                            <option value="{{$freight_account->id}}">{{$freight_account->title}}</option>
+                                            <option value="{{ $freight_account->id }}">{{ $freight_account->title }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -146,7 +154,8 @@
                             <div class="col-2 mt-2">
                                 <div class="form-group">
                                     <label for="freight_status">Freight Status</label>
-                                    <select name="freight_status" id="freight_status" class="form-control">
+                                    <select name="freight_status" onchange="updateFreightStatus(this.value)"
+                                        id="freight_status" class="form-control">
                                         <option value="Paid">Paid</option>
                                         <option value="Unpaid">Unpaid</option>
                                     </select>
@@ -157,12 +166,12 @@
                                     <label for="expense_categoryID">Expense Category</label>
                                     <select name="expense_categoryID" id="expense_categoryID" class="form-control">
                                         @foreach ($exp_categories as $exp_category)
-                                            <option value="{{$exp_category->id}}">{{$exp_category->name}}</option>
+                                            <option value="{{ $exp_category->id }}">{{ $exp_category->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                           
+
                             <div class="col-12 mt-2">
                                 <div class="form-group">
                                     <label for="notes">Notes</label>
@@ -175,10 +184,10 @@
                         </div>
                     </form>
                 </div>
+            </div>
+            <!--end card-->
         </div>
-        <!--end card-->
-    </div>
-    <!--end col-->
+        <!--end col-->
     </div>
     <!--end row-->
 @endsection
@@ -219,34 +228,81 @@
                     let found = $.grep(existingProducts, function(element) {
                         return element === product.id;
                     });
-                    if (found.length > 0) {
-                    } else {
+                    if (found.length > 0) {} else {
                         var id = product.id;
                         var units = product.units;
                         var html = '<tr id="row_' + id + '">';
                         html += '<td class="no-padding">' + product.name + '</td>';
-                        html += '<td class="no-padding"><select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges(' + id +')" id="unit_' + id + '">';
-                            units.forEach(function(unit) {
-                                html += '<option data-unit="'+unit.value+'" value="' + unit.id + '">' + unit.unit_name + '</option>';
-                            });
+                        html +=
+                            '<td class="no-padding"><select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges(' +
+                            id + ')" id="unit_' + id + '">';
+                        units.forEach(function(unit) {
+                            html += '<option data-unit="' + unit.value + '" value="' + unit.id + '">' +
+                                unit.unit_name + '</option>';
+                        });
                         html += '</select></td>';
-                        html += '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="1" class="form-control text-center no-padding" id="qty_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="loose[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="0" class="form-control text-center no-padding" id="loose_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="bonus[]" min="0" required step="any" value="0" class="form-control text-center no-padding" id="bonus_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' + id + ')" required step="any" value="'+product.pprice+'" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
-                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="discount[]" required step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discount_' + id + '"><span class="input-group-text no-padding discountText_'+id+'" id="basic-addon2"></span></td>';
-                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="discountp[]" required step="any" value="0" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discountp_' + id + '"><span class="input-group-text no-padding discountpText_'+id+'" id="basic-addon2"></span></td>';
-                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="fright[]" required step="any" oninput="updateChanges(' + id + ')" value="'+product.fright+'" min="0" class="form-control text-center no-padding" id="fright_' + id + '"> <span class="input-group-text no-padding frightText_'+id+'" id="basic-addon2"></span></div></td>';
-                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="labor[]" required step="any" oninput="updateChanges(' + id + ')" value="'+product.labor+'" min="0" class="form-control text-center no-padding" id="labor_' + id + '"> <span class="input-group-text no-padding laborText_'+id+'" id="basic-addon2"></span></div></td>';
-                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="claim[]" required step="any" oninput="updateChanges(' + id + ')" value="'+product.claim+'" min="0" class="form-control text-center no-padding" id="claim_' + id + '"> <span class="input-group-text no-padding claimText_'+id+'" id="basic-addon2"></span></div></td>';
-                        html += '<td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_' + id + '"></td>';
-                        html += '<td class="no-padding"> <span class="btn btn-sm btn-danger" onclick="deleteRow('+id+')">X</span> </td>';
-                        html += '<input type="hidden" name="id[]" value="' + id + '">';
-                        html += '<input type="hidden" name="frightValue[]" id="frightValue_'+id+'" value="0">';
-                        html += '<input type="hidden" name="laborValue[]" id="laborValue_'+id+'" value="0">';
-                        html += '<input type="hidden" name="claimValue[]" id="claimValue_'+id+'" value="0">';
-                        html += '<input type="hidden" name="discountValue[]" id="discountValue_'+id+'" value="0">';
-                        html += '<input type="hidden" name="discountPValue[]" id="discountPValue_'+id+'" value="0">';
+                        html +=
+                            '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' +
+                            id +
+                            ')" min="0" required step="any" value="1" class="form-control text-center no-padding" id="qty_' +
+                            id + '"></td>';
+                        html +=
+                            '<td class="no-padding"><input type="number" name="loose[]" oninput="updateChanges(' +
+                            id +
+                            ')" min="0" required step="any" value="0" class="form-control text-center no-padding" id="loose_' +
+                            id + '"></td>';
+                        html +=
+                            '<td class="no-padding"><input type="number" name="bonus[]" min="0" required step="any" value="0" class="form-control text-center no-padding" id="bonus_' +
+                            id + '"></td>';
+                        html +=
+                            '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' +
+                            id + ')" required step="any" value="' + product.pprice +
+                            '" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
+                        html +=
+                            '<td class="no-padding"><div class="input-group"><input type="number" name="discount[]" required step="any" value="0" min="0" oninput="updateChanges(' +
+                            id + ')" class="form-control text-center no-padding" id="discount_' + id +
+                            '"><span class="input-group-text no-padding discountText_' + id +
+                            '" id="basic-addon2"></span></td>';
+                        html +=
+                            '<td class="no-padding"><div class="input-group"><input type="number" name="discountp[]" required step="any" value="0" min="0" oninput="updateChanges(' +
+                            id + ')" class="form-control text-center no-padding" id="discountp_' + id +
+                            '"><span class="input-group-text no-padding discountpText_' + id +
+                            '" id="basic-addon2"></span></td>';
+                        html +=
+                            '<td class="no-padding"><div class="input-group"><input type="number" name="fright[]" required step="any" oninput="updateChanges(' +
+                            id + ')" value="' + product.fright +
+                            '" min="0" class="form-control text-center no-padding" id="fright_' + id +
+                            '"> <span class="input-group-text no-padding frightText_' + id +
+                            '" id="basic-addon2"></span></div></td>';
+                        html +=
+                            '<td class="no-padding"><div class="input-group"><input type="number" name="labor[]" required step="any" oninput="updateChanges(' +
+                            id + ')" value="' + product.labor +
+                            '" min="0" class="form-control text-center no-padding" id="labor_' + id +
+                            '"> <span class="input-group-text no-padding laborText_' + id +
+                            '" id="basic-addon2"></span></div></td>';
+                        html +=
+                            '<td class="no-padding"><div class="input-group"><input type="number" name="claim[]" required step="any" oninput="updateChanges(' +
+                            id + ')" value="' + product.claim +
+                            '" min="0" class="form-control text-center no-padding" id="claim_' + id +
+                            '"> <span class="input-group-text no-padding claimText_' + id +
+                            '" id="basic-addon2"></span></div></td>';
+                        html +=
+                            '<td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_' +
+                            id + '"></td>';
+                        html +=
+                            '<td class="no-padding"> <span class="btn btn-sm btn-danger" onclick="deleteRow(' +
+                            id + ')">X</span> </td>';
+                        html += '<input type="hidden" name="id[]" id="id_' + id + '" value="' + id + '">';
+                        html += '<input type="hidden" name="frightValue[]" id="frightValue_' + id +
+                            '" value="0">';
+                        html += '<input type="hidden" name="laborValue[]" id="laborValue_' + id +
+                        '" value="0">';
+                        html += '<input type="hidden" name="claimValue[]" id="claimValue_' + id +
+                        '" value="0">';
+                        html += '<input type="hidden" name="discountValue[]" id="discountValue_' + id +
+                            '" value="0">';
+                        html += '<input type="hidden" name="discountPValue[]" id="discountPValue_' + id +
+                            '" value="0">';
                         html += '</tr>';
                         $("#products_list").prepend(html);
                         existingProducts.push(id);
@@ -255,6 +311,7 @@
                 }
             });
         }
+
         function updateChanges(id) {
             var qty = parseFloat($('#qty_' + id).val());
             var loose = parseFloat($('#loose_' + id).val());
@@ -269,17 +326,17 @@
             var discountValue = price * discountp / 100;
             qty = loose + (qty * unit);
             var amount = (price - discount - discountValue - claim) * qty;
-            $("#amount_"+id).val(amount.toFixed(2));
-            $("#frightValue_"+id).val((fright * qty).toFixed(0));
-            $("#laborValue_"+id).val((labor * qty).toFixed(0));
-            $("#claimValue_"+id).val((claim * qty).toFixed(0));
-            $(".frightText_"+id).html(((fright * qty).toFixed(0)));
-            $(".laborText_"+id).html((labor * qty).toFixed(0));
-            $(".claimText_"+id).html((claim * qty).toFixed(0));
-            $(".discountText_"+id).html((discount * qty).toFixed(0));
-            $("#discountValue_"+id).val((discount * qty).toFixed(0));
-            $(".discountpText_"+id).html((discountValue * qty).toFixed(0));
-            $("#discountPValue_"+id).val((discountValue * qty).toFixed(0));
+            $("#amount_" + id).val(amount.toFixed(2));
+            $("#frightValue_" + id).val((fright * qty).toFixed(0));
+            $("#laborValue_" + id).val((labor * qty).toFixed(0));
+            $("#claimValue_" + id).val((claim * qty).toFixed(0));
+            $(".frightText_" + id).html(((fright * qty).toFixed(0)));
+            $(".laborText_" + id).html((labor * qty).toFixed(0));
+            $(".claimText_" + id).html((claim * qty).toFixed(0));
+            $(".discountText_" + id).html((discount * qty).toFixed(0));
+            $("#discountValue_" + id).val((discount * qty).toFixed(0));
+            $(".discountpText_" + id).html((discountValue * qty).toFixed(0));
+            $("#discountPValue_" + id).val((discountValue * qty).toFixed(0));
             updateTotal();
         }
 
@@ -356,10 +413,33 @@
             existingProducts = $.grep(existingProducts, function(value) {
                 return value !== id;
             });
-            $('#row_'+id).remove();
+            $('#row_' + id).remove();
             updateTotal();
         }
 
+        function updateFreightStatus(status) {
 
+            if (status == 'Paid') {
+                $("input[id^='fright_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    console.log(inputId);
+                    $(this).attr('disabled', false);
+                });
+
+            } else {
+                $("input[id^='fright_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    console.log(inputId);
+                    $(this).val(0);
+                    $(this).attr('disabled', true);
+                });
+            }
+            $("input[id^='id_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    var inputValue = $(this).val();
+                    updateChanges(inputValue);
+                });
+
+        }
     </script>
 @endsection

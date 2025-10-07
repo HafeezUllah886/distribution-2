@@ -186,7 +186,8 @@ class PurchaseOrderDeliveryController extends Controller
 
         createTransaction($purchase->vendorID, $purchase->orderdate, 0, $purchase->net, "Pending Amount of Purchase No. $purchase->id Notes: $purchase->notes", $purchase->refID, 0);
 
-        createTransaction($purchase->unloaderID, $purchase->recdate, 0, $purchase->totalLabor, "Labor Charges of Purchase No. $purchase->id Vendor: $vendor->title Notes: $purchase->notes", $purchase->refID, 0);
+        $unloaderNotes = "Labor Charges of Purchase ID. $purchase->id Inv No. $purchase->inv Vendor: $vendor->title Bilty: $purchase->bilty Vehicle: $purchase->cno Notes: $purchase->notes";
+        createTransaction($purchase->unloaderID, $purchase->recdate, 0, $purchase->totalLabor, $unloaderNotes, $purchase->refID, 0);
         $purchase->update([
             'status' => 'Approved',
         ]);
