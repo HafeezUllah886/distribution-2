@@ -95,6 +95,17 @@ class accounts extends Model
             return $query->where('type', 'Freight')->where('status', 'Active')->where('branchID', auth()->user()->branchID);
         }
     }
+    public function scopePersonal($query)
+    {
+        if(auth()->user()->role == 'Admin')
+        {
+            return $query->where('type', 'Personal')->where('status', 'Active');
+        }
+        else
+        {
+            return $query->where('type', 'Personal')->where('status', 'Active')->where('branchID', auth()->user()->branchID);
+        }
+    }
 
     public function scopeCurrentBranch($query)
     {

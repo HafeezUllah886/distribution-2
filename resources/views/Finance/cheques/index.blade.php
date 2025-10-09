@@ -178,6 +178,7 @@
                                 <option value="Customer">Customer</option>
                                 <option value="Supply Man">Supply Man</option>
                                 <option value="Unloader">Unloader</option>
+                                <option value="Personal">Personal</option>
                             </select>
                         </div>
                     </div>

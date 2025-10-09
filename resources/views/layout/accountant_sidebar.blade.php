@@ -114,6 +114,11 @@
                                     data-key="t-pickers">
                                     Freight Accounts </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('accountsList', 'Personal') }}" class="nav-link"
+                                    data-key="t-pickers">
+                                    Personal Accounts </a>
+                            </li>
                         </ul>
                     </div>
                 </li>  

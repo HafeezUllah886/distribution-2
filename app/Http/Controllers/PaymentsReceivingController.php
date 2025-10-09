@@ -39,7 +39,7 @@ class PaymentsReceivingController extends Controller
         }
         else
         {
-            $type = ['Business', 'Vendor', 'Supply Man', 'Unloader', 'Customer'];
+            $type = ['Business', 'Vendor', 'Supply Man', 'Unloader', 'Customer', 'Personal'];
         }
         $payments = $payments->get();
 
