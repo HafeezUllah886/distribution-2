@@ -119,7 +119,6 @@ class AutoStaffPaymentsController extends Controller
                 $receiver = accounts::find($request->account);
                 $user_name = auth()->user()->name;
                
-    
                 createTransaction($request->account, $date, $que->amount, 0, $notes1, $ref, $que->orderbookerID);
                 createMethodTransaction(auth()->user()->id,$que->method, 0, $que->amount, $date, $que->number, $que->bank, $que->cheque_date, $notes1, $ref);
                
