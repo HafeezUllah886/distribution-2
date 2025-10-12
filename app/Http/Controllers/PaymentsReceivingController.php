@@ -94,12 +94,12 @@ class PaymentsReceivingController extends Controller
             $user_name = auth()->user()->name;
             if($request->method == 'Cheque')
             {
-                $notes = "Payment deposited by $depositer->title Method $request->method Cheque Number : $request->number Bank : $request->bank Cheque Date : $request->cheque_date Notes : $request->notes";
+                $notes = "Payment deposited by $depositer->title ($depositer->type) Method $request->method Cheque Number : $request->number Bank : $request->bank Cheque Date : $request->cheque_date Notes : $request->notes";
                 $notes1 = "Payment deposited to $user_name Method $request->method Cheque Number : $request->number Bank : $request->bank Cheque Date : $request->cheque_date Notes : $request->notes";
             }
             else
             {
-                $notes = "Payment deposited by $depositer->title Method $request->method Notes : $request->notes";
+                $notes = "Payment deposited by $depositer->title ($depositer->type) Method $request->method Notes : $request->notes";
                 $notes1 = "Payment deposited to $user_name Method $request->method Notes : $request->notes";
             }
             createTransaction($request->depositerID, $request->date, 0, $request->amount, $notes1, $ref, $request->orderbookerID);

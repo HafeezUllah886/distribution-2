@@ -110,7 +110,7 @@ class PaymentsController extends Controller
             );
             $receiver = accounts::find($request->receiverID);
             $user_name = auth()->user()->name;
-            $notes = "Payment to $receiver->title Method $request->method Notes : $request->notes";
+            $notes = "Payment to $receiver->title ($receiver->type) Method $request->method Notes : $request->notes";
 
             createTransaction($request->receiverID, $request->date, $request->amount, 0, $notes, $ref, $request->orderbookerID);
             createMethodTransaction(auth()->user()->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);

@@ -8,6 +8,7 @@ use App\Http\Controllers\reports\customerProductsSaleReport;
 use App\Http\Controllers\reports\dailycashbookController;
 use App\Http\Controllers\reports\DailyInvWiseProductsSalesReport;
 use App\Http\Controllers\reports\DailyVendorWiseProductsSalesReport;
+use App\Http\Controllers\reports\EmpBalanceSheetReport;
 use App\Http\Controllers\reports\ExpenseReportController;
 use App\Http\Controllers\reports\invoicePaymentsReportController;
 use App\Http\Controllers\reports\loadsheetController;
@@ -52,6 +53,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/reports/balanceSheet', [balanceSheetReport::class, 'index'])->name('reportBalanceSheet');
     Route::get('/reports/balanceSheet/{type}/{area}/{orderbooker}', [balanceSheetReport::class, 'data'])->name('reportBalanceSheetData');
+
+    Route::get('/reports/empBalanceSheet', [EmpBalanceSheetReport::class, 'index'])->name('reportEmpBalanceSheet');
+    Route::get('/reports/empBalanceSheet/{filter}/{value}', [EmpBalanceSheetReport::class, 'data'])->name('reportEmpBalanceSheetData');
 
     Route::get('/reports/warehousestockreport', [WarehouseStockReportController::class, 'index'])->name('reportWarehouseStock');
     Route::get('/reports/warehousestockreport/{warehouse}/{value}/{vendors?}', [WarehouseStockReportController::class, 'data'])->name('reportWarehouseStockData');

@@ -14,6 +14,8 @@
                             <option value="Business">Business</option>
                             <option value="Vendor">Vendor</option>
                             <option value="Customer">Customer</option>
+                            <option value="Personal">Personal</option>
+                            <option value="Freight">Freight</option>
                         </select>
                     </div>
                     <div class="form-group mt-2">

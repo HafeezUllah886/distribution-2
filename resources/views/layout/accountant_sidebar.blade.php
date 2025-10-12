@@ -308,6 +308,10 @@
                                     data-key="t-basic-elements">Balance Sheet</a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ route('reportEmpBalanceSheet') }}" class="nav-link"
+                                    data-key="t-basic-elements">Employee Balance Sheet</a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('reportWarehouseStock') }}" class="nav-link"
                                     data-key="t-basic-elements">Warehouse Stock Report</a>
                             </li>
