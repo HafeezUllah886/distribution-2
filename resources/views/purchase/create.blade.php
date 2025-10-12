@@ -423,7 +423,7 @@
                 $("input[id^='fright_']").each(function() {
                     var inputId = $(this).attr('id');
                     console.log(inputId);
-                    $(this).attr('disabled', false);
+                    $(this).attr('readonly', false);
                 });
 
             } else {
@@ -431,7 +431,7 @@
                     var inputId = $(this).attr('id');
                     console.log(inputId);
                     $(this).val(0);
-                    $(this).attr('disabled', true);
+                    $(this).attr('readonly', true);
                 });
             }
             $("input[id^='id_']").each(function() {

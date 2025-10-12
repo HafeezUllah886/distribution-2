@@ -158,7 +158,8 @@ class PurchaseController extends Controller
 
             if($request->freight_status == "Paid")
             {
-                $fr_notes = "Freight Payment of Purchase ID: $purchase->id, Inv No: $request->inv, Vendor: $purchase->vendor->title, Bilty: $request->bilty, Transporter: $request->transporter, Driver:  $request->driver, Vehicle No: $request->container, Notes: $request->notes";
+                $vendor_title = $purchase->vendor->title;
+                $fr_notes = "Freight Payment of Purchase ID: $purchase->id, Inv No: $request->inv, Vendor: $vendor_title, Bilty: $request->bilty, Transporter: $request->transporter, Driver:  $request->driver, Vehicle No: $request->container, Notes: $request->notes";
                 expenses::create(
                     [
                         'userID'        => auth()->user()->id,
