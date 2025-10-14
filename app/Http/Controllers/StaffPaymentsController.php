@@ -61,14 +61,14 @@ class StaffPaymentsController extends Controller
        try{ 
             DB::beginTransaction(); 
             $staff = User::find($request->fromID);
-            if(!checkMethodExceed($request->method,$request->fromID, $request->amount))
+            /* if(!checkMethodExceed($request->method,$request->fromID, $request->amount))
             {
              throw new \Exception("Method Amount Exceed");
             }
             if(!checkUserAccountExceed($request->fromID, $request->amount))
             {
              throw new \Exception("User Account Amount Exceed");
-            }
+            } */
            if($request->method == 'Cash')
            {
             if($staff->cashable == 'yes')

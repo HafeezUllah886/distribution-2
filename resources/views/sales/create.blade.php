@@ -13,6 +13,7 @@
                         </div>
                     </div>
                 </div><!--end row-->
+                
                 <div class="card-body">
                     <form action="{{ route('sale.store') }}" method="post">
                         @csrf
@@ -174,6 +175,8 @@
 @endsection
 @section('page-js')
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
+
+
     <script>
         $(".selectize1").selectize();
         $(".selectize").selectize({
@@ -191,7 +194,7 @@
         var existingProducts = [];
         function getSingleProduct(id) {
             $.ajax({
-                url: "{{ url('sales/getproduct/') }}/" + id + "/" + {{$warehouse->id}} + "/" + {{$customer->areaID}},
+                url: "{{ url('sales/getproduct/') }}/" + id + "/" + {{$warehouse->id}} + "/" + {{$customer->areaID}} + "/" + {{$customer->id}},
                 method: "GET",
                 success: function(product) {
                     let found = $.grep(existingProducts, function(element) {
@@ -199,6 +202,7 @@
                     });
                     if (found.length > 0) {
                     } else {
+                        console.log(product);
                         if(product.stock == 0)
                         {
                             alert("Stock is not available");
@@ -207,7 +211,7 @@
                         var id = product.id;
                         var units = product.units;
                         var html = '<tr id="row_' + id + '">';
-                        html += '<td class="no-padding">' + product.name + '</td>';
+                        html += '<td class="no-padding"><span data-bs-toggle="tooltip" data-bs-placement="top" title="Price: '+product.last_price.price+'\nTotal Discount: '+product.last_price.totaldiscount +'\nFright: '+product.last_price.fright+'\nLabor: '+product.last_price.labor+'\nClaim: '+product.last_price.claim+'\nNet Price: '+product.last_price.netprice+'">' + product.name + '</span></td>';
                         html += '<td class="no-padding"><select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges(' + id +')" id="unit_' + id + '">';
                             units.forEach(function(unit) {
                                 html += '<option data-unit="'+unit.value+'" value="' + unit.id + '">' + unit.unit_name + '</option>';
@@ -235,6 +239,7 @@
                         $("#products_list").prepend(html);
                         existingProducts.push(id);
                         updateChanges(id);
+                        checkCharges();
                     }
                 }
             });
@@ -289,7 +294,7 @@
             $(".discountpText_"+id).html((discountValue * qty).toFixed(0));
             $("#discountPValue_"+id).val((discountValue * qty).toFixed(0));
             updateTotal();
-            checkCharges();
+            
         }
 
         function updateTotal() {

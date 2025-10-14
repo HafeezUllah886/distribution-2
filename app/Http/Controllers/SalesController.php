@@ -459,7 +459,7 @@ class SalesController extends Controller
         }
     }
 
-    public function getSignleProduct($id, $warehouse, $area)
+    public function getSignleProduct($id, $warehouse, $area, $customer)
     {
         $product = products::with('units')->find($id);
         $stocks = stock::select(DB::raw('SUM(cr) - SUM(db) AS balance'))
@@ -468,6 +468,30 @@ class SalesController extends Controller
         $product->stock = getWarehouseProductStock($id, $warehouse);
         $dc = product_dc::where('productID', $product->id)->where('areaID', $area)->first();
         $product->dc = $dc->dc ?? 0;
+
+
+        $sales = sales::where('customerID', $customer)->orderby('id','desc')->take('10')->pluck('id')->toArray();
+
+        // Get latest record to preserve expected fields in the view (price, fright, labor, claim, netprice)
+        $latest = sale_details::whereIn('saleID', $sales)
+            ->where('productID', $id)
+            ->orderBy('id', 'desc')
+            ->select('price', 'fright', 'labor', 'claim', 'netprice')
+            ->first();
+
+        // Compute combined discount across the last 10 sales: discount + discountvalue
+        $discountAgg = sale_details::whereIn('saleID', $sales)
+            ->where('productID', $id)
+            ->select(DB::raw('SUM(discount + discountvalue) as totaldiscount'))
+            ->first();
+
+        // Attach combined discount to the latest object (fallbacks to 0 if null)
+        if($latest){
+            $latest->totaldiscount = $discountAgg->totaldiscount ?? 0;
+        }
+
+        $product->last_price = $latest;
+
         return $product;
     }
 
