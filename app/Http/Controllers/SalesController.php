@@ -162,9 +162,11 @@ class SalesController extends Controller
                     'net' => $net,
                 ]
             );
+            if($totalLabor > 0)
+            {
+                createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer Notes: $request->notes", $ref, $request->orderbookerID);
+            }
 
-           
-            createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer Notes: $request->notes", $ref, $request->orderbookerID);
 
             if($request->payment == "Advance")
             {

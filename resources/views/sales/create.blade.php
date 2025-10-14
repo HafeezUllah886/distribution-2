@@ -17,7 +17,7 @@
                     <form action="{{ route('sale.store') }}" method="post">
                         @csrf
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-10">
                                 <div class="form-group">
                                     <label for="product">Product</label>
                                     <select name="product" class="selectize" id="product">
@@ -26,6 +26,18 @@
                                             <option value="{{ $product->id }}">{{ $product->name }}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <label for="freight_radio">Freight</label>
+                                <div class="form-check form-switch form-switch-lg" dir="ltr">
+                                    <input type="checkbox" class="form-check-input" onchange="checkCharges()" id="freight_radio" checked="">
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <label for="labor_radio">Labor</label>
+                                <div class="form-check form-switch form-switch-lg" dir="ltr">
+                                    <input type="checkbox" class="form-check-input" onchange="checkCharges()" id="labor_radio" checked="">
                                 </div>
                             </div>
                             <div class="col-12">
@@ -212,7 +224,7 @@
                         html += '<td class="no-padding"><div class="input-group"><input type="number" name="claim[]" required step="any" oninput="updateChanges(' + id + ')" value="'+product.sclaim+'" min="0" class="form-control text-center no-padding" id="claim_' + id + '"> <span class="input-group-text no-padding claimText_'+id+'" id="basic-addon2"></span></div></td>';
                         html += '<td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_' + id + '"></td>';
                         html += '<td class="no-padding"> <span class="btn btn-sm btn-danger" onclick="deleteRow('+id+')">X</span> </td>';
-                        html += '<input type="hidden" name="id[]" value="' + id + '">';
+                        html += '<input type="hidden" name="id[]" id="id_'+id+'" value="' + id + '">';
                         html += '<input type="hidden" name="frightValue[]" id="frightValue_'+id+'" value="0">';
                         html += '<input type="hidden" name="laborValue[]" id="laborValue_'+id+'" value="0">';
                         html += '<input type="hidden" name="claimValue[]" id="claimValue_'+id+'" value="0">';
@@ -277,6 +289,7 @@
             $(".discountpText_"+id).html((discountValue * qty).toFixed(0));
             $("#discountPValue_"+id).val((discountValue * qty).toFixed(0));
             updateTotal();
+            checkCharges();
         }
 
         function updateTotal() {
@@ -355,6 +368,47 @@
             });
             $('#row_'+id).remove();
             updateTotal();
+        }
+
+        function checkCharges() {
+            var freight = $("#freight_radio").is(':checked');
+            var labor = $("#labor_radio").is(':checked');
+            if (freight) {
+                $("input[id^='fright_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    console.log(inputId);
+                    $(this).attr('readonly', false);
+                });
+
+            } else {
+                $("input[id^='fright_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    console.log(inputId);
+                    $(this).val(0);
+                    $(this).attr('readonly', true);
+                });
+            }
+
+            if (labor) {
+                $("input[id^='labor_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    console.log(inputId);
+                    $(this).attr('readonly', false);
+                });
+
+            } else {
+                $("input[id^='labor_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    console.log(inputId);
+                    $(this).val(0);
+                    $(this).attr('readonly', true);
+                });
+            }
+            $("input[id^='id_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    var inputValue = $(this).val();
+                    updateChanges(inputValue);
+                });
         }
 
 

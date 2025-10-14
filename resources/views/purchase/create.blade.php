@@ -418,7 +418,6 @@
         }
 
         function updateFreightStatus(status) {
-
             if (status == 'Paid') {
                 $("input[id^='fright_']").each(function() {
                     var inputId = $(this).attr('id');
@@ -439,7 +438,6 @@
                     var inputValue = $(this).val();
                     updateChanges(inputValue);
                 });
-
         }
     </script>
 @endsection
