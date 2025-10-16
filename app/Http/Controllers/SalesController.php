@@ -490,7 +490,7 @@ class SalesController extends Controller
             $latest->totaldiscount = $discountAgg->totaldiscount ?? 0;
         }
 
-        $product->last_price = $latest;
+        $product->last_price = $latest ?? ['price' => 0, 'totaldiscount' => 0, 'fright' => 0, 'labor' => 0, 'claim' => 0, 'netprice' => 0];
 
         return $product;
     }
