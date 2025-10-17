@@ -37,11 +37,11 @@ class authController extends Controller
             ], 401);
         }
         
-        if($user->status == "Inactive")
+        if($user->status != "Active")
         {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Account is inactive'
+                'message' => 'Account is Blocked'
             ], 403);
         }
 

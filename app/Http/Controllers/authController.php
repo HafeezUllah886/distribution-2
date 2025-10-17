@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class authController extends Controller
@@ -13,7 +14,11 @@ class authController extends Controller
 
     public function login(Request $req)
     {
-
+        $status = User::where('name', $req->name)->first()->status;
+        if($status != 'Active')
+        {
+            return back()->with('error', 'Account Blocked');
+        }
        if(auth()->attempt($req->only('name', 'password')))
        {
             $req->session()->regenerate();

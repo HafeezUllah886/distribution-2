@@ -205,7 +205,6 @@ class ReturnsController extends Controller
                   'date'            => $request->date,
                   'invoices'        => $request->pendingInvoice,
                   'notes'           => $request->notes,
-                  
                 ]
             );
 
@@ -266,8 +265,8 @@ class ReturnsController extends Controller
                             'salesID'       => $invoice,
                             'date'          => $request->date,
                             'amount'        => $net,
-                            'branchID'        => Auth()->user()->branchID,
-                            'customerID'      => $request->customerID,
+                            'branchID'      => Auth()->user()->branchID,
+                            'customerID'    => $request->customerID,
                             'orderbookerID' => $request->orderbookerID,
                             'notes'         => "Return Amount Adjusted Return No. $return->id",
                             'userID'        => auth()->id(),
