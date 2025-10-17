@@ -211,13 +211,13 @@
                         var id = product.id;
                         var units = product.units;
                         var html = '<tr id="row_' + id + '">';
-                        html += '<td class="no-padding"><span data-bs-toggle="tooltip" data-bs-placement="top" title="Price: '+product.last_price.price+'\nTotal Discount: '+product.last_price.totaldiscount +'\nFright: '+product.last_price.fright+'\nLabor: '+product.last_price.labor+'\nClaim: '+product.last_price.claim+'\nNet Price: '+product.last_price.netprice+'">' + product.name + '</span></td>';
+                        html += '<td class="no-padding"><span data-bs-toggle="tooltip" data-bs-placement="top" title="Price: '+product.last_price.price+'\nDiscount: '+product.last_price.discount +'\nDiscount %: '+product.last_price.discountp +'\nFright: '+product.last_price.fright+'\nLabor: '+product.last_price.labor+'\nClaim: '+product.last_price.claim+'\nNet Price: '+product.last_price.netprice+'">' + product.name + '</span></td>';
                         html += '<td class="no-padding"><select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges(' + id +')" id="unit_' + id + '">';
                             units.forEach(function(unit) {
                                 html += '<option data-unit="'+unit.value+'" value="' + unit.id + '">' + unit.unit_name + '</option>';
                             });
                         html += '</select></td>';
-                        html += '<td class="no-padding"><div class="input-group"><span class="input-group-text no-padding stock_'+id+'" id="basic-addon2">'+product.stock+'</span><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" max="'+product.stock+'" min="0" required step="any" value="1" class="form-control text-center no-padding" id="qty_' + id + '"> </div></td>';
+                        html += '<td class="no-padding"><div class="input-group"><span class="input-group-text no-padding stock_'+id+'" id="basic-addon2">'+product.stock+'</span><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" max="'+product.stock+'" min="0" required step="any" value="0" class="form-control text-center no-padding" id="qty_' + id + '"> </div></td>';
                         html += '<td class="no-padding"><input type="number" name="loose[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="0" class="form-control text-center no-padding" id="loose_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="bonus[]" min="0" required oninput="updateChanges(' + id + ')" step="any" value="0" class="form-control text-center no-padding" id="bonus_' + id + '"></td>';
                         html += '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' + id + ')" required step="any" value="'+product.price+'" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';

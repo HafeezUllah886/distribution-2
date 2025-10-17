@@ -476,21 +476,12 @@ class SalesController extends Controller
         $latest = sale_details::whereIn('saleID', $sales)
             ->where('productID', $id)
             ->orderBy('id', 'desc')
-            ->select('price', 'fright', 'labor', 'claim', 'netprice')
+            ->select('price', 'fright', 'labor', 'claim', 'netprice', 'discount', 'discountp')
             ->first();
 
-        // Compute combined discount across the last 10 sales: discount + discountvalue
-        $discountAgg = sale_details::whereIn('saleID', $sales)
-            ->where('productID', $id)
-            ->select(DB::raw('SUM(discount + discountvalue) as totaldiscount'))
-            ->first();
+        
 
-        // Attach combined discount to the latest object (fallbacks to 0 if null)
-        if($latest){
-            $latest->totaldiscount = $discountAgg->totaldiscount ?? 0;
-        }
-
-        $product->last_price = $latest ?? ['price' => 0, 'totaldiscount' => 0, 'fright' => 0, 'labor' => 0, 'claim' => 0, 'netprice' => 0];
+        $product->last_price = $latest ?? ['price' => 0, 'discount' => 0, 'discountp' => 0, 'fright' => 0, 'labor' => 0, 'claim' => 0, 'netprice' => 0];
 
         return $product;
     }
