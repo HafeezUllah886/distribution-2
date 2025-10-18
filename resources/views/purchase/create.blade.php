@@ -20,7 +20,7 @@
                     <form action="{{ route('purchase.store') }}" method="post">
                         @csrf
                         <div class="row">
-                            <div class="col-12">
+                           <div class="col-10">
                                 <div class="form-group">
                                     <label for="product">Product</label>
                                     <select name="product" class="selectize" id="product">
@@ -29,6 +29,18 @@
                                             <option value="{{ $product->id }}">{{ $product->name }}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <label for="freight_radio">Freight</label>
+                                <div class="form-check form-switch form-switch-lg" dir="ltr">
+                                    <input type="checkbox" name="freight_status" class="form-check-input" onchange="checkCharges()" id="freight_radio" checked="">
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <label for="labor_radio">Labor</label>
+                                <div class="form-check form-switch form-switch-lg" dir="ltr">
+                                    <input type="checkbox" name="labor_status" class="form-check-input" onchange="checkCharges()" id="labor_radio" checked="">
                                 </div>
                             </div>
                             <div class="col-12">
@@ -127,14 +139,14 @@
                                     <input type="text" name="driver" id="driver" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-2 mt-2">
+                            <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="comp">Driver Contact</label>
                                     <input type="text" name="driver_contact" id="driver_contact"
                                         class="form-control">
                                 </div>
                             </div>
-                            <div class="col-2 mt-2">
+                            <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="comp">Vehicle No.</label>
                                     <input type="text" name="container" id="container" class="form-control">
@@ -148,16 +160,6 @@
                                             <option value="{{ $freight_account->id }}">{{ $freight_account->title }}
                                             </option>
                                         @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-2 mt-2">
-                                <div class="form-group">
-                                    <label for="freight_status">Freight Status</label>
-                                    <select name="freight_status" onchange="updateFreightStatus(this.value)"
-                                        id="freight_status" class="form-control">
-                                        <option value="Paid">Paid</option>
-                                        <option value="Unpaid">Unpaid</option>
                                     </select>
                                 </div>
                             </div>
@@ -307,6 +309,7 @@
                         $("#products_list").prepend(html);
                         existingProducts.push(id);
                         updateChanges(id);
+                        checkCharges();
                     }
                 }
             });
@@ -417,8 +420,10 @@
             updateTotal();
         }
 
-        function updateFreightStatus(status) {
-            if (status == 'Paid') {
+        function checkCharges() {
+            var freight = $("#freight_radio").is(':checked');
+            var labor = $("#labor_radio").is(':checked');
+            if (freight) {
                 $("input[id^='fright_']").each(function() {
                     var inputId = $(this).attr('id');
                     console.log(inputId);
@@ -427,6 +432,22 @@
 
             } else {
                 $("input[id^='fright_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    console.log(inputId);
+                    $(this).val(0);
+                    $(this).attr('readonly', true);
+                });
+            }
+
+            if (labor) {
+                $("input[id^='labor_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    console.log(inputId);
+                    $(this).attr('readonly', false);
+                });
+
+            } else {
+                $("input[id^='labor_']").each(function() {
                     var inputId = $(this).attr('id');
                     console.log(inputId);
                     $(this).val(0);

@@ -65,6 +65,7 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
+
        try
         {
             if($request->isNotFilled('id'))
@@ -91,7 +92,7 @@ class PurchaseController extends Controller
                   'cno'                 => $request->container,
                   'freightID'           => $request->freightID,
                   'expenseCategoryID'   => $request->expense_categoryID,
-                  'freight_status'      => $request->freight_status,
+                  'freight_status'      => $request->freight_status ? "Paid" : "Unpaid",
                   'refID'               => $ref,
                 ]
             );
@@ -156,7 +157,7 @@ class PurchaseController extends Controller
                 ]
             );
 
-            if($request->freight_status == "Paid")
+            if($request->freight_status == "on")
             {
                 $vendor_title = $purchase->vendor->title;
                 $fr_notes = "Freight Payment of Vendor: $vendor_title, Inv No: $request->inv, Bilty: $request->bilty, Vehicle No: $request->container, Transporter: $request->transporter, Driver:  $request->driver, Notes: $request->notes";
@@ -212,7 +213,9 @@ class PurchaseController extends Controller
         $accounts = accounts::business()->currentBranch()->get();
         $warehouses = warehouses::currentBranch()->get();
         $unloaders = accounts::unloader()->currentBranch()->get();
-        return view('purchase.edit', compact('products', 'units', 'accounts', 'purchase', 'warehouses', 'unloaders'));
+         $freight_accounts = accounts::freight()->currentBranch()->get();
+        $exp_categories = expense_categories::currentBranch()->get();
+        return view('purchase.edit', compact('products', 'units', 'accounts', 'purchase', 'warehouses', 'unloaders', 'freight_accounts', 'exp_categories'));
     }
 
     /**
@@ -237,6 +240,7 @@ class PurchaseController extends Controller
                 purchase_order_delivery::where('purchaseID', $purchase->id)->delete();
             }
             transactions::where('refID', $purchase->refID)->delete();
+            expenses::where('refID', $purchase->refID)->delete();
             $ref = $purchase->refID;
             $purchase->update(
                 [
@@ -248,6 +252,12 @@ class PurchaseController extends Controller
                   'status'          => "Pending",
                   'transporter'     => $request->transporter,
                   'inv'             => $request->inv,
+                   'driver_name'         => $request->driver_name,
+                  'driver_contact'      => $request->driver_contact,
+                  'cno'                 => $request->container,
+                  'freightID'           => $request->freightID,
+                  'expenseCategoryID'   => $request->expense_categoryID,
+                  'freight_status'      => $request->freight_status ? "Paid" : "Unpaid",
                   'refID'           => $ref,
                   ]
             );
@@ -256,6 +266,7 @@ class PurchaseController extends Controller
 
             $total = 0;
             $totalLabor = 0;
+              $totalFreight = 0;
             $vendor = accounts::find($request->vendorID)->title;
             foreach($ids as $key => $id)
             {
@@ -328,6 +339,31 @@ class PurchaseController extends Controller
                     'totalLabor' => $totalLabor,
                 ]
             );
+
+             if($request->freight_status == "on")
+            {
+                $vendor_title = $purchase->vendor->title;
+                $fr_notes = "Freight Payment of Vendor: $vendor_title, Inv No: $request->inv, Bilty: $request->bilty, Vehicle No: $request->container, Transporter: $request->transporter, Driver:  $request->driver, Notes: $request->notes";
+                expenses::create(
+                    [
+                        'userID'        => auth()->user()->id,
+                        'amount'        => $totalFreight,
+                        'branchID'      => auth()->user()->branchID,
+                        'categoryID'    => $request->expense_categoryID,
+                        'date'          => $request->recdate,
+                        'method'        => 'Other',
+                        'number'        => null,
+                        'bank'          => null,
+                        'cheque_date'   => $request->recdate,
+                        'notes'         => $fr_notes,
+                        'refID'         => $ref,
+                    ]
+                );
+
+                createTransaction($request->freightID, $request->recdate, 0, $totalFreight, $fr_notes, $ref, auth()->user()->id);
+    
+            }
+
           
             DB::commit();
             return back()->with('success', "Purchase Updated");

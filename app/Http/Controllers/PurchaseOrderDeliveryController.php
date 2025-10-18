@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\purchase_order_delivery;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\expense_categories;
+use App\Models\expenses;
 use App\Models\orders;
 use App\Models\product_units;
 use App\Models\purchase;
@@ -44,7 +46,10 @@ class PurchaseOrderDeliveryController extends Controller
         $product->unit_name = $product->unit->unit_name;
       }
 
-      return view('purchase_order.delivery', compact('order', 'warehouses', 'units', 'vendor', 'unloaders'));
+        $freight_accounts = accounts::freight()->currentBranch()->get();
+        $exp_categories = expense_categories::currentBranch()->get();
+
+      return view('purchase_order.delivery', compact('order', 'warehouses', 'units', 'vendor', 'unloaders', 'freight_accounts', 'exp_categories'));
     }
 
     /**
@@ -78,6 +83,12 @@ class PurchaseOrderDeliveryController extends Controller
                   'transporter'     => $request->transporter,
                   'inv'             => $request->inv,
                   'status'          => "Pending",
+                  'driver_name'         => $request->driver_name,
+                  'driver_contact'      => $request->driver_contact,
+                  'cno'                 => $request->container,
+                  'freightID'           => $request->freightID,
+                  'expenseCategoryID'   => $request->expense_categoryID,
+                  'freight_status'      => $request->freight_status ? "Paid" : "Unpaid",
                   'refID'           => $ref,
                 ]
             );
@@ -86,6 +97,7 @@ class PurchaseOrderDeliveryController extends Controller
 
             $total = 0;
             $totalLabor = 0;
+             $totalFreight = 0;
             $vendor = accounts::find($request->vendorID);
             foreach($ids as $key => $id)
             {
@@ -104,6 +116,7 @@ class PurchaseOrderDeliveryController extends Controller
                 $price_amount = $price * $pc;
                 $total += $amount;
                 $totalLabor += $request->labor[$key] * $pc;
+                $totalFreight += $request->fright[$key] * $pc;
 
                 purchase_details::create(
                     [
@@ -162,6 +175,31 @@ class PurchaseOrderDeliveryController extends Controller
                 'status' => 'Under Process',
             ]);
             $this->checkStatus($request->orderID);
+
+
+             if($request->freight_status == "on")
+            {
+                $vendor_title = $purchase->vendor->title;
+                $fr_notes = "Freight Payment of Vendor: $vendor_title, Inv No: $request->inv, Bilty: $request->bilty, Vehicle No: $request->container, Transporter: $request->transporter, Driver:  $request->driver, Notes: $request->notes";
+                expenses::create(
+                    [
+                        'userID'        => auth()->user()->id,
+                        'amount'        => $totalFreight,
+                        'branchID'      => auth()->user()->branchID,
+                        'categoryID'    => $request->expense_categoryID,
+                        'date'          => $request->recdate,
+                        'method'        => 'Other',
+                        'number'        => null,
+                        'bank'          => null,
+                        'cheque_date'   => $request->recdate,
+                        'notes'         => $fr_notes,
+                        'refID'         => $ref,
+                    ]
+                );
+
+                createTransaction($request->freightID, $request->recdate, 0, $totalFreight, $fr_notes, $ref, auth()->user()->id);
+    
+            }
 
             DB::commit();
             return back()->with('success', "Purchase Created");

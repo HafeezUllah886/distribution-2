@@ -14,6 +14,20 @@
                     </div>
                 </div><!--end row-->
                 <div class="card-body">
+                     <div class="row">
+                         <div class="col-1">
+                                <label for="freight_radio">Freight</label>
+                                <div class="form-check form-switch form-switch-lg" dir="ltr">
+                                    <input type="checkbox" name="freight_status" class="form-check-input" onchange="checkCharges()" id="freight_radio" checked="">
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <label for="labor_radio">Labor</label>
+                                <div class="form-check form-switch form-switch-lg" dir="ltr">
+                                    <input type="checkbox" name="labor_status" class="form-check-input" onchange="checkCharges()" id="labor_radio" checked="">
+                                </div>
+                            </div>
+                     </div>
                     <form action="{{ route('purchase_order_receiving.store') }}" method="post">
                         @csrf
                         <div class="row">
@@ -61,7 +75,7 @@
                                             <td class="no-padding"><div class="input-group"><input type="number" required name="labor[]"  step="any" oninput="updateChanges({{ $id }})" value="{{$product->labor}}"  min="0" class="form-control text-center no-padding" id="labor_{{ $id }}"> <span class="input-group-text no-padding laborText_{{ $id }}" id="basic-addon2"></span></div></td>
                                             <td class="no-padding"><div class="input-group"><input type="number" required name="claim[]"  step="any" oninput="updateChanges({{ $id }})" value="{{$product->claim}}" min="0" class="form-control text-center no-padding" id="claim_{{ $id }}"> <span class="input-group-text no-padding claimText_{{ $id }}" id="basic-addon2"></span></div></td>
                                             <td class="no-padding"><input type="number" name="amount[]" min="1" readonly required step="any" value="0" class="form-control text-center no-padding" id="amount_{{ $id }}"></td>
-                                            <input type="hidden" name="id[]" value="{{ $id }}">
+                                            <input type="hidden" name="id[]" id="id_{{ $id }}" value="{{ $id }}">
                                             <input type="hidden" name="frightValue[]" id="frightValue_{{ $id }}">
                                             <input type="hidden" name="laborValue[]" id="laborValue_{{ $id }}">
                                             <input type="hidden" name="claimValue[]" id="claimValue_{{ $id }}">
@@ -115,14 +129,14 @@
                                     <input type="date" name="orderdate" id="orderdate" value="{{ date('Y-m-d', strtotime($order->date)) }}" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-4 mt-2">
+                            <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="date">Receiving Date</label>
                                     <input type="date" name="recdate" id="date" value="{{ date('Y-m-d') }}" class="form-control">
                                     <input type="hidden" name="vendorID" value="{{ $vendor->id }}">
                                 </div>
                             </div>
-                            <div class="col-4 mt-2">
+                            <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="warehouseID">Warehouse</label>
                                     <select name="warehouseID" id="warehouseID" class="form-control">
@@ -132,12 +146,52 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-4 mt-2">
+                            <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="unloaderID">Unloader</label>
                                     <select name="unloaderID" id="unloaderID" class="form-control">
                                         @foreach ($unloaders as $unloader)
                                             <option value="{{$unloader->id}}">{{$unloader->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                             <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="comp">Driver</label>
+                                    <input type="text" name="driver" id="driver" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="comp">Driver Contact</label>
+                                    <input type="text" name="driver_contact" id="driver_contact"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="comp">Vehicle No.</label>
+                                    <input type="text" name="container" id="container" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="freightID">Freight Account</label>
+                                    <select name="freightID" id="freightID" class="form-control">
+                                        @foreach ($freight_accounts as $freight_account)
+                                            <option value="{{ $freight_account->id }}">{{ $freight_account->title }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="expense_categoryID">Expense Category</label>
+                                    <select name="expense_categoryID" id="expense_categoryID" class="form-control">
+                                        @foreach ($exp_categories as $exp_category)
+                                            <option value="{{ $exp_category->id }}">{{ $exp_category->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -308,6 +362,47 @@
             });
             $('#row_'+id).remove();
             updateTotal();
+        }
+
+           function checkCharges() {
+            var freight = $("#freight_radio").is(':checked');
+            var labor = $("#labor_radio").is(':checked');
+            if (freight) {
+                $("input[id^='fright_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    console.log(inputId);
+                    $(this).attr('readonly', false);
+                });
+
+            } else {
+                $("input[id^='fright_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    console.log(inputId);
+                    $(this).val(0);
+                    $(this).attr('readonly', true);
+                });
+            }
+
+            if (labor) {
+                $("input[id^='labor_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    console.log(inputId);
+                    $(this).attr('readonly', false);
+                });
+
+            } else {
+                $("input[id^='labor_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    console.log(inputId);
+                    $(this).val(0);
+                    $(this).attr('readonly', true);
+                });
+            }
+            $("input[id^='id_']").each(function() {
+                    var inputId = $(this).attr('id');
+                    var inputValue = $(this).val();
+                    updateChanges(inputValue);
+                });
         }
 
         @foreach ($order->details as $product)
