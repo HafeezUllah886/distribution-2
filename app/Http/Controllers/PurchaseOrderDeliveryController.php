@@ -176,7 +176,6 @@ class PurchaseOrderDeliveryController extends Controller
             ]);
             $this->checkStatus($request->orderID);
 
-
              if($request->freight_status == "on")
             {
                 $vendor_title = $purchase->vendor->title;
