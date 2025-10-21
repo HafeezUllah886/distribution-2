@@ -14,6 +14,8 @@
                     </div>
                 </div><!--end row-->
                 <div class="card-body">
+                    <form action="{{ route('purchase_order_receiving.store') }}" method="post">
+                        @csrf
                      <div class="row">
                          <div class="col-1">
                                 <label for="freight_radio">Freight</label>
@@ -28,8 +30,7 @@
                                 </div>
                             </div>
                      </div>
-                    <form action="{{ route('purchase_order_receiving.store') }}" method="post">
-                        @csrf
+                    
                         <div class="row">
                             <div class="col-12">
                                 <table class="table table-striped table-hover">
@@ -159,20 +160,20 @@
                              <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="comp">Driver</label>
-                                    <input type="text" name="driver" id="driver" class="form-control">
+                                    <input type="text" name="driver" id="driver" value="{{$order->driver_name}}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="comp">Driver Contact</label>
-                                    <input type="text" name="driver_contact" id="driver_contact"
+                                    <input type="text" name="driver_contact" value="{{$order->driver_contact}}" id="driver_contact"
                                         class="form-control">
                                 </div>
                             </div>
                             <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="comp">Vehicle No.</label>
-                                    <input type="text" name="container" id="container" class="form-control">
+                                    <input type="text" name="container" value="{{$order->vehicle}}" id="container" class="form-control">
                                 </div>
                             </div>
                             <div class="col-3 mt-2">

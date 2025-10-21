@@ -76,6 +76,7 @@ class PurchaseOrderController extends Controller
                   'notes'           => $request->notes,
                   'bilty'           => $request->bilty,
                   'vehicle'         => $request->vehicle,
+                  'driver_name'     => $request->driver,
                   'driver_contact'  => $request->driver_contact,
                   'transporter'     => $request->transporter,
                   'inv'             => $request->inv,
@@ -86,6 +87,7 @@ class PurchaseOrderController extends Controller
             $ids = $request->id;
             $total = 0;
             $totalLabor = 0;
+            $totalFreight = 0;
 
             foreach($ids as $key => $id)
             {
@@ -101,6 +103,7 @@ class PurchaseOrderController extends Controller
                 $price_amount = $price * $pc;
                 $total += $amount;
                 $totalLabor += $request->labor[$key] * $pc;
+                 $totalFreight += $request->fright[$key] * $pc;
 
                 purchase_order_details::create(
                     [
@@ -126,6 +129,37 @@ class PurchaseOrderController extends Controller
                     ]
                 );
             }
+
+             if($request->freight_status == "on")
+            {
+                $vendor_title = $purchase->vendor->title;
+                $fr_notes = "Freight Payment of Vendor: $vendor_title, Inv No: $request->inv, Bilty: $request->bilty, Vehicle No: $request->container, Transporter: $request->transporter, Driver:  $request->driver, Notes: $request->notes";
+                expenses::create(
+                    [
+                        'userID'        => auth()->user()->id,
+                        'amount'        => $totalFreight,
+                        'branchID'      => auth()->user()->branchID,
+                        'categoryID'    => $request->expense_categoryID,
+                        'date'          => $request->recdate,
+                        'method'        => 'Other',
+                        'number'        => null,
+                        'bank'          => null,
+                        'cheque_date'   => $request->recdate,
+                        'notes'         => $fr_notes,
+                        'refID'         => $ref,
+                    ]
+                );
+
+                createTransaction($request->freightID, $request->recdate, 0, $totalFreight, $fr_notes, $ref, auth()->user()->id);
+    
+            }
+             else
+            {
+                 $vendor_title = $purchase->vendor->title;
+                $fr_notes = "Freight Payment of Vendor: $vendor_title, Inv No: $request->inv, Bilty: $request->bilty, Vehicle No: $request->container, Transporter: $request->transporter, Driver:  $request->driver, Notes: $request->notes";
+                createTransaction($request->freightID, $request->recdate, 0, 0, $fr_notes, $ref, auth()->user()->id);
+            }
+
 
             DB::commit();
             return back()->with('success', "Purchase Order Created");

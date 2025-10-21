@@ -209,20 +209,20 @@
                              <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="comp">Driver</label>
-                                    <input type="text" name="driver" id="driver" class="form-control">
+                                    <input type="text" name="driver" id="driver" value="{{ $purchase->driver_name }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="comp">Driver Contact</label>
-                                    <input type="text" name="driver_contact" id="driver_contact"
+                                    <input type="text" name="driver_contact" value="{{ $purchase->driver_contact }}" id="driver_contact"
                                         class="form-control">
                                 </div>
                             </div>
                             <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="comp">Vehicle No.</label>
-                                    <input type="text" name="container" id="container" class="form-control">
+                                    <input type="text" name="container" id="container" value="{{ $purchase->cno }}" class="form-control">
                                 </div>
                             </div>
                              <div class="col-3 mt-2">

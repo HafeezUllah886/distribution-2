@@ -31,6 +31,10 @@
                                         <h5 class="fs-14 mb-0"><span>{{$order->vehicle}}</h5>
                                     </div>
                                     <div class="col-2">
+                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Driver</p>
+                                        <h5 class="fs-14 mb-0"><span>{{$order->driver_name}}</h5>
+                                    </div>
+                                    <div class="col-2">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Driver Contact</p>
                                         <h5 class="fs-14 mb-0"><span>{{$order->driver_contact}}</h5>
                                     </div>

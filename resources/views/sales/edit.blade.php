@@ -225,7 +225,7 @@
 
         function getSingleProduct(id) {
             $.ajax({
-                url: "{{ url('sales/getproduct/') }}/" + id + "/" + {{$warehouse->id}} + "/" + {{$customer->areaID}},
+                url: "{{ url('sales/getproduct/') }}/" + id + "/" + {{$warehouse->id}} + "/" + {{$customer->areaID}} + "/" + {{$customer->id}},
                 method: "GET",
                 success: function(product) {
                     let found = $.grep(existingProducts, function(element) {
@@ -240,7 +240,7 @@
                         var id = product.id;
                         var units = product.units;
                         var html = '<tr id="row_' + id + '">';
-                        html += '<td class="no-padding">' + product.name + '</td>';
+                         html += '<td class="no-padding"><span data-bs-toggle="tooltip" data-bs-placement="top" title="Price: '+product.last_price.price+'\nDiscount: '+product.last_price.discount +'\nDiscount %: '+product.last_price.discountp +'\nFright: '+product.last_price.fright+'\nLabor: '+product.last_price.labor+'\nClaim: '+product.last_price.claim+'\nNet Price: '+product.last_price.netprice+'">' + product.name + '</span></td>';
                         html += '<td class="no-padding"><select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges(' + id +')" id="unit_' + id + '">';
                             units.forEach(function(unit) {
                                 html += '<option data-unit="'+unit.value+'" value="' + unit.id + '">' + unit.unit_name + '</option>';

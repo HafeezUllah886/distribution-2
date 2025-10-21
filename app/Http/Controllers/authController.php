@@ -14,14 +14,17 @@ class authController extends Controller
 
     public function login(Request $req)
     {
-        $status = User::where('name', $req->name)->first()->status;
-        if($status != 'Active')
-        {
-            return back()->with('error', 'Account Blocked');
-        }
+        
+        
        if(auth()->attempt($req->only('name', 'password')))
        {
             $req->session()->regenerate();
+            $status = Auth()->user()->status;
+            if($status != 'Active')
+            {
+                auth()->logout();
+                return to_route('login')->with('error', 'Account Blocked');
+            }
             return redirect()->intended('/');
        }
        return back()->with('error', 'Wrong User Name or Password');

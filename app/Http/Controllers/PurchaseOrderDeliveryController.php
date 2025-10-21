@@ -83,7 +83,7 @@ class PurchaseOrderDeliveryController extends Controller
                   'transporter'     => $request->transporter,
                   'inv'             => $request->inv,
                   'status'          => "Pending",
-                  'driver_name'         => $request->driver_name,
+                  'driver_name'         => $request->driver,
                   'driver_contact'      => $request->driver_contact,
                   'cno'                 => $request->container,
                   'freightID'           => $request->freightID,
@@ -198,6 +198,12 @@ class PurchaseOrderDeliveryController extends Controller
 
                 createTransaction($request->freightID, $request->recdate, 0, $totalFreight, $fr_notes, $ref, auth()->user()->id);
     
+            }
+             else
+            {
+                 $vendor_title = $purchase->vendor->title;
+                $fr_notes = "Freight Payment of Vendor: $vendor_title, Inv No: $request->inv, Bilty: $request->bilty, Vehicle No: $request->container, Transporter: $request->transporter, Driver:  $request->driver, Notes: $request->notes";
+                createTransaction($request->freightID, $request->recdate, 0, 0, $fr_notes, $ref, auth()->user()->id);
             }
 
             DB::commit();
