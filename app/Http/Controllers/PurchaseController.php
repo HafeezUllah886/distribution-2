@@ -418,9 +418,22 @@ class PurchaseController extends Controller
         }
     }
 
-    public function getSignleProduct($id)
+    public function getSignleProduct($id, $vendor)
     {
         $product = products::with('units')->find($id);
+
+         $purchases = purchase::where('vendorID', $vendor)->orderby('id','desc')->take('10')->pluck('id')->toArray();
+
+        // Get latest record to preserve expected fields in the view (price, fright, labor, claim, netprice)
+        $latest = purchase_details::whereIn('purchaseID', $purchases)
+            ->where('productID', $id)
+            ->orderBy('id', 'desc')
+            ->select('price', 'fright', 'labor', 'claim', 'netprice', 'discount', 'discountp')
+            ->first();
+
+        
+
+        $product->last_price = $latest ?? ['price' => 0, 'discount' => 0, 'discountp' => 0, 'fright' => 0, 'labor' => 0, 'claim' => 0, 'netprice' => 0];
         return $product;
     }
 }
