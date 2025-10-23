@@ -241,7 +241,7 @@
                                     <label for="expense_categoryID">Expense Category</label>
                                     <select name="expense_categoryID" id="expense_categoryID" class="form-control">
                                         @foreach ($exp_categories as $exp_category)
-                                            <option value="{{ $exp_category->id }}" @selected($exp_category->id == $purchase->expense_categoryID)>{{ $exp_category->name }}</option>
+                                            <option value="{{ $exp_category->id }}" @selected($exp_category->id == $purchase->expenseCategoryID)>{{ $exp_category->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
