@@ -111,7 +111,7 @@
 
         function getSingleProduct(id) {
             $.ajax({
-                url: "{{ url('purchases/getproduct/') }}/" + id,
+                url: "{{ url('getSignleProduct/') }}/" + id,
                 method: "GET",
                 success: function(product) {
                     let found = $.grep(existingProducts, function(element) {

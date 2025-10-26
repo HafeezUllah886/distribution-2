@@ -10,6 +10,7 @@ use App\Http\Controllers\UnitsController;
 use App\Http\Controllers\WarehousesController;
 use App\Http\Middleware\adminCheck;
 use App\Models\accounts;
+use App\Models\products;
 use Illuminate\Support\Facades\Route;
 
 
@@ -37,6 +38,13 @@ Route::middleware('auth')->group(function () {
 
         return response()->json($accounts);
     })->name('accounts_by_type');
+    
+
+     Route::get('getSignleProduct/{id}', function ($id) {
+        $product = products::with('units')->find($id);
+
+        return $product;
+    })->name('getSignleProduct');
 
 });
 
