@@ -8,6 +8,8 @@ use App\Models\accounts;
 use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
+use App\Models\expense_categories;
+use App\Models\expenses;
 use App\Models\method_transactions;
 use App\Models\payments;
 use App\Models\transactions_que;
@@ -42,7 +44,9 @@ class StaffPaymentsController extends Controller
         $currencies = currencymgmt::all();
         $customers = accounts::customer()->currentBranch()->active()->get();
         $orderbookers = User::orderbookers()->currentBranch()->get();
-        return view('Finance.staff_payments.index', compact('receivings', 'users', 'currencies', 'customers', 'orderbookers', 'start', 'end', 'from', 'method'));
+
+        $expense_categories = expense_categories::currentBranch()->get();
+        return view('Finance.staff_payments.index', compact('receivings', 'users', 'currencies', 'customers', 'orderbookers', 'start', 'end', 'from', 'method', 'expense_categories'));
     }
 
     /**
@@ -58,6 +62,7 @@ class StaffPaymentsController extends Controller
      */
     public function store(Request $request)
     {
+      
        try{ 
             DB::beginTransaction(); 
             $staff = User::find($request->fromID);
@@ -118,6 +123,38 @@ class StaffPaymentsController extends Controller
                 createAttachment($request->file('file'), $ref);
             }
 
+            if($request->has('expense_id'))
+            {
+                foreach($request->expense_id as $key => $expense_id)
+                {
+                     expenses::create(
+                        [
+                            'userID' => $request->fromID,
+                            'amount' => $request->expense_amount[$key],
+                            'branchID' => auth()->user()->branchID,
+                            'categoryID' => $expense_id,
+                            'date' => $request->date,
+                            'method' => $request->method,
+                            'number' => $request->number,
+                            'bank' => $request->bank,
+                            'cheque_date' => $request->cheque_date,
+                            'notes' => "Entered during staff payment received from: $staff->name Method $request->method Notes : $request->notes",
+                            'refID' => $ref,
+                        ]
+                    );
+
+                     $notes = "Expense during staff payment received from: $staff->name Method ".$request->method." Notes : ".$request->notes;
+                    createMethodTransaction($request->fromID, $request->method, 0, $request->expense_amount[$key], $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
+                
+                    createUserTransaction($request->fromID, $request->date,0, $request->expense_amount[$key], $notes, $ref);
+
+                    if($request->method == 'Cash')
+                    {
+                        createCurrencyTransaction($request->fromID, $request->currencyID, $request->qty, 'db', $request->date, $notes, $ref);
+                    }
+                }
+            }
+
             DB::commit();
             return back()->with('success', "Payment Saved");
         }
@@ -176,6 +213,7 @@ class StaffPaymentsController extends Controller
             users_transactions::where('refID', $ref)->delete();
             currency_transactions::where('refID', $ref)->delete();
             method_transactions::where('refID', $ref)->delete();
+            expenses::where('refID', $ref)->delete();
             cheques::where('refID', $ref)->delete();
             transactions_que::where('trefID', $ref)->update([
                 'status' => 'pending'

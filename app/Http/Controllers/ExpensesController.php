@@ -9,6 +9,7 @@ use App\Models\currencymgmt;
 use App\Models\expense_categories;
 use App\Models\expenses;
 use App\Models\method_transactions;
+use App\Models\staffPayments;
 use App\Models\transactions;
 use App\Models\users_transactions;
 use Illuminate\Http\Request;
@@ -165,6 +166,7 @@ class ExpensesController extends Controller
             currency_transactions::where('refID', $ref)->delete();
             method_transactions::where('refID', $ref)->delete();
             cheques::where('refID', $ref)->delete();
+            staffPayments::where('refID', $ref)->delete();
             DB::commit();
             session()->forget('confirmed_password');
             return redirect()->route('expenses.index')->with('success', "Expense Deleted");
