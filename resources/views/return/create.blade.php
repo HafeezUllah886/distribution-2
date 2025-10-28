@@ -185,7 +185,7 @@
 
             qty = loose + (qty * unit);
             var amount = price * qty;
-            $("#amount_"+id).val(amount.toFixed(2));
+            $("#amount_"+id).val(amount.toFixed(0));
             updateTotal();
         }
 
