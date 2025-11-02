@@ -40,10 +40,10 @@ class StaffPaymentsController extends Controller
             $receivings->where('method', $method);
         }
         $receivings = $receivings->get();
-        $users = User::where('branchID', auth()->user()->branchID)->where('id', '!=', auth()->user()->id)->get();
+        $users = User::where('branchID', auth()->user()->branchID)->where('id', '!=', auth()->user()->id)->active()->get();
         $currencies = currencymgmt::all();
         $customers = accounts::customer()->currentBranch()->active()->get();
-        $orderbookers = User::orderbookers()->currentBranch()->get();
+        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
 
         $expense_categories = expense_categories::currentBranch()->get();
         return view('Finance.staff_payments.index', compact('receivings', 'users', 'currencies', 'customers', 'orderbookers', 'start', 'end', 'from', 'method', 'expense_categories'));
@@ -127,6 +127,7 @@ class StaffPaymentsController extends Controller
             {
                 foreach($request->expense_id as $key => $expense_id)
                 {
+                    $nottt = $request->expense_note[$key];
                      expenses::create(
                         [
                             'userID' => $request->fromID,
@@ -138,12 +139,13 @@ class StaffPaymentsController extends Controller
                             'number' => $request->number,
                             'bank' => $request->bank,
                             'cheque_date' => $request->cheque_date,
-                            'notes' => "Entered during staff payment received from: $staff->name Method $request->method Notes : $request->notes",
+                            'notes' => "Entered during staff payment received from: $staff->name Notes : $nottt",
                             'refID' => $ref,
                         ]
                     );
+                    $category = expense_categories::find($expense_id);
 
-                     $notes = "Expense during staff payment received from: $staff->name Method ".$request->method." Notes : ".$request->notes;
+                     $notes = "Expense during staff payment received from: $staff->name Category: $category->name  Method ".$request->method." Notes : ".$nottt;
                     createMethodTransaction($request->fromID, $request->method, 0, $request->expense_amount[$key], $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
                 
                     createUserTransaction($request->fromID, $request->date,0, $request->expense_amount[$key], $notes, $ref);

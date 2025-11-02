@@ -11,7 +11,7 @@ class ExpenseReportController extends Controller
 {
     public function index()
     {
-        $cats = expense_categories::all();
+        $cats = expense_categories::currentBranch()->get();
 
         return view('reports.expense.index', compact('cats'));
     }

@@ -54,7 +54,7 @@ class PaymentsReceivingController extends Controller
 
         $currencies = currencymgmt::all();
         $type = $request->type;
-        $orderbookers = User::orderbookers()->currentBranch()->get();
+        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
         return view('Finance.payments_receiving.index', compact('payments', 'depositers', 'currencies', 'areas', 'type', 'area', 'orderbookers', 'start', 'end'));
     }
 

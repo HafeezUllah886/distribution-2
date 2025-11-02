@@ -50,7 +50,7 @@ class ActivityReportController extends Controller
             $payment_account->receivings = paymentsReceiving::where('depositerID', $payment_account->id)->whereBetween('date', [$from, $to])->get();
         }
 
-        $staffs = User::where("branchID", $branch)->orderBy('role', 'asc')->get();
+        $staffs = User::where("branchID", $branch)->orderBy('role', 'asc')->active()->get();
 
         foreach($staffs as $staff)
         {

@@ -41,7 +41,7 @@ class ReturnsController extends Controller
             $returns = returns::whereBetween('date', [$start, $end])->where('orderbookerID', $bookerID)->currentBranch()->orderBy('date', 'desc')->get();
         }
         $customers = accounts::customer()->currentBranch()->get();
-        $orderbookers = User::orderbookers()->currentBranch()->get();
+        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
 
         return view('return.index', compact('returns', 'start', 'end', 'customers', 'orderbookers', 'bookerID'));
     }

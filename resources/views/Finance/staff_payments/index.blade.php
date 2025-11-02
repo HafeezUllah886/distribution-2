@@ -128,7 +128,7 @@
 
     <div id="new" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
         style="display: none;">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="myModalLabel">Create Receipt</h5>
@@ -138,7 +138,7 @@
                     @csrf
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-4">
                                 @include('layout.payment')
                                 <div class="form-group mt-2 check_customer d-none">
                                     <label for="customerID">Check From</label>
@@ -157,7 +157,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-8">
                                 <div class="form-group mt-2">
                                     <label for="fromID">From (Balance: <span id="accountBalance">0</span>) <span
                                             class="text-primary" id="viewBalance">View Balance</span></label>
@@ -197,8 +197,10 @@
                                     
                                 </div>
                                 <div class="row">
-                                    <div class="col-8 text-end" >Total</div>
-                                    <div class="col-4" id="expense_total">0</div>
+                                    <div class="col-4 text-end" >Total</div>
+                                    <div class="col-2" id="expense_total">0</div>
+                                    <div class="col-2">Grand Total</div>
+                                    <div class="col-2" id="grand_total">0</div>
                                 </div>
                                
                             </div>
@@ -279,12 +281,15 @@
     }
 
     var html = `<div class='row mb-1 g-1 expense-row' data-expense-id='${expenseId}'>
-        <div class='col-7 d-flex align-items-center'>
+        <div class='col-4 d-flex align-items-center'>
             <span>${name}</span>
         </div>
-        <div class='col-4 g-1'>
-            <input type='number' required name='expense_amount[]' oninput="calculateTotal()" class='form-control form-control-sm no-padding text-center'>
+        <div class='col-2 g-1'>
+            <input type='number' required name='expense_amount[]' oninput="calculateTotal()" placeholder="Amount" class='form-control form-control-sm no-padding text-center'>
             <input type='hidden' name='expense_id[]' value='${expenseId}'>
+        </div>
+        <div class='col-5 g-1'>
+            <input type='text' required name='expense_note[]' placeholder="Notes" class='form-control form-control-sm no-padding text-center'>
         </div>
         <div class='col-1 g-1 d-flex align-items-center'>
             <button type='button' class='btn btn-sm btn-danger remove-expense'>&times;</button>
@@ -309,6 +314,10 @@ function calculateTotal() {
         total += amount;
     });
     $('#expense_total').text(total.toFixed(2));
+    var amount = $('#amount').val();
+    var g_total = parseInt(total) + parseInt(amount);
+    $('#grand_total').text(g_total.toFixed(2));
+
 }
     </script>
 @endsection

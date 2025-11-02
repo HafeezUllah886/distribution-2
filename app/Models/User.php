@@ -113,4 +113,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(sales::class, 'orderbookerID');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'Active');
+    }
 }

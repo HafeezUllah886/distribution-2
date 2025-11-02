@@ -33,7 +33,7 @@ class AccountsController extends Controller
             $accounts = accounts::Other()->get();
         }
 
-        $orderbookers = User::orderbookers()->currentBranch()->get();
+        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
 
         return view('Finance.accounts.index', compact('accounts', 'filter', 'orderbookers'));
     }

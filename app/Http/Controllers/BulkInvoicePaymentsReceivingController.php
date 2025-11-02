@@ -32,7 +32,7 @@ class BulkInvoicePaymentsReceivingController extends Controller
         $method = $request->method;
 
         $customers = accounts::customer()->currentBranch()->get();
-        $orderBookers = User::orderbookers()->currentBranch()->get();
+        $orderBookers = User::orderbookers()->currentBranch()->active()->get();
 
         $areas = area::currentBranch()->get();
 

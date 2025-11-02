@@ -15,7 +15,7 @@ class invoicePaymentsReportController extends Controller
 {
     public function index()
     {
-        $orderbookers = User::orderbookers()->currentBranch()->get();
+        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
         $customers = accounts::customer()->currentBranch()->get();
         $areas = area::currentBranch()->get();
         return view('reports.invoice_payments.index', compact('orderbookers', 'customers', 'areas'));

@@ -27,11 +27,11 @@ class OrderbookerPerformanceReportController extends Controller
     {
             if($branch == "All")
             {
-                $orderbookers = User::orderbookers()->with('sales')->get();
+                $orderbookers = User::orderbookers()->with('sales')->active()->get();
             }
             else
             {
-                $orderbookers = User::orderbookers()->with('sales')->where('branchID', $branch)->get();
+                $orderbookers = User::orderbookers()->with('sales')->active()->where('branchID', $branch)->get();
             }
 
             $orderbookers = $orderbookers->sortByDesc(function ($orderbooker) {

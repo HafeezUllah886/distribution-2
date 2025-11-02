@@ -16,7 +16,7 @@ class AutoStaffPaymentsController extends Controller
 {
     public function index()
     {
-        $staff = User::whereIn('role', ['Operator', 'Order Booker'])->currentBranch()->get();
+        $staff = User::whereIn('role', ['Operator', 'Order Booker'])->currentBranch()->active()->get();
 
         return view('Finance.auto_staff_payments.index', compact('staff'));
     }

@@ -24,7 +24,7 @@ class balanceSheetReport extends Controller
             $branches = branches::where('id', auth()->user()->branchID)->get();
         }
         $areas = area::currentBranch()->get();
-        $orderbookers = User::orderbookers()->currentBranch()->get();
+        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
         return view('reports.balanceSheet.index', compact('branches', 'areas', 'orderbookers'));
     }
 

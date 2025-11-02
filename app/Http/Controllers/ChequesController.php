@@ -40,7 +40,7 @@ class ChequesController extends Controller
         }
 
         $cheques = $cheques->get();
-        $orderbookers = User::orderbookers()->currentBranch()->get();
+        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
 
         $accounts = accounts::currentBranch()->get();
 
@@ -121,7 +121,7 @@ class ChequesController extends Controller
             return redirect()->back()->with('error', 'Cheque already forwarded');
         }
 
-        $orderbookers = User::orderbookers()->currentBranch()->get();
+        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
         $accounts = accounts::currentBranch()->where('type', $request->type);
         if($request->areaID != null && $request->type == 'Customer')
         {

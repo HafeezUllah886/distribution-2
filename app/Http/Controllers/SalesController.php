@@ -49,7 +49,7 @@ class SalesController extends Controller
         $warehouses = warehouses::currentBranch()->get();
         $customers = accounts::customer()->currentBranch()->get();
 
-        $orderbookers = User::orderbookers()->currentBranch()->get();
+        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
         $supplymen = accounts::supplyMen()->currentBranch()->get();
         return view('sales.index', compact('sales', 'start', 'end', 'warehouses', 'customers', 'orderbookers', 'bookerID', 'supplymen'));
     }

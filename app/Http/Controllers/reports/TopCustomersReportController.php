@@ -16,12 +16,12 @@ class TopCustomersReportController extends Controller
         if(auth()->user()->role == "Admin")
         {
             $branches = branches::all();
-            $orderbookers = User::orderbookers()->get();
+            $orderbookers = User::orderbookers()->active()->get();
         }
         else
         {
             $branches = branches::where('id', auth()->user()->branchID)->get();
-            $orderbookers = User::orderbookers()->where('branchID', auth()->user()->branchID)->get();
+            $orderbookers = User::orderbookers()->where('branchID', auth()->user()->active()->branchID)->get();
         }
         return view('reports.top_customers.index', compact('branches', 'orderbookers'));
     }  

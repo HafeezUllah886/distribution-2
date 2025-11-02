@@ -39,7 +39,7 @@ class OrderbookerWiseCustomerBalanceReport extends Controller
     {
         $orderbookerIDs = orderbooker_customers::where('customerID', $customer)->pluck('orderbookerID')->toArray();
 
-        $orderbookers = User::whereIn('id', $orderbookerIDs)->select('id as value', 'name as text')->get();
+        $orderbookers = User::whereIn('id', $orderbookerIDs)->active()->select('id as value', 'name as text')->get();
 
         return response()->json($orderbookers);
 

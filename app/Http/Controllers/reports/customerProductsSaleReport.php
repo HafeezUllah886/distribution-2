@@ -19,7 +19,7 @@ class customerProductsSaleReport extends Controller
         $customers = accounts::customer()->currentBranch()->get();
         $vendors = accounts::vendor()->currentBranch()->get();
         $areas = area::currentBranch()->get();
-        $orderbookers = User::orderbookers()->currentBranch()->get();
+        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
         return view('reports.customerProductsSaleReport.index', compact('customers', 'vendors', 'areas', 'orderbookers'));
     }
 

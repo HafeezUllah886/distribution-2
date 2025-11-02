@@ -40,7 +40,7 @@ class CustomerAdvancePaymentController extends Controller
         }
         $advances = $advances->orderBy('date', 'desc')->get();
 
-        $orderbookers = User::orderbookers()->currentBranch()->get();
+        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
 
         $customers = accounts::customer()->currentBranch()->active()->get();
 
