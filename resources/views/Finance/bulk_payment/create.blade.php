@@ -40,6 +40,7 @@
 
                             <table class="table">
                                 <thead>
+                                    <th>#</th>
                                     <th>Invoice ID</th>
                                     <th>Date</th>
                                     <th>Total</th>
@@ -48,8 +49,19 @@
                                     <th>Amount</th>
                                 </thead>
                                 <tbody>
-                                    @foreach ($invoices as $invoice)
+                                    @php
+                                        $total_net = 0;
+                                        $total_paid = 0;
+                                        $total_due = 0;
+                                    @endphp
+                                    @foreach ($invoices as $key => $invoice)
+                                    @php
+                                        $total_net += $invoice->net;
+                                        $total_paid += $invoice->paid();
+                                        $total_due += $invoice->due();
+                                    @endphp
                                         <tr>
+                                            <td>{{ $key+1 }}</td>
                                             <td>{{ $invoice->id }}</td>
                                             <td>{{ date('d M Y', strtotime($invoice->date)) }}</td>
                                             <td>{{ number_format($invoice->net, 2) }}</td>
@@ -62,7 +74,10 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="5" class="text-end">Net Amount</td>
+                                        <td colspan="3" class="text-end">Total</td>
+                                        <td>{{ number_format($total_net, 2) }}</td>
+                                        <td>{{ number_format($total_paid, 2) }}</td>
+                                        <td>{{ number_format($total_due, 2) }}</td>
                                         <td><input type="number" id="netAmount" name="netAmount" readonly value="0" class="form-control form-control-sm"></td>
                                         <input type="hidden" name="customerID" value="{{ $_GET['customerID'] }}">
                                     </tr>
