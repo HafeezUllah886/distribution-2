@@ -184,7 +184,7 @@
                                      <div class="col-12">
                                         <div class="form-group mt-2">
                                             <label for="category">Expense Category</label>
-                                            <select name="category" id="category" onchange="addExpenses(this.value)" required class="selectize">
+                                            <select name="category" id="category" onchange="addExpenses(this.value)" class="selectize">
                                                 <option value=""></option>
                                                 @foreach ($expense_categories as $expense_category)
                                                     <option value="{{ $expense_category->id }}" data-title="{{ $expense_category->name }}"> {{ $expense_category->name }}</option>
