@@ -50,8 +50,9 @@ class BranchOrdersController extends Controller
 
     public function show($id)
     {
-        $order = orders::with('customer', 'details.product', 'details.unit', 'orderbooker')->findOrFail($id);
         $this->checkCompletion($id);
+        $order = orders::with('customer', 'details.product', 'details.unit', 'orderbooker')->findOrFail($id);
+        
         return view('orders.view', compact('order'));
     }
 
