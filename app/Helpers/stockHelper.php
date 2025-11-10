@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\discountManagement;
 use App\Models\products;
 use App\Models\stock;
 use App\Models\warehouses;
@@ -162,4 +163,25 @@ function packInfo($size, $name, $qty)
     $packs = intdiv($qty, $size);
     $remains = $qty - ($packs*$size);
     return $packs . "," . $remains;
+ }
+
+ function updateDiscountStatus($id)
+ {
+    $discount = discountManagement::find($id);
+
+     if (!$discount) {
+        return false;
+    }
+    
+    $now = now();
+    $start_date = $discount->start_date;
+    $end_date = $discount->end_date;
+    
+    if (($start_date && $now->lt($start_date)) || ($end_date && $now->gt($end_date))) {
+        $discount->status = 'Inactive';
+    } else {
+        $discount->status = 'Active';
+    }
+    $discount->save();
+    return $discount->status;
  }

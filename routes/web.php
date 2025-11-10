@@ -26,6 +26,7 @@ require __DIR__ . '/targets.php';
 require __DIR__ . '/otherusers.php';
 require __DIR__ . '/setups.php';
 require __DIR__ . '/employees.php';
+require __DIR__ . '/discount_mgmt.php';
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard');
@@ -36,6 +37,12 @@ Route::middleware('auth')->group(function () {
 
         return response()->json($accounts);
     })->name('accounts_by_type');
+    
+    Route::get('customer_by_area/{areaID}', function ($areaID) {
+        $customers = accounts::customer()->where('areaID', $areaID)->currentBranch()->select('id as value', 'title as text')->get();
+
+        return response()->json($customers);
+    })->name('customer_by_area');
     
      Route::get('getSignleProduct/{id}', function ($id) {
         $product = products::with('units')->find($id);

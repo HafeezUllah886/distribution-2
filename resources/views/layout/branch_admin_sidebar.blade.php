@@ -112,6 +112,7 @@
                         </ul>
                     </div>
                 </li> 
+               
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#stock" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
@@ -182,6 +183,11 @@
                         </ul>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('discount.index') }}">
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-my_balance">Discount Management</span>
+                    </a>
+                </li> 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('my_balance') }}">
                         <i class="ri-file-list-3-line"></i> <span data-key="t-my_balance">My Balance</span>

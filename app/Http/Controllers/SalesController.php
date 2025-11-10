@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\discountManagement;
 use App\Models\expenses;
 use App\Models\order_delivery;
 use App\Models\orderbooker_customers;
@@ -469,7 +470,17 @@ class SalesController extends Controller
         $dc = product_dc::where('productID', $product->id)->where('areaID', $area)->first();
         $product->dc = $dc->dc ?? 0;
 
+        $discount = discountManagement::where('customerID', $customer)->where('productID', $id)->where('start_date', '<=', now())->where('end_date', '>=', now())->currentBranch()->first();
+        if($discount)
+        {
+            $status = updateDiscountStatus($discount->id);
+            if($status == 'Active')
+            {
 
+                $product->discount = $discount->discount;
+                $product->discountp = $discount->discountp;
+            }
+        }
         $sales = sales::where('customerID', $customer)->orderby('id','desc')->take('10')->pluck('id')->toArray();
 
         // Get latest record to preserve expected fields in the view (price, fright, labor, claim, netprice)
@@ -478,9 +489,7 @@ class SalesController extends Controller
             ->orderBy('id', 'desc')
             ->select('price', 'fright', 'labor', 'claim', 'netprice', 'discount', 'discountp')
             ->first();
-
         
-
         $product->last_price = $latest ?? ['price' => 0, 'discount' => 0, 'discountp' => 0, 'fright' => 0, 'labor' => 0, 'claim' => 0, 'netprice' => 0];
 
         return $product;
