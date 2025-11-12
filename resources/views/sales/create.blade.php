@@ -186,15 +186,15 @@
                     getSingleProduct(value);
                     this.clear();
                     this.focus();
-                    
                 }
             },
         });
 
         var existingProducts = [];
         function getSingleProduct(id) {
+            var date = $("#date").val();
             $.ajax({
-                url: "{{ url('sales/getproduct/') }}/" + id + "/" + {{$warehouse->id}} + "/" + {{$customer->areaID}} + "/" + {{$customer->id}},
+                url: "{{ url('sales/getproduct/') }}/" + id + "/" + {{$warehouse->id}} + "/" + {{$customer->areaID}} + "/" + {{$customer->id}} + "/" + date,
                 method: "GET",
                 success: function(product) {
                     let found = $.grep(existingProducts, function(element) {

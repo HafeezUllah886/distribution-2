@@ -121,14 +121,14 @@
                                     <div class="col-6">
                                         <div class="form-group mt-2">
                                             <label for="flat_discount">Flat Discount</label>
-                                            <input type="number" name="flat_discount" value="0" required id="flat_discount" class="form-control">
+                                            <input type="number" name="flat_discount" value="0" step="any" required id="flat_discount" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group mt-2">
                                             <label for="percentage_discount">Percentage Discount</label>
                                             <div class="input-group">
-                                                <input type="number" name="percentage_discount" value="0" required id="percentage_discount" class="form-control">
+                                                <input type="number" name="percentage_discount" value="0" step="any" required id="percentage_discount" class="form-control">
                                                 <span class="input-group-text">%</span>
                                             </div>
                                         </div>

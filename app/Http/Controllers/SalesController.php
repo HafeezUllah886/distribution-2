@@ -460,7 +460,7 @@ class SalesController extends Controller
         }
     }
 
-    public function getSignleProduct($id, $warehouse, $area, $customer)
+    public function getSignleProduct($id, $warehouse, $area, $customer, $date)
     {
         $product = products::with('units')->find($id);
         $stocks = stock::select(DB::raw('SUM(cr) - SUM(db) AS balance'))
@@ -470,15 +470,15 @@ class SalesController extends Controller
         $dc = product_dc::where('productID', $product->id)->where('areaID', $area)->first();
         $product->dc = $dc->dc ?? 0;
 
-        $discount = discountManagement::where('customerID', $customer)->where('productID', $id)->where('start_date', '<=', now())->where('end_date', '>=', now())->currentBranch()->first();
+        $discount = discountManagement::where('customerID', $customer)->where('productID', $id)->where('start_date', '<=', $date)->where('end_date', '>=', $date)->currentBranch()->first();
         if($discount)
         {
             $status = updateDiscountStatus($discount->id);
+
             if($status == 'Active')
             {
-
-                $product->discount = $discount->discount;
-                $product->discountp = $discount->discountp;
+                $product->discount = $discount->discount + $product->discount;
+                $product->discountp = $discount->discountp + $product->discountp;
             }
         }
         $sales = sales::where('customerID', $customer)->orderby('id','desc')->take('10')->pluck('id')->toArray();
