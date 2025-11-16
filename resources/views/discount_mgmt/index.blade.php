@@ -3,21 +3,42 @@
     <div class="row">
         <div class="col-12">
             <form>
-                <div class="row">
-                    <div class="col-md-5">
+                <div class="row g-1">
+                   
+                    <div class="col-md-3">
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">From</span>
-                            <input type="date" class="form-control" placeholder="Username" name="start" value="{{$from}}" aria-label="Username" aria-describedby="basic-addon1">
+                            <span class="input-group-text" id="basic-addon1">Area</span>
+                            <select name="area" class="form-control" id="">
+                                <option value="">All</option>
+                                @foreach ($areas as $are)
+                                    <option value="{{ $are->id }}" @selected($are->id == $area)>{{ $are->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">To</span>
-                            <input type="date" class="form-control" placeholder="Username" name="end" value="{{$to}}" aria-label="Username" aria-describedby="basic-addon1">
+                            <span class="input-group-text" id="basic-addon1">Vendor</span>
+                            <select name="vendor" class="form-control" id="">
+                                <option value="">All</option>
+                                @foreach ($vendors as $vend)
+                                    <option value="{{ $vend->id }}" @selected($vend->id == $vendor)>{{ $vend->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Status</span>
+                            <select name="status" class="form-control" id="">
+                                <option value="">All</option>
+                                <option value="Active" @selected($status == 'Active')>Active</option>
+                                <option value="Inactive" @selected($status == 'Inactive')>Inactive</option>
+                            </select>
                         </div>
                     </div>
                   
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                        <input type="submit" value="Filter" class="btn btn-success w-100">
                     </div>
                 </div>

@@ -190,7 +190,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">Select Warehouse</h5>
+                    <h5 class="modal-title" id="myModalLabel">Create Sale</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <form action="{{ route('sale.create') }}" method="get">
@@ -218,6 +218,10 @@
                                     <select name="customerID" id="customerID" class="selectize">
                                        <option value="">Select Customer</option>
                                     </select>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="date">Date</label>
+                                    <input type="date" name="date" id="date" value="{{date('Y-m-d')}}" class="form-control">
                                 </div>
                          </div>
                          <div class="modal-footer">

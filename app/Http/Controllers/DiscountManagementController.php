@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\discountManagement;
 use App\Http\Controllers\Controller;
+use App\Models\accounts;
 use App\Models\area;
 use App\Models\products;
 use Illuminate\Http\Request;
@@ -15,12 +16,40 @@ class DiscountManagementController extends Controller
      */
     public function index(Request $request)
     {
-        $from = $request->from ?? firstDayOfMonth();
-        $to = $request->to ?? now()->toDateString();
-        $discounts = discountManagement::whereBetween('start_date', [$from, $to])->orWhereBetween('end_date', [$from, $to])->orderBy('status', 'desc')->get();
+        $area = $request->area ?? null;
+        $vendor = $request->vendor ?? null;
+        $status = $request->status ?? null;
+
+        if($area != null)
+        {
+            $customers = accounts::currentBranch()->customer()->where('areaID', $area)->get('id')->toArray();
+        }
+        else
+        {
+            $customers = accounts::currentBranch()->customer()->get('id')->toArray();
+        }
+
+        if($vendor != null)
+        {
+            $products = products::currentBranch()->where('vendorID', $vendor)->get('id')->toArray();
+        }
+        else
+        {
+            $products = products::currentBranch()->get('id')->toArray();
+        }
+
+
+        $discounts = discountManagement::whereIn('customerID', $customers)->whereIn('productID', $products)->orderBy('status', 'desc');
+        if($status != null)
+        {
+            $discounts = $discounts->where('status', $status);
+        }
+        $discounts = $discounts->get();
         $areas = area::currentBranch()->get();
+        dd($areas);
         $products = products::currentBranch()->get();
-        return view('discount_mgmt.index', compact('discounts', 'from', 'to', 'areas', 'products'));
+        $vendors = accounts::currentBranch()->vendor()->get();
+        return view('discount_mgmt.index', compact('discounts', 'areas', 'products', 'vendors', 'area', 'vendor', 'status'));
     }
 
     /**

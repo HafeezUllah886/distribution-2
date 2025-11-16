@@ -73,7 +73,8 @@ class SalesController extends Controller
         $orderbooker = User::find($request->orderbookerID);
         $warehouse = warehouses::find($request->warehouseID);
         $supplymen = accounts::supplyMen()->currentBranch()->get();
-        return view('sales.create', compact('products', 'units', 'customer', 'orderbooker', 'warehouse', 'supplymen'));
+        $date = $request->date ?? date('Y-m-d');
+        return view('sales.create', compact('products', 'units', 'customer', 'orderbooker', 'warehouse', 'supplymen', 'date')); 
     }
 
     /**

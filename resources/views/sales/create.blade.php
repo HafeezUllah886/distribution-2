@@ -115,7 +115,7 @@
                             <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="date">Sale Date</label>
-                                    <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}" class="form-control">
+                                    <input type="date" name="date" id="date" readonly value="{{ $date }}" class="form-control">
                                 </div>
                             </div>
                            
