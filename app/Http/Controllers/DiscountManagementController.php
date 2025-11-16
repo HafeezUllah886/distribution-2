@@ -46,7 +46,6 @@ class DiscountManagementController extends Controller
         }
         $discounts = $discounts->get();
         $areas = area::currentBranch()->get();
-        dd($areas);
         $products = products::currentBranch()->get();
         $vendors = accounts::currentBranch()->vendor()->get();
         return view('discount_mgmt.index', compact('discounts', 'areas', 'products', 'vendors', 'area', 'vendor', 'status'));

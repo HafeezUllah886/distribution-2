@@ -66,7 +66,9 @@
                             <th>#</th>
                             <th>Customer</th>
                             <th>Area</th>
+                            <th>Address</th>
                             <th>Product</th>
+                            <th>Vendor</th>
                             <th>Discount</th>
                             <th>Discount %</th>
                             <th>Start Date</th>
@@ -80,14 +82,15 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $discount->customer->title }}</td>
                                     <td>{{ $discount->customer->area->name }}</td>
+                                    <td>{{ $discount->customer->address }}</td>
                                     <td>{{ $discount->product->name }}</td>
+                                    <td>{{ $discount->product->vendor->title }}</td>
                                     <td>{{ $discount->discount }}</td>
                                     <td>{{ $discount->discountp }}</td>
                                     <td>{{ date('d M Y', strtotime($discount->start_date)) }}</td>
                                     <td>{{ date('d M Y', strtotime($discount->end_date)) }}</td>
                                     <td>{{ $discount->status }}</td>
                                     <td>
-
                                         <a href="{{ route('discount.delete', $discount->id) }}"
                                             class="btn btn-danger">Delete</a> 
                                     </td>
