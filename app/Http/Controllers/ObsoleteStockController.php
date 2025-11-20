@@ -6,6 +6,7 @@ use App\Models\obsolete_stock;
 use App\Http\Controllers\Controller;
 use App\Models\product_units;
 use App\Models\products;
+use App\Models\stock;
 use App\Models\warehouses;
 use Exception;
 use Illuminate\Http\Request;
@@ -121,8 +122,24 @@ class ObsoleteStockController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(obsolete_stock $obsolete_stock)
+    public function destroy($ref)
     {
-        //
+
+        try
+        {
+            DB::beginTransaction();
+            obsolete_stock::where('refID', $ref)->delete();
+            stock::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+            return redirect()->route('obsolete.index')->with('success', "Obsolete Stock Deleted");
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+            return redirect()->route('obsolete.index')->with('error', $e->getMessage());
+        }
+        
     }
 }

@@ -158,7 +158,9 @@
             var loose = parseFloat($('#loose_' + id).val());
             var price = parseFloat($('#price_' + id).val());
             var unit = $('#unit_' + id).find(':selected').data('unit');
-            var amount = (price) * qty;
+            var unit_qty = qty * unit;
+            var totalQty = unit_qty + loose;
+            var amount = (price) * totalQty;
             $("#amount_"+id).val(amount.toFixed(2));
             updateTotal();
         }
