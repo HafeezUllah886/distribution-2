@@ -100,9 +100,16 @@ class DiscountManagementController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, discountManagement $discountManagement)
+    public function update(Request $request, $id)
     {
-        //
+        $discountManagement = discountManagement::find($id);
+        $discountManagement->update([
+            'discount' => $request->flat_discount,
+            'discountp' => $request->percentage_discount,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ]);
+        return redirect()->back()->with('success', 'Discount updated successfully');
     }
 
     /**

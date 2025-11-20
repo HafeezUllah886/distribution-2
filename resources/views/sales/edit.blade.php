@@ -158,7 +158,7 @@
                             <div class="col-4 mt-2">
                                 <div class="form-group">
                                     <label for="date">Sale Date</label>
-                                    <input type="date" name="date" id="date" value="{{ date('Y-m-d', strtotime($sale->date)) }}" class="form-control">
+                                    <input type="date" name="date" id="date" readonly value="{{ date('Y-m-d', strtotime($sale->date)) }}" class="form-control">
                                 </div>
                             </div>
                            
@@ -224,8 +224,10 @@
         });
 
         function getSingleProduct(id) {
+             var date = $("#date").val();
             $.ajax({
-                url: "{{ url('sales/getproduct/') }}/" + id + "/" + {{$warehouse->id}} + "/" + {{$customer->areaID}} + "/" + {{$customer->id}},
+               
+                url: "{{ url('sales/getproduct/') }}/" + id + "/" + {{$warehouse->id}} + "/" + {{$customer->areaID}} + "/" + {{$customer->id}} + "/" + date,
                 method: "GET",
                 success: function(product) {
                     let found = $.grep(existingProducts, function(element) {

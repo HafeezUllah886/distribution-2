@@ -90,11 +90,82 @@
                                     <td>{{ date('d M Y', strtotime($discount->start_date)) }}</td>
                                     <td>{{ date('d M Y', strtotime($discount->end_date)) }}</td>
                                     <td>{{ $discount->status }}</td>
-                                    <td>
-                                        <a href="{{ route('discount.delete', $discount->id) }}"
-                                            class="btn btn-danger">Delete</a> 
+                                     <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="ri-more-fill align-middle"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#minorEditModal_{{$discount->id}}">
+                                                        <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        Edit
+                                                    </a>
+                                                </li>
+                                               
+                                                <li>
+                                                    <a class="dropdown-item text-danger" href="{{ route('discount.delete', $discount->id) }}">
+                                                        <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
+                                                        Delete
+                                                    </a>
+                                                </li>
+                                               
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
+                                 <div id="minorEditModal_{{$discount->id}}" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="myModalLabel">Edit</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                                            </div>
+                                            <form action="{{ route('discount.update', $discount->id) }}" method="post">
+                                              @csrf
+                                              @method('PUT')
+                                              <div class="modal-body">
+                                             <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-group mt-2">
+                                                        <label for="flat_discount">Flat Discount</label>
+                                                        <input type="number" name="flat_discount" value="{{ $discount->discount }}" step="any" required id="flat_discount" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group mt-2">
+                                                        <label for="percentage_discount">Percentage Discount</label>
+                                                        <div class="input-group">
+                                                            <input type="number" name="percentage_discount" value="{{ $discount->discountp }}" step="any" required id="percentage_discount" class="form-control">
+                                                            <span class="input-group-text">%</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-group mt-2">
+                                                        <label for="start_date">Start Date</label>
+                                                        <input type="date" name="start_date" value="{{ $discount->start_date }}" required id="start_date" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group mt-2">
+                                                        <label for="end_date">End Date</label>
+                                                        <input type="date" name="end_date" value="{{ $discount->end_date }}" required id="end_date" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Update</button>
+                                                     </div>
+                                              </form>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div>
                             @endforeach
                         </tbody>
                     </table>
