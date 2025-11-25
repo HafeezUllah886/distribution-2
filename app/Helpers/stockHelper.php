@@ -165,22 +165,29 @@ function packInfo($size, $name, $qty)
     return $packs . "," . $remains;
  }
 
- function updateDiscountStatus($id)
+ function updateDiscountStatus($id, $date)
  {
     $discount = discountManagement::find($id);
 
      if (!$discount) {
         return false;
     }
-    $date = now();
     $start_date = $discount->start_date;
     $end_date = $discount->end_date;
+    $date = date('Y-m-d', strtotime($date));
+
+
     
-    if (($start_date && $date->lt($start_date)) || ($end_date && $date->gt($end_date))) {
+    if (($start_date && $date < $start_date) || ($end_date && $date > $end_date)) {
         $discount->status = 'Inactive';
     } else {
         $discount->status = 'Active';
     }
-    $discount->save();
+
+    if($date == now()->toDateString())
+    {
+        $discount->save();
+    }
+   
     return $discount->status;
  }

@@ -89,6 +89,7 @@
                                             <input type="hidden" name="discountValue[]" id="discountValue_{{ $id }}">
                                             <input type="hidden" id="stockInput_{{ $id }}" value="{{$product->stock1}}">
                                             <input type="hidden" name="discountPValue[]" id="discountPValue_{{ $id }}">
+                                            <input type="hidden" name="minpc[]" value="{{$product->received}}" id="minpc_{{ $id }}">
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -194,7 +195,6 @@
                     getSingleProduct(value);
                     this.clear();
                     this.focus();
-                    
                 }
             },
         });
@@ -235,6 +235,7 @@
                         html += '<input type="hidden" name="claimValue[]" id="claimValue_'+id+'" value="0">';
                         html += '<input type="hidden" name="discountValue[]" id="discountValue_'+id+'" value="0">';
                         html += '<input type="hidden" name="discountPValue[]" id="discountPValue_'+id+'" value="0">';
+                        html += '<input type="hidden" name="minpc[]" id="minpc_'+id+'" value="0">';
                         html += '</tr>';
                         $("#products_list").prepend(html);
                         existingProducts.push(id);
@@ -249,16 +250,20 @@
             var loose = parseFloat($('#loose_' + id).val());
             var bonus = parseFloat($('#bonus_' + id).val());
             var unit = $('#unit_' + id).find(':selected').data('unit');
+            var minpc = parseFloat($('#minpc_'+id).val());
             
-
             var unit_qty = unit * qty;
             var totalQty = unit_qty + loose + bonus;
-
-
-            var qty = parseFloat($('#qty_' + id).val());
-            var loose = parseFloat($('#loose_' + id).val());
-            var bonus = parseFloat($('#bonus_' + id).val());
-            var unit = $('#unit_' + id).find(':selected').data('unit');
+            console.log(totalQty);
+            console.log(minpc);
+            if(totalQty < minpc)
+            {
+                alert(minpc + "PCs already received");
+                $('#qty_'+id).val(0);
+                $('#loose_'+id).val(minpc);
+                $('#bonus_'+id).val(0);
+                return;
+            }
 
             var price = parseFloat($('#price_' + id).val());
             var discount = parseFloat($('#discount_' + id).val());

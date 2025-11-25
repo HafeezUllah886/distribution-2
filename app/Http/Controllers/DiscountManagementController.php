@@ -122,4 +122,22 @@ class DiscountManagementController extends Controller
         session()->forget('confirmed_password');
         return to_route('discount.index')->with('success', 'Discount deleted successfully');
     }
+
+    public function updateStatus($id)
+    {
+        $discount = discountManagement::find($id);
+        if($discount->status == 'Active')
+        {
+            $discount->update([
+                'status' => 'Inactive',
+            ]);
+        }
+        else
+        {
+            $discount->update([
+                'status' => 'Active',
+            ]);
+        }
+        return redirect()->back()->with('success', 'Discount updated successfully');
+    }
 }

@@ -9,5 +9,6 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('discount', DiscountManagementController::class);
 Route::get('discount/delete/{ref}', [DiscountManagementController::class, 'destroy'])->name('discount.delete')->middleware(confirmPassword::class);
+Route::get('discount/update-status/{id}', [DiscountManagementController::class, 'updateStatus'])->name('discount.update-status');
 
 });

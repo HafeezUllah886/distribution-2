@@ -103,6 +103,16 @@
                                                         Edit
                                                     </a>
                                                 </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('discount.update-status', $discount->id) }}">
+                                                        <i class="ri-toggle-fill align-bottom me-2 text-muted"></i>
+                                                        @if ($discount->status == 'Active')
+                                                            Inactive
+                                                        @else
+                                                            Active
+                                                        @endif
+                                                    </a>
+                                                </li>
                                                
                                                 <li>
                                                     <a class="dropdown-item text-danger" href="{{ route('discount.delete', $discount->id) }}">

@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\purchase_order;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\expenses;
 use App\Models\product_units;
 use App\Models\products;
 use App\Models\purchase;
 use App\Models\purchase_details;
+use App\Models\purchase_order_delivery;
 use App\Models\purchase_order_details;
 use App\Models\units;
 use App\Models\warehouses;
@@ -130,36 +132,6 @@ class PurchaseOrderController extends Controller
                 );
             }
 
-             if($request->freight_status == "on")
-            {
-                $vendor_title = $purchase->vendor->title;
-                $fr_notes = "Freight Payment of Vendor: $vendor_title, Inv No: $request->inv, Bilty: $request->bilty, Vehicle No: $request->container, Transporter: $request->transporter, Driver:  $request->driver, Notes: $request->notes";
-                expenses::create(
-                    [
-                        'userID'        => auth()->user()->id,
-                        'amount'        => $totalFreight,
-                        'branchID'      => auth()->user()->branchID,
-                        'categoryID'    => $request->expense_categoryID,
-                        'date'          => $request->recdate,
-                        'method'        => 'Other',
-                        'number'        => null,
-                        'bank'          => null,
-                        'cheque_date'   => $request->recdate,
-                        'notes'         => $fr_notes,
-                        'refID'         => $ref,
-                    ]
-                );
-
-                createTransaction($request->freightID, $request->recdate, 0, $totalFreight, $fr_notes, $ref, auth()->user()->id);
-    
-            }
-             else
-            {
-                 $vendor_title = $purchase->vendor->title;
-                $fr_notes = "Freight Payment of Vendor: $vendor_title, Inv No: $request->inv, Bilty: $request->bilty, Vehicle No: $request->container, Transporter: $request->transporter, Driver:  $request->driver, Notes: $request->notes";
-                createTransaction($request->freightID, $request->recdate, 0, 0, $fr_notes, $ref, auth()->user()->id);
-            }
-
 
             DB::commit();
             return back()->with('success', "Purchase Order Created");
@@ -190,6 +162,14 @@ class PurchaseOrderController extends Controller
         $this->validateOrder($id);
         $order = purchase_order::with('vendor', 'details.product', 'details.unit')->findOrFail($id);
         $products = products::active()->vendor($order->vendorID)->orderby('name', 'asc')->get();
+
+        foreach($order->details as $product)
+        {
+            $received = purchase_order_delivery::where('orderID', $id)->where('productID', $product->productID)->sum('pc');
+            $product->received = $received;
+        }
+        
+
         $units = units::all();
         $vendor = accounts::find($order->vendorID);
         return view('purchase_order.edit', compact('order', 'products', 'units', 'vendor'));
@@ -299,10 +279,10 @@ class PurchaseOrderController extends Controller
     {
         $order = purchase_order::findOrFail($id);
 
-        if($order->status != "Pending")
+     /*    if($order->status != "Pending")
         {
             return redirect()->route('purchase_order.index')->with('error', 'Order cannot be edited');
-        }
+        } */
 
         if($order->branchID != Auth()->user()->branchID)
         {

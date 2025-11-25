@@ -471,10 +471,10 @@ class SalesController extends Controller
         $dc = product_dc::where('productID', $product->id)->where('areaID', $area)->first();
         $product->dc = $dc->dc ?? 0;
 
-        $discount = discountManagement::where('customerID', $customer)->where('productID', $id)->where('start_date', '<=', $date)->where('end_date', '>=', $date)->currentBranch()->first();
+        $discount = discountManagement::where('customerID', $customer)->where('productID', $id)->active()->currentBranch()->first();
         if($discount)
         {
-            $status = updateDiscountStatus($discount->id);
+            $status = updateDiscountStatus($discount->id, $date);
 
             if($status == 'Active')
             {

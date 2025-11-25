@@ -106,7 +106,6 @@
                                                         View
                                                     </button>
                                                 </li> 
-                                               @if (auth()->user()->role == "Branch Admin" && $order->status == "Pending")
                                                 <li>
                                                     <button class="dropdown-item" onclick="newWindow('{{route('purchase_order.edit', $order->id)}}')"
                                                         onclick=""><i
@@ -114,6 +113,8 @@
                                                         Edit
                                                     </button>
                                                 </li>
+                                               @if (auth()->user()->role == "Branch Admin" && $order->status == "Pending")
+                                                
                                                 <li>
                                                     <a href="{{route('purchaseOrderDelete', $order->id)}}" class="dropdown-item" 
                                                         onclick=""><i

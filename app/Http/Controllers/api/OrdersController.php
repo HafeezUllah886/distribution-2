@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\discountManagement;
 use App\Models\order_delivery;
 use App\Models\product_dc;
 use App\Models\product_units;
@@ -173,6 +174,18 @@ class OrdersController extends Controller
                 $price = $product->price;
                 $discount = $product->discount;
                 $discountp = $product->discountp;
+                 $discountmgmt = discountManagement::where('customerID', $request->customerID)->where('productID', $id)->active()->currentBranch()->first();
+                if($discountmgmt)
+                {
+                    $status = updateDiscountStatus($discountmgmt->id, now());
+
+                    if($status == 'Active')
+                    {
+                        $discount +=  $discountmgmt->discount;
+                        $discountp += $discountmgmt->discountp;
+                    }
+                }
+
                 $discountpValue = $discountp * $price / 100;
                 $fright = $product->sfright;
                 $claim = $product->sclaim;
@@ -181,6 +194,8 @@ class OrdersController extends Controller
 
                 $amount = (($price - $discount - $discountpValue - $claim) + $fright) * $qty;
                 $net += $amount;
+
+                
             
                 $orderDetail = order_details::create([
                     'orderID' => $order->id,
@@ -318,7 +333,19 @@ class OrdersController extends Controller
                 $price = $product->price;
                 $discount = $product->discount;
                 $discountp = $product->discountp;
-                $discountpValue = $discountp * $price / 100;
+               
+                $discountmgmt = discountManagement::where('customerID', $order->customerID)->where('productID', $id)->active()->currentBranch()->first();
+                if($discountmgmt)
+                {
+                    $status = updateDiscountStatus($discountmgmt->id, now());
+
+                    if($status == 'Active')
+                    {
+                        $discount +=  $discountmgmt->discount;
+                        $discountp += $discountmgmt->discountp;
+                    }
+                }
+                 $discountpValue = $discountp * $price / 100;
                 $fright = $product->sfright;
                 $claim = $product->sclaim;
                 $dc = product_dc::where('productID', $product->id)->where('areaID', $customer->areaID)->first();
