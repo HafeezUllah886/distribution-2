@@ -195,6 +195,7 @@ class PurchaseOrderController extends Controller
                 'date'            => $request->date,
                 'notes'           => $request->notes,
                 'bilty'           => $request->bilty,
+                'driver_name'     => $request->driver,
                 'vehicle'         => $request->vehicle,
                 'driver_contact'  => $request->driver_contact,
                 'transporter'     => $request->transporter,

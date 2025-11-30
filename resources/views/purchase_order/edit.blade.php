@@ -138,6 +138,12 @@
                             </div>
                             <div class="col-2">
                                 <div class="form-group">
+                                    <label for="comp">Driver</label>
+                                    <input type="text" name="driver" id="driver" value="{{ $order->driver_name }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-group">
                                     <label for="comp">Vehicle</label>
                                     <input type="text" name="vehicle" value="{{$order->vehicle}}"  id="vehicle" class="form-control">
                                 </div>
@@ -201,7 +207,7 @@
 
         function getSingleProduct(id) {
             $.ajax({
-                url: "{{ url('purchases/getproduct/') }}/" + id,
+                url: "{{ url('purchases/getproduct/') }}/" + id + "/" + {{$order->vendorID}},
                 method: "GET",
                 success: function(product) {
                     let found = $.grep(existingProducts, function(element) {
@@ -225,7 +231,7 @@
                         html += '<td class="no-padding"><div class="input-group"><input type="number" name="discount[]"  required step="any" value="'+product.discount+'" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discount_' + id + '"><span class="input-group-text no-padding discountText_'+id+'" id="basic-addon2"></span></td>';
                         html += '<td class="no-padding"><div class="input-group"><input type="number" name="discountp[]"  required step="any" value="'+product.discountp+'" min="0" oninput="updateChanges(' + id + ')" class="form-control text-center no-padding" id="discountp_' + id + '"><span class="input-group-text no-padding discountpText_'+id+'" id="basic-addon2"></span></td>';
                         html += '<td class="no-padding"><div class="input-group"><input type="number" name="fright[]"  required step="any" oninput="updateChanges(' + id + ')" value="'+product.sfright+'" min="0" class="form-control text-center no-padding" id="fright_' + id + '"> <span class="input-group-text no-padding frightText_'+id+'" id="basic-addon2"></span></div></td>';
-                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="labor[]"  required step="any" oninput="updateChanges(' + id + ')" value="'+product.dc+'" min="0" class="form-control text-center no-padding" id="labor_' + id + '"> <span class="input-group-text no-padding laborText_'+id+'" id="basic-addon2"></span></div></td>';
+                        html += '<td class="no-padding"><div class="input-group"><input type="number" name="labor[]"  required step="any" oninput="updateChanges(' + id + ')" value="'+product.labor+'" min="0" class="form-control text-center no-padding" id="labor_' + id + '"> <span class="input-group-text no-padding laborText_'+id+'" id="basic-addon2"></span></div></td>';
                         html += '<td class="no-padding"><div class="input-group"><input type="number" name="claim[]"  required step="any" oninput="updateChanges(' + id + ')" value="'+product.sclaim+'" min="0" class="form-control text-center no-padding" id="claim_' + id + '"> <span class="input-group-text no-padding claimText_'+id+'" id="basic-addon2"></span></div></td>';
                         html += '<td class="no-padding"><input type="number" name="amount[]" min="0.1"  required step="any" value="1" class="form-control text-center no-padding" id="amount_' + id + '"></td>';
                         html += '<td class="no-padding"> <span class="btn btn-sm btn-danger" onclick="deleteRow('+id+')">X</span> </td>';

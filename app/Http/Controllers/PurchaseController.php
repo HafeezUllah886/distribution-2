@@ -209,10 +209,10 @@ class PurchaseController extends Controller
      */
     public function edit(purchase $purchase)
     {
-        if($purchase->orderID != null)
+       /*  if($purchase->orderID != null)
         {
             return back()->with('error', "This purchase can not be edited");
-        }
+        } */
         $products = products::active()->vendor($purchase->vendorID)->orderby('name', 'asc')->get();
         $units = units::currentBranch()->get();
         $accounts = accounts::business()->currentBranch()->get();
@@ -257,7 +257,7 @@ class PurchaseController extends Controller
                   'status'          => "Pending",
                   'transporter'     => $request->transporter,
                   'inv'             => $request->inv,
-                   'driver_name'         => $request->driver,
+                  'driver_name'         => $request->driver,
                   'driver_contact'      => $request->driver_contact,
                   'cno'                 => $request->container,
                   'freightID'           => $request->freightID,

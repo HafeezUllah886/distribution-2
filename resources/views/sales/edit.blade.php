@@ -78,7 +78,7 @@
                                             <td class="no-padding">{{ $product->product->name }}</td>
                                             <td class="no-padding"><select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges({{ $id }})" id="unit_{{ $id }}">
                                                 @foreach ($units as $unit)
-                                                <option data-unit="{{$unit->value}}" value="{{ $unit->id }}">{{ $unit->unit_name }}</option>
+                                                <option data-unit="{{$unit->value}}" @selected($unit->id == $product->unitID) value="{{ $unit->id }}">{{ $unit->unit_name }}</option>
                                                 @endforeach
                                             </select></td>
                                             <td class="no-padding"><div class="input-group"><span class="input-group-text no-padding stock_{{ $id }}" id="basic-addon2">{{$product->stock}}</span><input type="number" name="qty[]" oninput="updateChanges({{ $id }})" max="{{$product->stock}}" min="0" required step="any" value="{{$product->qty}}" class="form-control text-center no-padding" id="qty_{{ $id }}"> </div></td>

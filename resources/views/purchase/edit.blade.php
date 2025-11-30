@@ -206,6 +206,12 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-3 mt-2">
+                                <div class="form-group">
+                                    <label for="comp">Driver</label>
+                                    <input type="text" name="driver" id="driver" value="{{ $purchase->driver_name }}" class="form-control">
+                                </div>
+                            </div>
                              <div class="col-3 mt-2">
                                 <div class="form-group">
                                     <label for="comp">Driver</label>
