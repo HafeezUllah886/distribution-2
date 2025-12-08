@@ -38,7 +38,7 @@
                                 <select name="customer" id="customer" class="form-control">
                                     <option value="All">All</option>
                                     @foreach ($customers as $customer)
-                                        <option value="{{$customer->id}}">{{$customer->title}}</option>
+                                        <option value="{{$customer->id}}">{{$customer->title}} - {{$customer->area->name}}</option>
                                     @endforeach
                                 </select>
                             </div>

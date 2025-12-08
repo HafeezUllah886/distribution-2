@@ -262,7 +262,7 @@
                 total += parseFloat(inputValue);
             });
 
-            $("#totalAmount").html(total.toFixed(2));
+            $("#totalAmount").html(total.toFixed(0));
 
             var totalQty = 0;
             $("input[id^='qty_']").each(function() {

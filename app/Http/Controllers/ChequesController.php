@@ -25,7 +25,15 @@ class ChequesController extends Controller
         $orderbooker = $request->orderbookerID ?? 'All';
         $status = $request->status ?? "All";
 
-        $cheques = cheques::where('userID', auth()->user()->id)->orderBy('cheque_date', 'asc')->whereBetween('cheque_date', [$start, $end]);
+        if($status == 'pending')
+        {
+            $cheques = cheques::where('userID', auth()->user()->id)->orderBy('cheque_date', 'asc');
+        }
+        else
+        {
+            $cheques = cheques::where('userID', auth()->user()->id)->orderBy('cheque_date', 'asc')->whereBetween('cheque_date', [$start, $end]);
+        }
+        
         if($orderbooker != 'All')
         {
             $cheques->where('orderbookerID', $orderbooker);
