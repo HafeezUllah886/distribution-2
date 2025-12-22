@@ -18160,8 +18160,8 @@ namespace App\Models {
      * @property int|null $orderbookerID
      * @property int $refID
      * @property string $notes
-     * @property mixed $db
-     * @property mixed $cr
+     * @property float $db
+     * @property float $cr
      * @property string $date
      * @property int $accountID
      * @property int $id
@@ -19358,8 +19358,8 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property int $refID
      * @property string $notes
-     * @property mixed $db
-     * @property mixed $cr
+     * @property float $db
+     * @property float $cr
      * @property string $date
      * @property int $userID
      * @property int $id

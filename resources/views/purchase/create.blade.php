@@ -20,7 +20,7 @@
                     <form action="{{ route('purchase.store') }}" method="post">
                         @csrf
                         <div class="row">
-                           <div class="col-10">
+                            <div class="col-10">
                                 <div class="form-group">
                                     <label for="product">Product</label>
                                     <select name="product" class="selectize" id="product">
@@ -34,13 +34,15 @@
                             <div class="col-1">
                                 <label for="freight_radio">Freight</label>
                                 <div class="form-check form-switch form-switch-lg" dir="ltr">
-                                    <input type="checkbox" name="freight_status" class="form-check-input" onchange="checkCharges()" id="freight_radio" checked="">
+                                    <input type="checkbox" name="freight_status" class="form-check-input"
+                                        onchange="checkCharges()" id="freight_radio" checked="">
                                 </div>
                             </div>
                             <div class="col-1">
                                 <label for="labor_radio">Labor</label>
                                 <div class="form-check form-switch form-switch-lg" dir="ltr">
-                                    <input type="checkbox" name="labor_status" class="form-check-input" onchange="checkCharges()" id="labor_radio" checked="">
+                                    <input type="checkbox" name="labor_status" class="form-check-input"
+                                        onchange="checkCharges()" id="labor_radio" checked="">
                                 </div>
                             </div>
                             <div class="col-12">
@@ -224,7 +226,7 @@
 
         function getSingleProduct(id) {
             $.ajax({
-                url: "{{ url('purchases/getproduct/') }}/" + id + "/" + {{$vendor}},
+                url: "{{ url('purchases/getproduct/') }}/" + id + "/" + {{ $vendor }},
                 method: "GET",
                 success: function(product) {
                     let found = $.grep(existingProducts, function(element) {
@@ -234,7 +236,13 @@
                         var id = product.id;
                         var units = product.units;
                         var html = '<tr id="row_' + id + '">';
-                        html += '<td class="no-padding"><span data-bs-toggle="tooltip" data-bs-placement="top" title="Price: '+product.last_price.price+'\nDiscount: '+product.last_price.discount + '\nDiscount %: '+product.last_price.discountp + '\nFright: '+product.last_price.fright+'\nLabor: '+product.last_price.labor+'\nClaim: '+product.last_price.claim+'\nNet Price: '+product.last_price.netprice+'">' + product.name + '</span></td>';
+                        html +=
+                            '<td class="no-padding"><span data-bs-toggle="tooltip" data-bs-placement="top" title="Price: ' +
+                            product.last_price.price + '\nDiscount: ' + product.last_price.discount +
+                            '\nDiscount %: ' + product.last_price.discountp + '\nFright: ' + product.last_price
+                            .fright + '\nLabor: ' + product.last_price.labor + '\nClaim: ' + product.last_price
+                            .claim + '\nNet Price: ' + product.last_price.netprice + '">' + product.name +
+                            '</span></td>';
                         html +=
                             '<td class="no-padding"><select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges(' +
                             id + ')" id="unit_' + id + '">';
@@ -298,9 +306,9 @@
                         html += '<input type="hidden" name="frightValue[]" id="frightValue_' + id +
                             '" value="0">';
                         html += '<input type="hidden" name="laborValue[]" id="laborValue_' + id +
-                        '" value="0">';
+                            '" value="0">';
                         html += '<input type="hidden" name="claimValue[]" id="claimValue_' + id +
-                        '" value="0">';
+                            '" value="0">';
                         html += '<input type="hidden" name="discountValue[]" id="discountValue_' + id +
                             '" value="0">';
                         html += '<input type="hidden" name="discountPValue[]" id="discountPValue_' + id +
@@ -329,7 +337,7 @@
             var discountValue = price * discountp / 100;
             qty = loose + (qty * unit);
             var amount = (price - discount - discountValue - claim) * qty;
-            $("#amount_" + id).val(amount.toFixed(2));
+            $("#amount_" + id).val(amount.toFixed(0));
             $("#frightValue_" + id).val((fright * qty).toFixed(0));
             $("#laborValue_" + id).val((labor * qty).toFixed(0));
             $("#claimValue_" + id).val((claim * qty).toFixed(0));
@@ -455,10 +463,10 @@
                 });
             }
             $("input[id^='id_']").each(function() {
-                    var inputId = $(this).attr('id');
-                    var inputValue = $(this).val();
-                    updateChanges(inputValue);
-                });
+                var inputId = $(this).attr('id');
+                var inputValue = $(this).val();
+                updateChanges(inputValue);
+            });
         }
     </script>
 @endsection
