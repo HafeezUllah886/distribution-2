@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('targets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customerID')->constrained('accounts', 'id');
+            $table->foreignId('branchID')->constrained('branches', 'id');
+            $table->foreignId('orderbookerID')->constrained('users', 'id');
             $table->date('startDate');
             $table->date('endDate');
             $table->text('notes')->nullable();

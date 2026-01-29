@@ -39,10 +39,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<CustomerAdvancePayment>|CustomerAdvancePayment whereBranchid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<CustomerAdvancePayment>|CustomerAdvancePayment whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<CustomerAdvancePayment>|CustomerAdvancePayment whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<CustomerAdvancePayment>|CustomerAdvancePayment currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<CustomerAdvancePayment>|CustomerAdvancePayment newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<CustomerAdvancePayment>|CustomerAdvancePayment newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<CustomerAdvancePayment>|CustomerAdvancePayment query()
+     * @method static \Illuminate\Database\Eloquent\Builder<CustomerAdvancePayment>|CustomerAdvancePayment currentBranch() {@see App\Models\CustomerAdvancePayment::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -945,14 +945,14 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereRememberToken($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<User>|User orderbookers()
-     * @method static \Illuminate\Database\Eloquent\Builder<User>|User accountants()
-     * @method static \Illuminate\Database\Eloquent\Builder<User>|User operators()
-     * @method static \Illuminate\Database\Eloquent\Builder<User>|User currentBranch()
-     * @method static \Illuminate\Database\Eloquent\Builder<User>|User active()
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User query()
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User orderbookers() {@see App\Models\User::scopeOrderbookers()}
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User accountants() {@see App\Models\User::scopeAccountants()}
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User operators() {@see App\Models\User::scopeOperators()}
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User currentBranch() {@see App\Models\User::scopeCurrentBranch()}
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User active() {@see App\Models\User::scopeActive()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -1265,20 +1265,20 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts whereStatus($value)
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts business()
-     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts customer()
-     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts vendor()
-     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts labor()
-     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts supplyMen()
-     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts unloader()
-     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts freight()
-     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts personal()
-     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts currentBranch()
-     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts other()
-     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts active()
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts query()
+     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts business() {@see App\Models\accounts::scopeBusiness()}
+     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts customer() {@see App\Models\accounts::scopeCustomer()}
+     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts vendor() {@see App\Models\accounts::scopeVendor()}
+     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts labor() {@see App\Models\accounts::scopeLabor()}
+     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts supplyMen() {@see App\Models\accounts::scopeSupplyMen()}
+     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts unloader() {@see App\Models\accounts::scopeUnloader()}
+     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts freight() {@see App\Models\accounts::scopeFreight()}
+     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts personal() {@see App\Models\accounts::scopePersonal()}
+     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts currentBranch() {@see App\Models\accounts::scopeCurrentBranch()}
+     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts other() {@see App\Models\accounts::scopeOther()}
+     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts active() {@see App\Models\accounts::scopeActive()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -1575,10 +1575,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<accountsAdjustment>|accountsAdjustment whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<accountsAdjustment>|accountsAdjustment whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<accountsAdjustment>|accountsAdjustment whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<accountsAdjustment>|accountsAdjustment currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<accountsAdjustment>|accountsAdjustment newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<accountsAdjustment>|accountsAdjustment newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<accountsAdjustment>|accountsAdjustment query()
+     * @method static \Illuminate\Database\Eloquent\Builder<accountsAdjustment>|accountsAdjustment currentBranch() {@see App\Models\accountsAdjustment::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -1865,10 +1865,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<area>|area whereName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<area>|area whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<area>|area whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<area>|area currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<area>|area newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<area>|area newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<area>|area query()
+     * @method static \Illuminate\Database\Eloquent\Builder<area>|area currentBranch() {@see App\Models\area::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -2725,10 +2725,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<brands>|brands whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<brands>|brands whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<brands>|brands whereBranchid($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<brands>|brands currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<brands>|brands newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<brands>|brands newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<brands>|brands query()
+     * @method static \Illuminate\Database\Eloquent\Builder<brands>|brands currentBranch() {@see App\Models\brands::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -3036,10 +3036,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<bulk_payments>|bulk_payments whereBranchid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<bulk_payments>|bulk_payments whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<bulk_payments>|bulk_payments whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<bulk_payments>|bulk_payments currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<bulk_payments>|bulk_payments newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<bulk_payments>|bulk_payments newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<bulk_payments>|bulk_payments query()
+     * @method static \Illuminate\Database\Eloquent\Builder<bulk_payments>|bulk_payments currentBranch() {@see App\Models\bulk_payments::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -3325,10 +3325,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<categories>|categories whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<categories>|categories whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<categories>|categories whereBranchid($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<categories>|categories currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<categories>|categories newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<categories>|categories newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<categories>|categories query()
+     * @method static \Illuminate\Database\Eloquent\Builder<categories>|categories currentBranch() {@see App\Models\categories::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -3643,10 +3643,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<cheques>|cheques whereForwardeddate($value)
      * @method static \Illuminate\Database\Eloquent\Builder<cheques>|cheques whereForwardednotes($value)
      * @method static \Illuminate\Database\Eloquent\Builder<cheques>|cheques whereForwardedrefid($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<cheques>|cheques currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<cheques>|cheques newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<cheques>|cheques newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<cheques>|cheques query()
+     * @method static \Illuminate\Database\Eloquent\Builder<cheques>|cheques currentBranch() {@see App\Models\cheques::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -5106,11 +5106,11 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<discountManagement>|discountManagement whereStatus($value)
      * @method static \Illuminate\Database\Eloquent\Builder<discountManagement>|discountManagement whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<discountManagement>|discountManagement whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<discountManagement>|discountManagement currentBranch()
-     * @method static \Illuminate\Database\Eloquent\Builder<discountManagement>|discountManagement active()
      * @method static \Illuminate\Database\Eloquent\Builder<discountManagement>|discountManagement newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<discountManagement>|discountManagement newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<discountManagement>|discountManagement query()
+     * @method static \Illuminate\Database\Eloquent\Builder<discountManagement>|discountManagement currentBranch() {@see App\Models\discountManagement::scopeCurrentBranch()}
+     * @method static \Illuminate\Database\Eloquent\Builder<discountManagement>|discountManagement active() {@see App\Models\discountManagement::scopeActive()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -5412,11 +5412,11 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<employee>|employee whereStatus($value)
      * @method static \Illuminate\Database\Eloquent\Builder<employee>|employee whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<employee>|employee whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<employee>|employee active()
-     * @method static \Illuminate\Database\Eloquent\Builder<employee>|employee currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<employee>|employee newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<employee>|employee newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<employee>|employee query()
+     * @method static \Illuminate\Database\Eloquent\Builder<employee>|employee active() {@see App\Models\employee::scopeActive()}
+     * @method static \Illuminate\Database\Eloquent\Builder<employee>|employee currentBranch() {@see App\Models\employee::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -6007,10 +6007,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<employee_ledger_adjustment>|employee_ledger_adjustment whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<employee_ledger_adjustment>|employee_ledger_adjustment whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<employee_ledger_adjustment>|employee_ledger_adjustment whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<employee_ledger_adjustment>|employee_ledger_adjustment currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<employee_ledger_adjustment>|employee_ledger_adjustment newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<employee_ledger_adjustment>|employee_ledger_adjustment newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<employee_ledger_adjustment>|employee_ledger_adjustment query()
+     * @method static \Illuminate\Database\Eloquent\Builder<employee_ledger_adjustment>|employee_ledger_adjustment currentBranch() {@see App\Models\employee_ledger_adjustment::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -6579,10 +6579,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<expense_categories>|expense_categories whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<expense_categories>|expense_categories whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<expense_categories>|expense_categories whereBranchid($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<expense_categories>|expense_categories currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<expense_categories>|expense_categories newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<expense_categories>|expense_categories newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<expense_categories>|expense_categories query()
+     * @method static \Illuminate\Database\Eloquent\Builder<expense_categories>|expense_categories currentBranch() {@see App\Models\expense_categories::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -6885,10 +6885,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<expenses>|expenses whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<expenses>|expenses whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<expenses>|expenses whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<expenses>|expenses currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<expenses>|expenses newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<expenses>|expenses newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<expenses>|expenses query()
+     * @method static \Illuminate\Database\Eloquent\Builder<expenses>|expenses currentBranch() {@see App\Models\expenses::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -7181,10 +7181,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<generate_salary>|generate_salary whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<generate_salary>|generate_salary whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<generate_salary>|generate_salary whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<generate_salary>|generate_salary currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<generate_salary>|generate_salary newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<generate_salary>|generate_salary newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<generate_salary>|generate_salary query()
+     * @method static \Illuminate\Database\Eloquent\Builder<generate_salary>|generate_salary currentBranch() {@see App\Models\generate_salary::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -7484,10 +7484,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<issue_advance>|issue_advance whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<issue_advance>|issue_advance whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<issue_advance>|issue_advance whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<issue_advance>|issue_advance currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<issue_advance>|issue_advance newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<issue_advance>|issue_advance newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<issue_advance>|issue_advance query()
+     * @method static \Illuminate\Database\Eloquent\Builder<issue_advance>|issue_advance currentBranch() {@see App\Models\issue_advance::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -8095,10 +8095,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<issue_salary>|issue_salary whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<issue_salary>|issue_salary whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<issue_salary>|issue_salary whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<issue_salary>|issue_salary currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<issue_salary>|issue_salary newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<issue_salary>|issue_salary newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<issue_salary>|issue_salary query()
+     * @method static \Illuminate\Database\Eloquent\Builder<issue_salary>|issue_salary currentBranch() {@see App\Models\issue_salary::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -8694,10 +8694,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<method_transactions>|method_transactions whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<method_transactions>|method_transactions whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<method_transactions>|method_transactions whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<method_transactions>|method_transactions currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<method_transactions>|method_transactions newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<method_transactions>|method_transactions newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<method_transactions>|method_transactions query()
+     * @method static \Illuminate\Database\Eloquent\Builder<method_transactions>|method_transactions currentBranch() {@see App\Models\method_transactions::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -9008,10 +9008,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<obsolete_stock>|obsolete_stock whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<obsolete_stock>|obsolete_stock whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<obsolete_stock>|obsolete_stock whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<obsolete_stock>|obsolete_stock currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<obsolete_stock>|obsolete_stock newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<obsolete_stock>|obsolete_stock newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<obsolete_stock>|obsolete_stock query()
+     * @method static \Illuminate\Database\Eloquent\Builder<obsolete_stock>|obsolete_stock currentBranch() {@see App\Models\obsolete_stock::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -9638,12 +9638,12 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<order_details>|order_details whereUnitid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<order_details>|order_details whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<order_details>|order_details whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<order_details>|order_details delivered()
-     * @method static \Illuminate\Database\Eloquent\Builder<order_details>|order_details remaining()
-     * @method static \Illuminate\Database\Eloquent\Builder<order_details>|order_details deliveredAmount()
      * @method static \Illuminate\Database\Eloquent\Builder<order_details>|order_details newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<order_details>|order_details newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<order_details>|order_details query()
+     * @method static \Illuminate\Database\Eloquent\Builder<order_details>|order_details delivered() {@see App\Models\order_details::scopeDelivered()}
+     * @method static \Illuminate\Database\Eloquent\Builder<order_details>|order_details remaining() {@see App\Models\order_details::scopeRemaining()}
+     * @method static \Illuminate\Database\Eloquent\Builder<order_details>|order_details deliveredAmount() {@see App\Models\order_details::scopeDeliveredAmount()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -10822,13 +10822,13 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders whereKey($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders currentBranch()
-     * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders pending()
-     * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders approved()
-     * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders completed()
      * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders query()
+     * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders currentBranch() {@see App\Models\orders::scopeCurrentBranch()}
+     * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders pending() {@see App\Models\orders::scopePending()}
+     * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders approved() {@see App\Models\orders::scopeApproved()}
+     * @method static \Illuminate\Database\Eloquent\Builder<orders>|orders completed() {@see App\Models\orders::scopeCompleted()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -11131,10 +11131,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<payments>|payments whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<payments>|payments whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<payments>|payments whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<payments>|payments currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<payments>|payments newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<payments>|payments newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<payments>|payments query()
+     * @method static \Illuminate\Database\Eloquent\Builder<payments>|payments currentBranch() {@see App\Models\payments::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -11441,10 +11441,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<paymentsReceiving>|paymentsReceiving whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<paymentsReceiving>|paymentsReceiving whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<paymentsReceiving>|paymentsReceiving whereKey($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<paymentsReceiving>|paymentsReceiving currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<paymentsReceiving>|paymentsReceiving newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<paymentsReceiving>|paymentsReceiving newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<paymentsReceiving>|paymentsReceiving query()
+     * @method static \Illuminate\Database\Eloquent\Builder<paymentsReceiving>|paymentsReceiving currentBranch() {@see App\Models\paymentsReceiving::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -12340,12 +12340,12 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<products>|products whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<products>|products whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<products>|products whereBranchid($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<products>|products active()
-     * @method static \Illuminate\Database\Eloquent\Builder<products>|products vendor()
-     * @method static \Illuminate\Database\Eloquent\Builder<products>|products currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<products>|products newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<products>|products newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<products>|products query()
+     * @method static \Illuminate\Database\Eloquent\Builder<products>|products active() {@see App\Models\products::scopeActive()}
+     * @method static \Illuminate\Database\Eloquent\Builder<products>|products vendor(mixed $id) {@see App\Models\products::scopeVendor()}
+     * @method static \Illuminate\Database\Eloquent\Builder<products>|products currentBranch() {@see App\Models\products::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -12953,18 +12953,18 @@ namespace App\Models {
      * @property string $date
      * @property float $price_amount
      * @property float $amount
-     * @property mixed $netprice
-     * @property mixed $claim
-     * @property mixed $labor
-     * @property mixed $fright
+     * @property float $netprice
+     * @property float $claim
+     * @property float $labor
+     * @property float $fright
      * @property float $bonus
      * @property float $pc
      * @property float $loose
      * @property float $qty
-     * @property mixed $discountvalue
-     * @property mixed $discountp
-     * @property mixed $discount
-     * @property mixed $price
+     * @property float $discountvalue
+     * @property float $discountp
+     * @property float $discount
+     * @property float $price
      * @property int $branchID
      * @property int $warehouseID
      * @property int $productID
@@ -13309,12 +13309,12 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_order>|purchase_order whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_order>|purchase_order whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_order>|purchase_order whereDriverName($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<purchase_order>|purchase_order pending()
-     * @method static \Illuminate\Database\Eloquent\Builder<purchase_order>|purchase_order approved()
-     * @method static \Illuminate\Database\Eloquent\Builder<purchase_order>|purchase_order completed()
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_order>|purchase_order newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_order>|purchase_order newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_order>|purchase_order query()
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase_order>|purchase_order pending() {@see App\Models\purchase_order::scopePending()}
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase_order>|purchase_order approved() {@see App\Models\purchase_order::scopeApproved()}
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase_order>|purchase_order completed() {@see App\Models\purchase_order::scopeCompleted()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -13935,11 +13935,11 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_order_details>|purchase_order_details whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_order_details>|purchase_order_details whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_order_details>|purchase_order_details whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<purchase_order_details>|purchase_order_details delivered()
-     * @method static \Illuminate\Database\Eloquent\Builder<purchase_order_details>|purchase_order_details remaining()
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_order_details>|purchase_order_details newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_order_details>|purchase_order_details newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<purchase_order_details>|purchase_order_details query()
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase_order_details>|purchase_order_details delivered() {@see App\Models\purchase_order_details::scopeDelivered()}
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase_order_details>|purchase_order_details remaining() {@see App\Models\purchase_order_details::scopeRemaining()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -14526,10 +14526,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<returns>|returns whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<returns>|returns whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<returns>|returns whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<returns>|returns currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<returns>|returns newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<returns>|returns newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<returns>|returns query()
+     * @method static \Illuminate\Database\Eloquent\Builder<returns>|returns currentBranch() {@see App\Models\returns::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -15794,15 +15794,15 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales paid()
-     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales due()
-     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales paidStatus()
-     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales dueStatus()
-     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales unpaidOrPartiallyPaid()
-     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales query()
+     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales paid() {@see App\Models\sales::scopePaid()}
+     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales due() {@see App\Models\sales::scopeDue()}
+     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales paidStatus() {@see App\Models\sales::scopePaidStatus()}
+     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales dueStatus() {@see App\Models\sales::scopeDueStatus()}
+     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales unpaidOrPartiallyPaid() {@see App\Models\sales::scopeUnpaidOrPartiallyPaid()}
+     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales currentBranch() {@see App\Models\sales::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -16099,10 +16099,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<staffAmountAdjustment>|staffAmountAdjustment whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<staffAmountAdjustment>|staffAmountAdjustment whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<staffAmountAdjustment>|staffAmountAdjustment whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<staffAmountAdjustment>|staffAmountAdjustment currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<staffAmountAdjustment>|staffAmountAdjustment newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<staffAmountAdjustment>|staffAmountAdjustment newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<staffAmountAdjustment>|staffAmountAdjustment query()
+     * @method static \Illuminate\Database\Eloquent\Builder<staffAmountAdjustment>|staffAmountAdjustment currentBranch() {@see App\Models\staffAmountAdjustment::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -17007,10 +17007,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<stockAdjustment>|stockAdjustment whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<stockAdjustment>|stockAdjustment whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<stockAdjustment>|stockAdjustment whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<stockAdjustment>|stockAdjustment currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<stockAdjustment>|stockAdjustment newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<stockAdjustment>|stockAdjustment newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<stockAdjustment>|stockAdjustment query()
+     * @method static \Illuminate\Database\Eloquent\Builder<stockAdjustment>|stockAdjustment currentBranch() {@see App\Models\stockAdjustment::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -17285,18 +17285,21 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
+     * @property float $unit_value
      * @property int $unitID
-     * @property float $qty
+     * @property float $pc
      * @property int $productID
      * @property int $targetID
      * @property int $id
      * @property-read \App\Models\products $product
+     * @property-read \App\Models\categories $category
      * @property-read \App\Models\units $unit
      * @method static \Illuminate\Database\Eloquent\Builder<targetDetails>|targetDetails whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targetDetails>|targetDetails whereTargetid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targetDetails>|targetDetails whereProductid($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<targetDetails>|targetDetails whereQty($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<targetDetails>|targetDetails wherePc($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targetDetails>|targetDetails whereUnitid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<targetDetails>|targetDetails whereUnitValue($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targetDetails>|targetDetails whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targetDetails>|targetDetails whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targetDetails>|targetDetails newModelQuery()
@@ -17579,13 +17582,16 @@ namespace App\Models {
      * @property string|null $notes
      * @property string $endDate
      * @property string $startDate
-     * @property int $customerID
+     * @property int $orderbookerID
+     * @property int $branchID
      * @property int $id
-     * @property-read \App\Models\accounts $customer
+     * @property-read \App\Models\User $orderbooker
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\targetDetails> $details
      * @property-read int|null $details_count
+     * @property-read \App\Models\branches $branch
      * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereCustomerid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereBranchid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereOrderbookerid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereStartdate($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereEnddate($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereNotes($value)
@@ -17594,6 +17600,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets query()
+     * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets currentBranch() {@see App\Models\targets::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -17879,10 +17886,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<town>|town whereBranchid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<town>|town whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<town>|town whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<town>|town currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<town>|town newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<town>|town newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<town>|town query()
+     * @method static \Illuminate\Database\Eloquent\Builder<town>|town currentBranch() {@see App\Models\town::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -18160,8 +18167,8 @@ namespace App\Models {
      * @property int|null $orderbookerID
      * @property int $refID
      * @property string $notes
-     * @property float $db
-     * @property float $cr
+     * @property mixed $db
+     * @property mixed $cr
      * @property string $date
      * @property int $accountID
      * @property int $id
@@ -18789,10 +18796,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<transfer>|transfer whereRefid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<transfer>|transfer whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<transfer>|transfer whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<transfer>|transfer currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<transfer>|transfer newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<transfer>|transfer newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<transfer>|transfer query()
+     * @method static \Illuminate\Database\Eloquent\Builder<transfer>|transfer currentBranch() {@see App\Models\transfer::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -19078,10 +19085,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<units>|units whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<units>|units whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<units>|units whereBranchid($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<units>|units currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<units>|units newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<units>|units newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<units>|units query()
+     * @method static \Illuminate\Database\Eloquent\Builder<units>|units currentBranch() {@see App\Models\units::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
@@ -19358,8 +19365,8 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property int $refID
      * @property string $notes
-     * @property float $db
-     * @property float $cr
+     * @property mixed $db
+     * @property mixed $cr
      * @property string $date
      * @property int $userID
      * @property int $id
@@ -19663,10 +19670,10 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<warehouses>|warehouses whereContact($value)
      * @method static \Illuminate\Database\Eloquent\Builder<warehouses>|warehouses whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<warehouses>|warehouses whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<warehouses>|warehouses currentBranch()
      * @method static \Illuminate\Database\Eloquent\Builder<warehouses>|warehouses newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<warehouses>|warehouses newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<warehouses>|warehouses query()
+     * @method static \Illuminate\Database\Eloquent\Builder<warehouses>|warehouses currentBranch() {@see App\Models\warehouses::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)

@@ -15,6 +15,11 @@ class targetDetails extends Model
         return $this->belongsTo(products::class, 'productID');
     }
 
+    public function category()
+    {
+        return $this->belongsTo(categories::class, 'categoryID');
+    }
+
     public function unit()
     {
         return $this->belongsTo(units::class, 'unitID');

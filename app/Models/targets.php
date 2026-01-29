@@ -8,15 +8,30 @@ use Illuminate\Database\Eloquent\Model;
 class targets extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
-   
-    public function customer()
+
+    public function orderbooker()
     {
-        return $this->belongsTo(accounts::class, 'customerID');
+        return $this->belongsTo(User::class, 'orderbookerID');
     }
 
     public function details()
     {
         return $this->hasMany(targetDetails::class, 'targetID');
+    }
+
+    public function scopeCurrentBranch($query)
+    {
+        if (auth()->user()->role != 'Admin') {
+            return $query->where('branchID', auth()->user()->branchID);
+        }
+
+        return $query;
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(branches::class, 'branchID');
     }
 }

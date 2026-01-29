@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('targetID')->constrained('targets', 'id');
             $table->foreignId('productID')->constrained('products', 'id');
-            $table->float('qty');
+            $table->float('pc');
             $table->foreignId('unitID')->constrained('units', 'id');
+            $table->float('unit_value');
             $table->timestamps();
         });
     }
