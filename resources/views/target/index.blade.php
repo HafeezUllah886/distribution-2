@@ -82,13 +82,13 @@
                                                         View
                                                     </button>
                                                 </li>
-                                                <li>
+                                                {{-- <li>
                                                     <a class="dropdown-item"
                                                         onclick="newWindow('{{ route('targets.edit', $item->id) }}')">
                                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                         Edit
                                                     </a>
-                                                </li>
+                                                </li> --}}
                                                 <li>
                                                     <a class="dropdown-item text-danger"
                                                         href="{{ route('target.delete', $item->id) }}">

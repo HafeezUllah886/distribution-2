@@ -136,23 +136,17 @@ class TargetsController extends Controller
         foreach ($target->details as $detail) {
             $query = DB::table('sale_details')
                 ->where('orderbookerID', $target->orderbookerID)
+                ->where('productID', $detail->productID)
                 ->whereBetween('date', [$target->startDate, $target->endDate]);
 
-            if ($detail->type == 'Product') {
-                $query->where('productID', $detail->productID);
-            } else {
-                $query->join('products', 'sale_details.productID', '=', 'products.id')
-                    ->where('products.catID', $detail->categoryID);
-            }
-
-            $qtySold = $query->sum('sale_details.qty');
-
-            $targetQty = $detail->qty;
+            $qtySold = $query->sum('pc');
+            $detail->sold = $qtySold / $detail->unit_value;
+            $targetQty = $detail->pc / $detail->unit_value;
+            $detail->targetQty = $targetQty;
 
             if ($qtySold > $targetQty) {
                 $qtySold = $targetQty;
             }
-            $detail->sold = $qtySold;
             $detail->per = $targetQty > 0 ? ($qtySold / $targetQty * 100) : 0;
 
             $totalTarget += $targetQty;
@@ -206,6 +200,7 @@ class TargetsController extends Controller
     public function destroy($id)
     {
         $target = targets::find($id);
+        $target->detail()->delete();
         $target->delete();
         session()->forget('confirmed_password');
 
