@@ -200,7 +200,9 @@ class TargetsController extends Controller
     public function destroy($id)
     {
         $target = targets::find($id);
-        $target->detail()->delete();
+        foreach ($target->details as $detail) {
+            $detail->delete();
+        }
         $target->delete();
         session()->forget('confirmed_password');
 

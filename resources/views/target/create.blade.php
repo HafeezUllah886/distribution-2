@@ -10,7 +10,7 @@
                                 <div class="col-6">
                                     <h3> Create Target </h3>
                                 </div>
-                                <div class="col-6 d-flex flex-row-reverse"><button onclick="window.close()"
+                                <div class="col-6 d-flex flex-row-reverse"><a href="{{ route('targets.index') }}"
                                         class="btn btn-danger">Close</button></div>
                             </div>
                         </div>
