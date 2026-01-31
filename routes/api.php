@@ -5,13 +5,12 @@ use App\Http\Controllers\api\CustomerAdvancePaymentAPIController;
 use App\Http\Controllers\api\customerPaymentsReceivingContoller;
 use App\Http\Controllers\api\DailyCustomerWisePaymentsReport;
 use App\Http\Controllers\api\DailyProductsOrderReport;
+use App\Http\Controllers\api\InvoicePaymentsHistory;
 use App\Http\Controllers\api\locationTrackingAPIController;
 use App\Http\Controllers\api\nonFinanancialInfoController;
-use App\Http\Controllers\api\OrdersController;
-use App\Http\Controllers\api\SaleApiController;
 use App\Http\Controllers\api\OrderbookerBalanceController;
 use App\Http\Controllers\api\OrderBookerInvoices;
-use App\Http\Controllers\api\InvoicePaymentsHistory;
+use App\Http\Controllers\api\OrdersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -42,11 +41,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/lastpayment', [customerPaymentsReceivingContoller::class, 'lastPayment']);
 
     Route::post('/storelocation', [locationTrackingAPIController::class, 'storeLocation']);
+    Route::post('/storelocationcached', [locationTrackingAPIController::class, 'storeLocationCached']);
 
     Route::get('/balance', [OrderbookerBalanceController::class, 'balance']);
     Route::get('/account_statement', [OrderbookerBalanceController::class, 'account_statement']);
     Route::get('/method_wise_balance', [OrderbookerBalanceController::class, 'method_wise_balance']);
-    
+
     Route::get('/product_stock', [OrdersController::class, 'stock']);
     Route::get('/pending_qty', [OrdersController::class, 'pendingQty']);
 

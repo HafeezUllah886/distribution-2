@@ -2,31 +2,29 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\discountManagement;
+use App\Models\order_delivery;
 use App\Models\order_details;
 use App\Models\orders;
+use App\Models\product_dc;
+use App\Models\product_units;
 use App\Models\products;
 use App\Models\units;
-use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use App\Models\discountManagement;
-use App\Models\order_delivery;
-use App\Models\product_dc;
-use App\Models\product_units;
 use Illuminate\Support\Facades\Validator;
 
 class OrdersController extends Controller
 {
-
     public function index(Request $request)
     {
         $from = $request->from ?? firstDayOfMonth();
         $to = $request->to ?? lastDayOfMonth();
 
-        $data = orders::with('customer.area', 'details.product', 'details.unit')->where('orderbookerID', $request->user()->id)->whereBetween("date", [$from, $to])->orderBy('id', 'desc')->get();
+        $data = orders::with('customer.area', 'details.product', 'details.unit')->where('orderbookerID', $request->user()->id)->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
 
         $orders = [];
 
@@ -40,9 +38,9 @@ class OrdersController extends Controller
                     'product_id' => $product->productID,
                     'product_name' => $product->product->name,
                     'product_name_urdu' => $product->product->nameurdu,
-                    'unit_id' => $product->unitID, 
+                    'unit_id' => $product->unitID,
                     'unit_name' => $product->unit->unit_name,
-                    'unit_value' => $product->unit->value, 
+                    'unit_value' => $product->unit->value,
                     'pack_qty' => $product->qty,
                     'loose_qty' => $product->loose,
                     'bonus_qty' => $product->bonus,
@@ -58,17 +56,16 @@ class OrdersController extends Controller
                     'amount' => $product->amount,
                 ];
 
-                $orderProducts;
             }
 
-            $delivered_items =  $order->details()->with(['product', 'unit'])->get()->map(function($detail) {
+            $delivered_items = $order->details()->with(['product', 'unit'])->get()->map(function ($detail) {
                 return [
                     'product_name' => $detail->product->name ?? null,
                     'unit_name' => $detail->unit->unit_name ?? null,
                     'pack_size' => $detail->unit->value ?? null,
                     'total_ordered' => packInfoWithOutName($detail->unit->value, $detail->pc),
                     'delivered' => packInfoWithOutName($detail->unit->value, $detail->delivered()),
-                    'remaining' => packInfoWithOutName($detail->unit->value, $detail->remaining())
+                    'remaining' => packInfoWithOutName($detail->unit->value, $detail->remaining()),
                 ];
             });
 
@@ -81,15 +78,15 @@ class OrdersController extends Controller
                 'branch' => $order->branch->name,
                 'customer' => ['id' => $order->customerID, 'title' => $order->customer->title, 'area' => $order->customer->area->name, 'contact' => $order->customer->contact, 'email' => $order->customer->email, 'credit_limit' => $order->customer->credit_limit],
                 'products' => $orderProducts,
-                'delivered_items' => $delivered_items
+                'delivered_items' => $delivered_items,
             ];
         }
-      
+
         return response()->json([
             'status' => 'success',
             'data' => [
                 'orders' => $orders,
-            ]
+            ],
         ], 200);
     }
 
@@ -101,6 +98,7 @@ class OrdersController extends Controller
         $products = products::all();
         $customers = accounts::Customer()->get();
         $units = units::all();
+
         return view('orders.create', compact('products', 'customers', 'units'));
     }
 
@@ -133,22 +131,21 @@ class OrdersController extends Controller
                 ], 422);
             }
 
-            if(count($request->id) == 0) {
+            if (count($request->id) == 0) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Please select at least one product'
+                    'message' => 'Please select at least one product',
                 ], 422);
             }
 
-            
-        $check = orders::where('key', $request->key)->count();
+            $check = orders::where('key', $request->key)->count();
 
-        if($check > 0) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Order already exists'
-            ], 201);
-        }
+            if ($check > 0) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Order already exists',
+                ], 201);
+            }
 
             DB::beginTransaction();
 
@@ -159,12 +156,12 @@ class OrdersController extends Controller
                 'orderbookerID' => $request->user()->id,
                 'date' => $request->date,
                 'notes' => $request->notes,
-                'key' => $request->key
+                'key' => $request->key,
             ]);
 
             $orderDetails = [];
             $net = 0;
-            foreach($request->id as $key => $id) {
+            foreach ($request->id as $key => $id) {
                 $unit = product_units::find($request->unit[$key]);
                 $pc = $request->pack_qty[$key] * $unit->value;
 
@@ -174,14 +171,12 @@ class OrdersController extends Controller
                 $price = $product->price;
                 $discount = $product->discount;
                 $discountp = $product->discountp;
-                 $discountmgmt = discountManagement::where('customerID', $request->customerID)->where('productID', $id)->active()->currentBranch()->first();
-                if($discountmgmt)
-                {
+                $discountmgmt = discountManagement::where('customerID', $request->customerID)->where('productID', $id)->active()->currentBranch()->first();
+                if ($discountmgmt) {
                     $status = updateDiscountStatus($discountmgmt->id, now());
 
-                    if($status == 'Active')
-                    {
-                        $discount +=  $discountmgmt->discount;
+                    if ($status == 'Active') {
+                        $discount += $discountmgmt->discount;
                         $discountp += $discountmgmt->discountp;
                     }
                 }
@@ -195,8 +190,6 @@ class OrdersController extends Controller
                 $amount = (($price - $discount - $discountpValue - $claim) + $fright) * $qty;
                 $net += $amount;
 
-                
-            
                 $orderDetail = order_details::create([
                     'orderID' => $order->id,
                     'productID' => $id,
@@ -216,7 +209,7 @@ class OrdersController extends Controller
                     'netprice' => $price - $discount - $discountpValue - $claim + $fright,
                     'amount' => $amount,
                     'date' => $request->date,
-                    'unitID' => $request->unit[$key]
+                    'unitID' => $request->unit[$key],
                 ]);
 
                 $orderDetails[] = [
@@ -238,18 +231,19 @@ class OrdersController extends Controller
                     'netprice' => ($price - $discount - $discountpValue - $claim + $fright) * $unit->value,
                     'amount' => $amount,
                     'date' => $request->date,
-                    'unit_id' => $request->unit[$key]
+                    'unit_id' => $request->unit[$key],
                 ];
             }
 
             $order->update([
                 'net' => round($net, 0),
             ]);
-            if($net > $customer->credit_limit) {
+            if ($net > $customer->credit_limit) {
                 DB::rollback();
+
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Customer credit limit exceeded Customer Name: '.$customer->title
+                    'message' => 'Customer credit limit exceeded Customer Name: '.$customer->title,
                 ], 422);
             }
 
@@ -261,14 +255,15 @@ class OrdersController extends Controller
                 'data' => [
                     'order' => $order,
                     'order_details' => $orderDetails,
-                ]
+                ],
             ], 201);
 
         } catch (\Exception $e) {
             DB::rollback();
+
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -301,10 +296,10 @@ class OrdersController extends Controller
                 ], 422);
             }
 
-            if(count($request->id) == 0) {
+            if (count($request->id) == 0) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Please select at least one product'
+                    'message' => 'Please select at least one product',
                 ], 422);
             }
 
@@ -323,7 +318,7 @@ class OrdersController extends Controller
 
             $orderDetails = [];
             $net = 0;
-            foreach($request->id as $key => $id) {
+            foreach ($request->id as $key => $id) {
                 $unit = product_units::find($request->unit[$key]);
                 $pc = $request->pack_qty[$key] * $unit->value;
 
@@ -333,19 +328,17 @@ class OrdersController extends Controller
                 $price = $product->price;
                 $discount = $product->discount;
                 $discountp = $product->discountp;
-               
+
                 $discountmgmt = discountManagement::where('customerID', $order->customerID)->where('productID', $id)->active()->currentBranch()->first();
-                if($discountmgmt)
-                {
+                if ($discountmgmt) {
                     $status = updateDiscountStatus($discountmgmt->id, now());
 
-                    if($status == 'Active')
-                    {
-                        $discount +=  $discountmgmt->discount;
+                    if ($status == 'Active') {
+                        $discount += $discountmgmt->discount;
                         $discountp += $discountmgmt->discountp;
                     }
                 }
-                 $discountpValue = $discountp * $price / 100;
+                $discountpValue = $discountp * $price / 100;
                 $fright = $product->sfright;
                 $claim = $product->sclaim;
                 $dc = product_dc::where('productID', $product->id)->where('areaID', $customer->areaID)->first();
@@ -353,7 +346,7 @@ class OrdersController extends Controller
 
                 $amount = (($price - $discount - $discountpValue - $claim) + $fright) * $qty;
                 $net += $amount;
-            
+
                 $orderDetail = order_details::create([
                     'orderID' => $order->id,
                     'productID' => $id,
@@ -373,7 +366,7 @@ class OrdersController extends Controller
                     'netprice' => $price - $discount - $discountpValue - $claim + $fright,
                     'amount' => $amount,
                     'date' => $request->date,
-                    'unitID' => $request->unit[$key]
+                    'unitID' => $request->unit[$key],
                 ]);
 
                 $orderDetails[] = $orderDetail;
@@ -382,12 +375,13 @@ class OrdersController extends Controller
             $order->update([
                 'net' => $net,
             ]);
-            if($net > $customer->credit_limit) {
-                $order->delete(); 
+            if ($net > $customer->credit_limit) {
+                $order->delete();
                 DB::rollback();
+
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Customer credit limit exceeded'
+                    'message' => 'Customer credit limit exceeded',
                 ], 422);
             }
 
@@ -399,14 +393,15 @@ class OrdersController extends Controller
                 'data' => [
                     'order' => $order,
                     'order_details' => $orderDetails,
-                ]
+                ],
             ], 201);
 
         } catch (\Exception $e) {
             DB::rollback();
+
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -416,23 +411,22 @@ class OrdersController extends Controller
      */
     public function destroy(Request $request)
     {
-        
-        try
-        {
+
+        try {
             $this->validateOrder($request->order_id, $request->user()->id);
             DB::beginTransaction();
             $order = orders::find($request->order_id);
             $order->details()->delete();
             $order->delete();
             DB::commit();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Order deleted successfully',
             ], 201);
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
@@ -444,28 +438,28 @@ class OrdersController extends Controller
     {
         $order = orders::findOrFail($id);
 
-        if (in_array($order->status, ["Finalized", "Approved"])) {
+        if (in_array($order->status, ['Finalized', 'Approved'])) {
             throw new Exception('Order Already Approved / Finalized');
         }
-    
+
         if ($order->orderbookerID != $orderbooker) {
             throw new Exception('This order does not belong to you');
         }
 
-        return true;  
+        return true;
     }
-
 
     public function stock(Request $request)
     {
         $user = $request->user();
         $product = products::find($request->productID);
+
         return response()->json([
             'status' => 'success',
             'message' => 'Stock retrieved successfully',
             'data' => [
                 'stock' => packInfo($product->units[0]->value, $product->units[0]->unit_name, getBranchProductStock($request->productID, $user->branchID)),
-            ]
+            ],
         ], 200);
     }
 
@@ -483,18 +477,18 @@ class OrdersController extends Controller
             ->where('productID', $product->id)
             ->sum('pc');
 
-            $deliveredQty = order_delivery::whereIn('orderID', $orders)
-                ->where('productID', $product->id)
-                ->sum('pc');
+        $deliveredQty = order_delivery::whereIn('orderID', $orders)
+            ->where('productID', $product->id)
+            ->sum('pc');
 
-                $pendingQty = $orderQty - $deliveredQty;
+        $pendingQty = $orderQty - $deliveredQty;
 
         return response()->json([
             'status' => 'success',
             'message' => 'Pending quantity retrieved successfully',
             'data' => [
                 'pending_qty' => packInfo($product->units[0]->value, $product->units[0]->unit_name, $pendingQty),
-            ]
+            ],
         ], 200);
     }
 
@@ -515,7 +509,7 @@ class OrdersController extends Controller
             'net' => $order->net,
             'status' => $order->status,
             'notes' => $order->notes,
-            'products' => $order->details()->with(['product', 'unit'])->get()->map(function($detail) {
+            'products' => $order->details()->with(['product', 'unit'])->get()->map(function ($detail) {
                 return [
                     'product_name' => $detail->product->name ?? null,
                     'unit_name' => $detail->unit->unit_name ?? null,
@@ -531,17 +525,17 @@ class OrdersController extends Controller
                     'labor' => $detail->labor,
                     'claim' => $detail->claim,
                     'net_price' => $detail->netprice,
-                    'amount' => $detail->amount
+                    'amount' => $detail->amount,
                 ];
             }),
-            'delivered_items' => $order->details()->with(['product', 'unit'])->get()->map(function($detail) {
+            'delivered_items' => $order->details()->with(['product', 'unit'])->get()->map(function ($detail) {
                 return [
                     'product_name' => $detail->product->name ?? null,
                     'unit_name' => $detail->unit->unit_name ?? null,
                     'pack_size' => $detail->unit->value ?? null,
                     'total_ordered' => packInfoWithOutName($detail->unit->value, $detail->pc),
                     'delivered' => packInfoWithOutName($detail->unit->value, $detail->delivered()),
-                    'remaining' => packInfoWithOutName($detail->unit->value, $detail->remaining())
+                    'remaining' => packInfoWithOutName($detail->unit->value, $detail->remaining()),
                 ];
             }),
         ];
@@ -549,9 +543,7 @@ class OrdersController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Order retrieved successfully',
-            'data' => $data
+            'data' => $data,
         ], 200);
     }
-
-    
 }
