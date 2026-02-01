@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\orderbooker_products;
 use App\Models\product_units;
 use App\Models\products;
-use App\Models\targetDetails;
 use App\Models\targets;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -22,29 +21,21 @@ class TargetsController extends Controller
         $end = $request->end ?? lastDayOfCurrentYear();
         $targets = targets::currentBranch()->whereBetween('endDate', [$start, $end])->orderBy('endDate', 'desc')->get();
         foreach ($targets as $target) {
-            $totalTarget = 0;
-            $totalSold = 0;
+            $query = DB::table('sale_details')
+                ->where('orderbookerID', $target->orderbookerID)
+                ->where('productID', $target->productID)
+                ->whereBetween('date', [$target->startDate, $target->endDate]);
 
-            foreach ($target->details as $detail) {
-                $query = DB::table('sale_details')
-                    ->where('orderbookerID', $target->orderbookerID)
-                    ->where('productID', $detail->productID)
-                    ->whereBetween('date', [$target->startDate, $target->endDate]);
+            $qtySold = $query->sum('pc');
+            $target->sold = $qtySold / $target->unit_value;
+            $targetQty = $target->pc / $target->unit_value;
 
-                $qtySold = $query->sum('pc');
-                $detail->sold = $qtySold / $detail->unit_value;
-                $targetQty = $detail->pc / $detail->unit_value;
+            // Cap the pieces for percentage calculation status, but use $target->pc (total pieces) for comparison
+            $qtySoldForPer = $qtySold > $target->pc ? $target->pc : $qtySold;
 
-                if ($qtySold > $targetQty) {
-                    $qtySold = $targetQty;
-                }
-                $detail->per = $targetQty > 0 ? ($qtySold / $targetQty * 100) : 0;
-
-                $totalTarget += $targetQty;
-                $totalSold += $qtySold;
-            }
-            $totalPer = $totalTarget > 0 ? ($totalSold / $totalTarget * 100) : 0;
-            $target->totalPer = $totalPer;
+            $target->per = $target->pc > 0 ? ($qtySoldForPer / $target->pc * 100) : 0;
+            $target->totalPer = $target->per;
+            $target->actual_per = $target->pc > 0 ? ($qtySold / $target->pc * 100) : 0;
 
             if ($target->endDate >= now()->toDateString()) {
 
@@ -55,10 +46,10 @@ class TargetsController extends Controller
                 $target->campain_color = 'warning';
             }
 
-            if ($totalPer >= 100) {
+            if ($target->per >= 100) {
                 $target->goal = 'Target Achieved';
                 $target->goal_color = 'success';
-            } elseif ($target->endDate >= now()->toDateString() && $totalPer < 100) {
+            } elseif ($target->endDate >= now()->toDateString() && $target->per < 100) {
                 $target->goal = 'In Progress';
                 $target->goal_color = 'info';
             } else {
@@ -91,30 +82,21 @@ class TargetsController extends Controller
     {
         try {
             DB::beginTransaction();
+            $unit = product_units::find($request->unitID);
             $target = targets::create(
                 [
                     'branchID' => auth()->user()->branchID,
                     'orderbookerID' => $request->orderbookerID,
+                    'productID' => $request->productID,
+                    'pc' => $request->target * $unit->value,
+                    'unitID' => $request->unitID,
+                    'unit_value' => $unit->value,
                     'startDate' => $request->startDate,
                     'endDate' => $request->endDate,
                     'notes' => $request->notes,
                 ]
             );
 
-            $ids = $request->id;
-
-            foreach ($ids as $key => $id) {
-                $unit = product_units::find($request->unit[$key]);
-                targetDetails::create(
-                    [
-                        'targetID' => $target->id,
-                        'productID' => $id,
-                        'pc' => $request->qty[$key],
-                        'unitID' => $unit->id,
-                        'unit_value' => $unit->value,
-                    ]
-                );
-            }
             DB::commit();
 
             return back()->with('success', 'Target Saved');
@@ -128,51 +110,46 @@ class TargetsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(targets $target)
+    public function show($id)
     {
-        $totalTarget = 0;
-        $totalSold = 0;
+        $target = targets::with('orderbooker', 'product.vendor', 'unit')->find($id);
 
-        foreach ($target->details as $detail) {
-            $query = DB::table('sale_details')
-                ->where('orderbookerID', $target->orderbookerID)
-                ->where('productID', $detail->productID)
-                ->whereBetween('date', [$target->startDate, $target->endDate]);
+        $query = DB::table('sale_details')
+            ->where('orderbookerID', $target->orderbookerID)
+            ->where('productID', $target->productID)
+            ->whereBetween('date', [$target->startDate, $target->endDate]);
 
-            $qtySold = $query->sum('pc');
-            $detail->sold = $qtySold / $detail->unit_value;
-            $targetQty = $detail->pc / $detail->unit_value;
-            $detail->targetQty = $targetQty;
+        $qtySold = $query->sum('pc');
+        $target->sold = $qtySold / $target->unit_value;
+        $targetQty = $target->pc / $target->unit_value;
+        $target->remaining = $targetQty - $target->sold;
 
-            if ($qtySold > $targetQty) {
-                $qtySold = $targetQty;
-            }
-            $detail->per = $targetQty > 0 ? ($qtySold / $targetQty * 100) : 0;
-
-            $totalTarget += $targetQty;
-            $totalSold += $qtySold;
-        }
-        $totalPer = $totalTarget > 0 ? ($totalSold / $totalTarget * 100) : 0;
-        $target->totalPer = $totalPer;
+        $qtySoldForPer = $qtySold > $target->pc ? $target->pc : $qtySold;
+        $target->per = $target->pc > 0 ? ($qtySoldForPer / $target->pc * 100) : 0;
+        $target->totalPer = $target->per;
 
         if ($target->endDate >= now()->toDateString()) {
-
             $target->campain = 'Open';
             $target->campain_color = 'success';
+            $target->display_status = 'ACTIVE';
+            $target->display_status_color = 'success';
         } else {
             $target->campain = 'Closed';
             $target->campain_color = 'warning';
+            $target->display_status = 'CLOSED';
+            $target->display_status_color = 'danger';
         }
 
-        if ($totalPer >= 100) {
+        if ($target->per >= 100) {
             $target->goal = 'Target Achieved';
             $target->goal_color = 'success';
-        } elseif ($target->endDate >= now()->toDateString() && $totalPer < 100) {
-            $target->goal = 'In Progress';
-            $target->goal_color = 'info';
+            $target->achievement = 'ACHIEVED';
+            $target->achievement_color = 'success';
         } else {
             $target->goal = 'Not Achieved';
             $target->goal_color = 'danger';
+            $target->achievement = 'PENDING';
+            $target->achievement_color = 'danger';
         }
 
         return view('target.view', compact('target'));
@@ -200,9 +177,7 @@ class TargetsController extends Controller
     public function destroy($id)
     {
         $target = targets::find($id);
-        foreach ($target->details as $detail) {
-            $detail->delete();
-        }
+
         $target->delete();
         session()->forget('confirmed_password');
 

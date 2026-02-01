@@ -47,6 +47,9 @@
                             <th>#</th>
                             <th>Branch</th>
                             <th>Order Booker</th>
+                            <th>Product</th>
+                            <th>Unit</th>
+                            <th>Target</th>
                             <th>Achieved</th>
                             <th>Dates</th>
                             <th>Status</th>
@@ -58,7 +61,10 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $item->branch->name }}</td>
                                     <td>{{ $item->orderbooker->name }}</td>
-                                    <td>{{ $item->totalPer }}%</td>
+                                    <td>{{ $item->product->name }}</td>
+                                    <td>{{ $item->unit->unit_name }} - {{ $item->unit_value }}</td>
+                                    <td>{{ $item->pc / $item->unit_value }}</td>
+                                    <td>{{ $item->sold }} - {{ $item->totalPer }}%</td>
                                     <td>{{ date('d M Y', strtotime($item->startDate)) }}
                                         <br>{{ date('d M Y', strtotime($item->endDate)) }}
                                     </td>
@@ -116,19 +122,44 @@
                     <h5 class="modal-title" id="myModalLabel">Create Target</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
-                <form action="{{ route('targets.create') }}" method="get">
+                <form action="{{ route('targets.store') }}" method="post">
                     @csrf
                     <div class="modal-body">
-
                         <div class="form-group mt-2">
                             <label for="orderbookerID">Order Booker</label>
-                            <select name="orderbookerID" id="orderbookerID" onchange="getCustomers(this.value)"
-                                class="form-control">
+                            <select name="orderbookerID" id="orderbookerID" onchange="getProducts(this.value)"
+                                class="selectize">
                                 <option value="">Select Order Booker</option>
                                 @foreach ($orderbookers as $orderbooker)
                                     <option value="{{ $orderbooker->id }}">{{ $orderbooker->name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="productID">Product</label>
+                            <select name="productID" id="productID" onchange="getUnits(this.value)" class="productID">
+                                <option value="">Select Product</option>
+
+                            </select>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="unitID">Unit</label>
+                            <select name="unitID" id="unitID" class="unitID selectize">
+                                <option value="">Select Unit</option>
+
+                            </select>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="target">Target Qty</label>
+                            <input type="number" name="target" id="target" class="form-control">
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="startDate">Start Date</label>
+                            <input type="date" name="startDate" id="startDate" class="form-control">
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="endDate">End Date</label>
+                            <input type="date" name="endDate" id="endDate" class="form-control">
                         </div>
 
                     </div>
@@ -162,6 +193,51 @@
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
-        $(".selectize").selectize();
+        var orderbookerSelect = $("#orderbookerID").selectize()[0].selectize;
+        var productSelect = $("#productID").selectize()[0].selectize;
+        var unitSelect = $(".unitID").selectize()[0].selectize;
+
+        function getProducts(orderbookerID) {
+            $.ajax({
+                url: "{{ route('getOrderbookerProducts', ':orderbookerID') }}".replace(':orderbookerID',
+                    orderbookerID),
+                type: "GET",
+                success: function(response) {
+                    productSelect.clear();
+                    productSelect.clearOptions();
+
+                    response.forEach(function(item) {
+                        productSelect.addOption({
+                            value: item.value,
+                            text: item.text
+                        });
+                    });
+
+                    productSelect.refreshOptions(false);
+                }
+            });
+        }
+
+        function getUnits(productID) {
+            $.ajax({
+                url: "{{ route('getUnits', ':productID') }}".replace(':productID',
+                    productID),
+                type: "GET",
+                success: function(response) {
+                    unitSelect.clear();
+                    unitSelect.clearOptions();
+                    console.log(response);
+
+                    response.forEach(function(item) {
+                        unitSelect.addOption({
+                            value: item.value,
+                            text: item.text + " - " + item.unit_value
+                        });
+                    });
+
+                    unitSelect.refreshOptions(false);
+                }
+            });
+        }
     </script>
 @endsection

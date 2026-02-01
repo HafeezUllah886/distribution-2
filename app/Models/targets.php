@@ -16,11 +16,6 @@ class targets extends Model
         return $this->belongsTo(User::class, 'orderbookerID');
     }
 
-    public function details()
-    {
-        return $this->hasMany(targetDetails::class, 'targetID');
-    }
-
     public function scopeCurrentBranch($query)
     {
         if (auth()->user()->role != 'Admin') {
@@ -33,5 +28,15 @@ class targets extends Model
     public function branch()
     {
         return $this->belongsTo(branches::class, 'branchID');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(products::class, 'productID');
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(product_units::class, 'unitID');
     }
 }
