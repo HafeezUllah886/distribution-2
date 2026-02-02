@@ -51,7 +51,8 @@ Route::middleware('auth')->group(function () {
         foreach ($products as $product) {
             $value = $product->product->id;
             $text = $product->product->name;
-            $products_array[] = compact('value', 'text');
+            $vendor = $product->product->vendor->title;
+            $products_array[] = compact('value', 'text', 'vendor');
         }
 
         return response()->json($products_array);

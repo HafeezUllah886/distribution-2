@@ -32,8 +32,8 @@
                                             <th rowspan="2" scope="col">ORDERBOOKER</th>
                                             <th rowspan="2" scope="col">PRODUCT</th>
                                             <th rowspan="2" scope="col">VENDOR</th>
-                                            <th rowspan="2" scope="col">PACK SIZE</th>
                                             <th rowspan="2" scope="col">UNIT</th>
+                                            <th rowspan="2" scope="col">PACK SIZE</th>
                                             <th rowspan="2" scope="col">PRICE</th>
                                             <th colspan="3" scope="col">TARGET</th>
                                             <th colspan="2" scope="col">DURATION</th>

@@ -48,6 +48,7 @@
                             <th>Branch</th>
                             <th>Order Booker</th>
                             <th>Product</th>
+                            <th>Vendor</th>
                             <th>Unit</th>
                             <th>Target</th>
                             <th>Achieved</th>
@@ -62,6 +63,7 @@
                                     <td>{{ $item->branch->name }}</td>
                                     <td>{{ $item->orderbooker->name }}</td>
                                     <td>{{ $item->product->name }}</td>
+                                    <td>{{ $item->product->vendor->title }}</td>
                                     <td>{{ $item->unit->unit_name }} - {{ $item->unit_value }}</td>
                                     <td>{{ $item->pc / $item->unit_value }}</td>
                                     <td>{{ $item->sold }} - {{ $item->totalPer }}%</td>
@@ -209,7 +211,7 @@
                     response.forEach(function(item) {
                         productSelect.addOption({
                             value: item.value,
-                            text: item.text
+                            text: item.text + ' (' + item.vendor + ')'
                         });
                     });
 
