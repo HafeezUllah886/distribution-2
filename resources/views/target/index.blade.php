@@ -4,32 +4,75 @@
         <div class="col-12">
             <form>
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">From</span>
-                            <input type="date" class="form-control" placeholder="Username" name="start"
-                                value="{{ $start }}" aria-label="Username" aria-describedby="basic-addon1">
+                            <span class="input-group-text">From</span>
+                            <input type="date" class="form-control" name="start" value="{{ $start }}">
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">To</span>
-                            <input type="date" class="form-control" placeholder="Username" name="end"
-                                value="{{ $end }}" aria-label="Username" aria-describedby="basic-addon1">
+                            <span class="input-group-text">To</span>
+                            <input type="date" class="form-control" name="end" value="{{ $end }}">
                         </div>
                     </div>
-                    {{--   <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">Orderbooker</span>
-                            <select name="orderbookerID" id="orderbookerID" class="form-control">
+                            <span class="input-group-text">Orderbooker</span>
+                            <select name="orderbookerID" class="form-control selectize">
                                 <option value="">All</option>
                                 @foreach ($orderbookers as $orderbooker)
-                                    <option value="{{ $orderbooker->id }}" @selected($orderbooker->id == $bookerID)>
+                                    <option value="{{ $orderbooker->id }}" @selected($orderbooker->id == request('orderbookerID'))>
                                         {{ $orderbooker->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-                    </div> --}}
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Product</span>
+                            <select name="productID" class="form-control selectize">
+                                <option value="">All</option>
+                                @foreach ($products as $product)
+                                    <option value="{{ $product->id }}" @selected($product->id == request('productID'))>
+                                        {{ $product->name }} ({{ $product->vendor->title }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Vendor</span>
+                            <select name="vendorID" class="form-control selectize">
+                                <option value="">All</option>
+                                @foreach ($vendors as $vendor)
+                                    <option value="{{ $vendor->id }}" @selected($vendor->id == request('vendorID'))>
+                                        {{ $vendor->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Achievement</span>
+                            <select name="achievement" class="form-control">
+                                <option value="">All</option>
+                                <option value="Achieved" @selected(request('achievement') == 'Achieved')>Achieved</option>
+                                <option value="In Progress" @selected(request('achievement') == 'In Progress')>In Progress</option>
+                                <option value="Not Achieved" @selected(request('achievement') == 'Not Achieved')>Not Achieved</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Status</span>
+                            <select name="status" class="form-control">
+                                <option value="">All</option>
+                                <option value="Open" @selected(request('status') == 'Open')>Open</option>
+                                <option value="Closed" @selected(request('status') == 'Closed')>Closed</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-md-2">
                         <input type="submit" value="Filter" class="btn btn-success w-100">
                     </div>

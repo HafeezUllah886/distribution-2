@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\accounts;
 use App\Models\orderbooker_products;
 use App\Models\product_units;
 use App\Models\products;
@@ -19,14 +20,42 @@ class TargetsController extends Controller
     {
         $start = $request->start ?? firstDayOfCurrentYear();
         $end = $request->end ?? lastDayOfCurrentYear();
-        $targets = targets::currentBranch()->whereBetween('endDate', [$start, $end])->orderBy('endDate', 'desc')->get();
+
+        $query = targets::currentBranch()
+            ->with(['orderbooker', 'product.vendor', 'branch', 'unit'])
+            ->whereBetween('endDate', [$start, $end]);
+
+        if ($request->filled('orderbookerID')) {
+            $query->where('orderbookerID', $request->orderbookerID);
+        }
+
+        if ($request->filled('productID')) {
+            $query->where('productID', $request->productID);
+        }
+
+        if ($request->filled('vendorID')) {
+            $query->whereHas('product', function ($q) use ($request) {
+                $q->where('vendorID', $request->vendorID);
+            });
+        }
+
+        if ($request->filled('status')) {
+            if ($request->status == 'Open') {
+                $query->where('endDate', '>=', now()->toDateString());
+            } else {
+                $query->where('endDate', '<', now()->toDateString());
+            }
+        }
+
+        $targets = $query->orderBy('endDate', 'desc')->get();
+
         foreach ($targets as $target) {
-            $query = DB::table('sale_details')
+            $saleQuery = DB::table('sale_details')
                 ->where('orderbookerID', $target->orderbookerID)
                 ->where('productID', $target->productID)
                 ->whereBetween('date', [$target->startDate, $target->endDate]);
 
-            $qtySold = $query->sum('pc');
+            $qtySold = $saleQuery->sum('pc');
             $target->sold = $qtySold / $target->unit_value;
             $targetQty = $target->pc / $target->unit_value;
 
@@ -38,7 +67,6 @@ class TargetsController extends Controller
             $target->actual_per = $target->pc > 0 ? ($qtySold / $target->pc * 100) : 0;
 
             if ($target->endDate >= now()->toDateString()) {
-
                 $target->campain = 'Open';
                 $target->campain_color = 'success';
             } else {
@@ -49,18 +77,29 @@ class TargetsController extends Controller
             if ($target->per >= 100) {
                 $target->goal = 'Target Achieved';
                 $target->goal_color = 'success';
+                $target->ach_status = 'Achieved';
             } elseif ($target->endDate >= now()->toDateString() && $target->per < 100) {
                 $target->goal = 'In Progress';
                 $target->goal_color = 'info';
+                $target->ach_status = 'In Progress';
             } else {
                 $target->goal = 'Not Achieved';
                 $target->goal_color = 'danger';
+                $target->ach_status = 'Not Achieved';
             }
         }
 
-        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
+        if ($request->filled('achievement')) {
+            $targets = $targets->filter(function ($target) use ($request) {
+                return $target->ach_status == $request->achievement;
+            });
+        }
 
-        return view('target.index', compact('targets', 'start', 'end', 'orderbookers'));
+        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
+        $products = products::currentBranch()->active()->with('vendor')->get();
+        $vendors = accounts::vendor()->currentBranch()->active()->get();
+
+        return view('target.index', compact('targets', 'start', 'end', 'orderbookers', 'products', 'vendors'));
     }
 
     /**
