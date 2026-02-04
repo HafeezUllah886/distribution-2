@@ -375,6 +375,10 @@
                                     data-key="t-basic-elements">Orderbooker Wise Customer Balance</a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ route('reportTargets') }}" class="nav-link"
+                                    data-key="t-basic-elements">Targets Report</a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('reportActivity') }}" class="nav-link"
                                     data-key="t-basic-elements">Activity Report</a>
                             </li>

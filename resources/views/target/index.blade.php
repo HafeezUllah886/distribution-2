@@ -109,7 +109,7 @@
                                     <td>{{ $item->product->vendor->title }}</td>
                                     <td>{{ $item->unit->unit_name }} - {{ $item->unit_value }}</td>
                                     <td>{{ $item->pc / $item->unit_value }}</td>
-                                    <td>{{ $item->sold }} - {{ $item->totalPer }}%</td>
+                                    <td>{{ $item->sold }} - {{ number_format($item->totalPer, 2) }}%</td>
                                     <td>{{ date('d M Y', strtotime($item->startDate)) }}
                                         <br>{{ date('d M Y', strtotime($item->endDate)) }}
                                     </td>
@@ -133,13 +133,13 @@
                                                         View
                                                     </button>
                                                 </li>
-                                                {{-- <li>
-                                                    <a class="dropdown-item"
-                                                        onclick="newWindow('{{ route('targets.edit', $item->id) }}')">
+                                                <li>
+                                                    <button class="dropdown-item" data-bs-toggle="modal"
+                                                        data-bs-target="#edit{{ $item->id }}">
                                                         <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
                                                         Edit
-                                                    </a>
-                                                </li> --}}
+                                                    </button>
+                                                </li>
                                                 <li>
                                                     <a class="dropdown-item text-danger"
                                                         href="{{ route('target.delete', $item->id) }}">
@@ -151,6 +151,61 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <div id="edit{{ $item->id }}" class="modal fade" tabindex="-1"
+                                    aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="myModalLabel">Edit Target</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"> </button>
+                                            </div>
+                                            <form action="{{ route('targets.update', $item->id) }}" method="post">
+                                                @csrf
+                                                @method('PUT')
+                                                <div class="modal-body">
+                                                    <div class="form-group mt-2">
+                                                        <label for="orderbookerID">Order Booker</label>
+                                                        <input type="text" name="orderbookerID" class="form-control"
+                                                            value="{{ $item->orderbooker->name }}" readonly>
+                                                    </div>
+                                                    <div class="form-group mt-2">
+                                                        <label for="productID">Product</label>
+                                                        <input type="text" name="productID" class="form-control"
+                                                            value="{{ $item->product->name }}" readonly>
+                                                    </div>
+                                                    <div class="form-group mt-2">
+                                                        <label for="unitID">Unit</label>
+                                                        <input type="text" name="unitID" class="form-control"
+                                                            value="{{ $item->unit->unit_name }}" readonly>
+                                                    </div>
+                                                    <div class="form-group mt-2">
+                                                        <label for="target">Target Qty</label>
+                                                        <input type="number" name="target" id="target"
+                                                            class="form-control"
+                                                            value="{{ $item->pc / $item->unit->value }}">
+                                                    </div>
+                                                    <div class="form-group mt-2">
+                                                        <label for="startDate">Start Date</label>
+                                                        <input type="date" name="startDate" id="startDate"
+                                                            class="form-control" value="{{ $item->startDate }}">
+                                                    </div>
+                                                    <div class="form-group mt-2">
+                                                        <label for="endDate">End Date</label>
+                                                        <input type="date" name="endDate" id="endDate"
+                                                            class="form-control" value="{{ $item->endDate }}">
+                                                    </div>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                </div>
+                                            </form>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
                             @endforeach
                         </tbody>
                     </table>

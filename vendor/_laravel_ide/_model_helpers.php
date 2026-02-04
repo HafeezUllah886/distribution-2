@@ -12010,6 +12010,8 @@ namespace App\Models {
      * @property string $unit_name
      * @property int $productID
      * @property int $id
+     * @property-read \App\Models\products $product
+     * @property-read \App\Models\units $unit
      * @method static \Illuminate\Database\Eloquent\Builder<product_units>|product_units whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<product_units>|product_units whereProductid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<product_units>|product_units whereUnitName($value)

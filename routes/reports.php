@@ -1,9 +1,8 @@
 <?php
 
 use App\Http\Controllers\reports\ActivityReportController;
-use App\Http\Controllers\reports\BranchStockReportController;
-use App\Http\Controllers\reports\profitController;
 use App\Http\Controllers\reports\balanceSheetReport;
+use App\Http\Controllers\reports\BranchStockReportController;
 use App\Http\Controllers\reports\customerProductsSaleReport;
 use App\Http\Controllers\reports\dailycashbookController;
 use App\Http\Controllers\reports\DailyInvWiseProductsSalesReport;
@@ -16,14 +15,16 @@ use App\Http\Controllers\reports\OrderbookerPerformanceReportController;
 use App\Http\Controllers\reports\OrderbookerWiseCustomerBalanceReport;
 use App\Http\Controllers\reports\OrdersReportController;
 use App\Http\Controllers\reports\ProductsSummaryReportController;
+use App\Http\Controllers\reports\profitController;
 use App\Http\Controllers\reports\purchaseReportController;
 use App\Http\Controllers\reports\salesReportController;
-use App\Http\Controllers\reports\TopCustomersReportController;
-use App\Http\Controllers\reports\TopSellingProductsReportController;
-use App\Http\Controllers\reports\WarehouseStockReportController;
 use App\Http\Controllers\reports\stockMovementReportController;
 use App\Http\Controllers\reports\SupplymanLabourChargesReportController;
+use App\Http\Controllers\reports\TargetsReportController;
+use App\Http\Controllers\reports\TopCustomersReportController;
+use App\Http\Controllers\reports\TopSellingProductsReportController;
 use App\Http\Controllers\reports\UnloaderLabourChargesReportController;
+use App\Http\Controllers\reports\WarehouseStockReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -40,7 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/sales', [salesReportController::class, 'index'])->name('reportSales');
     Route::get('/reports/salesFilter', [salesReportController::class, 'filter'])->name('reportSalesFilter');
     Route::get('/reports/salesData', [salesReportController::class, 'data'])->name('reportSalesData');
-    
+
     Route::get('/reports/orders', [OrdersReportController::class, 'index'])->name('reportOrders');
     Route::get('/reports/ordersFilter', [OrdersReportController::class, 'filter'])->name('reportOrdersFilter');
     Route::get('/reports/ordersData', [OrdersReportController::class, 'data'])->name('reportOrdersData');
@@ -71,13 +72,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/reports/topsellingproductsreport', [TopSellingProductsReportController::class, 'index'])->name('reportTopSellingProducts');
     Route::get('/reports/topsellingproductsreportData', [TopSellingProductsReportController::class, 'data'])->name('reportTopSellingProductsData');
-    
+
     Route::get('/reports/dailyvendorwiseproductssalesreport', [DailyVendorWiseProductsSalesReport::class, 'index'])->name('reportDailyVendorWiseProductsSales');
     Route::get('/reports/dailyvendorwiseproductssalesreportData', [DailyVendorWiseProductsSalesReport::class, 'data'])->name('reportDailyVendorWiseProductsSalesData');
-    
+
     Route::get('/reports/dailyinvwiseproductssalesreport', [DailyInvWiseProductsSalesReport::class, 'index'])->name('reportDailyInvWiseProductsSales');
     Route::get('/reports/dailyinvwiseproductssalesreportData', [DailyInvWiseProductsSalesReport::class, 'data'])->name('reportDailyInvWiseProductsSalesData');
-    
+
     Route::get('/reports/stockmovementreport', [stockMovementReportController::class, 'index'])->name('reportStockMovement');
     Route::get('/reports/stockmovementreportData', [stockMovementReportController::class, 'data'])->name('reportStockMovementData');
 
@@ -102,6 +103,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/reports/activity', [ActivityReportController::class, 'index'])->name('reportActivity');
     Route::get('/reports/activitydata', [ActivityReportController::class, 'data'])->name('reportActivityData');
 
+    Route::get('/reports/targets', [TargetsReportController::class, 'index'])->name('reportTargets');
+    Route::get('/reports/targetsData', [TargetsReportController::class, 'data'])->name('reportTargetsData');
+
     Route::get('/get-orderbookers-by-customer/{customer}', [OrderbookerWiseCustomerBalanceReport::class, 'getOrderbookersByCustomer'])->name('get-orderbookers-by-customer');
-   
+
 });

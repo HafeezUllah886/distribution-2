@@ -205,9 +205,28 @@ class TargetsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, targets $targets)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $target = targets::find($id);
+            $target->update(
+                [
+                    'pc' => $request->target * $target->unit_value,
+                    'startDate' => $request->startDate,
+                    'endDate' => $request->endDate,
+                    'notes' => $request->notes,
+                ]
+            );
+
+            DB::commit();
+
+            return back()->with('success', 'Target Updated');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     /**
