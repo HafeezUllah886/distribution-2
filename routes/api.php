@@ -11,6 +11,7 @@ use App\Http\Controllers\api\nonFinanancialInfoController;
 use App\Http\Controllers\api\OrderbookerBalanceController;
 use App\Http\Controllers\api\OrderBookerInvoices;
 use App\Http\Controllers\api\OrdersController;
+use App\Http\Controllers\api\TargetAPIController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -59,5 +60,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/invoicepayments/delete', [InvoicePaymentsHistory::class, 'destroy']);
 
     Route::post('/advancepayment/store', [CustomerAdvancePaymentAPIController::class, 'store']);
+
+    Route::get('/targets', [TargetAPIController::class, 'index']);
 
 });
