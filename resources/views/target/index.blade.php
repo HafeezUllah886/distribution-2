@@ -153,7 +153,7 @@
                                 </tr>
                                 <div id="edit{{ $item->id }}" class="modal fade" tabindex="-1"
                                     aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                                    <div class="modal-dialog">
+                                    <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="myModalLabel">Edit Target</h5>
@@ -164,44 +164,76 @@
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="modal-body">
-                                                    <div class="form-group mt-2">
-                                                        <label for="orderbookerID">Order Booker</label>
-                                                        <input type="text" name="orderbookerID" class="form-control"
-                                                            value="{{ $item->orderbooker->name }}" readonly>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group mt-2">
+                                                                <label for="orderbookerID">Order Booker</label>
+                                                                <input type="text" name="orderbookerID"
+                                                                    class="form-control"
+                                                                    value="{{ $item->orderbooker->name }}" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group mt-2">
+                                                                <label for="productID">Product</label>
+                                                                <input type="text" name="productID"
+                                                                    class="form-control"
+                                                                    value="{{ $item->product->name }}" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group mt-2">
+                                                                <label for="unitID">Unit</label>
+                                                                <input type="text" name="unitID" class="form-control"
+                                                                    value="{{ $item->unit->unit_name }}" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group mt-2">
+                                                                <label for="target">Target Qty</label>
+                                                                <input type="number" name="target" id="target"
+                                                                    class="form-control"
+                                                                    value="{{ $item->pc / $item->unit->value }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group mt-2">
+                                                                <label for="startDate">Start Date</label>
+                                                                <input type="date" name="startDate" id="startDate"
+                                                                    class="form-control" value="{{ $item->startDate }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group mt-2">
+                                                                <label for="endDate">End Date</label>
+                                                                <input type="date" name="endDate" id="endDate"
+                                                                    class="form-control" value="{{ $item->endDate }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group mt-2">
+                                                                <label for="notificationStartTime">Notification Start
+                                                                    Time</label>
+                                                                <input type="time" name="notificationStartTime"
+                                                                    id="notificationStartTime" class="form-control"
+                                                                    value="{{ $item->notificationStartTime }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group mt-2">
+                                                                <label for="notificationEndTime">Notification End
+                                                                    Time</label>
+                                                                <input type="time" name="notificationEndTime"
+                                                                    id="notificationEndTime" class="form-control"
+                                                                    value="{{ $item->notificationEndTime }}">
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="productID">Product</label>
-                                                        <input type="text" name="productID" class="form-control"
-                                                            value="{{ $item->product->name }}" readonly>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-light"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Update</button>
                                                     </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="unitID">Unit</label>
-                                                        <input type="text" name="unitID" class="form-control"
-                                                            value="{{ $item->unit->unit_name }}" readonly>
-                                                    </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="target">Target Qty</label>
-                                                        <input type="number" name="target" id="target"
-                                                            class="form-control"
-                                                            value="{{ $item->pc / $item->unit->value }}">
-                                                    </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="startDate">Start Date</label>
-                                                        <input type="date" name="startDate" id="startDate"
-                                                            class="form-control" value="{{ $item->startDate }}">
-                                                    </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="endDate">End Date</label>
-                                                        <input type="date" name="endDate" id="endDate"
-                                                            class="form-control" value="{{ $item->endDate }}">
-                                                    </div>
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-light"
-                                                        data-bs-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary">Update</button>
-                                                </div>
                                             </form>
                                         </div><!-- /.modal-content -->
                                     </div><!-- /.modal-dialog -->
@@ -216,7 +248,7 @@
     <!-- Default Modals -->
     <div id="new" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
         style="display: none;">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="myModalLabel">Create Target</h5>
@@ -225,43 +257,71 @@
                 <form action="{{ route('targets.store') }}" method="post">
                     @csrf
                     <div class="modal-body">
-                        <div class="form-group mt-2">
-                            <label for="orderbookerID">Order Booker</label>
-                            <select name="orderbookerID" id="orderbookerID" onchange="getProducts(this.value)"
-                                class="selectize">
-                                <option value="">Select Order Booker</option>
-                                @foreach ($orderbookers as $orderbooker)
-                                    <option value="{{ $orderbooker->id }}">{{ $orderbooker->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="productID">Product</label>
-                            <select name="productID" id="productID" onchange="getUnits(this.value)" class="productID">
-                                <option value="">Select Product</option>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mt-2">
+                                    <label for="orderbookerID">Order Booker</label>
+                                    <select name="orderbookerID" id="orderbookerID" onchange="getProducts(this.value)"
+                                        class="selectize">
+                                        <option value="">Select Order Booker</option>
+                                        @foreach ($orderbookers as $orderbooker)
+                                            <option value="{{ $orderbooker->id }}">{{ $orderbooker->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mt-2">
+                                    <label for="productID">Product</label>
+                                    <select name="productID" id="productID" onchange="getUnits(this.value)"
+                                        class="productID">
+                                        <option value="">Select Product</option>
 
-                            </select>
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="unitID">Unit</label>
-                            <select name="unitID" id="unitID" class="unitID selectize">
-                                <option value="">Select Unit</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mt-2">
+                                    <label for="unitID">Unit</label>
+                                    <select name="unitID" id="unitID" class="unitID selectize">
+                                        <option value="">Select Unit</option>
 
-                            </select>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mt-2">
+                                    <label for="target">Target Qty</label>
+                                    <input type="number" name="target" id="target" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mt-2">
+                                    <label for="startDate">Start Date</label>
+                                    <input type="date" name="startDate" id="startDate" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mt-2">
+                                    <label for="endDate">End Date</label>
+                                    <input type="date" name="endDate" id="endDate" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mt-2">
+                                    <label for="notificationStartTime">Notification Start Time</label>
+                                    <input type="time" name="notificationStartTime" id="notificationStartTime"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mt-2">
+                                    <label for="notificationEndTime">Notification End Time</label>
+                                    <input type="time" name="notificationEndTime" id="notificationEndTime"
+                                        class="form-control">
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group mt-2">
-                            <label for="target">Target Qty</label>
-                            <input type="number" name="target" id="target" class="form-control">
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="startDate">Start Date</label>
-                            <input type="date" name="startDate" id="startDate" class="form-control">
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="endDate">End Date</label>
-                            <input type="date" name="endDate" id="endDate" class="form-control">
-                        </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
