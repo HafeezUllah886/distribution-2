@@ -17,8 +17,6 @@ return new class extends Migration
             $table->foreignId('orderbookerID')->constrained('users', 'id');
             $table->date('startDate');
             $table->date('endDate');
-            $table->time('notificationStartTime');
-            $table->time('notificationEndTime');
             $table->foreignId('productID')->constrained('products', 'id');
             $table->float('pc');
             $table->foreignId('unitID')->constrained('units', 'id');

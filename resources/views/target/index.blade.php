@@ -210,24 +210,6 @@
                                                                     class="form-control" value="{{ $item->endDate }}">
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-6">
-                                                            <div class="form-group mt-2">
-                                                                <label for="notificationStartTime">Notification Start
-                                                                    Time</label>
-                                                                <input type="time" name="notificationStartTime"
-                                                                    id="notificationStartTime" class="form-control"
-                                                                    value="{{ $item->notificationStartTime }}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="form-group mt-2">
-                                                                <label for="notificationEndTime">Notification End
-                                                                    Time</label>
-                                                                <input type="time" name="notificationEndTime"
-                                                                    id="notificationEndTime" class="form-control"
-                                                                    value="{{ $item->notificationEndTime }}">
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-light"
@@ -307,20 +289,7 @@
                                     <input type="date" name="endDate" id="endDate" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group mt-2">
-                                    <label for="notificationStartTime">Notification Start Time</label>
-                                    <input type="time" name="notificationStartTime" id="notificationStartTime"
-                                        class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group mt-2">
-                                    <label for="notificationEndTime">Notification End Time</label>
-                                    <input type="time" name="notificationEndTime" id="notificationEndTime"
-                                        class="form-control">
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                     <div class="modal-footer">

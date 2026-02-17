@@ -49,8 +49,6 @@ class TargetAPIController extends Controller
                 'start_date' => $target->startDate,
                 'end_date' => $target->endDate,
                 'percentage' => $percentage,
-                'notification_start_time' => $target->notificationStartTime,
-                'notification_end_time' => $target->notificationEndTime,
                 /* 'actual_percentage' => $actualPercentage, */
                 'achievement_status' => $isAchieved ? 'ACHIEVED' : 'PENDING',
                 'achievement_color' => $isAchieved ? 'success' : 'danger',

@@ -132,8 +132,6 @@ class TargetsController extends Controller
                     'unit_value' => $unit->value,
                     'startDate' => $request->startDate,
                     'endDate' => $request->endDate,
-                    'notificationStartTime' => $request->notificationStartTime,
-                    'notificationEndTime' => $request->notificationEndTime,
                     'notes' => $request->notes,
                 ]
             );

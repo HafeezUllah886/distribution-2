@@ -17292,6 +17292,8 @@ namespace App\Models {
      * @property int $unitID
      * @property float $pc
      * @property int $productID
+     * @property string $notificationEndTime
+     * @property string $notificationStartTime
      * @property string $endDate
      * @property string $startDate
      * @property int $orderbookerID
@@ -17306,6 +17308,8 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereOrderbookerid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereStartdate($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereEnddate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereNotificationstarttime($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereNotificationendtime($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereProductid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets wherePc($value)
      * @method static \Illuminate\Database\Eloquent\Builder<targets>|targets whereUnitid($value)
