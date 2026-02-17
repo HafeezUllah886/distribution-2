@@ -12,7 +12,7 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
-    <!-- Layout config Js -->
+    <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('assets/js/layout.js') }}"></script>
     <!-- Bootstrap Css -->
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
@@ -26,13 +26,16 @@
     <link href="{{ asset('assets/libs/toastify/toastify.min.css') }}" rel="stylesheet" type="text/css" />
     <style>
         input:invalid {
-        border-color: red;  /* Change the border to red for invalid fields */
+            border-color: red;
+            /* Change the border to red for invalid fields */
         }
+
         @media print {
-  tfoot {
-    display: table-row-group; /* Prevent browser from treating it as a repeating footer */
-  }
-}
+            tfoot {
+                display: table-row-group;
+                /* Prevent browser from treating it as a repeating footer */
+            }
+        }
     </style>
     @yield('page-css')
 
@@ -63,6 +66,7 @@
     @include('layout.settings')
 
     <!-- JAVASCRIPT -->
+
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
@@ -73,46 +77,44 @@
     <!-- App js -->
     <script src="{{ asset('assets/js/app.js') }}"></script>
     <script src="{{ asset('assets/libs/toastify/toastify.min.js') }}"></script>
-
-    <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
     @if (Session::get('success'))
-    <script>
-       Toastify({
-        text: "{{Session::get('success')}}",
-        className: "info",
-        close: true,
-        gravity: "top", // `top` or `bottom`
-        position: "center", // `left`, `center` or `right`
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-        style: {
-            background: "linear-gradient(to right, #01CB3E, #96c93d)",
-        }
-        }).showToast();
-    </script>
-@endif
-@if (Session::get('error'))
-    <script>
-         Toastify({
-        text: "{{Session::get('error')}}",
-        className: "info",
-        close: true,
-        gravity: "top", // `top` or `bottom`
-        position: "center", // `left`, `center` or `right`
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-        style: {
-            background: "linear-gradient(to right, #FF5733, #E70000)",
-        }
-        }).showToast();
-    </script>
+        <script>
+            Toastify({
+                text: "{{ Session::get('success') }}",
+                className: "info",
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: "center", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "linear-gradient(to right, #01CB3E, #96c93d)",
+                }
+            }).showToast();
+        </script>
+    @endif
+    @if (Session::get('error'))
+        <script>
+            Toastify({
+                text: "{{ Session::get('error') }}",
+                className: "info",
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: "center", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "linear-gradient(to right, #FF5733, #E70000)",
+                }
+            }).showToast();
+        </script>
     @endif
     <script>
-         $(document).on('keydown', function(event) {
-    // Check if F2 is pressed
-    if (event.key === 'F2') {
-        event.preventDefault();  // Prevent any default action (if any)
-        $('#code').focus();  // Focus on the input field
-    }
-});
+        $(document).on('keydown', function(event) {
+            // Check if F2 is pressed
+            if (event.key === 'F2') {
+                event.preventDefault(); // Prevent any default action (if any)
+                $('#code').focus(); // Focus on the input field
+            }
+        });
     </script>
     @yield('page-js')
 </body>

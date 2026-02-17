@@ -49,13 +49,13 @@
                                 <label for="emailInput" class="form-label">Week Days</label>
                                 <select name="week_days[]" id="week_days" class="selectize" multiple>
                                     <option value="">Select Week Days</option>
-                                    <option value="Monday">Monday</option>
-                                    <option value="Tuesday">Tuesday</option>
-                                    <option value="Wednesday">Wednesday</option>
-                                    <option value="Thursday">Thursday</option>
-                                    <option value="Friday">Friday</option>
-                                    <option value="Saturday">Saturday</option>
-                                    <option value="Sunday">Sunday</option>
+                                    <option value="Monday" @selected($notificationSettings && in_array('Monday', $notificationSettings->week_days ?? []))>Monday</option>
+                                    <option value="Tuesday" @selected($notificationSettings && in_array('Tuesday', $notificationSettings->week_days ?? []))>Tuesday</option>
+                                    <option value="Wednesday" @selected($notificationSettings && in_array('Wednesday', $notificationSettings->week_days ?? []))>Wednesday</option>
+                                    <option value="Thursday" @selected($notificationSettings && in_array('Thursday', $notificationSettings->week_days ?? []))>Thursday</option>
+                                    <option value="Friday" @selected($notificationSettings && in_array('Friday', $notificationSettings->week_days ?? []))>Friday</option>
+                                    <option value="Saturday" @selected($notificationSettings && in_array('Saturday', $notificationSettings->week_days ?? []))>Saturday</option>
+                                    <option value="Sunday" @selected($notificationSettings && in_array('Sunday', $notificationSettings->week_days ?? []))>Sunday</option>
                                 </select>
                             </div>
                         </div>
@@ -74,23 +74,18 @@
     </div>
 @endsection
 @section('page-css')
-
     <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
 @endsection
 @section('page-js')
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('.selectize').selectize({
+            $(".selectize").selectize({
                 plugins: ['remove_button'],
-                delimiter: ',',
-                persist: false,
-                create: function(input) {
-                    return {
-                        value: input,
-                        text: input
-                    }
-                }
+                maxItems: null,
+                create: false,
+                placeholder: 'Select Option...'
             });
         });
     </script>
+@endsection

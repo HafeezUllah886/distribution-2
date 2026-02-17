@@ -8,6 +8,7 @@ use App\Http\Controllers\api\DailyProductsOrderReport;
 use App\Http\Controllers\api\InvoicePaymentsHistory;
 use App\Http\Controllers\api\locationTrackingAPIController;
 use App\Http\Controllers\api\nonFinanancialInfoController;
+use App\Http\Controllers\api\NotificationSettingsAPIController;
 use App\Http\Controllers\api\OrderbookerBalanceController;
 use App\Http\Controllers\api\OrderBookerInvoices;
 use App\Http\Controllers\api\OrdersController;
@@ -62,5 +63,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/advancepayment/store', [CustomerAdvancePaymentAPIController::class, 'store']);
 
     Route::get('/targets', [TargetAPIController::class, 'index']);
+    Route::get('/notification_settings', [NotificationSettingsAPIController::class, 'index']);
 
 });

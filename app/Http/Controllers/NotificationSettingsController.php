@@ -12,7 +12,7 @@ class NotificationSettingsController extends Controller
      */
     public function index()
     {
-        $notificationSettings = notification_settings::where('branch_id', auth()->user()->branch_id)->first();
+        $notificationSettings = notification_settings::where('branch_id', auth()->user()->branchID)->first();
 
         return view('notification_settings.index', compact('notificationSettings'));
     }
@@ -30,7 +30,17 @@ class NotificationSettingsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        notification_settings::updateOrCreate([
+            'branch_id' => auth()->user()->branchID,
+        ], [
+            'branch_id' => auth()->user()->branchID,
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
+            'intervals' => $request->intervals,
+            'week_days' => $request->week_days,
+        ]);
+
+        return redirect()->route('notification_settings.index')->with('success', 'Notification settings updated successfully');
     }
 
     /**
