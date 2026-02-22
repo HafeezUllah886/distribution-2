@@ -2,28 +2,20 @@
 
 use App\Http\Controllers\AccountsAdjustmentController;
 use App\Http\Controllers\AccountsController;
-use App\Http\Controllers\authController;
 use App\Http\Controllers\AutoStaffPaymentsController;
 use App\Http\Controllers\BulkInvoicePaymentsReceivingController;
 use App\Http\Controllers\ChequesController;
 use App\Http\Controllers\CurrencymgmtController;
 use App\Http\Controllers\CustomerAdvancePaymentController;
-use App\Http\Controllers\CustomerPaymentsController;
-use App\Http\Controllers\DepositWithdrawController;
 use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpensesController;
-use App\Http\Controllers\LaborPaymentsController;
 use App\Http\Controllers\MyBalanceController;
-use App\Http\Controllers\PaymentReceivingController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\PaymentsReceivingController;
-use App\Http\Controllers\profileController;
 use App\Http\Controllers\StaffAmountAdjustmentController;
 use App\Http\Controllers\StaffPaymentsController;
 use App\Http\Controllers\TransferController;
-use App\Http\Controllers\VendorPaymentsController;
 use App\Http\Middleware\Admin_BranchAdmin_AccountantCheck;
-use App\Http\Middleware\adminCheck;
 use App\Http\Middleware\confirmPassword;
 use App\Models\attachment;
 use Illuminate\Support\Facades\Route;
@@ -83,17 +75,21 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
         return response()->json(['data' => $result]);
     });
 
-    Route::get("/attachment/{ref}", function($ref)
-    {
-        $attachment = attachment::where("refID", $ref)->first();
-        if(!$attachment)
-        {
-            return redirect()->back()->with('error', "No Attachement Found");
+    Route::get('/customerbalance/{id}/{orderbookerID}', function ($id, $orderbookerID) {
+        // Call your Laravel helper function here
+        $result = getAccountBalanceOrderbookerWise($id, $orderbookerID);
+
+        return response()->json(['data' => $result]);
+    })->name('getCustomerBalance');
+
+    Route::get('/attachment/{ref}', function ($ref) {
+        $attachment = attachment::where('refID', $ref)->first();
+        if (! $attachment) {
+            return redirect()->back()->with('error', 'No Attachement Found');
         }
 
         return response()->file(public_path($attachment->path));
     })->name('viewAttachment');
-
 
     Route::resource('customer_advances', CustomerAdvancePaymentController::class);
     Route::get('customer_advance/pay/{id}', [CustomerAdvancePaymentController::class, 'pay'])->name('customer_advance.pay');
@@ -105,7 +101,7 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
 });
 
 Route::middleware('auth')->group(function () {
-    
+
     Route::get('my_balance', [MyBalanceController::class, 'index'])->name('my_balance');
     Route::get('method/statement/{user}/{method}/{from}/{to}', [AccountsController::class, 'methodStatement'])->name('methodStatement');
     Route::get('/get-customers-by-area/{area}', [BulkInvoicePaymentsReceivingController::class, 'getCustomersByArea'])->name('get-customers-by-area');

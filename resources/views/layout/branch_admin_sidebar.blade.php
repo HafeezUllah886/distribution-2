@@ -213,6 +213,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('balance_targets.index') }}">
+                        <i class="ri-focus-2-line"></i> <span data-key="t-my_balance">Balance Targets</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('notification_settings.index') }}">
                         <i class="ri-notification-line"></i> <span data-key="t-my_balance">Notification
                             Settings</span>

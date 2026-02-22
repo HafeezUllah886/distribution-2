@@ -58,6 +58,18 @@ Route::middleware('auth')->group(function () {
         return response()->json($products_array);
     })->name('getOrderbookerProducts');
 
+    Route::get('getOrderbookerCustomers/{orderbookerID}', function ($orderbookerID) {
+        $customers = \App\Models\orderbooker_customers::where('orderbookerID', $orderbookerID)->with('customer')->get();
+        $customers_array = [];
+        foreach ($customers as $item) {
+            $value = $item->customer->id;
+            $text = $item->customer->title;
+            $customers_array[] = compact('value', 'text');
+        }
+
+        return response()->json($customers_array);
+    })->name('getOrderbookerCustomers');
+
     Route::get('getUnits/{productID}', function ($productID) {
         $units = product_units::where('productID', $productID)->get();
         $units_array = [];
