@@ -31,7 +31,7 @@
                                             <th>CUSTOMER</th>
                                             <th>START BALANCE</th>
                                             <th>TARGET BALANCE</th>
-                                            <th>CURRENT BALANCE</th>
+                                            <th>CLOSING BALANCE</th>
                                             <th>ACHIEVEMENT</th>
                                             <th>START DATE</th>
                                             <th>END DATE</th>

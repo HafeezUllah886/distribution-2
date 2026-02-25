@@ -43,10 +43,10 @@ class BalanceTargetsController extends Controller
 
         foreach ($targets as $target) {
             $credits = transactions::where('accountID', $target->customerID)
-                ->where('orderbookerID', $target->orderbookerID)
+                ->where('orderbookerID', $target->orderbookerID)->whereDate('date', '<=', $target->endDate)
                 ->sum('cr') ?? 0;
             $debits = transactions::where('accountID', $target->customerID)
-                ->where('orderbookerID', $target->orderbookerID)
+                ->where('orderbookerID', $target->orderbookerID)->whereDate('date', '<=', $target->endDate)
                 ->sum('db') ?? 0;
 
             $target->current_balance = $credits - $debits;
@@ -135,10 +135,10 @@ class BalanceTargetsController extends Controller
         $target = balance_targets::with(['orderbooker', 'customer', 'branch'])->find($id);
 
         $credits = transactions::where('accountID', $target->customerID)
-            ->where('orderbookerID', $target->orderbookerID)
+            ->where('orderbookerID', $target->orderbookerID)->whereDate('date', '<=', $target->endDate)
             ->sum('cr') ?? 0;
         $debits = transactions::where('accountID', $target->customerID)
-            ->where('orderbookerID', $target->orderbookerID)
+            ->where('orderbookerID', $target->orderbookerID)->whereDate('date', '<=', $target->endDate)
             ->sum('db') ?? 0;
 
         $target->current_balance = $credits - $debits;

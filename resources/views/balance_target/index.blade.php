@@ -265,7 +265,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mt-2">
-                                    <label for="start_value">Current Balance</label>
+                                    <label for="start_value">Closing Balance</label>
                                     <input type="number" step="0.01" readonly name="start_value" id="start_value"
                                         class="form-control">
                                 </div>
