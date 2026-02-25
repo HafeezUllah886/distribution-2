@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\authController;
+use App\Http\Controllers\api\BalanceTargetAPIController;
 use App\Http\Controllers\api\CustomerAdvancePaymentAPIController;
 use App\Http\Controllers\api\customerPaymentsReceivingContoller;
 use App\Http\Controllers\api\DailyCustomerWisePaymentsReport;
@@ -63,6 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/advancepayment/store', [CustomerAdvancePaymentAPIController::class, 'store']);
 
     Route::get('/targets', [TargetAPIController::class, 'index']);
+    Route::get('/balance_targets', [BalanceTargetAPIController::class, 'index']);
     Route::get('/notification_settings', [NotificationSettingsAPIController::class, 'index']);
 
 });

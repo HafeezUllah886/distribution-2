@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\targets;
-use Illuminate\Support\Facades\DB;
+use App\Models\balance_targets;
+use App\Models\transactions;
 
 class BalanceTargetAPIController extends Controller
 {
@@ -12,48 +12,68 @@ class BalanceTargetAPIController extends Controller
     {
         $user = auth()->user();
 
-        $targets = targets::where('orderbookerID', $user->id)
-            ->with(['product.vendor', 'unit'])
+        $targets = balance_targets::where('orderbookerID', $user->id)
+            ->with(['customer', 'branch'])
             ->orderBy('endDate', 'desc')
             ->get();
 
         $data = $targets->map(function ($target) {
-            $qtySold = DB::table('sale_details')
+            $credits = transactions::where('accountID', $target->customerID)
                 ->where('orderbookerID', $target->orderbookerID)
-                ->where('productID', $target->productID)
-                ->whereBetween('date', [$target->startDate, $target->endDate])
-                ->sum('pc');
+                ->whereDate('date', '<=', $target->endDate)
+                ->sum('cr') ?? 0;
+            $debits = transactions::where('accountID', $target->customerID)
+                ->where('orderbookerID', $target->orderbookerID)
+                ->whereDate('date', '<=', $target->endDate)
+                ->sum('db') ?? 0;
 
-            $targetQty = $target->pc / $target->unit_value;
-            $achievedQty = $qtySold / $target->unit_value;
-            $remainingQty = $targetQty - $achievedQty;
+            $current_balance = $credits - $debits;
 
-            // Cap for percentage calculation for status logic
-            $qtySoldForPer = $qtySold > $target->pc ? $target->pc : $qtySold;
-            $percentage = $target->pc > 0 ? round(($qtySoldForPer / $target->pc) * 100, 2) : 0;
-            $actualPercentage = $target->pc > 0 ? round(($qtySold / $target->pc) * 100, 2) : 0;
+            $total_reduction_needed = $target->start_value - $target->target_value;
+            $current_reduction = $target->start_value - $current_balance;
+
+            if ($total_reduction_needed > 0) {
+                $per = ($current_reduction / $total_reduction_needed) * 100;
+            } else {
+                $per = $current_balance <= $target->target_value ? 100 : 0;
+            }
+
+            $display_per = $per < 0 ? 0 : ($per > 100 ? 100 : $per);
+            $totalPer = round($display_per, 2);
 
             $isExpired = $target->endDate < now()->toDateString();
-            $isAchieved = $percentage >= 100;
+            $isAchieved = $totalPer >= 100;
+
+            $achievement_status = '';
+            $achievement_color = '';
+            if ($isAchieved) {
+                $achievement_status = 'Achieved';
+                $achievement_color = 'success';
+            } elseif (! $isExpired) {
+                $achievement_status = 'In Progress';
+                $achievement_color = 'info';
+            } else {
+                $achievement_status = 'Not Achieved';
+                $achievement_color = 'danger';
+            }
 
             return [
                 'id' => $target->id,
-                'product_name' => $target->product->name,
-                'vendor_name' => $target->product->vendor->title ?? 'N/A',
-                'unit_name' => $target->unit->unit_name,
-                'pack_size' => $target->unit_value,
-                'price' => round($target->product->price * $target->unit_value, 2),
-                'target_qty' => round($targetQty, 2),
-                'achieved_qty' => round($achievedQty, 2),
-                'remaining_qty' => round($remainingQty, 2),
+                'customer_name' => $target->customer->title ?? 'N/A',
+                'branch_name' => $target->branch->name ?? 'N/A',
+                'start_value' => round($target->start_value, 2),
+                'target_value' => round($target->target_value, 2),
+                'current_balance' => round($current_balance, 2),
+                'total_reduction_needed' => round($total_reduction_needed, 2),
+                'current_reduction' => round($current_reduction, 2),
+                'percentage' => $totalPer,
                 'start_date' => $target->startDate,
                 'end_date' => $target->endDate,
-                'percentage' => $percentage,
-                /* 'actual_percentage' => $actualPercentage, */
-                'achievement_status' => $isAchieved ? 'ACHIEVED' : 'PENDING',
-                'achievement_color' => $isAchieved ? 'success' : 'danger',
-                'target_status' => $isExpired ? 'CLOSED' : 'ACTIVE',
-                'target_status_color' => $isExpired ? 'danger' : 'success',
+                'achievement_status' => $achievement_status,
+                'achievement_color' => $achievement_color,
+                'target_status' => $isExpired ? 'Closed' : 'Open',
+                'target_status_color' => $isExpired ? 'warning' : 'success',
+                'notes' => $target->notes,
             ];
         });
 
