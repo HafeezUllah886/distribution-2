@@ -37,8 +37,8 @@
                                     <!--end col-->
                                     <div class="col-lg-3 col-6">
                                         <p class="text-muted mb-2 text-uppercase fw-semibold">Balance</p>
-                                        <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">Current &nbsp;</small><span id="invoice-date">Rs. {{ number_format($cur_balance) }}</span> </h5>
-                                        <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">Previous </small><span id="invoice-date">Rs. {{ number_format($pre_balance) }}</span> </h5>
+                                        <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">Current &nbsp;</small><span id="invoice-date">Rs. {{ number_format($cur_balance, 0) }}</span> </h5>
+                                        <h5 class="fs-14 mb-0"><small class="text-muted" id="invoice-time">Previous </small><span id="invoice-date">Rs. {{ number_format($pre_balance, 0) }}</span> </h5>
                                     </div>
                                     <!--end col-->
                                     <div class="col-lg-3 col-6">
@@ -81,18 +81,18 @@
                                                 <td><a href="{{route('viewAttachment', $trans->refID)}}" target="_black">{{ $trans->refID }} <i class="ri-attachment-2"></i></a></td>
                                                 <td>{{ date('d M Y', strtotime($trans->date)) }}</td>
                                                 <td class="text-start" style="max-width: 200px; overflow-wrap: break-word; white-space: normal;">{{ $trans->notes }}</td>
-                                                <td class="text-end">{{ number_format($trans->cr) }}</td>
-                                                <td class="text-end">{{ number_format($trans->db) }}</td>
-                                                <td class="text-end">{{ number_format($balance) }}</td>
+                                                <td class="text-end">{{ number_format($trans->cr, 0) }}</td>
+                                                <td class="text-end">{{ number_format($trans->db, 0) }}</td>
+                                                <td class="text-end">{{ number_format($balance, 0) }}</td>
                                             </tr>
                                         @endforeach
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <th colspan="4" class="text-end p-1 m-0">Total</th>
-                                                <th class="text-end p-1 m-0">{{ number_format($transactions->sum('cr'),2) }}</th>
-                                                <th class="text-end p-1 m-0">{{ number_format($transactions->sum('db'),2) }}</th>
-                                                <th class="text-end p-1 m-0">{{ number_format($balance,2) }}</th>
+                                                <th class="text-end p-1 m-0">{{ number_format($transactions->sum('cr'),0) }}</th>
+                                                <th class="text-end p-1 m-0">{{ number_format($transactions->sum('db'),0) }}</th>
+                                                <th class="text-end p-1 m-0">{{ number_format($balance,0) }}</th>
                                             </tr>
                                         </tfoot>
                                     </table><!--end table-->
