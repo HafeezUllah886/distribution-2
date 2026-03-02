@@ -180,7 +180,7 @@
                                                             <div class="form-group mt-2">
                                                                 <label for="start_value">Start Balance</label>
                                                                 <input type="number" step="0.01" name="start_value"
-                                                                    id="start_value" class="form-control"
+                                                                    id="start_value_{{ $item->id }}" class="form-control"
                                                                     value="{{ $item->start_value }}">
                                                             </div>
                                                         </div>
@@ -352,8 +352,7 @@
         }
 
         function getCustomerBalance() {
-            console.log(orderbookerSelect.getValue());
-            console.log(customerSelect.getValue());
+          
             var orderbookerID = orderbookerSelect.getValue();
             var customerID = customerSelect.getValue();
             $.ajax({

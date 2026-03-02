@@ -13213,6 +13213,8 @@ namespace App\Models {
      * App\Models\purchase
      *
      * @property string $freight_status
+     * @property int|null $expenseCategoryID
+     * @property int|null $freightID
      * @property string|null $cno
      * @property string|null $driver_contact
      * @property string|null $driver_name
@@ -13260,6 +13262,8 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereDriverName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereDriverContact($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereCno($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereFreightid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereExpensecategoryid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase whereFreightStatus($value)
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<purchase>|purchase newQuery()
