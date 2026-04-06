@@ -2,21 +2,21 @@
     <!-- LOGO -->
     <div class="navbar-brand-box">
         <!-- Dark Logo-->
-        <a href="{{route('dashboard')}}" class="logo logo-dark">
+        <a href="{{ route('dashboard') }}" class="logo logo-dark">
             <span class="logo-sm">
-                <h3 class="text-white">{{projectNameShort()}}</h3>
+                <h3 class="text-white">{{ projectNameShort() }}</h3>
             </span>
             <span class="logo-lg">
-                <h3 class="text-white mt-3">{{projectNameHeader()}}</h3>
+                <h3 class="text-white mt-3">{{ projectNameHeader() }}</h3>
             </span>
         </a>
         <!-- Light Logo-->
-        <a href="{{route('dashboard')}}" class="logo logo-light">
+        <a href="{{ route('dashboard') }}" class="logo logo-light">
             <span class="logo-sm">
-                <h3 class="text-white">{{projectNameShort()}}</h3>
+                <h3 class="text-white">{{ projectNameShort() }}</h3>
             </span>
             <span class="logo-lg">
-                <h3 class="text-white mt-3">{{projectNameHeader()}}</h3>
+                <h3 class="text-white mt-3">{{ projectNameHeader() }}</h3>
             </span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
@@ -61,7 +61,7 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
-               <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#sales" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-shopping-cart-fill"></i><span data-key="t-apps">Sale</span>
@@ -69,11 +69,12 @@
                     <div class="collapse menu-dropdown" id="sales">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('sale.index', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()]) }}" class="nav-link" data-key="t-chat"> Sales History</a>
+                                <a href="{{ route('sale.index', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()]) }}"
+                                    class="nav-link" data-key="t-chat"> Sales History</a>
                             </li>
                         </ul>
                     </div>
-                </li> 
+                </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarAccounts" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarAccounts">
@@ -95,8 +96,7 @@
                                     data-key="t-checkboxs-radios">Customer Accounts</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('accountsList', 'Vendor') }}" class="nav-link"
-                                    data-key="t-pickers">
+                                <a href="{{ route('accountsList', 'Vendor') }}" class="nav-link" data-key="t-pickers">
                                     Vendor Accounts </a>
                             </li>
                             <li class="nav-item">
@@ -119,59 +119,69 @@
                                     data-key="t-pickers">
                                     Personal Accounts </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('accountsList', 'Investor') }}" class="nav-link"
+                                    data-key="t-pickers">
+                                    Investor Accounts </a>
+                            </li>
                         </ul>
                     </div>
-                </li>  
+                </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarMakePayments" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarMakePayments">
+                    <a class="nav-link menu-link" href="{{ route('branch_investment.index') }}">
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-my_balance">Branch Investment</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarMakePayments" data-bs-toggle="collapse"
+                        role="button" aria-expanded="false" aria-controls="sidebarMakePayments">
                         <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Make Payments</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarMakePayments">
                         <ul class="nav nav-sm flex-column">
-                           <li class="nav-item">
+                            <li class="nav-item">
                                 <a href="{{ route('payments.index') }}" class="nav-link"
                                     data-key="t-input-masks">Payments</a>
-                            </li> 
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('expenses.index') }}" class="nav-link" data-key="t-range-slider">
                                     Expenses</a>
                             </li>
-                           
+
                         </ul>
                     </div>
-                </li>  
+                </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarReceivePayments" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarReceivePayments">
+                    <a class="nav-link menu-link" href="#sidebarReceivePayments" data-bs-toggle="collapse"
+                        role="button" aria-expanded="false" aria-controls="sidebarReceivePayments">
                         <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Receive Payments</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarReceivePayments">
                         <ul class="nav nav-sm flex-column">
-                           
-                           
-                           <li class="nav-item">
+
+
+                            <li class="nav-item">
                                 <a href="{{ route('payments_receiving.index') }}" class="nav-link"
                                     data-key="t-input-masks">Receive Payments</a>
-                            </li> 
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('staff_payments.index') }}" class="nav-link"
                                     data-key="t-input-masks">Staff Payments</a>
-                            </li> 
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('auto_staff_payments') }}" class="nav-link"
                                     data-key="t-input-masks">Auto Staff Payments</a>
-                            </li> 
-                           <li class="nav-item">
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('bulk_payment.index') }}" class="nav-link"
                                     data-key="t-input-masks">Bulk Payments</a>
-                            </li> 
+                            </li>
                         </ul>
                     </div>
-                </li>  
+                </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarMiscellaneous" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarMiscellaneous">
+                    <a class="nav-link menu-link" href="#sidebarMiscellaneous" data-bs-toggle="collapse"
+                        role="button" aria-expanded="false" aria-controls="sidebarMiscellaneous">
                         <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Miscellaneous</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarMiscellaneous">
@@ -179,7 +189,7 @@
                             <li class="nav-item">
                                 <a href="{{ route('accounts_adjustments.index') }}" class="nav-link"
                                     data-key="t-input-masks">Accounts Adjustment</a>
-                            </li> 
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('staff_amounts_adjustments.index') }}" class="nav-link"
                                     data-key="t-input-masks">Staff Amount Adjustment</a>
@@ -190,7 +200,7 @@
                             </li>
                         </ul>
                     </div>
-                </li>  
+                </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarEmployees" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarEmployees">
@@ -201,36 +211,36 @@
                             <li class="nav-item">
                                 <a href="{{ route('employees.index') }}" class="nav-link"
                                     data-key="t-input-masks">List</a>
-                            </li> 
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('generate_salary.index') }}" class="nav-link"
                                     data-key="t-input-masks">Generate Salary</a>
-                            </li> 
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('issue_salary.index') }}" class="nav-link"
                                     data-key="t-input-masks">Issue Salary</a>
-                            </li> 
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('issue_advance.index') }}" class="nav-link"
                                     data-key="t-input-masks">Issue Advance</a>
-                            </li> 
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('issue_misc.index') }}" class="nav-link"
                                     data-key="t-input-masks">Issue Miscellaneous</a>
-                            </li> 
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('employee_adjustments.index') }}" class="nav-link"
                                     data-key="t-input-masks">Ledger Adjustments</a>
-                            </li> 
+                            </li>
                         </ul>
                     </div>
-                </li>  
+                </li>
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('my_balance') }}">
                         <i class="ri-file-list-3-line"></i> <span data-key="t-my_balance">My Balance</span>
                     </a>
-                </li> 
+                </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#cheques" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
@@ -239,26 +249,30 @@
                     <div class="collapse menu-dropdown" id="cheques">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('cheques.index', ['status' => 'All']) }}" class="nav-link" data-key="t-chat"> All</a>
+                                <a href="{{ route('cheques.index', ['status' => 'All']) }}" class="nav-link"
+                                    data-key="t-chat"> All</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('cheques.index', ['status' => 'pending']) }}" class="nav-link" data-key="t-chat"> Pending</a>
+                                <a href="{{ route('cheques.index', ['status' => 'pending']) }}" class="nav-link"
+                                    data-key="t-chat"> Pending</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('cheques.index', ['status' => 'forwarded']) }}" class="nav-link" data-key="t-chat"> Forwarded</a>
+                                <a href="{{ route('cheques.index', ['status' => 'forwarded']) }}" class="nav-link"
+                                    data-key="t-chat"> Forwarded</a>
                             </li>
-                            
+
                             <li class="nav-item">
-                                <a href="{{ route('cheques.index', ['status' => 'bounced']) }}" class="nav-link" data-key="t-chat"> Bounced</a>
+                                <a href="{{ route('cheques.index', ['status' => 'bounced']) }}" class="nav-link"
+                                    data-key="t-chat"> Bounced</a>
                             </li>
                         </ul>
                     </div>
-                </li>  
+                </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('customer_advances.index') }}">
                         <i class="ri-cash-line"></i> <span data-key="t-customer_advances">Customer Advances</span>
                     </a>
-                </li> 
+                </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarOtherUsers" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarOtherUsers">
@@ -269,17 +283,17 @@
                             <li class="nav-item">
                                 <a href="{{ route('otherusers.index', ['Order Booker']) }}" class="nav-link"
                                     data-key="t-form-select">
-                                   Order Bookers </a>
+                                    Order Bookers </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('otherusers.index', ['Operator']) }}" class="nav-link"
                                     data-key="t-form-select">
-                                   Operators </a>
+                                    Operators </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('otherusers.index', ['Branch Admin']) }}" class="nav-link"
                                     data-key="t-form-select">
-                                   Branch Admins </a>
+                                    Branch Admins </a>
                             </li>
                         </ul>
                     </div>
@@ -294,12 +308,12 @@
                             <li class="nav-item">
                                 <a href="{{ route('reportProductSummary') }}" class="nav-link"
                                     data-key="t-basic-elements">Products Summary</a>
-                            </li> 
+                            </li>
                             <li class="nav-item">
                                 <a href="{{ route('reportSales') }}" class="nav-link"
                                     data-key="t-basic-elements">Sales Report</a>
                             </li>
-                           <li class="nav-item">
+                            <li class="nav-item">
                                 <a href="{{ route('reportPurchases') }}" class="nav-link"
                                     data-key="t-basic-elements">Purchases Report</a>
                             </li>
@@ -316,7 +330,7 @@
                                     data-key="t-basic-elements">Warehouse Stock Report</a>
                             </li>
 
-                           <li class="nav-item">
+                            <li class="nav-item">
                                 <a href="{{ route('reportBranchStock') }}" class="nav-link"
                                     data-key="t-basic-elements">Branch Stock Report</a>
                             </li>
@@ -328,7 +342,7 @@
                                 <a href="{{ route('reportTopSellingProducts') }}" class="nav-link"
                                     data-key="t-basic-elements">Top Selling Products</a>
                             </li>
-                           <li class="nav-item">
+                            <li class="nav-item">
                                 <a href="{{ route('reportTopOrderbookers') }}" class="nav-link"
                                     data-key="t-basic-elements">Top Orderbookers</a>
                             </li>
@@ -364,13 +378,13 @@
                                 <a href="{{ route('reportOrderbookerWiseCustomerBalance') }}" class="nav-link"
                                     data-key="t-basic-elements">Orderbooker Wise Customer Balance</a>
                             </li>
-                           <li class="nav-item">
+                            <li class="nav-item">
                                 <a href="{{ route('reportExpense') }}" class="nav-link"
                                     data-key="t-basic-elements">Expense Report</a>
                             </li>
                         </ul>
                     </div>
-                </li> 
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

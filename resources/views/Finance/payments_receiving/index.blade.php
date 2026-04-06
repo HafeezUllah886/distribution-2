@@ -7,13 +7,13 @@
                     <div class="col-md-3">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">From</span>
-                            <input type="date" name="start" value="{{$start}}" class="form-control">
+                            <input type="date" name="start" value="{{ $start }}" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">To</span>
-                            <input type="date" name="end" value="{{$end}}" class="form-control">
+                            <input type="date" name="end" value="{{ $end }}" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -34,14 +34,15 @@
                             <span class="input-group-text" id="basic-addon1">Area</span>
                             <select name="area" id="area" class="form-control">
                                 <option @selected($area == 'All') value="All">All</option>
-                               @foreach ($areas as $are)
-                                   <option @selected($area == $are->id) value="{{$are->id}}">{{$are->name}}</option>
-                               @endforeach
+                                @foreach ($areas as $are)
+                                    <option @selected($area == $are->id) value="{{ $are->id }}">{{ $are->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
                     <div class="col-md-2">
-                       <input type="submit" value="Filter" class="btn btn-success w-100">
+                        <input type="submit" value="Filter" class="btn btn-success w-100">
                     </div>
                 </div>
             </form>
@@ -53,14 +54,14 @@
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <table class="table" id="buttons-datatables">
                         <thead>
                             <th>#</th>
@@ -89,7 +90,7 @@
                                     <td>{{ $tran->number }}</td>
                                     <td>{{ $tran->bank }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->cheque_date)) }}</td>
-                                   
+
                                     <td>{{ number_format($tran->amount) }}</td>
                                     <td>
                                         <div class="dropdown">
@@ -99,14 +100,16 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <button class="dropdown-item" onclick="newWindow('{{route('payments_receiving.show', $tran->id)}}')"
+                                                    <button class="dropdown-item"
+                                                        onclick="newWindow('{{ route('payments_receiving.show', $tran->id) }}')"
                                                         onclick=""><i
                                                             class="ri-eye-fill align-bottom me-2 text-muted"></i>
                                                         View
                                                     </button>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item text-danger" href="{{route('payments_receiving.delete', $tran->refID)}}">
+                                                    <a class="dropdown-item text-danger"
+                                                        href="{{ route('payments_receiving.delete', $tran->refID) }}">
                                                         <i class="ri-delete-bin-2-fill align-bottom me-2 text-danger"></i>
                                                         Delete
                                                     </a>
@@ -120,7 +123,8 @@
                     </table>
                 </div>
             </div>
-            <span class="alert alert-info">Receive payments from Vendors, Supply Man, Unloader, Customers and Business Accounts.</span>
+            <span class="alert alert-info">Receive payments from Vendors, Supply Man, Unloader, Customers and Business
+                Accounts.</span>
         </div>
     </div>
     <!-- Default Modals -->
@@ -138,56 +142,59 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-6">
-                               @include('layout.payment')
-                               <div class="form-group mt-2">
-                                <label for="orderbookerID">Order Booker</label>
-                                <select name="orderbookerID" id="orderbookerID" required class="selectize">
-                                    @foreach ($orderbookers as $orderbooker)
-                                        <option value="{{ $orderbooker->id }}">{{ $orderbooker->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                                @include('layout.payment')
+                                <div class="form-group mt-2">
+                                    <label for="orderbookerID">Order Booker</label>
+                                    <select name="orderbookerID" id="orderbookerID" required class="selectize">
+                                        @foreach ($orderbookers as $orderbooker)
+                                            <option value="{{ $orderbooker->id }}">{{ $orderbooker->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group mt-2">
-                                    <label for="fromID">Deposited By (Balance: <span id="accountBalance">0</span>)</label>
-                            <select name="depositerID" id="fromID" onchange="getBalance()" required class="selectize">
-                                <option value=""></option>
-                                @foreach ($depositers as $depositer)
-                                    <option value="{{ $depositer->id }}">{{ $depositer->title }} ({{ $depositer->type }})</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="date">Date</label>
-                            <input type="date" name="date" required id="date" value="{{ date('Y-m-d') }}"
-                                class="form-control">
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="notes">Notes</label>
-                            <textarea name="notes" required id="notes" cols="30" class="form-control" rows="5"></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
+                                    <label for="fromID">Deposited By (Balance: <span
+                                            id="accountBalance">0</span>)</label>
+                                    <select name="depositerID" id="fromID" onchange="getBalance()" required
+                                        class="selectize">
+                                        <option value=""></option>
+                                        @foreach ($depositers as $depositer)
+                                            <option value="{{ $depositer->id }}">{{ $depositer->title }}
+                                                ({{ $depositer->type }})</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="date">Date</label>
+                                    <input type="date" name="date" required id="date"
+                                        value="{{ date('Y-m-d') }}" class="form-control">
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="notes">Notes</label>
+                                    <textarea name="notes" required id="notes" cols="30" class="form-control" rows="5"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
                 </form>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 @endsection
 @section('page-css')
-<link rel="stylesheet" href="{{ asset('assets/libs/datatable/datatable.bootstrap5.min.css') }}" />
-<!--datatable responsive css-->
-<link rel="stylesheet" href="{{ asset('assets/libs/datatable/responsive.bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/datatable.bootstrap5.min.css') }}" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/responsive.bootstrap.min.css') }}" />
 
-<link rel="stylesheet" href="{{ asset('assets/libs/datatable/buttons.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/buttons.dataTables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
 @endsection
 
 @section('page-js')
-<script src="{{ asset('assets/libs/datatable/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/dataTables.buttons.min.js') }}"></script>
@@ -203,21 +210,17 @@
     <script>
         $(".selectize").selectize();
 
-        function getBalance()
-        {
+        function getBalance() {
             var id = $("#fromID").find(":selected").val();
             $.ajax({
                 url: "{{ url('/accountbalance/') }}/" + id,
                 method: 'GET',
                 success: function(response) {
                     $("#accountBalance").html(response.data.toFixed(0));
-                    if(response.data > 0)
-                    {
+                    if (response.data > 0) {
                         $("#accountBalance").addClass('text-success');
                         $("#accountBalance").removeClass('text-danger');
-                    }
-                    else
-                    {
+                    } else {
                         $("#accountBalance").addClass('text-danger');
                         $("#accountBalance").removeClass('text-success');
                     }
@@ -229,8 +232,5 @@
         }
     </script>
 
-<script>
-  
-   
-</script>
+    <script></script>
 @endsection
