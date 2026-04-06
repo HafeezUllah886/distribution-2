@@ -193,6 +193,11 @@
                     </div>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('branch_investment.index') }}">
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-my_balance">Branch Investment</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('discount.index') }}">
                         <i class="ri-file-list-3-line"></i> <span data-key="t-my_balance">Discount Management</span>
                     </a>

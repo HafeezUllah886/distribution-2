@@ -5,15 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\BranchInvestment;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BranchInvestmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $from = $request->from ?? firstDayOfCurrentYear();
+        $to = $request->to ?? lastDayOfCurrentYear();
+        $investments = BranchInvestment::currentBranch()->whereBetween('date', [$from, $to])->get();
+
+        return view('Finance.branch_investment.index', compact('investments', 'from', 'to'));
     }
 
     /**
@@ -29,7 +34,24 @@ class BranchInvestmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'investerName' => 'required',
+            'amount' => 'required',
+            'date' => 'required',
+        ]);
+
+        $ref = getRef();
+
+        BranchInvestment::create([
+            'investerName' => $request->investerName,
+            'amount' => $request->amount,
+            'date' => $request->date,
+            'notes' => $request->notes,
+            'branchID' => auth()->user()->branchID,
+            'refID' => $ref,
+        ]);
+
+        return redirect()->route('branch_investment.index')->with('success', 'Branch Investment created successfully');
     }
 
     /**
@@ -59,8 +81,21 @@ class BranchInvestmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(BranchInvestment $branchInvestment)
+    public function destroy($refID)
     {
-        //
+        try
+        {
+            DB::beginTransaction();
+            BranchInvestment::where('refID', $refID)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+            return redirect()->route('branch_investment.index')->with('success', "Branch Investment Deleted");
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+            return redirect()->route('branch_investment.index')->with('error', $e->getMessage());
+        }
     }
 }

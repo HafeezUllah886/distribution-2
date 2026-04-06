@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('branch_investments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('branchId')->constrained('branches', 'id')->onDelete('cascade');
+            $table->foreignId('branchID')->constrained('branches', 'id')->onDelete('cascade');
             $table->string('investerName');
             $table->date('date');
             $table->decimal('amount', 10, 2);

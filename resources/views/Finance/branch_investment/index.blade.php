@@ -83,11 +83,12 @@
                     <h5 class="modal-title" id="myModalLabel">Create Investment</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
-                <form action="{{ route('branch_investment.store') }}" enctype="multipart/form-data" method="post">
+                <form action="{{ route('branch_investment.store') }}" method="post">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-12">
+
                                 <div class="form-group mt-2">
                                     <label for="investerName">Investor Name</label>
                                     <input type="text" name="investerName" required id="investerName"

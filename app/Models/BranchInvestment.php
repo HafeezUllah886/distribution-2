@@ -10,4 +10,18 @@ class BranchInvestment extends Model
 
     use HasFactory;
     protected $guarded = [];
+
+    public function scopeCurrentBranch($query)
+    {
+        if (auth()->user()->role != 'Admin') {
+            return $query->where('branchID', auth()->user()->branchID);
+        }
+
+        return $query;
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(branches::class, 'branchID');
+    }
 }

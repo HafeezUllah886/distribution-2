@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountsAdjustmentController;
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\AutoStaffPaymentsController;
+use App\Http\Controllers\BranchInvestmentController;
 use App\Http\Controllers\BulkInvoicePaymentsReceivingController;
 use App\Http\Controllers\ChequesController;
 use App\Http\Controllers\CurrencymgmtController;
@@ -67,6 +68,9 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
     Route::get('cheque/forward/{ref}/clear', [ChequesController::class, 'forwardClear'])->name('cheques.forwardClear')->middleware(confirmPassword::class);
 
     Route::get('staff_balance/{staff}', [MyBalanceController::class, 'staff_balance'])->name('staff_balance');
+
+    Route::resource('branch_investment', BranchInvestmentController::class);
+    Route::get('branch_investment/delete/{ref}', [BranchInvestmentController::class, 'delete'])->name('branch_investment.delete')->middleware(confirmPassword::class);
 
     Route::get('/accountbalance/{id}', function ($id) {
         // Call your Laravel helper function here

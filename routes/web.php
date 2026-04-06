@@ -22,6 +22,7 @@ require __DIR__.'/otherusers.php';
 require __DIR__.'/setups.php';
 require __DIR__.'/employees.php';
 require __DIR__.'/discount_mgmt.php';
+require __DIR__.'/branch_investment.php';
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard');

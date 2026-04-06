@@ -5,9 +5,11 @@ namespace App\Models {
     /**
      * App\Models\BranchInvestment
      *
+     * @property-read \App\Models\branches $branch
      * @method static \Illuminate\Database\Eloquent\Builder<BranchInvestment>|BranchInvestment newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<BranchInvestment>|BranchInvestment newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<BranchInvestment>|BranchInvestment query()
+     * @method static \Illuminate\Database\Eloquent\Builder<BranchInvestment>|BranchInvestment currentBranch() {@see App\Models\BranchInvestment::scopeCurrentBranch()}
      * @method static mixed select($columns)
      * @method static mixed selectSub($query, $as)
      * @method static mixed selectRaw($expression, array $bindings)
