@@ -188,10 +188,13 @@ function avg_cost_warehouse_wise($id, $warehouse)
 
     $purchase_amount = $purchases->sum('amount');
     $purchase_qty = $purchases->sum('pc');
+    $purchase_fright = $purchases->avg('fright');
+    
+    $purchase_labor = $purchases->avg('labor');
 
     if($purchase_qty > 0)
     {
-        $purchase_price = $purchase_amount / $purchase_qty;
+        $purchase_price = ($purchase_amount / $purchase_qty) + $purchase_fright + $purchase_labor;
     }
     else
     {
@@ -214,10 +217,13 @@ function avg_purchase_price_branch_wise($id, $branch)
 
     $purchase_amount = $purchases->sum('price_amount');
     $purchase_qty = $purchases->sum('pc');
+    $purchase_fright = $purchases->avg('fright');
+    
+    $purchase_labor = $purchases->avg('labor');
 
     if($purchase_qty > 0)
     {
-        $purchase_price = $purchase_amount / $purchase_qty;
+        $purchase_price = ($purchase_amount / $purchase_qty) + $purchase_fright + $purchase_labor;
     }
     else
     {
