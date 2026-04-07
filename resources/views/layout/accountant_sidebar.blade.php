@@ -128,8 +128,8 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('branch_investment.index') }}">
-                        <i class="ri-file-list-3-line"></i> <span data-key="t-my_balance">Branch Investment</span>
+                    <a class="nav-link menu-link" href="{{ route('fixed_assets.index') }}">
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-my_balance">Fixed Assets</span>
                     </a>
                 </li>
                 <li class="nav-item">

@@ -3,13 +3,14 @@
 use App\Http\Controllers\AccountsAdjustmentController;
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\AutoStaffPaymentsController;
-use App\Http\Controllers\BranchInvestmentController;
 use App\Http\Controllers\BulkInvoicePaymentsReceivingController;
 use App\Http\Controllers\ChequesController;
 use App\Http\Controllers\CurrencymgmtController;
 use App\Http\Controllers\CustomerAdvancePaymentController;
 use App\Http\Controllers\ExpenseCategoriesController;
 use App\Http\Controllers\ExpensesController;
+use App\Http\Controllers\FixedAssetsCategoriesController;
+use App\Http\Controllers\FixedAssetsController;
 use App\Http\Controllers\MyBalanceController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\PaymentsReceivingController;
@@ -69,18 +70,20 @@ Route::middleware('auth', Admin_BranchAdmin_AccountantCheck::class)->group(funct
 
     Route::get('staff_balance/{staff}', [MyBalanceController::class, 'staff_balance'])->name('staff_balance');
 
-    Route::resource('branch_investment', BranchInvestmentController::class);
-    Route::get('branch_investment/delete/{ref}', [BranchInvestmentController::class, 'delete'])->name('branch_investment.delete')->middleware(confirmPassword::class);
+    Route::resource('fixed_assets', FixedAssetsController::class);
+    Route::get('fixed_asset/sale/create/{id}', [FixedAssetsController::class, 'saleCreate'])->name('fixed_asset.saleCreate');
+    Route::post('fixed_asset/sale', [FixedAssetsController::class, 'sale'])->name('fixed_asset.sale');
+    Route::get('fixed_asset/delete/{ref}', [FixedAssetsController::class, 'delete'])->name('fixed_asset.delete')->middleware(confirmPassword::class);
+
+    Route::resource('fixed_asset_categories', FixedAssetsCategoriesController::class);
 
     Route::get('/accountbalance/{id}', function ($id) {
-        // Call your Laravel helper function here
         $result = getAccountBalance($id);
 
         return response()->json(['data' => $result]);
     });
 
     Route::get('/customerbalance/{id}/{orderbookerID}', function ($id, $orderbookerID) {
-        // Call your Laravel helper function here
         $result = getAccountBalanceOrderbookerWise($id, $orderbookerID);
 
         return response()->json(['data' => $result]);

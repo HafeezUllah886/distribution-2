@@ -1,0 +1,194 @@
+@extends('layout.app')
+@section('content')
+    <div class="row">
+        <div class="col-12">
+            <form>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">From</span>
+                            <input type="date" class="form-control" placeholder="Username" name="start"
+                                value="{{ $from }}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">To</span>
+                            <input type="date" class="form-control" placeholder="Username" name="end"
+                                value="{{ $to }}" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Category</span>
+                            <select class="form-control" name="category" aria-label="Username"
+                                aria-describedby="basic-addon1">
+                                <option value="All">All</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}" @selected($category->id == $categoryID)>{{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="submit" value="Filter" class="btn btn-success w-100">
+                    </div>
+                </div>
+            </form>
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h3>Fixed Assets</h3>
+                    <div>
+                        <a type="button" class="btn btn-info" href="{{ route('fixed_asset_categories.index') }}">Fixed
+                            Asset Categories</a>
+                        <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create
+                            New</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <table class="table" id="buttons-datatables">
+                        <thead>
+                            <th>#</th>
+                            <th>Ref #</th>
+                            <th>Item</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Notes</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                            @foreach ($fixed_assets as $key => $tran)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $tran->refID }}</td>
+                                    <td>{{ $tran->item_description }}</td>
+                                    <td>{{ $tran->category->name }}</td>
+                                    <td>{{ date('d M Y', strtotime($tran->date)) }}</td>
+                                    <td>{{ $tran->notes }}</td>
+                                    <td>{{ number_format($tran->amount) }}</td>
+                                    <td><span
+                                            class="badge bg-{{ $tran->status() == 'Sold' ? 'danger' : 'success' }}">{{ $tran->status() }}</span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('fixed_asset.saleCreate', $tran->id) }}"
+                                            class="btn btn-primary">Sale</a>
+
+                                        <a href="{{ route('fixed_asset.delete', $tran->refID) }}"
+                                            class="btn btn-danger">Delete</a>
+                                    </td>
+
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Default Modals -->
+
+    <div id="new" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+        style="display: none;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Create Fixed Asset</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <form action="{{ route('fixed_assets.store') }}" enctype="multipart/form-data" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group mt-2">
+                                    <label for="item_description">Item Description</label>
+                                    <input type="text" name="item_description" required id="item_description"
+                                        class="form-control">
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="category">Category</label>
+                                    <select name="category" required id="category" class="form-control">
+                                        <option value="">Select Category</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="date">Date</label>
+                                    <input type="date" name="date" required id="date"
+                                        value="{{ date('Y-m-d') }}" class="form-control">
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="date">Purchase Status</label>
+                                    <select name="purchase_status" required id="purchase_status" class="form-control">
+                                        <option value="new">New Purchasing</option>
+                                        <option value="already">Already Purchased</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="notes">Notes</label>
+                                    <textarea name="notes" required id="notes" cols="30" class="form-control" rows="5"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                @include('layout.payment')
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+@endsection
+@section('page-css')
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/datatable.bootstrap5.min.css') }}" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/responsive.bootstrap.min.css') }}" />
+
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/buttons.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
+@endsection
+
+@section('page-js')
+    <script src="{{ asset('assets/libs/datatable/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/jszip.min.js') }}"></script>
+
+    <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
+
+    <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
+
+    <script>
+        function sale(id, item_description) {
+            $('#id_edit').val(id);
+            $('#itemDescription').text(item_description);
+            $('#sale').modal('show');
+        }
+    </script>
+@endsection
