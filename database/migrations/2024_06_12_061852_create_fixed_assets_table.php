@@ -27,6 +27,7 @@ return new class extends Migration
             $table->date('date');
             $table->float('amount');
             $table->enum('method', ['Cash', 'Online', 'Cheque', 'Other']);
+            $table->string('purchase_status')->nullable();
             $table->string('number')->nullable();
             $table->string('bank')->nullable();
             $table->date('cheque_date')->nullable();

@@ -7469,9 +7469,11 @@ namespace App\Models {
      * @property string|null $cheque_date
      * @property string|null $bank
      * @property string|null $number
+     * @property string|null $purchase_status
      * @property mixed $method
      * @property float $amount
      * @property string $date
+     * @property string $item_description
      * @property int $categoryID
      * @property int $branchID
      * @property int $id
@@ -7480,9 +7482,11 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<fixed_assets>|fixed_assets whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<fixed_assets>|fixed_assets whereBranchid($value)
      * @method static \Illuminate\Database\Eloquent\Builder<fixed_assets>|fixed_assets whereCategoryid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<fixed_assets>|fixed_assets whereItemDescription($value)
      * @method static \Illuminate\Database\Eloquent\Builder<fixed_assets>|fixed_assets whereDate($value)
      * @method static \Illuminate\Database\Eloquent\Builder<fixed_assets>|fixed_assets whereAmount($value)
      * @method static \Illuminate\Database\Eloquent\Builder<fixed_assets>|fixed_assets whereMethod($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<fixed_assets>|fixed_assets wherePurchaseStatus($value)
      * @method static \Illuminate\Database\Eloquent\Builder<fixed_assets>|fixed_assets whereNumber($value)
      * @method static \Illuminate\Database\Eloquent\Builder<fixed_assets>|fixed_assets whereBank($value)
      * @method static \Illuminate\Database\Eloquent\Builder<fixed_assets>|fixed_assets whereChequeDate($value)

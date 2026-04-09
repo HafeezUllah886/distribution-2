@@ -18,7 +18,7 @@
                                 value="{{ $to }}" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">Category</span>
                             <select class="form-control" name="category" aria-label="Username"
@@ -31,7 +31,18 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Status</span>
+                            <select class="form-control" name="status" aria-label="Username"
+                                aria-describedby="basic-addon1">
+                                <option value="All">All</option>
+                                <option value="Available" @selected($status == 'Available')>Available</option>
+                                <option value="Sold" @selected($status == 'Sold')>Sold</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
                         <input type="submit" value="Filter" class="btn btn-success w-100">
                     </div>
                 </div>
@@ -63,10 +74,14 @@
                             <th>Ref #</th>
                             <th>Item</th>
                             <th>Category</th>
+                            <th>Purchase Status</th>
                             <th>Date</th>
                             <th>Notes</th>
                             <th>Amount</th>
                             <th>Status</th>
+                            <th>Sale Date</th>
+                            <th>Sale Amount</th>
+                            <th>Difference</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
@@ -76,18 +91,59 @@
                                     <td>{{ $tran->refID }}</td>
                                     <td>{{ $tran->item_description }}</td>
                                     <td>{{ $tran->category->name }}</td>
+                                    <td class="text-uppercase">{{ $tran->purchase_status }}</td>
                                     <td>{{ date('d M Y', strtotime($tran->date)) }}</td>
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
-                                    <td><span
+                                    <td>
+                                        <span
                                             class="badge bg-{{ $tran->status() == 'Sold' ? 'danger' : 'success' }}">{{ $tran->status() }}</span>
                                     </td>
+                                    <td>{{ $tran->status() == 'Sold' ? date('d M Y', strtotime($tran->sale->date)) : '---' }}
+                                    </td>
+                                    <td>{{ $tran->status() == 'Sold' ? number_format($tran->sale->amount) : '---' }}
+                                    </td>
                                     <td>
-                                        <a href="{{ route('fixed_asset.saleCreate', $tran->id) }}"
-                                            class="btn btn-primary">Sale</a>
+                                        {{ $tran->status() == 'Sold' ? number_format($tran->sale->amount - $tran->amount) : '---' }}
+                                    </td>
 
-                                        <a href="{{ route('fixed_asset.delete', $tran->refID) }}"
-                                            class="btn btn-danger">Delete</a>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="ri-more-fill align-middle"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('fixed_assets.show', $tran->id) }}"><i
+                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>
+                                                        View
+                                                    </a>
+                                                </li>
+                                                @if ($tran->status() !== 'Sold')
+                                                    <li>
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('fixed_asset.saleCreate', $tran->id) }}"
+                                                            onclick=""><i
+                                                                class="ri-money-dollar-circle-fill align-bottom me-2 text-muted"></i>
+                                                            Sale
+                                                        </a>
+                                                    </li>
+                                                @endif
+
+                                                @if ($tran->status() !== 'Sold')
+                                                    <li>
+                                                        <a href="{{ route('fixed_asset.delete', $tran->refID) }}"
+                                                            class="dropdown-item"><i
+                                                                class="ri-delete-bin-fill align-bottom me-2 text-danger"></i>
+                                                            Delete
+                                                        </a>
+                                                    </li>
+                                                @endif
+
+                                            </ul>
+                                        </div>
                                     </td>
 
                                 </tr>
@@ -157,8 +213,6 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
-
 @endsection
 @section('page-css')
     <link rel="stylesheet" href="{{ asset('assets/libs/datatable/datatable.bootstrap5.min.css') }}" />
