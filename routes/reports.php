@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\reports\ActivityReportController;
 use App\Http\Controllers\reports\balanceSheetReport;
+use App\Http\Controllers\reports\BranchInvestmentReportController;
 use App\Http\Controllers\reports\BranchStockReportController;
 use App\Http\Controllers\reports\customerProductsSaleReport;
 use App\Http\Controllers\reports\dailycashbookController;
@@ -105,6 +106,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/reports/targets', [TargetsReportController::class, 'index'])->name('reportTargets');
     Route::get('/reports/targetsData', [TargetsReportController::class, 'data'])->name('reportTargetsData');
+
+    Route::get('/reports/branchInvestment', [BranchInvestmentReportController::class, 'index'])->name('reportBranchInvestment');
+    Route::get('/reports/branchInvestmentData', [BranchInvestmentReportController::class, 'data'])->name('reportBranchInvestmentData');
 
     Route::get('/get-orderbookers-by-customer/{customer}', [OrderbookerWiseCustomerBalanceReport::class, 'getOrderbookersByCustomer'])->name('get-orderbookers-by-customer');
 

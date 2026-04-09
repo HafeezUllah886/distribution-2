@@ -106,6 +106,17 @@ class accounts extends Model
             return $query->where('type', 'Personal')->where('status', 'Active')->where('branchID', auth()->user()->branchID);
         }
     }
+    public function scopeInvestor($query)
+    {
+        if(auth()->user()->role == 'Admin')
+        {
+            return $query->where('type', 'Investor')->where('status', 'Active');
+        }
+        else
+        {
+            return $query->where('type', 'Investor')->where('status', 'Active')->where('branchID', auth()->user()->branchID);
+        }
+    }
 
     public function scopeCurrentBranch($query)
     {

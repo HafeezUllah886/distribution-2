@@ -283,6 +283,32 @@ function avg_cost_branch_wise($id, $branch)
     return $purchase_price;
 }
 
+function avg_cost_branch_wise_till_date($id, $branch, $date)
+{
+    $purchase = purchase::where('branchID', $branch)
+        ->whereDate('date', '<=', $date)
+        ->latest()
+        ->take(10)
+        ->pluck('id')->toArray();
+
+    $purchases = purchase_details::where('productID', $id)
+        ->whereIn('purchaseID', $purchase)
+        ->get();
+
+    $purchase_amount = $purchases->sum('amount');
+    $purchase_qty = $purchases->sum('pc');
+
+    if($purchase_qty > 0)
+    {
+        $purchase_price = $purchase_amount / $purchase_qty;
+    }
+    else
+    {
+        $purchase_price = 0;
+    }
+    return $purchase_price;
+}
+
 function projectNameAuth()
 {
     return "GS Marketing";

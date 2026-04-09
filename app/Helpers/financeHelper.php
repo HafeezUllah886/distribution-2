@@ -263,6 +263,27 @@ function spotUserBalance($id, $ref)
     return $balance = $cr - $db;
 }
 
+function accountBalanceTillDate($id, $date)
+{
+    $cr = transactions::where('accountID', $id)->whereDate('date', '<=', $date)->sum('cr');
+    $db = transactions::where('accountID', $id)->whereDate('date', '<=', $date)->sum('db');
+    return $balance = $cr - $db;
+}
+
+function userBalanceTillDate($id, $date)
+{
+    $cr = users_transactions::where('userID', $id)->whereDate('date', '<=', $date)->sum('cr');
+    $db = users_transactions::where('userID', $id)->whereDate('date', '<=', $date)->sum('db');
+    return $balance = $cr - $db;
+}
+
+function employeeBalanceTillDate($id, $date)
+{
+    $cr = employee_ledger::where('employeeID', $id)->whereDate('date', '<=', $date)->sum('cr');
+    $db = employee_ledger::where('employeeID', $id)->whereDate('date', '<=', $date)->sum('db');
+    return $balance = $cr - $db;
+}
+
 
 function saveCheque($customerID, $userID, $orderbookerID, $chequeDate, $amount, $number, $bank, $notes, $ref){
     cheques::create(

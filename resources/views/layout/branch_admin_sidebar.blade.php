@@ -399,6 +399,10 @@
                                 <a href="{{ route('reportActivity') }}" class="nav-link"
                                     data-key="t-basic-elements">Activity Report</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('reportBranchInvestment') }}" class="nav-link"
+                                    data-key="t-basic-elements">Branch Investment Report</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

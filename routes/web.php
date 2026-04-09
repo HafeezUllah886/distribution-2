@@ -83,4 +83,6 @@ Route::middleware('auth')->group(function () {
 
         return response()->json($units_array);
     })->name('getUnits');
+
+   
 });

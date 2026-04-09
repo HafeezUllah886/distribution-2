@@ -53,6 +53,20 @@ function getBranchProductStock($id, $branch){
     return $balance;
 }
 
+function BranchProductStockTillDate($id, $branch, $date){
+    
+    $warehouses = DB::table('warehouses')->where('branchID', $branch)->distinct()->pluck('id')->toArray();
+    $stocks  = stock::where('productID', $id)->whereIn('warehouseID', $warehouses)->whereDate('date', '<=', $date)->get();
+    
+    $balance = 0;
+    foreach($stocks as $stock)
+    {
+    $balance += $stock->cr;
+    $balance -= $stock->db;
+    }
+    return $balance;
+}
+
 function getWarehouseProductStock($id, $warehouse){
     $stocks  = stock::where('productID', $id)->where('warehouseID', $warehouse)->get();
     $balance = 0;
@@ -134,6 +148,13 @@ function branch_product_stock_value_sale_wise($id, $branch)
 function branch_product_stock_value_cost_wise($id, $branch)
 {
     $stock = getBranchProductStock($id, $branch);
+    $price = avg_cost_branch_wise($id, $branch);
+    
+    return $price * $stock;
+}
+function branch_product_stock_value_cost_wise_till_date($id, $branch, $date)
+{
+    $stock = BranchProductStockTillDate($id, $branch, $date);
     $price = avg_cost_branch_wise($id, $branch);
     
     return $price * $stock;

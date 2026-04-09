@@ -1276,6 +1276,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts unloader() {@see App\Models\accounts::scopeUnloader()}
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts freight() {@see App\Models\accounts::scopeFreight()}
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts personal() {@see App\Models\accounts::scopePersonal()}
+     * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts investor() {@see App\Models\accounts::scopeInvestor()}
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts currentBranch() {@see App\Models\accounts::scopeCurrentBranch()}
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts other() {@see App\Models\accounts::scopeOther()}
      * @method static \Illuminate\Database\Eloquent\Builder<accounts>|accounts active() {@see App\Models\accounts::scopeActive()}
