@@ -17,14 +17,9 @@
                             </select>
                         </div>
                         <div class="form-group mt-2">
-                            <label for="from">From Date</label>
-                            <input type="date" name="from" id="from" class="form-control"
-                                value="{{ firstDayOfCurrentYear() }}">
-                        </div>
-                        <div class="form-group mt-2">
-                            <label for="to">To Date</label>
-                            <input type="date" name="to" id="to" class="form-control"
-                                value="{{ lastDayOfCurrentYear() }}">
+                            <label for="date">On Date</label>
+                            <input type="date" name="date" id="date" class="form-control"
+                                value="{{ today() }}">
                         </div>
 
                         <div class="form-group mt-2">

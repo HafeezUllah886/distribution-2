@@ -35,18 +35,16 @@ class BranchInvestmentReportController extends Controller
     public function data(Request $request)
     {
        $branch = $request->branch;
-       $from = $request->from;
-       $to = $request->to;
+       $date = $request->date;
 
-       $lastYearFrom = date('Y-m-d', strtotime($from . ' - 1 year'));
-       $lastYearTo = date('Y-m-d', strtotime($to . ' - 1 year'));
+       $lastYearDate = date('Y-m-d', strtotime($date . ' - 1 year'));
 
        $customers = accounts::customer()->where('branchID', $branch)->get();
      
        foreach($customers as $customer)
        {
-           $customer->currentBalance = accountBalanceTillDate($customer->id, $to);
-           $customer->lastYearBalance = accountBalanceTillDate($customer->id, $lastYearTo);
+           $customer->currentBalance = accountBalanceTillDate($customer->id, $date);
+           $customer->lastYearBalance = accountBalanceTillDate($customer->id, $lastYearDate);
           
        }
 
@@ -54,8 +52,8 @@ class BranchInvestmentReportController extends Controller
   
        foreach($vendors as $vendor)
        {
-           $vendor->currentBalance = accountBalanceTillDate($vendor->id, $to);
-           $vendor->lastYearBalance = accountBalanceTillDate($vendor->id, $lastYearTo);
+           $vendor->currentBalance = accountBalanceTillDate($vendor->id, $date);
+           $vendor->lastYearBalance = accountBalanceTillDate($vendor->id, $lastYearDate);
            
        }
 
@@ -63,8 +61,8 @@ class BranchInvestmentReportController extends Controller
       
        foreach($business as $busines)
        {
-           $currentBalance = accountBalanceTillDate($busines->id, $to);
-           $lastYearBalance = accountBalanceTillDate($busines->id, $lastYearTo);
+           $currentBalance = accountBalanceTillDate($busines->id, $date);
+           $lastYearBalance = accountBalanceTillDate($busines->id, $lastYearDate);
            $busines->currentBalance = $currentBalance;
            $busines->lastYearBalance = $lastYearBalance;
        }
@@ -73,8 +71,8 @@ class BranchInvestmentReportController extends Controller
        $staff = user::where('branchID', $branch)->get();
        foreach($staff as $staf)
        {
-           $currentBalance = userBalanceTillDate($staf->id, $to);
-           $lastYearBalance = userBalanceTillDate($staf->id, $lastYearTo);
+           $currentBalance = userBalanceTillDate($staf->id, $date);
+           $lastYearBalance = userBalanceTillDate($staf->id, $lastYearDate);
            $staf->currentBalance = $currentBalance;
            $staf->lastYearBalance = $lastYearBalance;
        }
@@ -82,8 +80,8 @@ class BranchInvestmentReportController extends Controller
        $personal = accounts::personal()->where('branchID', $branch)->get();
        foreach($personal as $person)
        {
-           $currentBalance = accountBalanceTillDate($person->id, $to);
-           $lastYearBalance = accountBalanceTillDate($person->id, $lastYearTo);
+           $currentBalance = accountBalanceTillDate($person->id, $date);
+           $lastYearBalance = accountBalanceTillDate($person->id, $lastYearDate);
            $person->currentBalance = $currentBalance;
            $person->lastYearBalance = $lastYearBalance;
        }
@@ -91,8 +89,8 @@ class BranchInvestmentReportController extends Controller
        $employees = employee::where('branchID', $branch)->get();
        foreach($employees as $employee)
        {
-           $currentBalance = employeeBalanceTillDate($employee->id, $to);
-           $lastYearBalance = employeeBalanceTillDate($employee->id, $lastYearTo);
+           $currentBalance = employeeBalanceTillDate($employee->id, $date);
+           $lastYearBalance = employeeBalanceTillDate($employee->id, $lastYearDate);
            $employee->currentBalance = $currentBalance;
            $employee->lastYearBalance = $lastYearBalance;
        }
@@ -102,8 +100,8 @@ class BranchInvestmentReportController extends Controller
        $totalLastYearStockValue = 0;
        foreach($products as $product)
        {
-           $currentStockValue = branch_product_stock_value_cost_wise_till_date($product->id, $branch, $to);
-           $lastYearStockValue = branch_product_stock_value_cost_wise_till_date($product->id, $branch, $lastYearTo);
+           $currentStockValue = branch_product_stock_value_cost_wise_till_date($product->id, $branch, $date);
+           $lastYearStockValue = branch_product_stock_value_cost_wise_till_date($product->id, $branch, $lastYearDate);
            $product->currentStockValue = $currentStockValue;
            $product->lastYearStockValue = $lastYearStockValue;
            $totalCurrentStockValue += $currentStockValue;
@@ -114,8 +112,8 @@ class BranchInvestmentReportController extends Controller
       
        foreach($investors as $investor)
        {
-           $currentBalance = accountBalanceTillDate($investor->id, $to);
-           $lastYearBalance = accountBalanceTillDate($investor->id, $lastYearTo);
+           $currentBalance = accountBalanceTillDate($investor->id, $date);
+           $lastYearBalance = accountBalanceTillDate($investor->id, $lastYearDate);
            $investor->currentBalance = $currentBalance;
            $investor->lastYearBalance = $lastYearBalance;
        }
@@ -125,17 +123,17 @@ class BranchInvestmentReportController extends Controller
        $totalLastYearFixedAssetsValue = 0;
        foreach($fixed_assets as $fixed_asset)
        {
-        if($fixed_asset->date <= $to && ($fixed_asset->whereDoesntHave('sale') || $fixed_asset->sale->date <= $to))
+        if($fixed_asset->date <= $date && ($fixed_asset->whereDoesntHave('sale') || $fixed_asset->sale->date <= $date))
         {
             $totalCurrentFixedAssetsValue += $fixed_asset->amount;
         }
-        if($fixed_asset->date <= $lastYearTo && ($fixed_asset->whereDoesntHave('sale') || $fixed_asset->sale->date <= $lastYearTo))
+        if($fixed_asset->date <= $lastYearDate && ($fixed_asset->whereDoesntHave('sale') || $fixed_asset->sale->date <= $lastYearDate))
         {
             $totalLastYearFixedAssetsValue += $fixed_asset->amount;
         }
        }
 
        $branch_name = branches::find($branch)->name;
-        return view('reports.branch_investment.details', compact('from', 'to', 'lastYearFrom', 'lastYearTo', 'branch', 'customers', 'branch_name', 'vendors', 'business', 'staff', 'employees', 'products', 'totalCurrentStockValue', 'totalLastYearStockValue', 'personal', 'investors', 'fixed_assets', 'totalCurrentFixedAssetsValue', 'totalLastYearFixedAssetsValue'));
+        return view('reports.branch_investment.details', compact('date', 'lastYearDate', 'branch', 'customers', 'branch_name', 'vendors', 'business', 'staff', 'employees', 'products', 'totalCurrentStockValue', 'totalLastYearStockValue', 'personal', 'investors', 'fixed_assets', 'totalCurrentFixedAssetsValue', 'totalLastYearFixedAssetsValue'));
     }
 }
