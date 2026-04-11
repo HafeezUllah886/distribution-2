@@ -118,19 +118,20 @@ class BranchInvestmentReportController extends Controller
            $investor->lastYearBalance = $lastYearBalance;
        }
 
-       $fixed_assets= fixed_assets::where('branchID', $branch)->get();
+       $fixed_assets = fixed_assets::with('sale')->where('branchID', $branch)->get();
        $totalCurrentFixedAssetsValue = 0;
        $totalLastYearFixedAssetsValue = 0;
        foreach($fixed_assets as $fixed_asset)
        {
-        if($fixed_asset->date <= $date && ($fixed_asset->whereDoesntHave('sale') || $fixed_asset->sale->date <= $date))
-        {
-            $totalCurrentFixedAssetsValue += $fixed_asset->amount;
-        }
-        if($fixed_asset->date <= $lastYearDate && ($fixed_asset->whereDoesntHave('sale') || $fixed_asset->sale->date <= $lastYearDate))
-        {
-            $totalLastYearFixedAssetsValue += $fixed_asset->amount;
-        }
+           // Include if: acquired on/before the date AND (never sold OR sold after the date)
+           if($fixed_asset->date <= $date && (is_null($fixed_asset->sale) || $fixed_asset->sale->date > $date))
+           {
+               $totalCurrentFixedAssetsValue += $fixed_asset->amount;
+           }
+           if($fixed_asset->date <= $lastYearDate && (is_null($fixed_asset->sale) || $fixed_asset->sale->date > $lastYearDate))
+           {
+               $totalLastYearFixedAssetsValue += $fixed_asset->amount;
+           }
        }
 
        $branch_name = branches::find($branch)->name;

@@ -316,7 +316,7 @@
                                                 $personal->sum('currentBalance') +
                                                 $employees->sum('currentBalance') +
                                                 $staff->sum('currentBalance') +
-                                                $totalCurrentStockValue -
+                                                $totalCurrentStockValue +
                                                 $vendors->sum('currentBalance');
 
                                             $totalGeneralLastYear =
@@ -325,7 +325,7 @@
                                                 $personal->sum('lastYearBalance') +
                                                 $employees->sum('lastYearBalance') +
                                                 $staff->sum('lastYearBalance') +
-                                                $totalLastYearStockValue -
+                                                $totalLastYearStockValue +
                                                 $vendors->sum('lastYearBalance');
 
                                             $totalCurrentInvestment =
