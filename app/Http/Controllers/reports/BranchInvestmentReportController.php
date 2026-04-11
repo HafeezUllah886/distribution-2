@@ -114,8 +114,8 @@ class BranchInvestmentReportController extends Controller
        {
            $currentBalance = accountBalanceTillDate($investor->id, $date);
            $lastYearBalance = accountBalanceTillDate($investor->id, $lastYearDate);
-           $investor->currentBalance = $currentBalance;
-           $investor->lastYearBalance = $lastYearBalance;
+           $investor->currentBalance = abs($currentBalance);
+           $investor->lastYearBalance = abs($lastYearBalance);
        }
 
        $totalInvestmentCurrent = $investors->sum('currentBalance');
