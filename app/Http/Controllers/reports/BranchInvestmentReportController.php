@@ -118,6 +118,14 @@ class BranchInvestmentReportController extends Controller
            $investor->lastYearBalance = $lastYearBalance;
        }
 
+       $totalInvestmentCurrent = $investors->sum('currentBalance');
+       $totalInvestmentLastYear = $investors->sum('lastYearBalance');
+
+       foreach($investors as $investor)
+       {
+           $investor->currentPercentage = ($investor->currentBalance / $totalInvestmentCurrent) * 100;
+           $investor->lastYearPercentage = ($investor->lastYearBalance / $totalInvestmentLastYear) * 100;
+       }
        $fixed_assets = fixed_assets::with('sale')->where('branchID', $branch)->get();
        $totalCurrentFixedAssetsValue = 0;
        $totalLastYearFixedAssetsValue = 0;

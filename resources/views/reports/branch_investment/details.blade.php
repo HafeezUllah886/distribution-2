@@ -289,9 +289,12 @@
                                                 <td class="p-1 text-start">
                                                     {{ $investor->title }}
                                                 </td>
-                                                <td class="p-1 text-end">{{ number_format($investor->currentBalance, 2) }}
+                                                <td class="p-1 text-end">
+                                                    ({{ number_format($investor->currentPercentage, 2) }}%)
+                                                    {{ number_format($investor->currentBalance, 2) }}
                                                 </td>
                                                 <td class="p-1 text-end">
+                                                    ({{ number_format($investor->lastYearPercentage, 2) }}%)
                                                     {{ number_format($investor->lastYearBalance, 2) }}
                                                 </td>
                                             </tr>
