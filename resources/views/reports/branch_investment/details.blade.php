@@ -1,41 +1,80 @@
 @extends('layout.popups')
 @section('content')
     <style>
-        /* Accordion heading rows */
-        tr.accordion-heading {
-            cursor: pointer;
-            user-select: none;
+        .acc-btn {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .acc-btn .acc-num  { width: 40px; flex-shrink: 0; text-align: center; }
+        .acc-btn .acc-name { flex-grow: 1; text-align: left; }
+        .acc-btn .acc-val  { width: 130px; flex-shrink: 0; text-align: right; }
+        .acc-btn .acc-ly   { width: 130px; flex-shrink: 0; text-align: right; }
+
+        .accordion-button:not(.collapsed) { background-color: #e8f0fe; color: #000; }
+        .accordion-button:focus { box-shadow: none; }
+        .accordion-body { padding: 0; }
+
+        /* Column headers row */
+        .acc-col-header {
+            display: flex;
+            width: 100%;
+            padding: 4px 16px;
+            background: #f3f3f3;
+            font-weight: 700;
+            font-size: 0.8rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .acc-col-header .h-num  { width: 40px; flex-shrink: 0; text-align: center; }
+        .acc-col-header .h-name { flex-grow: 1; }
+        .acc-col-header .h-val  { width: 130px; flex-shrink: 0; text-align: right; }
+        .acc-col-header .h-ly   { width: 130px; flex-shrink: 0; text-align: right; }
+
+        /* Section label rows */
+        .section-label {
+            background: #f8f9fa;
+            padding: 6px 16px;
+            font-weight: 700;
+            font-size: 1rem;
+            border-top: 2px solid #dee2e6;
+            border-bottom: 1px solid #dee2e6;
         }
 
-        tr.accordion-heading:hover {
-            filter: brightness(0.93);
+        /* Static (non-accordion) rows */
+        .static-row {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            padding: 6px 16px;
+            border-bottom: 1px solid #dee2e6;
+            background: #f8f9fa;
         }
+        .static-row .s-num  { width: 40px; flex-shrink: 0; text-align: center; font-weight: 600; }
+        .static-row .s-name { flex-grow: 1; font-weight: 600; }
+        .static-row .s-val  { width: 130px; flex-shrink: 0; text-align: right; font-weight: 600; }
+        .static-row .s-ly   { width: 130px; flex-shrink: 0; text-align: right; font-weight: 600; }
 
-        tr.accordion-heading .acc-toggle-icon {
-            float: right;
-            margin-right: 4px;
-            transition: transform 0.2s ease;
-            font-style: normal;
-            font-size: 12px;
-        }
+        /* Detail table inside accordion */
+        .detail-table { width: 100%; margin: 0; }
+        .detail-table td { padding: 4px 8px; font-size: 0.825rem; border-bottom: 1px solid #f0f0f0; }
+        .detail-table td:first-child { width: 40px; text-align: center; }
+        .detail-table td:nth-child(2) { }
+        .detail-table td:nth-child(3), .detail-table td:nth-child(4) { width: 130px; text-align: right; }
 
-        tr.accordion-heading.collapsed .acc-toggle-icon {
-            transform: rotate(-90deg);
-        }
+        /* Totals table */
+        .totals-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        .totals-table td { padding: 6px 8px; border: 1px solid #dee2e6; font-weight: 700; }
+        .totals-table td:last-child, .totals-table td:nth-last-child(2) { text-align: right; width: 130px; }
 
-        tr.accordion-detail {
-            transition: opacity 0.15s ease;
-        }
-
-        /* Print: always show all rows */
+        /* ── PRINT ─────────────────────────────────────────────── */
         @media print {
-            tr.accordion-detail {
-                display: table-row !important;
-            }
-
-            .acc-toggle-icon {
-                display: none !important;
-            }
+            /* Hide the toggle chevron — print what is currently visible */
+            .accordion-button::after { display: none !important; }
+            .accordion-button { padding: 4px 8px !important; }
+            .accordion-item { border: none !important; }
         }
     </style>
 
@@ -45,8 +84,9 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="hstack gap-2 justify-content-end d-print-none p-2 mt-4">
-                            <a href="javascript:window.print()" class="btn btn-success ml-4"><i
-                                    class="ri-printer-line mr-4"></i> Print</a>
+                            <a href="javascript:window.print()" class="btn btn-success ml-4">
+                                <i class="ri-printer-line mr-4"></i> Print
+                            </a>
                         </div>
                         <div class="card-header border-bottom-dashed p-4">
                             <div class="d-flex">
@@ -58,8 +98,8 @@
                                 </div>
                             </div>
                         </div>
-                        <!--end card-header-->
                     </div><!--end col-->
+
                     <div class="col-lg-12">
                         <div class="card-body p-4">
                             <div class="row g-3">
@@ -67,352 +107,319 @@
                                     <p class="text-muted mb-2 text-uppercase fw-semibold">On Date</p>
                                     <h5 class="fs-14 mb-0">{{ date('d M Y', strtotime($date)) }}</h5>
                                 </div>
-
                                 <div class="col-3">
                                     <p class="text-muted mb-2 text-uppercase fw-semibold">Branch</p>
                                     <h5 class="fs-14 mb-0">{{ $branch_name }}</h5>
                                 </div>
-                                <!--end col-->
-                                <!--end col-->
                                 <div class="col-3">
                                     <p class="text-muted mb-2 text-uppercase fw-semibold">Printed On</p>
-                                    <h5 class="fs-14 mb-0"><span id="total-amount">{{ date('d M Y') }}</span></h5>
-                                    {{-- <h5 class="fs-14 mb-0"><span id="total-amount">{{ \Carbon\Carbon::now()->format('h:i A') }}</span></h5> --}}
+                                    <h5 class="fs-14 mb-0">{{ date('d M Y') }}</h5>
                                 </div>
-                                <!--end col-->
                             </div>
-                            <!--end row-->
                         </div>
-                        <!--end card-body-->
                     </div><!--end col-->
+
                     <div class="col-lg-12">
                         <div class="card-body p-4">
-                            <div class="table-responsive">
-                                <table class="table table-bordered text-center table-nowrap align-middle mb-0">
 
-                                    <thead>
-                                        <tr class="table-active p-1 fw-bold">
-                                            <th scope="col" class="p-1 fw-bold" style="width: 50px;">#</th>
-                                            <th scope="col" class="p-1 text-start fw-bold">Particulars</th>
-                                            <th scope="col" class="p-1 text-end fw-bold">Values</th>
-                                            <th scope="col" class="p-1 text-end fw-bold">Last Year</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="table-active p-1">
-                                            <td colspan="4" class="p-1 text-start fw-bold fs-16">General Investment</td>
-                                        </tr>
-
-                                        {{-- ── 1. Customers Balance ── --}}
-                                        <tr class="table-active p-1 accordion-heading" data-target="acc-customers">
-                                            <td class="p-1">1</td>
-                                            <td class="p-1 fw-bold text-start">
-                                                Customers Balance
-                                                <i class="acc-toggle-icon">▼</i>
-                                            </td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($customers->sum('currentBalance'), 2) }}</td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($customers->sum('lastYearBalance'), 2) }}</td>
-                                        </tr>
-                                        @foreach ($customers as $customer)
-                                            <tr class="p-1 accordion-detail acc-customers">
-                                                <td class="p-1"></td>
-                                                <td class="p-1 text-start">
-                                                    {{ $customer->title }} | {{ $customer->area->name }}
-                                                </td>
-                                                <td class="p-1 text-end">{{ number_format($customer->currentBalance, 2) }}
-                                                </td>
-                                                <td class="p-1 text-end">{{ number_format($customer->lastYearBalance, 2) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
-                                        {{-- ── 2. Vendors Balance ── --}}
-                                        <tr class="table-active p-1 accordion-heading" data-target="acc-vendors">
-                                            <td class="p-1">2</td>
-                                            <td class="p-1 fw-bold text-start">
-                                                Vendors Balance
-                                                <i class="acc-toggle-icon">▼</i>
-                                            </td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($vendors->sum('currentBalance'), 2) }}</td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($vendors->sum('lastYearBalance'), 2) }}</td>
-                                        </tr>
-                                        @foreach ($vendors as $vendor)
-                                            <tr class="p-1 accordion-detail acc-vendors">
-                                                <td class="p-1"></td>
-                                                <td class="p-1 text-start">
-                                                    {{ $vendor->title }}
-                                                </td>
-                                                <td class="p-1 text-end">{{ number_format($vendor->currentBalance, 2) }}
-                                                </td>
-                                                <td class="p-1 text-end">{{ number_format($vendor->lastYearBalance, 2) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
-                                        {{-- ── 3. Business Balance ── --}}
-                                        <tr class="table-active p-1 accordion-heading" data-target="acc-business">
-                                            <td class="p-1">3</td>
-                                            <td class="p-1 fw-bold text-start">
-                                                Business Balance
-                                                <i class="acc-toggle-icon">▼</i>
-                                            </td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($business->sum('currentBalance'), 2) }}</td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($business->sum('lastYearBalance'), 2) }}</td>
-                                        </tr>
-                                        @foreach ($business as $busines)
-                                            <tr class="p-1 accordion-detail acc-business">
-                                                <td class="p-1"></td>
-                                                <td class="p-1 text-start">
-                                                    {{ $busines->title }}
-                                                </td>
-                                                <td class="p-1 text-end">{{ number_format($busines->currentBalance, 2) }}
-                                                </td>
-                                                <td class="p-1 text-end">{{ number_format($busines->lastYearBalance, 2) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
-                                        {{-- ── 4. Staff Balance ── --}}
-                                        <tr class="table-active p-1 accordion-heading" data-target="acc-staff">
-                                            <td class="p-1">4</td>
-                                            <td class="p-1 fw-bold text-start">
-                                                Staff Balance
-                                                <i class="acc-toggle-icon">▼</i>
-                                            </td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($staff->sum('currentBalance'), 2) }}</td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($staff->sum('lastYearBalance'), 2) }}</td>
-                                        </tr>
-                                        @foreach ($staff as $staf)
-                                            <tr class="p-1 accordion-detail acc-staff">
-                                                <td class="p-1"></td>
-                                                <td class="p-1 text-start">
-                                                    {{ $staf->name }}
-                                                </td>
-                                                <td class="p-1 text-end">{{ number_format($staf->currentBalance, 2) }}
-                                                </td>
-                                                <td class="p-1 text-end">{{ number_format($staf->lastYearBalance, 2) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
-                                        {{-- ── 5. Personal Balance ── --}}
-                                        <tr class="table-active p-1 accordion-heading" data-target="acc-personal">
-                                            <td class="p-1">5</td>
-                                            <td class="p-1 fw-bold text-start">
-                                                Personal Balance
-                                                <i class="acc-toggle-icon">▼</i>
-                                            </td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($personal->sum('currentBalance'), 2) }}</td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($personal->sum('lastYearBalance'), 2) }}</td>
-                                        </tr>
-                                        @foreach ($personal as $person)
-                                            <tr class="p-1 accordion-detail acc-personal">
-                                                <td class="p-1"></td>
-                                                <td class="p-1 text-start">
-                                                    {{ $person->title }}
-                                                </td>
-                                                <td class="p-1 text-end">{{ number_format($person->currentBalance, 2) }}
-                                                </td>
-                                                <td class="p-1 text-end">{{ number_format($person->lastYearBalance, 2) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
-                                        {{-- ── 6. Employees Balance ── --}}
-                                        <tr class="table-active p-1 accordion-heading" data-target="acc-employees">
-                                            <td class="p-1">6</td>
-                                            <td class="p-1 fw-bold text-start">
-                                                Employees Balance
-                                                <i class="acc-toggle-icon">▼</i>
-                                            </td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($employees->sum('currentBalance'), 2) }}</td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($employees->sum('lastYearBalance'), 2) }}</td>
-                                        </tr>
-                                        @foreach ($employees as $employee)
-                                            <tr class="p-1 accordion-detail acc-employees">
-                                                <td class="p-1"></td>
-                                                <td class="p-1 text-start">
-                                                    {{ $employee->name }}
-                                                </td>
-                                                <td class="p-1 text-end">{{ number_format($employee->currentBalance, 2) }}
-                                                </td>
-                                                <td class="p-1 text-end">
-                                                    {{ number_format($employee->lastYearBalance, 2) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
-                                        {{-- ── 7. Floor Stock Value (no children) ── --}}
-                                        <tr class="table-active p-1">
-                                            <td class="p-1">7</td>
-                                            <td class="p-1 fw-bold text-start">Floor Stock Value (On Cost)</td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($totalCurrentStockValue, 2) }}</td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($totalLastYearStockValue, 2) }}</td>
-                                        </tr>
-
-                                        <tr class="table-active p-1">
-                                            <td colspan="4" class="p-1 fw-bold text-start fs-16">Invested Amount &
-                                                Fixed
-                                                Assets
-                                            </td>
-                                        </tr>
-
-                                        {{-- ── 8. Investors Balance ── --}}
-                                        <tr class="table-active p-1 accordion-heading" data-target="acc-investors">
-                                            <td class="p-1">8</td>
-                                            <td class="p-1 fw-bold text-start">
-                                                Investors Balance
-                                                <i class="acc-toggle-icon">▼</i>
-                                            </td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($investors->sum('currentBalance'), 2) }}</td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($investors->sum('lastYearBalance'), 2) }}</td>
-                                        </tr>
-                                        @foreach ($investors as $investor)
-                                            <tr class="p-1 accordion-detail acc-investors">
-                                                <td class="p-1"></td>
-                                                <td class="p-1 text-start">
-                                                    {{ $investor->title }}
-                                                </td>
-                                                <td class="p-1 text-end">
-                                                    ({{ number_format($investor->currentPercentage, 2) }}%)
-                                                    {{ number_format($investor->currentBalance, 2) }}
-                                                </td>
-                                                <td class="p-1 text-end">
-                                                    ({{ number_format($investor->lastYearPercentage, 2) }}%)
-                                                    {{ number_format($investor->lastYearBalance, 2) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-
-                                        {{-- ── 9. Fixed Assets (no children) ── --}}
-                                        <tr class="table-active p-1">
-                                            <td class="p-1">9</td>
-                                            <td class="p-1 fw-bold text-start">Fixed Assets</td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($totalCurrentFixedAssetsValue, 2) }}</td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($totalLastYearFixedAssetsValue, 2) }}</td>
-                                        </tr>
-
-                                    </tbody>
-                                    <tfoot>
-                                        @php
-                                            $totalGeneralCurrent =
-                                                $customers->sum('currentBalance') +
-                                                $business->sum('currentBalance') +
-                                                $personal->sum('currentBalance') +
-                                                $employees->sum('currentBalance') +
-                                                $staff->sum('currentBalance') +
-                                                $totalCurrentStockValue +
-                                                $vendors->sum('currentBalance');
-
-                                            $totalGeneralLastYear =
-                                                $customers->sum('lastYearBalance') +
-                                                $business->sum('lastYearBalance') +
-                                                $personal->sum('lastYearBalance') +
-                                                $employees->sum('lastYearBalance') +
-                                                $staff->sum('lastYearBalance') +
-                                                $totalLastYearStockValue +
-                                                $vendors->sum('lastYearBalance');
-
-                                            $totalCurrentInvestment =
-                                                $investors->sum('currentBalance') + $totalCurrentFixedAssetsValue;
-                                            $totalLastYearInvestment =
-                                                $investors->sum('lastYearBalance') + $totalLastYearFixedAssetsValue;
-                                        @endphp
-
-                                        <tr class="table-active p-1">
-                                            <td class="p-1 fw-bold text-end" colspan="2">Total Investment and Fixed
-                                                Assets
-                                            </td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($totalGeneralCurrent + $totalCurrentFixedAssetsValue, 2) }}
-                                            </td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($totalGeneralLastYear + $totalLastYearFixedAssetsValue, 2) }}
-                                            </td>
-                                        </tr>
-                                        <tr class="table-active p-1">
-                                            <td class="p-1 fw-bold text-end" colspan="2">Total Fixed Investment &
-                                                Assets
-                                            </td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($investors->sum('currentBalance'), 2) }}</td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($investors->sum('lastYearBalance'), 2) }}</td>
-                                        </tr>
-                                        <tr class="table-active p-1">
-                                            <td class="p-1 fw-bold text-end" colspan="2">Result / Outcome of Investment
-                                            </td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($totalGeneralCurrent + $totalCurrentFixedAssetsValue - $investors->sum('currentBalance'), 2) }}
-                                            </td>
-                                            <td class="p-1 fw-bold text-end">
-                                                {{ number_format($totalGeneralLastYear + $totalLastYearFixedAssetsValue - $investors->sum('lastYearBalance'), 2) }}
-                                            </td>
-                                        </tr>
-
-
-                                    </tfoot>
-                                </table><!--end table-->
+                            {{-- Column header bar --}}
+                            <div class="acc-col-header">
+                                <div class="h-num">#</div>
+                                <div class="h-name">Particulars</div>
+                                <div class="h-val">Values</div>
+                                <div class="h-ly">Last Year</div>
                             </div>
 
-                        </div>
-                        <!--end card-body-->
+                            {{-- ══ Section: General Investment ══ --}}
+                            <div class="section-label">General Investment</div>
+
+                            <div class="accordion accordion-flush" id="investmentAccordion">
+
+                                {{-- ── 1. Customers Balance ── --}}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="hCustomers">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#accCustomers"
+                                                aria-expanded="false" aria-controls="accCustomers">
+                                            <span class="acc-btn">
+                                                <span class="acc-num">1</span>
+                                                <span class="acc-name">Customers Balance</span>
+                                                <span class="acc-val">{{ number_format($customers->sum('currentBalance'), 2) }}</span>
+                                                <span class="acc-ly">{{ number_format($customers->sum('lastYearBalance'), 2) }}</span>
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div id="accCustomers" class="accordion-collapse collapse"
+                                         aria-labelledby="hCustomers">
+                                        <div class="accordion-body">
+                                            <table class="detail-table">
+                                                @foreach ($customers as $customer)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ $customer->title }} | {{ $customer->area->name }}</td>
+                                                        <td>{{ number_format($customer->currentBalance, 2) }}</td>
+                                                        <td>{{ number_format($customer->lastYearBalance, 2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- ── 2. Vendors Balance ── --}}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="hVendors">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#accVendors"
+                                                aria-expanded="false" aria-controls="accVendors">
+                                            <span class="acc-btn">
+                                                <span class="acc-num">2</span>
+                                                <span class="acc-name">Vendors Balance</span>
+                                                <span class="acc-val">{{ number_format($vendors->sum('currentBalance'), 2) }}</span>
+                                                <span class="acc-ly">{{ number_format($vendors->sum('lastYearBalance'), 2) }}</span>
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div id="accVendors" class="accordion-collapse collapse"
+                                         aria-labelledby="hVendors">
+                                        <div class="accordion-body">
+                                            <table class="detail-table">
+                                                @foreach ($vendors as $vendor)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ $vendor->title }}</td>
+                                                        <td>{{ number_format($vendor->currentBalance, 2) }}</td>
+                                                        <td>{{ number_format($vendor->lastYearBalance, 2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- ── 3. Business Balance ── --}}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="hBusiness">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#accBusiness"
+                                                aria-expanded="false" aria-controls="accBusiness">
+                                            <span class="acc-btn">
+                                                <span class="acc-num">3</span>
+                                                <span class="acc-name">Business Balance</span>
+                                                <span class="acc-val">{{ number_format($business->sum('currentBalance'), 2) }}</span>
+                                                <span class="acc-ly">{{ number_format($business->sum('lastYearBalance'), 2) }}</span>
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div id="accBusiness" class="accordion-collapse collapse"
+                                         aria-labelledby="hBusiness">
+                                        <div class="accordion-body">
+                                            <table class="detail-table">
+                                                @foreach ($business as $busines)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ $busines->title }}</td>
+                                                        <td>{{ number_format($busines->currentBalance, 2) }}</td>
+                                                        <td>{{ number_format($busines->lastYearBalance, 2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- ── 4. Staff Balance ── --}}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="hStaff">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#accStaff"
+                                                aria-expanded="false" aria-controls="accStaff">
+                                            <span class="acc-btn">
+                                                <span class="acc-num">4</span>
+                                                <span class="acc-name">Staff Balance</span>
+                                                <span class="acc-val">{{ number_format($staff->sum('currentBalance'), 2) }}</span>
+                                                <span class="acc-ly">{{ number_format($staff->sum('lastYearBalance'), 2) }}</span>
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div id="accStaff" class="accordion-collapse collapse"
+                                         aria-labelledby="hStaff">
+                                        <div class="accordion-body">
+                                            <table class="detail-table">
+                                                @foreach ($staff as $staf)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ $staf->name }}</td>
+                                                        <td>{{ number_format($staf->currentBalance, 2) }}</td>
+                                                        <td>{{ number_format($staf->lastYearBalance, 2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- ── 5. Personal Balance ── --}}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="hPersonal">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#accPersonal"
+                                                aria-expanded="false" aria-controls="accPersonal">
+                                            <span class="acc-btn">
+                                                <span class="acc-num">5</span>
+                                                <span class="acc-name">Personal Balance</span>
+                                                <span class="acc-val">{{ number_format($personal->sum('currentBalance'), 2) }}</span>
+                                                <span class="acc-ly">{{ number_format($personal->sum('lastYearBalance'), 2) }}</span>
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div id="accPersonal" class="accordion-collapse collapse"
+                                         aria-labelledby="hPersonal">
+                                        <div class="accordion-body">
+                                            <table class="detail-table">
+                                                @foreach ($personal as $person)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ $person->title }}</td>
+                                                        <td>{{ number_format($person->currentBalance, 2) }}</td>
+                                                        <td>{{ number_format($person->lastYearBalance, 2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- ── 6. Employees Balance ── --}}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="hEmployees">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#accEmployees"
+                                                aria-expanded="false" aria-controls="accEmployees">
+                                            <span class="acc-btn">
+                                                <span class="acc-num">6</span>
+                                                <span class="acc-name">Employees Balance</span>
+                                                <span class="acc-val">{{ number_format($employees->sum('currentBalance'), 2) }}</span>
+                                                <span class="acc-ly">{{ number_format($employees->sum('lastYearBalance'), 2) }}</span>
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div id="accEmployees" class="accordion-collapse collapse"
+                                         aria-labelledby="hEmployees">
+                                        <div class="accordion-body">
+                                            <table class="detail-table">
+                                                @foreach ($employees as $employee)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ $employee->name }}</td>
+                                                        <td>{{ number_format($employee->currentBalance, 2) }}</td>
+                                                        <td>{{ number_format($employee->lastYearBalance, 2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>{{-- end accordion --}}
+
+                            {{-- ── 7. Floor Stock Value (no children) ── --}}
+                            <div class="static-row">
+                                <div class="s-num">7</div>
+                                <div class="s-name">Floor Stock Value (On Cost)</div>
+                                <div class="s-val">{{ number_format($totalCurrentStockValue, 2) }}</div>
+                                <div class="s-ly">{{ number_format($totalLastYearStockValue, 2) }}</div>
+                            </div>
+
+                            {{-- ══ Section: Invested Amount & Fixed Assets ══ --}}
+                            <div class="section-label">Invested Amount &amp; Fixed Assets</div>
+
+                            <div class="accordion accordion-flush" id="investmentAccordion2">
+
+                                {{-- ── 8. Investors Balance ── --}}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="hInvestors">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#accInvestors"
+                                                aria-expanded="false" aria-controls="accInvestors">
+                                            <span class="acc-btn">
+                                                <span class="acc-num">8</span>
+                                                <span class="acc-name">Investors Balance</span>
+                                                <span class="acc-val">{{ number_format($investors->sum('currentBalance'), 2) }}</span>
+                                                <span class="acc-ly">{{ number_format($investors->sum('lastYearBalance'), 2) }}</span>
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div id="accInvestors" class="accordion-collapse collapse"
+                                         aria-labelledby="hInvestors">
+                                        <div class="accordion-body">
+                                            <table class="detail-table">
+                                                @foreach ($investors as $investor)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ $investor->title }}</td>
+                                                        <td>({{ number_format($investor->currentPercentage, 2) }}%) {{ number_format($investor->currentBalance, 2) }}</td>
+                                                        <td>({{ number_format($investor->lastYearPercentage, 2) }}%) {{ number_format($investor->lastYearBalance, 2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>{{-- end accordion2 --}}
+
+                            {{-- ── 9. Fixed Assets (no children) ── --}}
+                            <div class="static-row">
+                                <div class="s-num">9</div>
+                                <div class="s-name">Fixed Assets</div>
+                                <div class="s-val">{{ number_format($totalCurrentFixedAssetsValue, 2) }}</div>
+                                <div class="s-ly">{{ number_format($totalLastYearFixedAssetsValue, 2) }}</div>
+                            </div>
+
+                            {{-- ══ Totals ══ --}}
+                            @php
+                                $totalGeneralCurrent =
+                                    $customers->sum('currentBalance') +
+                                    $business->sum('currentBalance') +
+                                    $personal->sum('currentBalance') +
+                                    $employees->sum('currentBalance') +
+                                    $staff->sum('currentBalance') +
+                                    $totalCurrentStockValue +
+                                    $vendors->sum('currentBalance');
+
+                                $totalGeneralLastYear =
+                                    $customers->sum('lastYearBalance') +
+                                    $business->sum('lastYearBalance') +
+                                    $personal->sum('lastYearBalance') +
+                                    $employees->sum('lastYearBalance') +
+                                    $staff->sum('lastYearBalance') +
+                                    $totalLastYearStockValue +
+                                    $vendors->sum('lastYearBalance');
+                            @endphp
+
+                            <table class="totals-table mt-3">
+                                <tr class="table-active">
+                                    <td colspan="2" class="text-end">Total Investment and Fixed Assets</td>
+                                    <td>{{ number_format($totalGeneralCurrent + $totalCurrentFixedAssetsValue, 2) }}</td>
+                                    <td>{{ number_format($totalGeneralLastYear + $totalLastYearFixedAssetsValue, 2) }}</td>
+                                </tr>
+                                <tr class="table-active">
+                                    <td colspan="2" class="text-end">Total Fixed Investment &amp; Assets</td>
+                                    <td>{{ number_format($investors->sum('currentBalance'), 2) }}</td>
+                                    <td>{{ number_format($investors->sum('lastYearBalance'), 2) }}</td>
+                                </tr>
+                                <tr class="table-active">
+                                    <td colspan="2" class="text-end">Result / Outcome of Investment</td>
+                                    <td>{{ number_format($totalGeneralCurrent + $totalCurrentFixedAssetsValue - $investors->sum('currentBalance'), 2) }}</td>
+                                    <td>{{ number_format($totalGeneralLastYear + $totalLastYearFixedAssetsValue - $investors->sum('lastYearBalance'), 2) }}</td>
+                                </tr>
+                            </table>
+
+                        </div><!--end card-body-->
                     </div><!--end col-->
                 </div><!--end row-->
-            </div>
-            <!--end card-->
-        </div>
-        <!--end col-->
-    </div>
-    <!--end row-->
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('tr.accordion-heading').forEach(function(heading) {
-                heading.addEventListener('click', function() {
-                    var target = this.dataset.target;
-                    var details = document.querySelectorAll('tr.' + target);
-                    var isCollapsed = this.classList.contains('collapsed');
-
-                    if (isCollapsed) {
-                        // Expand
-                        details.forEach(function(row) {
-                            row.style.display = '';
-                        });
-                        heading.classList.remove('collapsed');
-                    } else {
-                        // Collapse
-                        details.forEach(function(row) {
-                            row.style.display = 'none';
-                        });
-                        heading.classList.add('collapsed');
-                    }
-                });
-
-                // Collapse all sections by default on page load
-                heading.classList.add('collapsed');
-                document.querySelectorAll('tr.' + heading.dataset.target).forEach(function(row) {
-                    row.style.display = 'none';
-                });
-            });
-        });
-    </script>
+            </div><!--end card-->
+        </div><!--end col-->
+    </div><!--end row-->
 @endsection
