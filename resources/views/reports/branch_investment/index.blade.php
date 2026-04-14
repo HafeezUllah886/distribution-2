@@ -17,8 +17,13 @@
                             </select>
                         </div>
                         <div class="form-group mt-2">
-                            <label for="date">On Date</label>
-                            <input type="date" name="date" id="date" class="form-control"
+                            <label for="date">Current Year Date</label>
+                            <input type="date" name="current_date" id="current_date" class="form-control"
+                                value="{{ today() }}">
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="date">Last Year Date</label>
+                            <input type="date" name="last_date" id="last_date" class="form-control"
                                 value="{{ today() }}">
                         </div>
 
