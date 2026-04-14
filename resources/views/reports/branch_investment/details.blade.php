@@ -547,9 +547,6 @@
                                 </div>
 
                             </div>{{-- end accordion2 --}}
-
-
-
                             {{-- ══ Totals ══ --}}
                             @php
                                 $totalGeneralCurrent =
@@ -558,7 +555,7 @@
                                     $personal->sum('currentBalance') +
                                     $employees->sum('currentBalance') +
                                     $staff->sum('currentBalance') +
-                                    $totalCurrentStockValue +
+                                    $products->sum('currentStockValue') +
                                     $vendors->sum('currentBalance');
 
                                 $totalGeneralLastYear =
@@ -567,7 +564,7 @@
                                     $personal->sum('lastYearBalance') +
                                     $employees->sum('lastYearBalance') +
                                     $staff->sum('lastYearBalance') +
-                                    $totalLastYearStockValue +
+                                    $products->sum('lastYearStockValue') +
                                     $vendors->sum('lastYearBalance');
                             @endphp
 
