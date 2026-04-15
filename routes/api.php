@@ -12,6 +12,7 @@ use App\Http\Controllers\api\nonFinanancialInfoController;
 use App\Http\Controllers\api\NotificationSettingsAPIController;
 use App\Http\Controllers\api\OrderbookerBalanceController;
 use App\Http\Controllers\api\OrderBookerInvoices;
+use App\Http\Controllers\api\OrderbookerNotificationsController;
 use App\Http\Controllers\api\OrdersController;
 use App\Http\Controllers\api\TargetAPIController;
 use Illuminate\Http\Request;
@@ -66,5 +67,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/targets', [TargetAPIController::class, 'index']);
     Route::get('/balance_targets', [BalanceTargetAPIController::class, 'index']);
     Route::get('/notification_settings', [NotificationSettingsAPIController::class, 'index']);
+
+    Route::get('/orderbookernotifications', [OrderbookerNotificationsController::class, 'index']);
+    Route::get('/orderbookernotifications/read', [OrderbookerNotificationsController::class, 'read']);
 
 });

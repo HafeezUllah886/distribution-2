@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\area;
 use App\Models\orderbooker_customers;
@@ -15,10 +13,7 @@ class OrderbookerCustomersController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($orderbooker)
-    {
-
-    }
+    public function index($orderbooker) {}
 
     /**
      * Show the form for creating a new resource.
@@ -34,38 +29,39 @@ class OrderbookerCustomersController extends Controller
     public function store(Request $request)
     {
         $check = orderbooker_customers::where('orderbookerID', $request->orderbookerID)->where('customerID', $request->customerID)->first();
-        if($check)
-        {
+        if ($check) {
             return redirect()->back()->with('error', 'Customer already added');
         }
-        $orderbooker_customers = new orderbooker_customers();
+        $orderbooker_customers = new orderbooker_customers;
         $orderbooker_customers->orderbookerID = $request->orderbookerID;
         $orderbooker_customers->customerID = $request->customerID;
         $orderbooker_customers->save();
+
+        $customer_name = accounts::find($request->customerID)->title;
+
+        createNotification($request->orderbookerID, 'New Customer', $customer_name.' added successfully', $orderbooker_customers->id);
+
         return redirect()->back()->with('success', 'Customer added successfully');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($orderbooker, $area = "All")
+    public function show($orderbooker, $area = 'All')
     {
 
         $orderbooker_customers = orderbooker_customers::where('orderbookerID', $orderbooker)->get();
         $ids = $orderbooker_customers->pluck('customerID')->toArray();
-        if($area == "All")
-        {
+        if ($area == 'All') {
             $customers = accounts::customer()->currentBranch()->whereNotIn('id', $ids)->get();
-        }
-        else
-        {
+        } else {
             $customers = accounts::customer()->currentBranch()->where('areaID', $area)->whereNotIn('id', $ids)->get();
         }
 
         $areas = area::with('town')->currentBranch()->get();
-        
-        
+
         $orderbooker = User::find($orderbooker);
+
         return view('users.customers', compact('orderbooker_customers', 'customers', 'orderbooker', 'areas', 'area'));
     }
 
@@ -92,9 +88,12 @@ class OrderbookerCustomersController extends Controller
     {
         $orderbooker_customers = orderbooker_customers::find($id);
         $orderbooker = $orderbooker_customers->orderbookerID;
+        $customer_name = accounts::find($orderbooker_customers->customerID)->title;
         $orderbooker_customers->delete();
         session()->forget('confirmed_password');
+
+        createNotification($orderbooker, 'Customer Removed', $customer_name.' removed successfully', $id);
+
         return to_route('orderbookercustomers.show', $orderbooker)->with('success', 'Customer removed successfully');
     }
-
 }

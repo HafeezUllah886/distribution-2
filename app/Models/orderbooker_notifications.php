@@ -5,14 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class location_tracking extends Model
+class orderbooker_notifications extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
-
-    public function orderbooker()
-    {
-        return $this->belongsTo(User::class, 'orderbooker_id');
-    }
 }
