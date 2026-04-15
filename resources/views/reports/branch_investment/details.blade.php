@@ -341,6 +341,99 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="hUnloaders">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#accUnloaders"
+                                            aria-expanded="false" aria-controls="accUnloaders">
+                                            <span class="acc-btn">
+                                                <span class="acc-num">4</span>
+                                                <span class="acc-name">Unloaders Balance</span>
+                                                <span
+                                                    class="acc-val">{{ number_format($unloaders->sum('currentBalance'), 2) }}</span>
+                                                <span
+                                                    class="acc-ly">{{ number_format($unloaders->sum('lastYearBalance'), 2) }}</span>
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div id="accUnloaders" class="accordion-collapse collapse"
+                                        aria-labelledby="hUnloaders">
+                                        <div class="accordion-body">
+                                            <table class="detail-table">
+                                                @foreach ($unloaders as $unloader)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ $unloader->title }}</td>
+                                                        <td>{{ number_format($unloader->currentBalance, 2) }}</td>
+                                                        <td>{{ number_format($unloader->lastYearBalance, 2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="hSupplymans">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#accSupplymans"
+                                            aria-expanded="false" aria-controls="accSupplymans">
+                                            <span class="acc-btn">
+                                                <span class="acc-num">5</span>
+                                                <span class="acc-name">Supplymans Balance</span>
+                                                <span
+                                                    class="acc-val">{{ number_format($supplymans->sum('currentBalance'), 2) }}</span>
+                                                <span
+                                                    class="acc-ly">{{ number_format($supplymans->sum('lastYearBalance'), 2) }}</span>
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div id="accSupplymans" class="accordion-collapse collapse"
+                                        aria-labelledby="hSupplymans">
+                                        <div class="accordion-body">
+                                            <table class="detail-table">
+                                                @foreach ($supplymans as $supplyman)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ $supplyman->title }}</td>
+                                                        <td>{{ number_format($supplyman->currentBalance, 2) }}</td>
+                                                        <td>{{ number_format($supplyman->lastYearBalance, 2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="hFreights">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#accFreights" aria-expanded="false"
+                                            aria-controls="accFreights">
+                                            <span class="acc-btn">
+                                                <span class="acc-num">6</span>
+                                                <span class="acc-name">Freights Balance</span>
+                                                <span
+                                                    class="acc-val">{{ number_format($freights->sum('currentBalance'), 2) }}</span>
+                                                <span
+                                                    class="acc-ly">{{ number_format($freights->sum('lastYearBalance'), 2) }}</span>
+                                            </span>
+                                        </button>
+                                    </h2>
+                                    <div id="accFreights" class="accordion-collapse collapse"
+                                        aria-labelledby="hFreights">
+                                        <div class="accordion-body">
+                                            <table class="detail-table">
+                                                @foreach ($freights as $freight)
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>{{ $freight->title }}</td>
+                                                        <td>{{ number_format($freight->currentBalance, 2) }}</td>
+                                                        <td>{{ number_format($freight->lastYearBalance, 2) }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 {{-- ── 4. Staff Balance ── --}}
                                 <div class="accordion-item">
@@ -349,7 +442,7 @@
                                             data-bs-toggle="collapse" data-bs-target="#accStaff" aria-expanded="false"
                                             aria-controls="accStaff">
                                             <span class="acc-btn">
-                                                <span class="acc-num">4</span>
+                                                <span class="acc-num">7</span>
                                                 <span class="acc-name">Staff Balance</span>
                                                 <span
                                                     class="acc-val">{{ number_format($staff->sum('currentBalance'), 2) }}</span>
@@ -381,7 +474,7 @@
                                             data-bs-toggle="collapse" data-bs-target="#accPersonal" aria-expanded="false"
                                             aria-controls="accPersonal">
                                             <span class="acc-btn">
-                                                <span class="acc-num">5</span>
+                                                <span class="acc-num">8</span>
                                                 <span class="acc-name">Personal Balance</span>
                                                 <span
                                                     class="acc-val">{{ number_format($personal->sum('currentBalance'), 2) }}</span>
@@ -414,7 +507,7 @@
                                             data-bs-toggle="collapse" data-bs-target="#accEmployees"
                                             aria-expanded="false" aria-controls="accEmployees">
                                             <span class="acc-btn">
-                                                <span class="acc-num">6</span>
+                                                <span class="acc-num">9</span>
                                                 <span class="acc-name">Employees Balance</span>
                                                 <span
                                                     class="acc-val">{{ number_format($employees->sum('currentBalance'), 2) }}</span>
@@ -446,7 +539,7 @@
                                             data-bs-toggle="collapse" data-bs-target="#accFloorStock"
                                             aria-expanded="false" aria-controls="accFloorStock">
                                             <span class="acc-btn">
-                                                <span class="acc-num">7</span>
+                                                <span class="acc-num">10</span>
                                                 <span class="acc-name">Floor Stock Value (On Cost)</span>
                                                 <span
                                                     class="acc-val">{{ number_format($products->sum('currentStockValue'), 2) }}</span>
@@ -487,7 +580,7 @@
                                             data-bs-toggle="collapse" data-bs-target="#accInvestors"
                                             aria-expanded="false" aria-controls="accInvestors">
                                             <span class="acc-btn">
-                                                <span class="acc-num">8</span>
+                                                <span class="acc-num">11</span>
                                                 <span class="acc-name">Fixed Assets</span>
                                                 <span
                                                     class="acc-val">{{ number_format($fixed_assets->sum('currentBalance'), 2) }}</span>
@@ -518,7 +611,7 @@
                                             data-bs-toggle="collapse" data-bs-target="#accInvestors"
                                             aria-expanded="false" aria-controls="accInvestors">
                                             <span class="acc-btn">
-                                                <span class="acc-num">9</span>
+                                                <span class="acc-num">12</span>
                                                 <span class="acc-name">Investors Balance</span>
                                                 <span
                                                     class="acc-val">{{ number_format($investors->sum('currentBalance'), 2) }}</span>
@@ -552,6 +645,9 @@
                                 $totalGeneralCurrent =
                                     $customers->sum('currentBalance') +
                                     $business->sum('currentBalance') +
+                                    $unloaders->sum('currentBalance') +
+                                    $supplymans->sum('currentBalance') +
+                                    $freights->sum('currentBalance') +
                                     $personal->sum('currentBalance') +
                                     $employees->sum('currentBalance') +
                                     $staff->sum('currentBalance') +
@@ -561,6 +657,9 @@
                                 $totalGeneralLastYear =
                                     $customers->sum('lastYearBalance') +
                                     $business->sum('lastYearBalance') +
+                                    $unloaders->sum('lastYearBalance') +
+                                    $supplymans->sum('lastYearBalance') +
+                                    $freights->sum('lastYearBalance') +
                                     $personal->sum('lastYearBalance') +
                                     $employees->sum('lastYearBalance') +
                                     $staff->sum('lastYearBalance') +

@@ -56,6 +56,31 @@ class BranchInvestmentReportController extends Controller
             $busines->lastYearBalance = $lastYearBalance;
         }
 
+        $unloaders = accounts::unloader()->where('branchID', $branch)->get();
+
+        foreach ($unloaders as $unloader) {
+            $currentBalance = accountBalanceTillDate($unloader->id, $date);
+            $lastYearBalance = accountBalanceTillDate($unloader->id, $lastYearDate);
+            $unloader->currentBalance = $currentBalance;
+            $unloader->lastYearBalance = $lastYearBalance;
+        }
+        $supplymans = accounts::supplyMen()->where('branchID', $branch)->get();
+
+        foreach ($supplymans as $supplyman) {
+            $currentBalance = accountBalanceTillDate($supplyman->id, $date);
+            $lastYearBalance = accountBalanceTillDate($supplyman->id, $lastYearDate);
+            $supplyman->currentBalance = $currentBalance;
+            $supplyman->lastYearBalance = $lastYearBalance;
+        }
+        $freights = accounts::freight()->where('branchID', $branch)->get();
+
+        foreach ($freights as $freight) {
+            $currentBalance = accountBalanceTillDate($freight->id, $date);
+            $lastYearBalance = accountBalanceTillDate($freight->id, $lastYearDate);
+            $freight->currentBalance = $currentBalance;
+            $freight->lastYearBalance = $lastYearBalance;
+        }
+
         $staff = user::where('branchID', $branch)->get();
         foreach ($staff as $staf) {
             $currentBalance = userBalanceTillDate($staf->id, $date);
@@ -126,6 +151,6 @@ class BranchInvestmentReportController extends Controller
 
         $branch_name = branches::find($branch)->name;
 
-        return view('reports.branch_investment.details', compact('date', 'lastYearDate', 'branch', 'customers', 'branch_name', 'vendors', 'business', 'staff', 'employees', 'products', 'totalCurrentStockValue', 'totalLastYearStockValue', 'personal', 'investors', 'fixed_assets', 'totalCurrentFixedAssetsValue', 'totalLastYearFixedAssetsValue'));
+        return view('reports.branch_investment.details', compact('date', 'lastYearDate', 'branch', 'customers', 'branch_name', 'vendors', 'business', 'unloaders', 'supplymans', 'freights', 'staff', 'employees', 'products', 'totalCurrentStockValue', 'totalLastYearStockValue', 'personal', 'investors', 'fixed_assets', 'totalCurrentFixedAssetsValue', 'totalLastYearFixedAssetsValue'));
     }
 }
