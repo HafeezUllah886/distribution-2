@@ -2,3 +2,4 @@
 /node_modules/
 /storage/*.key
 /env
+/public/images/products

@@ -28,6 +28,7 @@ class nonFinanancialInfoController extends Controller
                 'id' => $product->product->id,
                 'name' => $product->product->name,
                 'name_urdu' => $product->product->nameurdu,
+                'image' => asset($product->product->image_path ?? 'images/products/no-img.jpg'),
                 'price' => ($product->product->price - $product->product->discount - $discountValue - $product->product->sclaim) + $product->product->sfright,
                 'units' => $product->product->units()->select('id', 'unit_name', 'value')->get(),
             ];

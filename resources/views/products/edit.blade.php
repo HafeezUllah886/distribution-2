@@ -16,7 +16,7 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{ route('product.update', $product->id) }}" method="post">
+                    <form action="{{ route('product.update', $product->id) }}" method="post" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="row">
@@ -77,6 +77,7 @@
                                     </select>
                                 </div>
                             </div>
+
 
                             <div class="col-md-6 mt-2">
                                 <h5>Purchase Values</h5>
@@ -150,6 +151,16 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="form-group mt-2">
+                                    <label for="image">Product Image</label>
+                                    <input type="file" name="image" id="image" class="form-control">
+                                    @if ($product->image_path)
+                                        <img src="{{ asset($product->image_path) }}" alt="Product Image" class="mt-2"
+                                            style="max-width: 150px; border: 1px solid #ddd; padding: 5px;">
+                                    @endif
+                                </div>
+
                             </div>
 
 

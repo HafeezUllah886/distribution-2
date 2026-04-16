@@ -10,13 +10,15 @@ use App\Models\product_units;
 use App\Models\products;
 use App\Models\units;
 use Illuminate\Http\Request;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class ProductsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index($s_cat , $s_brand)
+    public function index($s_cat, $s_brand)
     {
         $products = products::currentBranch();
 
@@ -56,24 +58,42 @@ class ProductsController extends Controller
     {
         $request->validate(
             [
-                'name' => "unique:products,name",
+                'name' => 'unique:products,name',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             ],
             [
-            'name.unique' => "Product already Existing",
+                'name.unique' => 'Product already Existing',
             ]
         );
 
         $product = products::create($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim', 'sfright', 'sclaim', 'discountp']) + ['branchID' => auth()->user()->branchID]);
 
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = $product->id.'.'.$image->getClientOriginalExtension();
+            $destPath = public_path('images/products');
+            if (! file_exists($destPath)) {
+                mkdir($destPath, 0777, true);
+            }
+            $image->move($destPath, $filename);
+
+            $manager = new ImageManager(new Driver);
+            $manager->read($destPath.'/'.$filename)
+                ->cover(300, 200)
+                ->save($destPath.'/'.$filename);
+
+            $product->image_path = 'images/products/'.$filename;
+            $product->save();
+        }
+
         $units = $request->unit_names;
 
-        foreach($units as $key => $unit)
-        {
+        foreach ($units as $key => $unit) {
             product_units::create(
                 [
                     'productID' => $product->id,
                     'unit_name' => $unit,
-                    'value' =>  $request->unit_values[$key],
+                    'value' => $request->unit_values[$key],
                 ]
             );
         }
@@ -87,6 +107,7 @@ class ProductsController extends Controller
     public function show($all)
     {
         $categories = categories::with('products')->get();
+
         return view('products.pricelist', compact('categories'));
     }
 
@@ -110,15 +131,38 @@ class ProductsController extends Controller
     {
         $request->validate(
             [
-                'name' => "unique:products,name,".$id,
+                'name' => 'unique:products,name,'.$id,
+                'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             ],
             [
-            'name.unique' => "Product already Existing",
+                'name.unique' => 'Product already Existing',
             ]
         );
 
         $product = products::find($id);
         $product->update($request->only(['name', 'nameurdu', 'catID', 'brandID', 'pprice', 'price', 'discount', 'status', 'vendorID', 'fright', 'labor', 'claim', 'sfright', 'sclaim', 'discountp', 'branchID']));
+
+        if ($request->hasFile('image')) {
+            if ($product->image_path && file_exists(public_path($product->image_path))) {
+                unlink(public_path($product->image_path));
+            }
+
+            $image = $request->file('image');
+            $filename = $product->id.'.'.$image->getClientOriginalExtension();
+            $destPath = public_path('images/products');
+            if (! file_exists($destPath)) {
+                mkdir($destPath, 0777, true);
+            }
+            $image->move($destPath, $filename);
+
+            $manager = new ImageManager(new Driver);
+            $manager->read($destPath.'/'.$filename)
+                ->cover(300, 200)
+                ->save($destPath.'/'.$filename);
+
+            $product->image_path = 'images/products/'.$filename;
+            $product->save();
+        }
 
         return redirect()->back()->with('success', 'Product Updated');
     }

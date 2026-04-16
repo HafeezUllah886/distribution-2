@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3>Products</h3>
-                    <a href="{{route('product.create')}}" class="btn btn-primary">Create New</a>
+                    <a href="{{ route('product.create') }}" class="btn btn-primary">Create New</a>
                 </div>
                 <div class="card-body">
                     <div class="row mb-2">
@@ -15,7 +15,8 @@
                                 <select id="category"onchange="refresh()" class="form-control">
                                     <option value="all">All</option>
                                     @foreach ($cats as $cat)
-                                        <option value="{{$cat->id}}" @selected($cat->id == $s_cat)>{{$cat->name}}</option>
+                                        <option value="{{ $cat->id }}" @selected($cat->id == $s_cat)>{{ $cat->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -26,7 +27,8 @@
                                 <select id="brand"onchange="refresh()" class="form-control">
                                     <option value="all">All</option>
                                     @foreach ($brands as $brand)
-                                        <option value="{{$brand->id}}" @selected($brand->id == $s_brand)>{{$brand->name}}</option>
+                                        <option value="{{ $brand->id }}" @selected($brand->id == $s_brand)>{{ $brand->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -59,42 +61,51 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ $item->name }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-sm avatar-rounded flex-shrink-0 me-2">
+                                                <img src="{{ asset($item->image_path ?? 'images/products/no-img.jpg') }}"
+                                                    alt="category" class="img-fluid">
+                                            </div>
+                                            <h6 class="fs-14 fw-normal mb-0">{{ $item->name }}</h6>
+                                        </div>
+                                    </td>
                                     <td>{{ $item->brand->name }}</td>
                                     <td>{{ $item->category->name }}</td>
                                     <td>{{ $item->vendor->title }}</td>
-                                    <td>{{ number_format($item->pprice,0) }}</td>
-                                    <td>{{ number_format($item->price,0) }}</td>
+                                    <td>{{ number_format($item->pprice, 0) }}</td>
+                                    <td>{{ number_format($item->price, 0) }}</td>
                                     <td>{{ $item->discount }}</td>
                                     <td>
                                         <div class="dropdown">
-                                               <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
-                                                   data-bs-toggle="dropdown" aria-expanded="false">
-                                                   <i class="ri-more-fill align-middle"></i>
-                                               </button>
-                                               <ul class="dropdown-menu dropdown-menu-end">
-                                                   <li>
-                                                       <a class="dropdown-item" href="{{route('product.edit', $item->id)}}">
-                                                           <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
-                                                           Edit
-                                                       </a>
-                                                   </li>
-                                                   <li>
-                                                       <a class="dropdown-item" href="{{route('product_units.show', $item->id)}}">
-                                                           <i class="ri-list-check align-bottom me-2 text-muted"></i>
-                                                           Units
-                                                       </a>
-                                                   </li>
-                                                   <li>
-                                                       <a class="dropdown-item" href="{{route('dc.show', $item->id)}}">
-                                                           <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
-                                                           Delivery Charges
-                                                       </a>
-                                                   </li>
-                                               </ul>
-                                           </div>
-                                 </td>
-                                
+                                            <button class="btn btn-soft-secondary btn-sm dropdown" type="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="ri-more-fill align-middle"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('product.edit', $item->id) }}">
+                                                        <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        Edit
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('product_units.show', $item->id) }}">
+                                                        <i class="ri-list-check align-bottom me-2 text-muted"></i>
+                                                        Units
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('dc.show', $item->id) }}">
+                                                        <i class="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                                                        Delivery Charges
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+
                                 </tr>
                             @endforeach
                         </tbody>
@@ -107,31 +118,30 @@
 @endsection
 
 @section('page-css')
-<link rel="stylesheet" href="{{ asset('assets/libs/datatable/datatable.bootstrap5.min.css') }}" />
-<!--datatable responsive css-->
-<link rel="stylesheet" href="{{ asset('assets/libs/datatable/responsive.bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/datatable.bootstrap5.min.css') }}" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/responsive.bootstrap.min.css') }}" />
 
-<link rel="stylesheet" href="{{ asset('assets/libs/datatable/buttons.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/buttons.dataTables.min.css') }}">
 @endsection
 @section('page-js')
-    <script src="{{ asset('assets/libs/datatable/jquery.dataTables.min.js')}}"></script>
-    <script src="{{ asset('assets/libs/datatable/dataTables.bootstrap5.min.js')}}"></script>
-    <script src="{{ asset('assets/libs/datatable/dataTables.responsive.min.js')}}"></script>
-    <script src="{{ asset('assets/libs/datatable/dataTables.buttons.min.js')}}"></script>
-    <script src="{{ asset('assets/libs/datatable/buttons.print.min.js')}}"></script>
-    <script src="{{ asset('assets/libs/datatable/buttons.html5.min.js')}}"></script>
-    <script src="{{ asset('assets/libs/datatable/vfs_fonts.js')}}"></script>
-    <script src="{{ asset('assets/libs/datatable/pdfmake.min.js')}}"></script>
-    <script src="{{ asset('assets/libs/datatable/jszip.min.js')}}"></script>
+    <script src="{{ asset('assets/libs/datatable/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/jszip.min.js') }}"></script>
 
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
 
     <script>
-        function refresh()
-        {
+        function refresh() {
             var category = $("#category").find(":selected").val();
             var brand = $("#brand").find(":selected").val();
-            var url = "{{ url('products/index/')}}/"+category+'/'+brand;
+            var url = "{{ url('products/index/') }}/" + category + '/' + brand;
             window.open(url, "_self");
         }
     </script>
