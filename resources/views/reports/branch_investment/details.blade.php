@@ -575,10 +575,10 @@
 
                                 {{-- ── 8. Investors Balance ── --}}
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header" id="hInvestors">
+                                    <h2 class="accordion-header" id="hAssets">
                                         <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#accInvestors"
-                                            aria-expanded="false" aria-controls="accInvestors">
+                                            data-bs-toggle="collapse" data-bs-target="#accAssets" aria-expanded="false"
+                                            aria-controls="accAssets">
                                             <span class="acc-btn">
                                                 <span class="acc-num">11</span>
                                                 <span class="acc-name">Fixed Assets</span>
@@ -589,8 +589,7 @@
                                             </span>
                                         </button>
                                     </h2>
-                                    <div id="accInvestors" class="accordion-collapse collapse"
-                                        aria-labelledby="hInvestors">
+                                    <div id="accAssets" class="accordion-collapse collapse" aria-labelledby="hAssets">
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($fixed_assets as $fixed_asset)
