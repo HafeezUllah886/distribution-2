@@ -552,13 +552,20 @@
                                         aria-labelledby="hFloorStock">
                                         <div class="accordion-body">
                                             <table class="detail-table">
-                                                @foreach ($products as $product)
+                                                @foreach ($products->groupBy(function($p) { return $p->vendor->title ?? 'Unknown Vendor'; }) as $vendorName => $vProducts)
                                                     <tr>
-                                                        <td></td>
-                                                        <td>{{ $product->name }}</td>
-                                                        <td>{{ number_format($product->currentStockValue, 2) }}</td>
-                                                        <td>{{ number_format($product->lastYearStockValue, 2) }}</td>
+                                                        <th colspan="4" style="background: #f8f9fa; padding: 4px 16px; font-weight: 600; text-align: left; border-bottom: 1px solid #dee2e6;">
+                                                            {{ $vendorName }}
+                                                        </th>
                                                     </tr>
+                                                    @foreach ($vProducts as $product)
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ $product->name }}</td>
+                                                            <td>{{ number_format($product->currentStockValue, 2) }}</td>
+                                                            <td>{{ number_format($product->lastYearStockValue, 2) }}</td>
+                                                        </tr>
+                                                    @endforeach
                                                 @endforeach
                                             </table>
                                         </div>
