@@ -552,9 +552,12 @@
                                         aria-labelledby="hFloorStock">
                                         <div class="accordion-body">
                                             <table class="detail-table">
-                                                @foreach ($products->groupBy(function($p) { return $p->vendor->title ?? 'Unknown Vendor'; }) as $vendorName => $vProducts)
+                                                @foreach ($products->groupBy(function ($p) {
+            return $p->vendor->title ?? 'Unknown Vendor';
+        }) as $vendorName => $vProducts)
                                                     <tr>
-                                                        <th colspan="4" style="background: #f8f9fa; padding: 4px 16px; font-weight: 600; text-align: left; border-bottom: 1px solid #dee2e6;">
+                                                        <th colspan="4"
+                                                            style="background: #f8f9fa; padding: 4px 16px; font-weight: 600; text-align: left; border-bottom: 1px solid #dee2e6;">
                                                             {{ $vendorName }}
                                                         </th>
                                                     </tr>
@@ -566,6 +569,19 @@
                                                             <td>{{ number_format($product->lastYearStockValue, 2) }}</td>
                                                         </tr>
                                                     @endforeach
+                                                    <tr>
+                                                        <th colspan="2"
+                                                            style="text-align: right; padding: 4px 16px; font-weight: 600; background: #f8f9fa;">
+                                                            Total:</th>
+                                                        <th style="text-align: left; padding: 4px 16px; font-weight: 600; background: #f8f9fa;"
+                                                            class="text-end">
+                                                            {{ number_format($vProducts->sum('currentStockValue'), 2) }}
+                                                        </th>
+                                                        <th style="text-align: left; padding: 4px 16px; font-weight: 600; background: #f8f9fa;"
+                                                            class="text-end">
+                                                            {{ number_format($vProducts->sum('lastYearStockValue'), 2) }}
+                                                        </th>
+                                                    </tr>
                                                 @endforeach
                                             </table>
                                         </div>

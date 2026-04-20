@@ -5,11 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\bulk_payments;
-use App\Models\customerPayments;
 use App\Models\orderbooker_customers;
-use App\Models\orderbookerPaymentsReceiving;
-use App\Models\orders;
-use App\Models\paymentReceiving;
 use App\Models\paymentsReceiving;
 use App\Models\sale_payments;
 use App\Models\sales;
@@ -40,87 +36,87 @@ class customerPaymentsReceivingContoller extends Controller
             ], 422);
         }
 
-              
         $check = paymentsReceiving::where('key', $request->key)->count();
 
-        if($check > 0) {
+        if ($check > 0) {
+            $payment = paymentsReceiving::where('key', $request->key)->first();
+
             return response()->json([
                 'status' => 'error',
-                'message' => 'Payment already punched'
-            ], 201);
+                'message' => 'Payment already punched key: '.$request->key,
+                'data' => $payment,
+            ], 409);
         }
 
-
-        try{ 
+        try {
             DB::beginTransaction();
             $ref = getRef();
             $payment = paymentsReceiving::create(
                 [
-                    'depositerID'   => $request->customerID,
+                    'depositerID' => $request->customerID,
                     'orderbookerID' => $request->user()->id,
-                    'date'          => $request->date,
-                    'amount'        => $request->amount,
-                    'method'        => $request->method,
-                    'number'        => $request->number,
-                    'bank'          => $request->bank,
-                    'cheque_date'   => $request->cheque_date,
-                    'branchID'      => $request->user()->branchID,
-                    'notes'         => $request->notes,
-                    'userID'        => $request->user()->id,
-                    'refID'         => $ref,
-                    'key'           => $request->key
+                    'date' => $request->date,
+                    'amount' => $request->amount,
+                    'method' => $request->method,
+                    'number' => $request->number,
+                    'bank' => $request->bank,
+                    'cheque_date' => $request->cheque_date,
+                    'branchID' => $request->user()->branchID,
+                    'notes' => $request->notes,
+                    'userID' => $request->user()->id,
+                    'refID' => $ref,
+                    'key' => $request->key,
                 ]
             );
             $depositer = accounts::find($request->customerID);
             $user_name = $request->user()->name;
 
-            if($request->method != 'Cash')
-                {
-                    transactions_que::create(
-                        [
-                            'userID' => $request->user()->id,
-                            'customerID' => $request->customerID,
-                            'orderbookerID' => $request->user()->id,
-                            'branchID' => $request->user()->branchID,
-                            'method' => $request->method,
-                            'number' => $request->number,
-                            'bank' => $request->bank,
-                            'cheque_date' => $request->cheque_date,
-                            'amount' => $request->amount,
-                            'date' => $request->date,
-                            'notes' => "Mobile - Payment deposited to $user_name : $request->notes",
-                            'notes2' => "Mobile - Payment deposited by $depositer->title : $request->notes",
-                            'refID' => $ref,
-                        ]
-                    );
-                }
-           
+            if ($request->method != 'Cash') {
+                transactions_que::create(
+                    [
+                        'userID' => $request->user()->id,
+                        'customerID' => $request->customerID,
+                        'orderbookerID' => $request->user()->id,
+                        'branchID' => $request->user()->branchID,
+                        'method' => $request->method,
+                        'number' => $request->number,
+                        'bank' => $request->bank,
+                        'cheque_date' => $request->cheque_date,
+                        'amount' => $request->amount,
+                        'date' => $request->date,
+                        'notes' => "Mobile - Payment deposited to $user_name : $request->notes",
+                        'notes2' => "Mobile - Payment deposited by $depositer->title : $request->notes",
+                        'refID' => $ref,
+                    ]
+                );
+            }
+
             createTransaction($request->customerID, $request->date, 0, $request->amount, "Mobile - Payment deposited to $user_name : $request->notes", $ref, $request->user()->id);
-            
-            createMethodTransaction($request->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, "Mobile - Payment deposited by $depositer->title : $request->notes", $ref);
-    
+
+            createMethodTransaction($request->user()->id, $request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, "Mobile - Payment deposited by $depositer->title : $request->notes", $ref);
+
             createUserTransaction($request->user()->id, $request->date, $request->amount, 0, "Mobile - Payment deposited by $depositer->title : $request->notes", $ref);
 
-            if($request->has('file')){
+            if ($request->has('file')) {
                 createAttachment($request->file('file'), $ref);
             }
             DB::commit();
+
             return response()->json([
                 'status' => 'success',
                 'data' => [
                     'message' => 'Payment received successfully',
                     'payment' => $payment,
-                ]
+                ],
             ], 201);
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
-        } 
+        }
     }
 
     /**
@@ -140,20 +136,18 @@ class customerPaymentsReceivingContoller extends Controller
         }
 
         $check = orderbooker_customers::where('orderbookerID', $request->user()->id)->where('customerID', $request->customerID)->first();
-        if(!$check)
-        {
+        if (! $check) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Customer does not belong to the orderbooker',
             ], 404);
         }
-        
+
         $invoices = sales::with('payments')->where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->unpaidOrPartiallyPaid()->get();
         $data = [];
-        foreach($invoices as $invoice)
-        {
+        foreach ($invoices as $invoice) {
             $payment = $invoice->payments->sum('amount');
-            
+
             $data[] = [
                 'salesID' => $invoice->id,
                 'total_bill' => $invoice->net,
@@ -164,9 +158,10 @@ class customerPaymentsReceivingContoller extends Controller
                 'payments' => $invoice->payments()->select('method', 'number', 'bank', 'cheque_date', 'amount', 'date', 'notes')->get(),
             ];
         }
+
         return response()->json([
             'status' => 'success',
-            'data' => $data
+            'data' => $data,
         ], 200);
     }
 
@@ -186,16 +181,14 @@ class customerPaymentsReceivingContoller extends Controller
             'file' => 'nullable|file|mimes:jpg,png,jpeg',
         ]);
 
-        
         $check = sale_payments::where('key', $request->key)->count();
 
-        if($check > 0) {
+        if ($check > 0) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Payment already punched'
+                'message' => 'Payment already punched',
             ], 201);
         }
-
 
         if ($validator->fails()) {
             return response()->json([
@@ -203,35 +196,33 @@ class customerPaymentsReceivingContoller extends Controller
                 'message' => $validator->errors(),
             ], 422);
         }
-        try{
+        try {
             DB::beginTransaction();
             $data = [];
             $total_amount = 0;
             $ref = getRef();
-            foreach($request->saleIDs as $key => $saleID)
-            {
-                if($request->amount[$key] > 0)
-                {
-                $total_amount += $request->amount[$key];
-                $sale = sales::find($saleID);
-                $data[] = sale_payments::create([
-                    'salesID' => $saleID,
-                    'userID' => $request->user()->id,
-                    'orderbookerID' => $request->user()->id,
-                    'customerID' => $sale->customerID,
-                    'branchID' => $request->user()->branchID,
-                    'date' => $request->date,
-                    'amount' => $request->amount[$key],
-                    'notes' => $request->notes,
-                    'method' => $request->method,
-                    'bank' => $request->bank,
-                    'number' => $request->number,
-                    'cheque_date' => $request->cheque_date,
-                    'refID' => $ref,
-                    'key' => $request->key
-                ]);
+            foreach ($request->saleIDs as $key => $saleID) {
+                if ($request->amount[$key] > 0) {
+                    $total_amount += $request->amount[$key];
+                    $sale = sales::find($saleID);
+                    $data[] = sale_payments::create([
+                        'salesID' => $saleID,
+                        'userID' => $request->user()->id,
+                        'orderbookerID' => $request->user()->id,
+                        'customerID' => $sale->customerID,
+                        'branchID' => $request->user()->branchID,
+                        'date' => $request->date,
+                        'amount' => $request->amount[$key],
+                        'notes' => $request->notes,
+                        'method' => $request->method,
+                        'bank' => $request->bank,
+                        'number' => $request->number,
+                        'cheque_date' => $request->cheque_date,
+                        'refID' => $ref,
+                        'key' => $request->key,
+                    ]);
 
-                $saleIDs[] = $saleID;
+                    $saleIDs[] = $saleID;
                 }
             }
 
@@ -249,153 +240,142 @@ class customerPaymentsReceivingContoller extends Controller
                 'cheque_date' => $request->cheque_date,
                 'userID' => $request->user()->id,
                 'refID' => $ref,
-                'invoiceIDs' => $saleIDs
-            ]); 
+                'invoiceIDs' => $saleIDs,
+            ]);
             $user = $request->user()->name;
             $customer = accounts::find($sale->customerID);
 
-            if($request->method != 'Cash')
-                {
-                    transactions_que::create(
-                        [
-                            'userID' => $request->user()->id,
-                            'customerID' => $sale->customerID,
-                            'orderbookerID' => $sale->orderbookerID,
-                            'branchID' => $request->user()->branchID,
-                            'method' => $request->method,
-                            'number' => $request->number,
-                            'bank' => $request->bank,
-                            'cheque_date' => $request->cheque_date,
-                            'amount' => $total_amount,
-                            'date' => $request->date,
-                            'refID' => $ref,
-                            'notes' => "Mobile - Bulk Payment of Inv No. $saleIDs Received by $user Method: $request->method - Notes : $request->notes",
-                            'notes2' => "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title Method: $request->method - Notes : $request->notes",
-                        ]
-                    );
-                }
+            if ($request->method != 'Cash') {
+                transactions_que::create(
+                    [
+                        'userID' => $request->user()->id,
+                        'customerID' => $sale->customerID,
+                        'orderbookerID' => $sale->orderbookerID,
+                        'branchID' => $request->user()->branchID,
+                        'method' => $request->method,
+                        'number' => $request->number,
+                        'bank' => $request->bank,
+                        'cheque_date' => $request->cheque_date,
+                        'amount' => $total_amount,
+                        'date' => $request->date,
+                        'refID' => $ref,
+                        'notes' => "Mobile - Bulk Payment of Inv No. $saleIDs Received by $user Method: $request->method - Notes : $request->notes",
+                        'notes2' => "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title Method: $request->method - Notes : $request->notes",
+                    ]
+                );
+            }
             $user = $request->user()->name;
             $customer = accounts::find($sale->customerID);
-            createTransaction($request->customerID, $request->date,0, $total_amount, "Mobile - Bulk Payment of Inv No. $saleIDs Received by $user Method: $request->method - Notes : $request->notes", $ref, $sale->orderbookerID);
-            createUserTransaction($request->user()->id, $request->date,$total_amount, 0, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title Method: $request->method - Notes : $request->notes", $ref);
-           createMethodTransaction($request->user()->id, $request->method, $total_amount,0, $request->date, $request->number, $request->bank, $request->cheque_date, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title Method: $request->method - Notes : $request->notes", $ref);
-            
-            if($request->has('file'))
-            {
+            createTransaction($request->customerID, $request->date, 0, $total_amount, "Mobile - Bulk Payment of Inv No. $saleIDs Received by $user Method: $request->method - Notes : $request->notes", $ref, $sale->orderbookerID);
+            createUserTransaction($request->user()->id, $request->date, $total_amount, 0, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title Method: $request->method - Notes : $request->notes", $ref);
+            createMethodTransaction($request->user()->id, $request->method, $total_amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, "Mobile - Bulk Payment of Inv No. $saleIDs Received from $customer->title Method: $request->method - Notes : $request->notes", $ref);
+
+            if ($request->has('file')) {
                 createAttachment($request->file('file'), $ref);
             }
 
             DB::commit();
-                return response()->json([
-                    'status' => 'success',
-                    'data' => $data
-                ], 200);
-        }
-        catch(\Exception $e)
-        {
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data,
+            ], 200);
+        } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
 
-   public function lastPayment(Request $request)
-   {
-    $validation = Validator::make($request->all(), [
-        'customerID' => 'required|exists:accounts,id',
-    ]);
-
-    if($validation->fails())
+    public function lastPayment(Request $request)
     {
+        $validation = Validator::make($request->all(), [
+            'customerID' => 'required|exists:accounts,id',
+        ]);
+
+        if ($validation->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validation->errors(),
+            ], 422);
+        }
+
+        $sale_payment_date = sale_payments::where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->pluck('date');
+        $payment_receiving_date = paymentsReceiving::where('depositerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->pluck('date');
+
+        //newest date
+        $newest_date = $sale_payment_date->max();
+        if ($payment_receiving_date->max() > $newest_date) {
+            $newest_date = $payment_receiving_date->max();
+        }
+
+        $methods = ['Cash', 'Cheque', 'Online', 'Other'];
+        $methodData = [];
+        $methodData['date'] = $newest_date;
+        foreach ($methods as $method) {
+            $sales_payment = sale_payments::where('customerID', $request->customerID)->where('date', $newest_date)->where('method', $method)->sum('amount');
+            $payment_receiving = paymentsReceiving::where('depositerID', $request->customerID)->where('date', $newest_date)->where('method', $method)->sum('amount');
+
+            $total = $sales_payment + $payment_receiving;
+            $methodData[$method] = round($total, 2);
+        }
+
+        $last_sale = sales::where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->first();
+        if ($last_sale) {
+            $last_sale_date = $last_sale->date;
+            $last_sale_amount = $last_sale->net;
+        } else {
+            $last_sale_date = null;
+            $last_sale_amount = 0;
+        }
+        $last_balance = getAccountBalanceOrderbookerWise($request->customerID, $request->user()->id);
+
+        $methodData['last_sale'] = $last_sale_date;
+        $methodData['last_sale_amount'] = round($last_sale_amount, 2);
+        $methodData['last_balance'] = round($last_balance, 2);
+
         return response()->json([
-            'status' => 'error',
-            'message' => $validation->errors(),
-        ], 422);
+            'status' => 'success',
+            'data' => $methodData,
+        ], 200);
     }
 
-    $sale_payment_date = sale_payments::where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->pluck('date');
-    $payment_receiving_date = paymentsReceiving::where('depositerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->pluck('date');
-
-    //newest date
-    $newest_date = $sale_payment_date->max();
-    if($payment_receiving_date->max() > $newest_date)
+    public function orderbookerPendingInvoices(Request $request)
     {
-        $newest_date = $payment_receiving_date->max();
+
+        $customers = orderbooker_customers::where('orderbookerID', $request->user()->id)->get();
+
+        $data = [];
+        foreach ($customers as $customer) {
+            $invoices = sales::with('payments')->where('customerID', $customer->customerID)->where('orderbookerID', $request->user()->id)->unpaidOrPartiallyPaid()->get();
+            $customerData = accounts::find($customer->customerID);
+            $invoicesData = [];
+            foreach ($invoices as $invoice) {
+                $payment = $invoice->payments->sum('amount');
+
+                $invoicesData[] = [
+                    'salesID' => $invoice->id,
+                    'total_bill' => $invoice->net,
+                    'paid' => $payment,
+                    'due' => $invoice->net - $payment,
+                    'date' => $invoice->date,
+                    'age' => $invoice->age(),
+                    'payments' => $invoice->payments()->select('method', 'number', 'bank', 'cheque_date', 'amount', 'date', 'notes')->get(),
+                ];
+            }
+            $data[] = [
+                'customerID' => $customer->customerID,
+                'customerName' => $customerData->title,
+                'invoices' => $invoicesData,
+            ];
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $data,
+        ], 200);
     }
-    
-    $methods = ['Cash', 'Cheque', 'Online', 'Other'];
-    $methodData = [];
-    $methodData['date'] = $newest_date;
-   foreach($methods as $method)
-   {
-    $sales_payment = sale_payments::where('customerID', $request->customerID)->where('date', $newest_date)->where('method', $method)->sum('amount');
-    $payment_receiving = paymentsReceiving::where('depositerID', $request->customerID)->where('date', $newest_date)->where('method', $method)->sum('amount');
-
-    $total = $sales_payment + $payment_receiving;
-    $methodData[$method] = round($total, 2);
-   }
-   
-   $last_sale = sales::where('customerID', $request->customerID)->where('orderbookerID', $request->user()->id)->orderBy('id', 'desc')->first();
-   if($last_sale)
-   {
-    $last_sale_date = $last_sale->date;
-    $last_sale_amount = $last_sale->net;
-   }
-   else
-   {
-    $last_sale_date = null;
-    $last_sale_amount = 0;
-   }
-   $last_balance = getAccountBalanceOrderbookerWise($request->customerID, $request->user()->id);
-
-   $methodData['last_sale'] = $last_sale_date;
-   $methodData['last_sale_amount'] = round($last_sale_amount, 2);
-   $methodData['last_balance'] = round($last_balance, 2);
-
-    return response()->json([
-        'status' => 'success',
-        'data' => $methodData
-    ], 200);
-   }
-
-   public function orderbookerPendingInvoices(Request $request)
-   {
-      
-    $customers = orderbooker_customers::where('orderbookerID', $request->user()->id)->get();
-
-    $data = [];
-    foreach($customers as $customer)
-    {
-       $invoices = sales::with('payments')->where('customerID', $customer->customerID)->where('orderbookerID', $request->user()->id)->unpaidOrPartiallyPaid()->get();
-       $customerData = accounts::find($customer->customerID);
-       $invoicesData = [];
-       foreach($invoices as $invoice)
-       {
-           $payment = $invoice->payments->sum('amount');
-           
-           $invoicesData[] = [
-               'salesID' => $invoice->id,
-               'total_bill' => $invoice->net,
-               'paid' => $payment,
-               'due' => $invoice->net - $payment,
-               'date' => $invoice->date,
-               'age' => $invoice->age(),
-               'payments' => $invoice->payments()->select('method', 'number', 'bank', 'cheque_date', 'amount', 'date', 'notes')->get(),
-           ];
-       }
-       $data[] = [
-           'customerID' => $customer->customerID,
-           'customerName' => $customerData->title,
-           'invoices' => $invoicesData
-       ];
-    }
-    return response()->json([
-        'status' => 'success',
-        'data' => $data
-    ], 200);
-   }
-
 }
-

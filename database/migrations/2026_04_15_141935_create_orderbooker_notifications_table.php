@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('message');
             $table->string('ref_id');
+            $table->string('model');
             $table->enum('status', ['read', 'unread'])->default('unread');
             $table->timestamps();
         });

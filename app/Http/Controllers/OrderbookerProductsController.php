@@ -37,9 +37,11 @@ class OrderbookerProductsController extends Controller
         $orderbooker_products->productID = $request->productID;
         $orderbooker_products->save();
 
-        $product_name = products::find($request->productID)->name;
+        $product = products::find($request->productID);
+        $product_name = $product->name;
+        $product_vendor = $product->vendor->title;
 
-        createNotification($request->orderbookerID, 'New Product', $product_name.' added successfully', $orderbooker_products->id);
+        createNotification($request->orderbookerID, 'New Product', "Product $product_name Vendor $product_vendor added successfully", $orderbooker_products->id, 'products');
 
         return redirect()->back()->with('success', 'Product added successfully');
     }
@@ -87,11 +89,14 @@ class OrderbookerProductsController extends Controller
     {
         $orderbooker_products = orderbooker_products::find($id);
         $orderbooker = $orderbooker_products->orderbookerID;
-        $product_name = products::find($orderbooker_products->productID)->name;
+        $product = products::find($orderbooker_products->productID);
+        $product_name = $product->name;
+        $product_vendor = $product->vendor->title;
+
         $orderbooker_products->delete();
         session()->forget('confirmed_password');
 
-        createNotification($orderbooker, 'Product Removed', $product_name.' removed successfully', $id);
+        createNotification($orderbooker, 'Product Removed', "Product $product_name Vendor $product_vendor removed successfully", $id, 'products');
 
         return to_route('orderbookerproducts.show', [$orderbooker, 'All'])->with('success', 'Product removed successfully');
     }

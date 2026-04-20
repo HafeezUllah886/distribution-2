@@ -37,9 +37,13 @@ class OrderbookerCustomersController extends Controller
         $orderbooker_customers->customerID = $request->customerID;
         $orderbooker_customers->save();
 
-        $customer_name = accounts::find($request->customerID)->title;
+        $customer = accounts::find($request->customerID);
+        $customer_name = $customer->title;
+        $customer_area = $customer->area->name;
+        $customer_town = $customer->area->town->name;
+        $customer_address = $customer->address;
 
-        createNotification($request->orderbookerID, 'New Customer', $customer_name.' added successfully', $orderbooker_customers->id);
+        createNotification($request->orderbookerID, 'New Customer', "Customer $customer_name (Area: $customer_area, Town: $customer_town, Address: $customer_address) added successfully", $orderbooker_customers->id, 'customers');
 
         return redirect()->back()->with('success', 'Customer added successfully');
     }
@@ -88,11 +92,15 @@ class OrderbookerCustomersController extends Controller
     {
         $orderbooker_customers = orderbooker_customers::find($id);
         $orderbooker = $orderbooker_customers->orderbookerID;
-        $customer_name = accounts::find($orderbooker_customers->customerID)->title;
+        $customer = accounts::find($orderbooker_customers->customerID);
+        $customer_name = $customer->title;
+        $customer_area = $customer->area->name;
+        $customer_town = $customer->area->town->name;
+        $customer_address = $customer->address;
         $orderbooker_customers->delete();
         session()->forget('confirmed_password');
 
-        createNotification($orderbooker, 'Customer Removed', $customer_name.' removed successfully', $id);
+        createNotification($orderbooker, 'Customer Removed', "Customer $customer_name (Area: $customer_area, Town: $customer_town, Address: $customer_address) removed successfully", $id, 'customers');
 
         return to_route('orderbookercustomers.show', $orderbooker)->with('success', 'Customer removed successfully');
     }

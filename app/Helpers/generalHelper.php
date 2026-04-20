@@ -295,13 +295,14 @@ function avg_cost_branch_wise_till_date($id, $branch, $date)
     return $purchase_price;
 }
 
-function createNotification($orderbooker_id, $title, $message, $id)
+function createNotification($orderbooker_id, $title, $message, $id, $model)
 {
     $notification = new orderbooker_notifications;
     $notification->orderbooker_id = $orderbooker_id;
     $notification->title = $title;
     $notification->message = $message;
     $notification->ref_id = $id;
+    $notification->model = $model;
     $notification->save();
 }
 
