@@ -263,7 +263,7 @@ function avg_cost_branch_wise($id, $branch)
     $purchase_qty = $purchases->sum('pc');
 
     if ($purchase_qty > 0) {
-        $purchase_price = $purchase_amount / $purchase_qty;
+        $purchase_price = $purchase_amount / $purchase_qty + $purchases->avg('fright') + $purchases->avg('labor');
     } else {
         $purchase_price = 0;
     }
