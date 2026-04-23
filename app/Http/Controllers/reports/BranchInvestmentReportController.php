@@ -4,6 +4,7 @@ namespace App\Http\Controllers\reports;
 
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\area;
 use App\Models\branches;
 use App\Models\employee;
 use App\Models\fixed_assets;
@@ -31,11 +32,19 @@ class BranchInvestmentReportController extends Controller
         $date = $request->current_date;
         $lastYearDate = $request->last_date;
 
-        $customers = accounts::customer()->where('branchID', $branch)->get();
+        $areas = area::where('branchID', $branch)->get();
 
-        foreach ($customers as $customer) {
-            $customer->currentBalance = accountBalanceTillDate($customer->id, $date);
-            $customer->lastYearBalance = accountBalanceTillDate($customer->id, $lastYearDate);
+        foreach ($areas as $area) {
+
+            $customers = accounts::customer()->where('branchID', $branch)->where('areaID', $area->id)->get();
+            foreach ($customers as $customer) {
+                $customer->currentBalance = accountBalanceTillDate($customer->id, $date);
+                $customer->lastYearBalance = accountBalanceTillDate($customer->id, $lastYearDate);
+
+            }
+            $area->customers = $customers;
+            $area->currentBalance = $customers->sum('currentBalance');
+            $area->lastYearBalance = $customers->sum('lastYearBalance');
 
         }
 
@@ -151,6 +160,6 @@ class BranchInvestmentReportController extends Controller
 
         $branch_name = branches::find($branch)->name;
 
-        return view('reports.branch_investment.details', compact('date', 'lastYearDate', 'branch', 'customers', 'branch_name', 'vendors', 'business', 'unloaders', 'supplymans', 'freights', 'staff', 'employees', 'products', 'totalCurrentStockValue', 'totalLastYearStockValue', 'personal', 'investors', 'fixed_assets', 'totalCurrentFixedAssetsValue', 'totalLastYearFixedAssetsValue'));
+        return view('reports.branch_investment.details', compact('date', 'lastYearDate', 'branch', 'areas', 'branch_name', 'vendors', 'business', 'unloaders', 'supplymans', 'freights', 'staff', 'employees', 'products', 'totalCurrentStockValue', 'totalLastYearStockValue', 'personal', 'investors', 'fixed_assets', 'totalCurrentFixedAssetsValue', 'totalLastYearFixedAssetsValue'));
     }
 }

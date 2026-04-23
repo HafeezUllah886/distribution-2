@@ -250,29 +250,28 @@
 
                                 {{-- ── 1. Customers Balance ── --}}
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header" id="hCustomers">
+                                    <h2 class="accordion-header" id="hAreas">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#accCustomers" aria-expanded="false"
-                                            aria-controls="accCustomers">
+                                            data-bs-target="#accAreas" aria-expanded="false" aria-controls="accAreas">
                                             <span class="acc-btn">
                                                 <span class="acc-num">1</span>
-                                                <span class="acc-name">Customers Balance</span>
+                                                <span class="acc-name">Areas Balance</span>
                                                 <span
-                                                    class="acc-val">{{ number_format($customers->sum('currentBalance'), 2) }}</span>
+                                                    class="acc-val">{{ number_format($areas->sum('currentBalance'), 2) }}</span>
                                                 <span
-                                                    class="acc-ly">{{ number_format($customers->sum('lastYearBalance'), 2) }}</span>
+                                                    class="acc-ly">{{ number_format($areas->sum('lastYearBalance'), 2) }}</span>
                                             </span>
                                         </button>
                                     </h2>
-                                    <div id="accCustomers" class="accordion-collapse collapse" aria-labelledby="hCustomers">
+                                    <div id="accAreas" class="accordion-collapse collapse" aria-labelledby="hAreas">
                                         <div class="accordion-body">
                                             <table class="detail-table">
-                                                @foreach ($customers as $customer)
+                                                @foreach ($areas as $area)
                                                     <tr>
                                                         <td></td>
-                                                        <td>{{ $customer->title }} | {{ $customer->area->name }}</td>
-                                                        <td>{{ number_format($customer->currentBalance, 2) }}</td>
-                                                        <td>{{ number_format($customer->lastYearBalance, 2) }}</td>
+                                                        <td>{{ $area->name }} </td>
+                                                        <td>{{ number_format($area->currentBalance, 2) }}</td>
+                                                        <td>{{ number_format($area->lastYearBalance, 2) }}</td>
                                                     </tr>
                                                 @endforeach
                                             </table>
@@ -665,7 +664,7 @@
                             {{-- ══ Totals ══ --}}
                             @php
                                 $totalGeneralCurrent =
-                                    $customers->sum('currentBalance') +
+                                    $areas->sum('currentBalance') +
                                     $business->sum('currentBalance') +
                                     $unloaders->sum('currentBalance') +
                                     $supplymans->sum('currentBalance') +
@@ -677,7 +676,7 @@
                                     $vendors->sum('currentBalance');
 
                                 $totalGeneralLastYear =
-                                    $customers->sum('lastYearBalance') +
+                                    $areas->sum('lastYearBalance') +
                                     $business->sum('lastYearBalance') +
                                     $unloaders->sum('lastYearBalance') +
                                     $supplymans->sum('lastYearBalance') +
@@ -691,20 +690,24 @@
 
                             <table class="totals-table mt-3">
                                 <tr class="table-active">
-                                    <td colspan="2" class="text-end">Total Investment and Fixed Assets</td>
-                                    <td>{{ number_format($totalGeneralCurrent + $totalCurrentFixedAssetsValue, 2) }}</td>
-                                    <td>{{ number_format($totalGeneralLastYear + $totalLastYearFixedAssetsValue, 2) }}</td>
+                                    <td colspan="2" class="text-end h5">Total Investment and Fixed Assets</td>
+                                    <td class="h5">
+                                        {{ number_format($totalGeneralCurrent + $totalCurrentFixedAssetsValue, 2) }}</td>
+                                    <td class="h5">
+                                        {{ number_format($totalGeneralLastYear + $totalLastYearFixedAssetsValue, 2) }}</td>
                                 </tr>
                                 <tr class="table-active">
-                                    <td colspan="2" class="text-end">Total Fixed Investment &amp; Assets</td>
-                                    <td>{{ number_format($investors->sum('currentBalance'), 2) }}</td>
-                                    <td>{{ number_format($investors->sum('lastYearBalance'), 2) }}</td>
+                                    <td colspan="2" class="text-end h5">Total Fixed Investment &amp; Assets</td>
+                                    <td class="h5">{{ number_format($investors->sum('currentBalance'), 2) }}</td>
+                                    <td class="h5">{{ number_format($investors->sum('lastYearBalance'), 2) }}</td>
                                 </tr>
                                 <tr class="table-active">
-                                    <td colspan="2" class="text-end">Result / Outcome of Investment</td>
-                                    <td>{{ number_format($totalGeneralCurrent + $totalCurrentFixedAssetsValue - $investors->sum('currentBalance'), 2) }}
+                                    <td colspan="2" class="text-end h5">Result / Outcome of Investment</td>
+                                    <td class="h5">
+                                        {{ number_format($totalGeneralCurrent + $totalCurrentFixedAssetsValue - $investors->sum('currentBalance'), 2) }}
                                     </td>
-                                    <td>{{ number_format($totalGeneralLastYear + $totalLastYearFixedAssetsValue - $investors->sum('lastYearBalance'), 2) }}
+                                    <td class="h5">
+                                        {{ number_format($totalGeneralLastYear + $totalLastYearFixedAssetsValue - $investors->sum('lastYearBalance'), 2) }}
                                     </td>
                                 </tr>
                             </table>
