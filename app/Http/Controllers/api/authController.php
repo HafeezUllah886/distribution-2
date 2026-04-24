@@ -17,39 +17,39 @@ class authController extends Controller
     {
         $validate = validator::make($request->all(), [
             'user_name' => 'required',
-            'password' => 'required' 
+            'password' => 'required',
         ]);
 
         if ($validate->fails()) {
             return response()->json([
                 'status' => 'error',
-                'message' => $validate->errors()
+                'message' => $validate->errors(),
             ], 422);
         }
 
         $user = User::where('name', $request->user_name)->first();
 
-        if(!$user || !Hash::check($request->password, $user->password))
-        {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Invalid username or password'
+                'message' => 'Invalid username or password',
             ], 401);
         }
-        
-        if($user->status != "Active")
-        {
+
+        if ($user->status != 'Active') {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Account is Blocked'
+                'message' => 'Account is Blocked',
             ], 403);
         }
 
         $token = $user->createToken($request->user_name);
- 
+        $header_image = asset($user->branch->header);
+
         return [
             'user' => $user,
             'token' => $token->plainTextToken,
+            'header_image' => $header_image,
             'message' => 'Logged in successfully',
         ];
     }
@@ -62,9 +62,8 @@ class authController extends Controller
         $request->user()->tokens()->delete();
 
         return [
-            'status' => 'success',  
+            'status' => 'success',
             'message' => 'Logged out successfully',
         ];
     }
-
 }
