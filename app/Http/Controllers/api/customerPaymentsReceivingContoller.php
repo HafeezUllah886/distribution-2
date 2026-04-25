@@ -187,7 +187,7 @@ class customerPaymentsReceivingContoller extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Payment already punched',
-            ], 201);
+            ], 422);
         }
 
         if ($validator->fails()) {
