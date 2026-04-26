@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\NotificationSettingsController;
 use App\Http\Controllers\productDCController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\ProductsPriceListController;
 use App\Http\Controllers\ProductUnitsController;
 use App\Http\Controllers\TownController;
 use App\Http\Controllers\UnitsController;
@@ -37,5 +38,8 @@ Route::middleware(['auth', Admin_BranchAdmin::class])->group(function () {
     Route::get('getUnit/{id}', [UnitsController::class, 'getUnit']);
 
     Route::resource('notification_settings', NotificationSettingsController::class);
+
+    Route::get('price-list', [ProductsPriceListController::class, 'index'])->name('productsPriceList');
+    Route::get('price-list-data', [ProductsPriceListController::class, 'priceListData'])->name('productsPriceListData');
 
 });

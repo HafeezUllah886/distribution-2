@@ -242,6 +242,10 @@
                                     List </a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ route('productsPriceList') }}" class="nav-link" data-key="t-chat">
+                                    Price List </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('brands.index') }}" class="nav-link" data-key="t-chat"> Brands
                                 </a>
                             </li>

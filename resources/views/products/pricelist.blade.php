@@ -1,91 +1,55 @@
-@extends('layout.popups')
+@extends('layout.app')
 @section('content')
-        <div class="row justify-content-center">
-            <div class="col-xxl-9">
-                <div class="card" id="demo">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="hstack gap-2 justify-content-end d-print-none p-2 mt-4">
-                                <a href="javascript:window.print()" class="btn btn-success ml-4"><i class="ri-printer-line mr-4"></i> Print</a>
-                            </div>
-                            <div class="card-header border-bottom-dashed p-4">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
-                                        <h1>{{projectNameHeader()}}</h1>
-                                    </div>
-                                    <div class="flex-shrink-0 mt-sm-0 mt-3">
-                                        <h3>Price List</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--end card-header-->
-                        </div><!--end col-->
-                        <div class="col-lg-12">
-                            <div class="card-body p-4">
-                                <div class="row g-3">
-                                    <div class="col-lg-3 col-6">
-                                        <p class="text-muted mb-2 text-uppercase fw-semibold">Printed On</p>
-                                        <h5 class="fs-14 mb-0"><span id="total-amount">{{ date("d M Y") }}</span></h5>
-                                        {{-- <h5 class="fs-14 mb-0"><span id="total-amount">{{ \Carbon\Carbon::now()->format('h:i A') }}</span></h5> --}}
-                                    </div>
-                                    <!--end col-->
-                                </div>
-                                <!--end row-->
-                            </div>
-                            <!--end card-body-->
-                        </div><!--end col-->
-                        <div class="col-lg-12">
-                            <div class="card-body p-4">
-                                <div class="table-responsive">
-                                    <table class="table table-borderless text-center table-nowrap align-middle mb-0">
-                                        <thead>
-                                            <tr class="table-active">
-                                                <th scope="col" class="text-start">Product Name</th>
-                                                <th scope="col" class="text-start">Packing</th>
-                                                <th scope="col" class="text-start">Size</th>
-                                                <th scope="col" class="text-start">Price Pack</th>
-                                                <th scope="col" class="text-start">Price Unit</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody >
-                                        @foreach ($categories as $key => $cat)
-                                            <tr>
-                                               <td colspan="9" class="text-uppercase border-1 border-dark no-padding"><strong>{{$cat->name}}</strong></td>
-                                            </tr>
-                                            @foreach ($cat->products as $product)
-                                            <tr>
-                                                <td class="text-start border-1 border-dark no-padding">{{ $product->name}}</td>
-                                                <td class="text-start border-1 border-dark no-padding">{{ $product->unit->name }}</td>
-                                                <td class="text-start border-1 border-dark no-padding">{{ $product->unit->value }}</td>
-                                                <td class="text-start border-1 border-dark no-padding">{{ number_format($product->price * $product->unit->value) }}</td>
-                                                <td class="text-start border-1 border-dark no-padding">{{ number_format($product->price) }}</td>
-                                            </tr>
-                                            @endforeach
-                                        @endforeach
-                                        </tbody>
-                                    </table><!--end table-->
-                                </div>
-
-                            </div>
-                            <!--end card-body-->
-                        </div><!--end col-->
-                    </div><!--end row-->
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h3>View Price List</h3>
                 </div>
-                <!--end card-->
+                <form action="{{ route('productsPriceListData') }}" method="get">
+                    <div class="card-body">
+                        <div class="form-group mt-2">
+                            <label for="vendor">Vendor</label>
+                            <select name="vendor" id="vendor" class="selectize">
+                                <option value="all">All</option>
+                                @foreach ($vendors as $vendor)
+                                    <option value="{{ $vendor->id }}">{{ $vendor->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="category">Category</label>
+                            <select name="category" id="category" class="selectize">
+                                <option value="all">All</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="brand">Brand</label>
+                            <select name="brand" id="brand" class="selectize">
+                                <option value="all">All</option>
+                                @foreach ($brands as $brand)
+                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mt-2">
+                            <button class="btn btn-success w-100" type="submit" id="viewBtn">View Report</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <!--end col-->
         </div>
-        <!--end row-->
-
+    </div>
 @endsection
 @section('page-css')
-<style>
-    .no-padding {
-        padding: 5px 5px !important;
-    }
-</style>
-
+    <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
 @endsection
-
-
-
+@section('page-js')
+    <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
+    <script>
+        $(".selectize").selectize();
+    </script>
+@endsection
