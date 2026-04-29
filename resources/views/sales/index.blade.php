@@ -107,13 +107,16 @@
                                                         View (URDU)
                                                     </button>
                                                 </li>
-                                                {{--  <li>
-                                                    <button class="dropdown-item" onclick="newWindow('{{route('sale.gatePass', $sale->id)}}')"
-                                                        onclick=""><i
-                                                            class="ri-eye-fill align-bottom me-2 text-muted"></i>
-                                                        Gate Pass
-                                                    </button>
-                                                </li> --}}
+                                                @if (auth()->user()->role == 'Accountant' && !$sale->has_expense)
+                                                    <li>
+                                                        <button class="dropdown-item"
+                                                            onclick="addExpense({{ $sale->id }})">
+                                                            <i
+                                                                class="ri-money-dollar-circle-fill align-bottom me-2 text-muted"></i>
+                                                            Add Expense
+                                                        </button>
+                                                    </li>
+                                                @endif
                                                 @if (auth()->user()->role == 'Operator' && $sale->edit)
                                                     <li>
                                                         <a class="dropdown-item"
@@ -254,6 +257,63 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <div id="add_expense" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+        style="display: none;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Create Expense</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <form action="{{ route('sale.expense') }}" enctype="multipart/form-data" method="post">
+                    @csrf
+                    <input type="hidden" name="saleID" id="saleID">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group mt-2">
+                                    <label for="category">Category</label>
+                                    <select name="category" required id="category" class="form-control">
+                                        <option value="">Select Category</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="date">Date</label>
+                                    <input type="date" name="date" required id="date"
+                                        value="{{ date('Y-m-d') }}" class="form-control">
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="notes">Notes</label>
+                                    <textarea name="notes" required id="notes" cols="30" class="form-control" rows="5"></textarea>
+                                </div>
+                                <div class="form-group mt-2">
+                                    <label for="showoninvoice">Show on Invoice</label>
+                                    <select name="showoninvoice" id="showoninvoice" class="form-control">
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="col-6">
+                                @include('layout.payment')
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 @endsection
 
 @section('page-css')
@@ -300,6 +360,12 @@
             } else {
                 customerSelectize.clearOptions();
             }
+        }
+
+        function addExpense(saleID) {
+            var modal = $('#add_expense');
+            modal.find('input[name="saleID"]').val(saleID);
+            modal.modal('show');
         }
     </script>
 @endsection

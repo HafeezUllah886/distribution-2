@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\currencymgmt;
 use App\Models\discountManagement;
+use App\Models\expense_categories;
 use App\Models\expenses;
 use App\Models\order_delivery;
 use App\Models\orderbooker_customers;
@@ -15,7 +17,6 @@ use App\Models\products;
 use App\Models\sale_details;
 use App\Models\sale_payments;
 use App\Models\sales;
-use App\Models\salesman;
 use App\Models\stock;
 use App\Models\transactions;
 use App\Models\units;
@@ -38,13 +39,10 @@ class SalesController extends Controller
 
         $bookerID = $request->orderbookerID ?? null;
 
-        if($bookerID == null)
-        {
-            $sales = sales::with('payments')->whereBetween("date", [$start, $end])->where('branchID', auth()->user()->branchID)->orderby('id', 'desc')->get();
-        }
-        else
-        {
-            $sales = sales::with('payments')->whereBetween("date", [$start, $end])->where('branchID', auth()->user()->branchID)->where('orderbookerID', $bookerID)->orderby('id', 'desc')->get();
+        if ($bookerID == null) {
+            $sales = sales::with('payments')->whereBetween('date', [$start, $end])->where('branchID', auth()->user()->branchID)->orderby('id', 'desc')->get();
+        } else {
+            $sales = sales::with('payments')->whereBetween('date', [$start, $end])->where('branchID', auth()->user()->branchID)->where('orderbookerID', $bookerID)->orderby('id', 'desc')->get();
         }
 
         $warehouses = warehouses::currentBranch()->get();
@@ -52,7 +50,14 @@ class SalesController extends Controller
 
         $orderbookers = User::orderbookers()->currentBranch()->active()->get();
         $supplymen = accounts::supplyMen()->currentBranch()->get();
-        return view('sales.index', compact('sales', 'start', 'end', 'warehouses', 'customers', 'orderbookers', 'bookerID', 'supplymen'));
+
+        $currencies = currencymgmt::all();
+        foreach ($currencies as $currency) {
+            $currency->qty = getCurrencyBalance($currency->id, auth()->user()->id);
+        }
+        $categories = expense_categories::currentBranch()->get();
+
+        return view('sales.index', compact('sales', 'start', 'end', 'warehouses', 'customers', 'orderbookers', 'bookerID', 'supplymen', 'currencies', 'categories'));
     }
 
     /**
@@ -63,18 +68,18 @@ class SalesController extends Controller
         $orderbooker_products = orderbooker_products::where('orderbookerID', $request->orderbookerID)->pluck('productID')->toArray();
         $products = products::whereIn('id', $orderbooker_products)->orderby('name', 'asc')->get();
         $customer = accounts::find($request->customerID);
-        foreach($products as $product)
-        {
+        foreach ($products as $product) {
             $stock = getStock($product->id);
             $product->stock = $stock;
-           
+
         }
         $units = units::currentBranch()->get();
         $orderbooker = User::find($request->orderbookerID);
         $warehouse = warehouses::find($request->warehouseID);
         $supplymen = accounts::supplyMen()->currentBranch()->get();
         $date = $request->date ?? date('Y-m-d');
-        return view('sales.create', compact('products', 'units', 'customer', 'orderbooker', 'warehouse', 'supplymen', 'date')); 
+
+        return view('sales.create', compact('products', 'units', 'customer', 'orderbooker', 'warehouse', 'supplymen', 'date'));
     }
 
     /**
@@ -82,27 +87,25 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
-        try
-        {
-            if($request->isNotFilled('id'))
-            {
+        try {
+            if ($request->isNotFilled('id')) {
                 throw new Exception('Please Select Atleast One Product');
             }
             DB::beginTransaction();
             $ref = getRef();
             $sale = sales::create(
                 [
-                  'customerID'      => $request->customerID,
-                  'branchID'        => Auth()->user()->branchID,
-                  'warehouseID'     => $request->warehouseID,
-                  'orderbookerID'   => $request->orderbookerID,
-                  'supplymanID'     => $request->supplymanID,
-                  'orderdate'       => $request->orderdate,
-                  'date'            => $request->date,
-                  'bilty'           => $request->bilty,
-                  'transporter'     => $request->transporter,
-                  'notes'           => $request->notes,
-                  'refID'           => $ref,
+                    'customerID' => $request->customerID,
+                    'branchID' => Auth()->user()->branchID,
+                    'warehouseID' => $request->warehouseID,
+                    'orderbookerID' => $request->orderbookerID,
+                    'supplymanID' => $request->supplymanID,
+                    'orderdate' => $request->orderdate,
+                    'date' => $request->date,
+                    'bilty' => $request->bilty,
+                    'transporter' => $request->transporter,
+                    'notes' => $request->notes,
+                    'refID' => $ref,
                 ]
             );
 
@@ -111,11 +114,10 @@ class SalesController extends Controller
             $total = 0;
             $totalLabor = 0;
             $customer = accounts::find($request->customerID)->title;
-            foreach($ids as $key => $id)
-            {
+            foreach ($ids as $key => $id) {
                 $unit = product_units::find($request->unit[$key]);
                 $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
-                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                $pc = $request->loose[$key] + ($request->qty[$key] * $unit->value);
                 $price = $request->price[$key];
                 $discount = $request->discount[$key];
                 $claim = $request->claim[$key];
@@ -129,121 +131,113 @@ class SalesController extends Controller
 
                 sale_details::create(
                     [
-                        'saleID'        => $sale->id,
-                        'warehouseID'   => $request->warehouseID,
+                        'saleID' => $sale->id,
+                        'warehouseID' => $request->warehouseID,
                         'orderbookerID' => $request->orderbookerID,
-                        'branchID'        => Auth()->user()->branchID,
-                        'productID'     => $id,
-                        'price'         => $price,
-                        'discount'      => $discount,
-                        'discountp'     => $request->discountp[$key],
+                        'branchID' => Auth()->user()->branchID,
+                        'productID' => $id,
+                        'price' => $price,
+                        'discount' => $discount,
+                        'discountp' => $request->discountp[$key],
                         'discountvalue' => $discountvalue,
-                        'qty'           => $request->qty[$key],
-                        'pc'            => $pc,
-                        'loose'         => $request->loose[$key],
-                        'netprice'      => $netPrice,
-                        'amount'        => $amount,
-                        'price_amount'  => $price_amount,
-                        'date'          => $request->date,
-                        'bonus'         => $request->bonus[$key],
-                        'labor'         => $request->labor[$key],
-                        'fright'        => $request->fright[$key],
-                        'claim'         => $claim,
-                        'unitID'        => $unit->id,
-                        'refID'         => $ref,
+                        'qty' => $request->qty[$key],
+                        'pc' => $pc,
+                        'loose' => $request->loose[$key],
+                        'netprice' => $netPrice,
+                        'amount' => $amount,
+                        'price_amount' => $price_amount,
+                        'date' => $request->date,
+                        'bonus' => $request->bonus[$key],
+                        'labor' => $request->labor[$key],
+                        'fright' => $request->fright[$key],
+                        'claim' => $claim,
+                        'unitID' => $unit->id,
+                        'refID' => $ref,
                     ]
                 );
                 createStock($id, 0, $qty, $request->date, "Sold to $customer", $ref, $request->warehouseID);
             }
 
-            $net = round($total,0);
-            $totalLabor = round($totalLabor,0);
+            $net = round($total, 0);
+            $totalLabor = round($totalLabor, 0);
 
             $sale->update(
                 [
                     'net' => $net,
                 ]
             );
-            if($totalLabor > 0)
-            {
+            if ($totalLabor > 0) {
                 createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer Notes: $request->notes", $ref, $request->orderbookerID);
             }
 
-
-            if($request->payment == "Advance")
-            {
+            if ($request->payment == 'Advance') {
                 $account_balance = getAccountBalance($request->customerID);
-                if($account_balance >= 0)
-                {
-                    
+                if ($account_balance >= 0) {
+
                     createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id Notes: $request->notes", $ref, $request->orderbookerID);
                     DB::commit();
-                    return back()->with('success', "Sale Created But Invoice is not marked as Paid as Customer Balance is not enough");
-                }
-                else
-                {
+
+                    return back()->with('success', 'Sale Created But Invoice is not marked as Paid as Customer Balance is not enough');
+                } else {
                     $balance = abs($account_balance);
                     $difference = $balance - $net;
-                    if($difference >= 0)
-                    {
+                    if ($difference >= 0) {
                         sale_payments::create(
                             [
-                                'salesID'       => $sale->id,
+                                'salesID' => $sale->id,
                                 'orderbookerID' => $sale->orderbookerID,
-                                'branchID'      => auth()->user()->branchID,
-                                'customerID'    => $sale->customerID,
-                                'method'        => "Cash",
-                                'number'        => "Advance",
-                                'bank'          => "Advance",
-                                'cheque_date'   => $request->date,
-                                'date'          => $request->date,
-                                'amount'        => $net,
-                                'notes'         => "Advance Payment of Sale No. $sale->id",
-                                'userID'        => auth()->id(),
-                                'refID'         => $ref,
+                                'branchID' => auth()->user()->branchID,
+                                'customerID' => $sale->customerID,
+                                'method' => 'Cash',
+                                'number' => 'Advance',
+                                'bank' => 'Advance',
+                                'cheque_date' => $request->date,
+                                'date' => $request->date,
+                                'amount' => $net,
+                                'notes' => "Advance Payment of Sale No. $sale->id",
+                                'userID' => auth()->id(),
+                                'refID' => $ref,
                             ]
                         );
                         createTransaction($request->customerID, $request->date, $net, 0, "Sale No. $sale->id Adjusted as Already Paid Notes: $request->notes", $ref, $request->orderbookerID);
-                        
+
                         DB::commit();
-                        return back()->with('success', "Sale Created and marked as paid");
-                    }
-                    else
-                    {
+
+                        return back()->with('success', 'Sale Created and marked as paid');
+                    } else {
                         $diff = abs($difference);
                         sale_payments::create(
                             [
-                                'salesID'       => $sale->id,
+                                'salesID' => $sale->id,
                                 'orderbookerID' => $sale->orderbookerID,
-                                'branchID'      => auth()->user()->branchID,
-                                'customerID'    => $sale->customerID,
-                                'method'        => "Cash",
-                                'number'        => "Advance",
-                                'bank'          => "Advance",
-                                'cheque_date'   => $request->date,
-                                'date'          => $request->date,
-                                'amount'        => $diff,
-                                'notes'         => "Advance Payment of Sale No. $sale->id",
-                                'userID'        => auth()->id(),
-                                'refID'         => $ref,
+                                'branchID' => auth()->user()->branchID,
+                                'customerID' => $sale->customerID,
+                                'method' => 'Cash',
+                                'number' => 'Advance',
+                                'bank' => 'Advance',
+                                'cheque_date' => $request->date,
+                                'date' => $request->date,
+                                'amount' => $diff,
+                                'notes' => "Advance Payment of Sale No. $sale->id",
+                                'userID' => auth()->id(),
+                                'refID' => $ref,
                             ]
                         );
                         createTransaction($request->customerID, $request->date, $diff, 0, "Partial Payment of Sale No. $sale->id as already paid Notes: $request->notes", $ref, $request->orderbookerID);
                         DB::commit();
+
                         return back()->with('success', "Sale Created and Rs. $diff is marked as paid");
                     }
                 }
-            }
-            else
-            {
+            } else {
                 createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id Notes: $request->notes", $ref, $request->orderbookerID);
             }
             DB::commit();
-            return back()->with('success', "Sale Created");
-        }
-        catch(\Exception $e)
-        {
+
+            return back()->with('success', 'Sale Created');
+        } catch (\Exception $e) {
             DB::rollback();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -254,6 +248,7 @@ class SalesController extends Controller
     public function show(sales $sale)
     {
         $balance = spotBalance($sale->customerID, $sale->refID);
+
         return view('sales.view', compact('sale', 'balance'));
     }
 
@@ -261,12 +256,14 @@ class SalesController extends Controller
     {
         $sale = sales::findOrFail($id);
         $balance = spotBalance($sale->customerID, $sale->refID);
+
         return view('sales.urdu', compact('sale', 'balance'));
     }
 
     public function gatePass($id)
     {
         $sale = sales::find($id);
+
         return view('sales.gatepass', compact('sale'));
     }
 
@@ -278,23 +275,22 @@ class SalesController extends Controller
         $orderbooker_products = orderbooker_products::where('orderbookerID', $sale->orderbookerID)->pluck('productID')->toArray();
         $products = products::whereIn('id', $orderbooker_products)->orderby('name', 'asc')->get();
         $customer = accounts::find($sale->customerID);
-        foreach($products as $product)
-        {
+        foreach ($products as $product) {
             $stock = getStock($product->id);
-            $product->stock = $stock ;
+            $product->stock = $stock;
         }
 
-        foreach($sale->details as $pro)
-        {
+        foreach ($sale->details as $pro) {
             $pro->stock = round((getStock($pro->productID) + $pro->pc + $pro->bonus + $pro->loose) / $pro->unit->value);
             $pro->stock1 = round((getStock($pro->productID) + $pro->pc + $pro->bonus + $pro->loose));
 
         }
         $units = units::currentBranch()->get();
-       
+
         $orderbooker = User::find($sale->orderbookerID);
         $warehouse = warehouses::find($sale->warehouseID);
         $supplymen = accounts::supplyMen()->currentBranch()->get();
+
         return view('sales.edit', compact('products', 'units', 'customer', 'sale', 'orderbooker', 'warehouse', 'supplymen'));
     }
 
@@ -303,8 +299,7 @@ class SalesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
             $sale = sales::find($id);
             /* foreach($sale->payments as $payment)
@@ -312,30 +307,28 @@ class SalesController extends Controller
                 transactions::where('refID', $payment->refID)->delete();
                 $payment->delete();
             } */
-            foreach($sale->details as $product)
-            {
+            foreach ($sale->details as $product) {
                 stock::where('refID', $product->refID)->delete();
                 $product->delete();
             }
 
-            transactions::where(['accountID' => $sale->customerID, 'refID' => $sale->refID ])->delete(); 
-            transactions::where(['accountID' => $sale->supplymanID, 'refID' => $sale->refID ])->delete(); 
+            transactions::where(['accountID' => $sale->customerID, 'refID' => $sale->refID])->delete();
+            transactions::where(['accountID' => $sale->supplymanID, 'refID' => $sale->refID])->delete();
             $ref = $sale->refID;
-           
-            if($request->isNotFilled('id'))
-            {
+
+            if ($request->isNotFilled('id')) {
                 throw new Exception('Please Select Atleast One Product');
             }
-        
+
             $sale->update(
                 [
-                  'orderbookerID'   => $request->orderbookerID,
-                  'supplymanID'     => $request->supplymanID,
-                  'orderdate'       => $request->orderdate,
-                  'date'            => $request->date,
-                  'bilty'           => $request->bilty,
-                  'transporter'     => $request->transporter,
-                  'notes'           => $request->notes,
+                    'orderbookerID' => $request->orderbookerID,
+                    'supplymanID' => $request->supplymanID,
+                    'orderdate' => $request->orderdate,
+                    'date' => $request->date,
+                    'bilty' => $request->bilty,
+                    'transporter' => $request->transporter,
+                    'notes' => $request->notes,
                 ]
             );
 
@@ -344,11 +337,10 @@ class SalesController extends Controller
             $total = 0;
             $totalLabor = 0;
             $customer = accounts::find($request->customerID)->title;
-            foreach($ids as $key => $id)
-            {
+            foreach ($ids as $key => $id) {
                 $unit = product_units::find($request->unit[$key]);
                 $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
-                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                $pc = $request->loose[$key] + ($request->qty[$key] * $unit->value);
                 $price = $request->price[$key];
                 $discount = $request->discount[$key];
                 $claim = $request->claim[$key];
@@ -362,35 +354,35 @@ class SalesController extends Controller
 
                 sale_details::create(
                     [
-                        'saleID'        => $sale->id,
-                        'warehouseID'   => $request->warehouseID,
+                        'saleID' => $sale->id,
+                        'warehouseID' => $request->warehouseID,
                         'orderbookerID' => $request->orderbookerID,
-                        'branchID'      => Auth()->user()->branchID,
-                        'productID'     => $id,
-                        'price'         => $price,
-                        'discount'      => $discount,
-                        'discountp'     => $request->discountp[$key],
+                        'branchID' => Auth()->user()->branchID,
+                        'productID' => $id,
+                        'price' => $price,
+                        'discount' => $discount,
+                        'discountp' => $request->discountp[$key],
                         'discountvalue' => $discountvalue,
-                        'qty'           => $request->qty[$key],
-                        'pc'            => $pc,
-                        'loose'         => $request->loose[$key],
-                        'netprice'      => $netPrice,
-                        'amount'        => $amount,
-                        'price_amount'  => $price_amount,
-                        'date'          => $request->date,
-                        'bonus'         => $request->bonus[$key],
-                        'labor'         => $request->labor[$key],
-                        'fright'        => $request->fright[$key],
-                        'claim'         => $claim,
-                        'unitID'        => $unit->id,
-                        'refID'         => $ref,
+                        'qty' => $request->qty[$key],
+                        'pc' => $pc,
+                        'loose' => $request->loose[$key],
+                        'netprice' => $netPrice,
+                        'amount' => $amount,
+                        'price_amount' => $price_amount,
+                        'date' => $request->date,
+                        'bonus' => $request->bonus[$key],
+                        'labor' => $request->labor[$key],
+                        'fright' => $request->fright[$key],
+                        'claim' => $claim,
+                        'unitID' => $unit->id,
+                        'refID' => $ref,
                     ]
                 );
                 createStock($id, 0, $qty, $request->date, "Sold to $customer", $ref, $request->warehouseID);
             }
 
-            $net = round($total,0);
-            $totalLabor = round($totalLabor,0);
+            $net = round($total, 0);
+            $totalLabor = round($totalLabor, 0);
 
             $sale->update(
                 [
@@ -399,15 +391,15 @@ class SalesController extends Controller
             );
 
             createTransaction($request->customerID, $request->date, $net, 0, "Pending Amount of Sale No. $sale->id Notes: $request->notes", $ref, $sale->orderbookerID);
-           
-           createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer Notes: $request->notes", $ref, $sale->orderbookerID);
+
+            createTransaction($request->supplymanID, $request->date, 0, $totalLabor, "Labor Charges of Sale No. $sale->id Customer: $customer Notes: $request->notes", $ref, $sale->orderbookerID);
 
             DB::commit();
-            return back()->with('success', "Sale Updated");
-        }
-        catch(\Exception $e)
-        {
+
+            return back()->with('success', 'Sale Updated');
+        } catch (\Exception $e) {
             DB::rollback();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -417,25 +409,21 @@ class SalesController extends Controller
      */
     public function destroy($id)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
             $sale = sales::find($id);
-            foreach($sale->payments as $payment)
-            {
+            foreach ($sale->payments as $payment) {
                 transactions::where('refID', $payment->refID)->delete();
                 $payment->delete();
             }
-            foreach($sale->details as $product)
-            {
+            foreach ($sale->details as $product) {
                 stock::where('refID', $product->refID)->delete();
                 $product->delete();
             }
             transactions::where('refID', $sale->refID)->delete();
-           
+
             $order = order_delivery::where('refID', $sale->refID)->first();
-            if($order)
-            {
+            if ($order) {
                 $order_id = $order->orderID;
 
                 $order_status = orders::find($order_id);
@@ -451,12 +439,12 @@ class SalesController extends Controller
 
             DB::commit();
             session()->forget('confirmed_password');
-            return to_route('sale.index')->with('success', "Sale Deleted");
-        }
-        catch(\Exception $e)
-        {
+
+            return to_route('sale.index')->with('success', 'Sale Deleted');
+        } catch (\Exception $e) {
             DB::rollBack();
             session()->forget('confirmed_password');
+
             return to_route('sale.index')->with('error', $e->getMessage());
         }
     }
@@ -465,24 +453,22 @@ class SalesController extends Controller
     {
         $product = products::with('units')->find($id);
         $stocks = stock::select(DB::raw('SUM(cr) - SUM(db) AS balance'))
-                  ->where('productID', $product->id)
-                  ->get();
+            ->where('productID', $product->id)
+            ->get();
         $product->stock = getWarehouseProductStock($id, $warehouse);
         $dc = product_dc::where('productID', $product->id)->where('areaID', $area)->first();
         $product->dc = $dc->dc ?? 0;
 
         $discount = discountManagement::where('customerID', $customer)->where('productID', $id)->active()->currentBranch()->first();
-        if($discount)
-        {
+        if ($discount) {
             $status = updateDiscountStatus($discount->id, $date);
 
-            if($status == 'Active')
-            {
+            if ($status == 'Active') {
                 $product->discount = $discount->discount + $product->discount;
                 $product->discountp = $discount->discountp + $product->discountp;
             }
         }
-        $sales = sales::where('customerID', $customer)->orderby('id','desc')->take('10')->pluck('id')->toArray();
+        $sales = sales::where('customerID', $customer)->orderby('id', 'desc')->take('10')->pluck('id')->toArray();
 
         // Get latest record to preserve expected fields in the view (price, fright, labor, claim, netprice)
         $latest = sale_details::whereIn('saleID', $sales)
@@ -490,7 +476,7 @@ class SalesController extends Controller
             ->orderBy('id', 'desc')
             ->select('price', 'fright', 'labor', 'claim', 'netprice', 'discount', 'discountp')
             ->first();
-        
+
         $product->last_price = $latest ?? ['price' => 0, 'discount' => 0, 'discountp' => 0, 'fright' => 0, 'labor' => 0, 'claim' => 0, 'netprice' => 0];
 
         return $product;
@@ -499,24 +485,23 @@ class SalesController extends Controller
     public function getProductByCode($code)
     {
         $product = products::where('code', $code)->first();
-        if($product)
-        {
-           return $product->id;
+        if ($product) {
+            return $product->id;
         }
-        return "Not Found";
+
+        return 'Not Found';
     }
 
     public function orderbooker_customers($orderbookerID)
     {
         $customers = orderbooker_customers::where('orderbookerID', $orderbookerID)->get();
-        
+
         $data = [];
 
-        foreach($customers as $customer)
-        {
-            $data []= [
+        foreach ($customers as $customer) {
+            $data[] = [
                 'value' => $customer->customerID,
-                'text' => $customer->customer->title . " - " . $customer->customer->area->name
+                'text' => $customer->customer->title.' - '.$customer->customer->area->name,
             ];
         }
 
@@ -525,16 +510,15 @@ class SalesController extends Controller
 
     public function minor_edit(Request $request)
     {
-      
+
         $sale = sales::find($request->saleID);
         $oldSupplymanID = $sale->supplymanID;
         $supplymanID = $request->supplymanID;
         $bilty = $request->bilty;
         $transporter = $request->transporter;
         $ref = $sale->refID;
-        try
-        {
- 
+        try {
+
             transactions::where('refID', $ref)->where('accountID', $oldSupplymanID)->update(
                 [
                     'accountID' => $supplymanID,
@@ -542,15 +526,80 @@ class SalesController extends Controller
             );
             $sale->update(
                 [
-                    'supplymanID'   => $supplymanID,
-                    'bilty'         => $bilty,
-                    'transporter'   => $transporter,
+                    'supplymanID' => $supplymanID,
+                    'bilty' => $bilty,
+                    'transporter' => $transporter,
                 ]
             );
-        return back()->with('success', "Sale Updated");
+
+            return back()->with('success', 'Sale Updated');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
-        catch(\Exception $e)
-        {
+    }
+
+    public function storeExpense(Request $request)
+    {
+
+        $sale = sales::find($request->saleID);
+        try {
+            DB::beginTransaction();
+            if (! checkMethodExceed($request->method, auth()->user()->id, $request->amount)) {
+                throw new \Exception('Method Amount Exceed');
+            }
+            if (! checkUserAccountExceed(auth()->user()->id, $request->amount)) {
+                throw new \Exception('User Account Amount Exceed');
+            }
+            if ($request->method == 'Cash') {
+                if (! checkCurrencyExceed(auth()->user()->id, $request->currencyID, $request->qty)) {
+                    throw new \Exception('Currency Qty Exceed');
+                }
+            }
+            $ref = $sale->refID;
+            expenses::create(
+                [
+                    'userID' => auth()->user()->id,
+                    'amount' => $request->amount,
+                    'branchID' => auth()->user()->branchID,
+                    'categoryID' => $request->category,
+                    'date' => $request->date,
+                    'method' => $request->method,
+                    'number' => $request->number,
+                    'bank' => $request->bank,
+                    'cheque_date' => $request->cheque_date,
+                    'notes' => $request->notes,
+                    'is_for_sale' => 1,
+                    'refID' => $ref,
+                ]
+            );
+
+            $sale->update(
+                [
+                    'expense_amount' => $request->amount,
+                    'show_expense' => isset($request->showoninvoice) ? $request->showoninvoice : 0,
+                    'has_expense' => 1,
+                ]
+            );
+
+            $notes = 'Sale Expense ID: '.$sale->id.' Method '.$request->method.' Notes : '.$request->notes;
+            createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
+
+            createUserTransaction(auth()->user()->id, $request->date, 0, $request->amount, $notes, $ref);
+
+            if ($request->method == 'Cash') {
+                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, $notes, $ref);
+            }
+
+            if ($request->has('file')) {
+                createAttachment($request->file('file'), $ref);
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Expense Saved');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
             return back()->with('error', $e->getMessage());
         }
     }

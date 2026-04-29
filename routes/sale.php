@@ -2,20 +2,20 @@
 
 use App\Http\Controllers\SalePaymentsController;
 use App\Http\Controllers\SalesController;
-use App\Http\Middleware\adminCheck;
 use App\Http\Middleware\confirmPassword;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
 
-    Route::get("sales/getproduct/{id}/{warehouse}/{area}/{customer}/{date}", [SalesController::class, 'getSignleProduct']);
+    Route::get('sales/getproduct/{id}/{warehouse}/{area}/{customer}/{date}', [SalesController::class, 'getSignleProduct']);
 
     Route::resource('sale', SalesController::class);
-    Route::get("sale/{id}/urdu", [SalesController::class, 'showUrdu'])->name('sale.showUrdu');
+    Route::get('sale/{id}/urdu', [SalesController::class, 'showUrdu'])->name('sale.showUrdu');
 
-    Route::get("sales/delete/{id}", [SalesController::class, 'destroy'])->name('sale.delete')->middleware(confirmPassword::class);
-    Route::get("sales/gatepass/{id}", [SalesController::class, 'gatePass'])->name('sale.gatePass');
-    Route::get("product/searchByCode/{code}", [SalesController::class, 'getProductByCode'])->name('product.searchByCode');
+    Route::get('sales/delete/{id}', [SalesController::class, 'destroy'])->name('sale.delete')->middleware(confirmPassword::class);
+    Route::post('sales/expense', [SalesController::class, 'storeExpense'])->name('sale.expense');
+    Route::get('sales/gatepass/{id}', [SalesController::class, 'gatePass'])->name('sale.gatePass');
+    Route::get('product/searchByCode/{code}', [SalesController::class, 'getProductByCode'])->name('product.searchByCode');
 
     Route::get('salepayment/{id}', [SalePaymentsController::class, 'index'])->name('salePayment.index');
     Route::get('salepayment/show/{id}', [SalePaymentsController::class, 'show'])->name('salePayment.show');

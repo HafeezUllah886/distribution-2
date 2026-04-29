@@ -7,28 +7,32 @@
                     <div class="col-md-3">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">From</span>
-                            <input type="date" class="form-control" placeholder="Username" name="start" value="{{$from}}" aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="date" class="form-control" placeholder="Username" name="start"
+                                value="{{ $from }}" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">To</span>
-                            <input type="date" class="form-control" placeholder="Username" name="end" value="{{$to}}" aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="date" class="form-control" placeholder="Username" name="end"
+                                value="{{ $to }}" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">Category</span>
-                            <select class="form-control" name="category" aria-label="Username" aria-describedby="basic-addon1">
+                            <select class="form-control" name="category" aria-label="Username"
+                                aria-describedby="basic-addon1">
                                 <option value="All">All</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}" @selected($category->id == $categoryID)>{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}" @selected($category->id == $categoryID)>{{ $category->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                     <div class="col-md-2">
-                       <input type="submit" value="Filter" class="btn btn-success w-100">
+                        <input type="submit" value="Filter" class="btn btn-success w-100">
                     </div>
                 </div>
             </form>
@@ -36,21 +40,22 @@
                 <div class="card-header d-flex justify-content-between">
                     <h3>Expenses</h3>
                     <div>
-                        <a type="button" class="btn btn-info" href="{{ route('expense_categories.index') }}">Expense Categories</a>
-                    <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create
-                        New</button>
+                        <a type="button" class="btn btn-info" href="{{ route('expense_categories.index') }}">Expense
+                            Categories</a>
+                        <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#new">Create
+                            New</button>
                     </div>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
                     <table class="table" id="buttons-datatables">
                         <thead>
@@ -74,11 +79,12 @@
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
                                     <td>
-                                        <a href="{{ route('expenses.show', $tran->id) }}"
-                                            class="btn btn-primary">View</a>
+                                        <a href="{{ route('expenses.show', $tran->id) }}" class="btn btn-primary">View</a>
 
-                                        <a href="{{ route('expense.delete', $tran->refID) }}"
-                                            class="btn btn-danger">Delete</a>
+                                        @if (!$tran->is_for_sale)
+                                            <a href="{{ route('expense.delete', $tran->refID) }}"
+                                                class="btn btn-danger">Delete</a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -114,8 +120,8 @@
                                 </div>
                                 <div class="form-group mt-2">
                                     <label for="date">Date</label>
-                                    <input type="date" name="date" required id="date" value="{{ date('Y-m-d') }}"
-                                        class="form-control">
+                                    <input type="date" name="date" required id="date"
+                                        value="{{ date('Y-m-d') }}" class="form-control">
                                 </div>
                                 <div class="form-group mt-2">
                                     <label for="notes">Notes</label>
@@ -139,16 +145,16 @@
     </div><!-- /.modal -->
 @endsection
 @section('page-css')
-<link rel="stylesheet" href="{{ asset('assets/libs/datatable/datatable.bootstrap5.min.css') }}" />
-<!--datatable responsive css-->
-<link rel="stylesheet" href="{{ asset('assets/libs/datatable/responsive.bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/datatable.bootstrap5.min.css') }}" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/responsive.bootstrap.min.css') }}" />
 
-<link rel="stylesheet" href="{{ asset('assets/libs/datatable/buttons.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/libs/datatable/buttons.dataTables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
 @endsection
 
 @section('page-js')
-<script src="{{ asset('assets/libs/datatable/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatable/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/libs/datatable/dataTables.buttons.min.js') }}"></script>
@@ -161,5 +167,4 @@
     <script src="{{ asset('assets/js/pages/datatables.init.js') }}"></script>
 
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
-   
 @endsection
