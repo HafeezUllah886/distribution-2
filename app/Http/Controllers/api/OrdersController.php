@@ -76,7 +76,7 @@ class OrdersController extends Controller
                 'status' => $order->status,
                 'notes' => $order->notes,
                 'branch' => $order->branch->name,
-                'customer' => ['id' => $order->customerID, 'title' => $order->customer->title, 'area' => $order->customer->area->name, 'contact' => $order->customer->contact, 'email' => $order->customer->email, 'credit_limit' => $order->customer->credit_limit],
+                'customer' => ['id' => $order->customerID, 'title' => $order->customer->title, 'area' => $order->customer->area->name, 'contact' => $order->customer->contact, 'email' => $order->customer->email, 'credit_limit' => $order->customer->credit_limit, 'customer_urdu' => $order->customer->title_urdu, 'address_urdu' => $order->customer->address_urdu],
                 'products' => $orderProducts,
                 'delivered_items' => $delivered_items,
             ];

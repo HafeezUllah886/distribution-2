@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\delete_requests;
 use App\Models\orderbooker_notifications;
 use App\Models\purchase;
 use App\Models\purchase_details;
@@ -318,4 +319,20 @@ function projectNameHeader()
 function projectNameShort()
 {
     return 'GS';
+}
+
+function storeDeleteRequest($user_id, $branchID, $refID, $model, $notes)
+{
+    $check = delete_requests::where('refID', $refID)->first();
+    if ($check) {
+        return false;
+    }
+    delete_requests::create([
+        'user_id' => $user_id,
+        'branchID' => $branchID,
+        'refID' => $refID,
+        'model' => $model,
+        'notes' => $notes,
+    ]);
+
 }

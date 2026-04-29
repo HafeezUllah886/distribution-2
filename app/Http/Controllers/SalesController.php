@@ -7,10 +7,8 @@ use App\Models\currencymgmt;
 use App\Models\discountManagement;
 use App\Models\expense_categories;
 use App\Models\expenses;
-use App\Models\order_delivery;
 use App\Models\orderbooker_customers;
 use App\Models\orderbooker_products;
-use App\Models\orders;
 use App\Models\product_dc;
 use App\Models\product_units;
 use App\Models\products;
@@ -409,44 +407,15 @@ class SalesController extends Controller
      */
     public function destroy($id)
     {
-        try {
-            DB::beginTransaction();
-            $sale = sales::find($id);
-            foreach ($sale->payments as $payment) {
-                transactions::where('refID', $payment->refID)->delete();
-                $payment->delete();
-            }
-            foreach ($sale->details as $product) {
-                stock::where('refID', $product->refID)->delete();
-                $product->delete();
-            }
-            transactions::where('refID', $sale->refID)->delete();
+        $sale = sales::find($id);
+        $customer = accounts::find($sale->customerID)->title;
+        $area = $sale->customer->area->name;
+        $notes = "Invoice No. $id Customer : $customer Area : $area Invoice Date: $sale->date";
+        storeDeleteRequest(auth()->user()->id, $sale->branchID, $sale->refID, 'sales', $notes);
 
-            $order = order_delivery::where('refID', $sale->refID)->first();
-            if ($order) {
-                $order_id = $order->orderID;
+        session()->forget('confirmed_password');
 
-                $order_status = orders::find($order_id);
-                $order_status->update(
-                    [
-                        'status' => 'Under Process',
-                    ]
-                );
-
-                order_delivery::where('refID', $sale->refID)->delete();
-            }
-            $sale->delete();
-
-            DB::commit();
-            session()->forget('confirmed_password');
-
-            return to_route('sale.index')->with('success', 'Sale Deleted');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-
-            return to_route('sale.index')->with('error', $e->getMessage());
-        }
+        return to_route('sale.index')->with('success', 'Delete Request Sent to Branch Admin.');
     }
 
     public function getSignleProduct($id, $warehouse, $area, $customer, $date)
