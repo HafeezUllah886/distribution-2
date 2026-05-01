@@ -8,6 +8,8 @@ use App\Models\orders;
 use App\Models\sales;
 use App\Models\stock;
 use App\Models\transactions;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DeleteRequestsController extends Controller
@@ -15,19 +17,78 @@ class DeleteRequestsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $from = $request->from ?? Carbon::now()->startOfMonth()->format('Y-m-d');
+        $to = $request->to ?? Carbon::now()->endOfMonth()->format('Y-m-d');
+        $status = $request->status ?? 'pending';
+
+        $delete_req = delete_requests::with('user')
+            ->whereBetween('created_at', [
+                Carbon::parse($from)->startOfDay(),
+                Carbon::parse($to)->endOfDay(),
+            ]);
+
+        if ($status != 'all') {
+            $delete_req->where('status', $status);
+        }
+
+        $delete_req = $delete_req->orderBy('id', 'desc')->get();
+
+        return view('delete_request.index', compact('delete_req', 'from', 'to', 'status'));
     }
 
     public function approve($id)
     {
-
         $deleteRequest = delete_requests::find($id);
-        if ($deleteRequest->model == 'Sales') {
-            try {
-                DB::beginTransaction();
-                $sale = sales::where('refID', $deleteRequest->refID)->first();
+
+        if ($deleteRequest->status != 'pending') {
+            return redirect()->back()->with('error', 'Request already '.$deleteRequest->status);
+        }
+
+        $result = null;
+        if ($deleteRequest->model == 'sales') {
+            $result = $this->deleteSales($deleteRequest->refID);
+        }
+
+        // Generic approval for other models if any
+        $deleteRequest->update(['status' => 'approved']);
+        if (isset($result) && $result['status'] == 'error') {
+            return to_route('delete_request.index')->with('error', $result['msg']);
+        } else {
+            return to_route('delete_request.index')->with('success', 'Delete Request Approved');
+        }
+
+    }
+
+    public function reject($id)
+    {
+        $deleteRequest = delete_requests::find($id);
+
+        if ($deleteRequest->status != 'pending') {
+            return redirect()->back()->with('error', 'Request already '.$deleteRequest->status);
+        }
+
+        $deleteRequest->status = 'rejected';
+        $deleteRequest->save();
+
+        return to_route('delete_request.index')->with('success', 'Delete Request Rejected');
+    }
+
+    public function destroy($id)
+    {
+        $deleteRequest = delete_requests::find($id);
+        $deleteRequest->delete();
+
+        return to_route('delete_request.index')->with('success', 'Delete Request Record Deleted');
+    }
+
+    public function deleteSales($ref)
+    {
+        try {
+            DB::beginTransaction();
+            $sale = sales::where('refID', $ref)->first();
+            if ($sale) {
                 foreach ($sale->payments as $payment) {
                     transactions::where('refID', $payment->refID)->delete();
                     $payment->delete();
@@ -37,46 +98,34 @@ class DeleteRequestsController extends Controller
                     $product->delete();
                 }
                 transactions::where('refID', $sale->refID)->delete();
-
                 $order = order_delivery::where('refID', $sale->refID)->first();
                 if ($order) {
                     $order_id = $order->orderID;
 
                     $order_status = orders::find($order_id);
-                    $order_status->update(
-                        [
-                            'status' => 'Under Process',
-                        ]
-                    );
-
+                    if ($order_status) {
+                        $order_status->update(['status' => 'Under Process']);
+                    }
                     order_delivery::where('refID', $sale->refID)->delete();
                 }
                 $sale->delete();
-
-                DB::commit();
-                session()->forget('confirmed_password');
-
-                return to_route('sale.index')->with('success', 'Sale Deleted');
-            } catch (\Exception $e) {
-                DB::rollBack();
-                session()->forget('confirmed_password');
-
-                return to_route('sale.index')->with('error', $e->getMessage());
             }
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Sale Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
         }
 
-        return redirect()->back()->with('success', 'Delete Request Approved');
     }
-
-    public function reject($id)
-    {
-
-        $deleteRequest = delete_requests::find($id);
-        $deleteRequest->status = 'rejected';
-        $deleteRequest->save();
-
-        return redirect()->back()->with('success', 'Delete Request Rejected');
-    }
-
-    //
 }

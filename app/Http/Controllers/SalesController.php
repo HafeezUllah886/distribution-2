@@ -545,12 +545,11 @@ class SalesController extends Controller
             $sale->update(
                 [
                     'expense_amount' => $request->amount,
-                    'show_expense' => isset($request->showoninvoice) ? $request->showoninvoice : 0,
                     'has_expense' => 1,
                 ]
             );
 
-            $notes = 'Sale Expense ID: '.$sale->id.' Method '.$request->method.' Notes : '.$request->notes;
+            $notes = 'Sale Expense Method '.$request->method.' Invoice Date : '.$sale->date.' Invoice Number : '.$sale->id.' Invoice Amount : '.$sale->amount.' Customer Name : '.$sale->customer->title.' Area : '.$sale->customer->area->name.' Address : '.$sale->customer->address.' Orderbooker : '.$sale->orderbooker->name.' Bilty Number : '.$sale->bilty.' Transport : '.$sale->transporter.' Notes : '.$request->notes;
             createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
 
             createUserTransaction(auth()->user()->id, $request->date, 0, $request->amount, $notes, $ref);

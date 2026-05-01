@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\accounts;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class accountSeeder extends Seeder
@@ -15,9 +14,9 @@ class accountSeeder extends Seeder
     {
         accounts::create(
             [
-                'title' => "Business",
-                'type' => "Business",
-                'category' => "Bank",
+                'title' => 'Business',
+                'type' => 'Business',
+                'category' => 'Bank',
                 'areaID' => 1,
                 'branchID' => 1,
             ]
@@ -25,8 +24,8 @@ class accountSeeder extends Seeder
 
         accounts::create(
             [
-                'title' => "Test Customer",
-                'type' => "Customer",
+                'title' => 'Test Customer',
+                'type' => 'Customer',
                 'areaID' => 1,
                 'branchID' => 1,
                 'credit_limit' => 100000,
@@ -35,8 +34,8 @@ class accountSeeder extends Seeder
 
         accounts::create(
             [
-                'title' => "Test Vendor",
-                'type' => "Vendor",
+                'title' => 'Test Vendor',
+                'type' => 'Vendor',
                 'areaID' => 1,
                 'branchID' => 1,
             ]
@@ -44,8 +43,8 @@ class accountSeeder extends Seeder
 
         accounts::create(
             [
-                'title' => "Supply Man",
-                'type' => "Supply Man",
+                'title' => 'Supply Man',
+                'type' => 'Supply Man',
                 'areaID' => 1,
                 'branchID' => 1,
             ]
@@ -53,8 +52,16 @@ class accountSeeder extends Seeder
 
         accounts::create(
             [
-                'title' => "Unloader",
-                'type' => "Unloader",
+                'title' => 'Unloader',
+                'type' => 'Unloader',
+                'areaID' => 1,
+                'branchID' => 1,
+            ]
+        );
+        accounts::create(
+            [
+                'title' => 'Freight Account',
+                'type' => 'Freight',
                 'areaID' => 1,
                 'branchID' => 1,
             ]

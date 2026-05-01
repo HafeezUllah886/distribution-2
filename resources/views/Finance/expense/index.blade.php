@@ -80,7 +80,6 @@
                                     <td>{{ number_format($tran->amount) }}</td>
                                     <td>
                                         <a href="{{ route('expenses.show', $tran->id) }}" class="btn btn-primary">View</a>
-
                                         @if (!$tran->is_for_sale)
                                             <a href="{{ route('expense.delete', $tran->refID) }}"
                                                 class="btn btn-danger">Delete</a>

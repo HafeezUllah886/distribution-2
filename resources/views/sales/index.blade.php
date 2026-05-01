@@ -117,6 +117,29 @@
                                                         </button>
                                                     </li>
                                                 @endif
+                                                @if (auth()->user()->role == 'Accountant' && $sale->has_expense)
+                                                    @php
+                                                        $expenseID = DB::table('expenses')
+                                                            ->where('refID', $sale->refID)
+                                                            ->first();
+                                                    @endphp
+                                                    <li>
+                                                        <a href="{{ route('expenses.show', $expenseID->id) }}"
+                                                            class="dropdown-item">
+                                                            <i class="ri-list-check align-bottom me-2 text-muted"></i>
+                                                            View Expense
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ route('expense.delete', $sale->refID) }}"
+                                                            class="dropdown-item">
+                                                            <i
+                                                                class="ri-delete-bin-2-fill align-bottom me-2 text-muted"></i>
+                                                            Delete Expense
+                                                        </a>
+                                                    </li>
+                                                @endif
+
                                                 @if (auth()->user()->role == 'Operator' && $sale->edit)
                                                     <li>
                                                         <a class="dropdown-item"
@@ -290,14 +313,6 @@
                                     <label for="notes">Notes</label>
                                     <textarea name="notes" required id="notes" cols="30" class="form-control" rows="5"></textarea>
                                 </div>
-                                <div class="form-group mt-2">
-                                    <label for="showoninvoice">Show on Invoice</label>
-                                    <select name="showoninvoice" id="showoninvoice" class="form-control">
-                                        <option value="1">Yes</option>
-                                        <option value="0">No</option>
-                                    </select>
-                                </div>
-
                             </div>
                             <div class="col-6">
                                 @include('layout.payment')

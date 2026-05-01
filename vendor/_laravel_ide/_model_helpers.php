@@ -5384,7 +5384,25 @@ namespace App\Models {
     /**
      * App\Models\delete_requests
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string|null $notes
+     * @property string $model
+     * @property mixed $status
+     * @property int $refID
+     * @property int $branchID
+     * @property int $user_id
+     * @property int $id
      * @property-read \App\Models\User $user
+     * @method static \Illuminate\Database\Eloquent\Builder<delete_requests>|delete_requests whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<delete_requests>|delete_requests whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<delete_requests>|delete_requests whereBranchid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<delete_requests>|delete_requests whereRefid($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<delete_requests>|delete_requests whereStatus($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<delete_requests>|delete_requests whereModel($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<delete_requests>|delete_requests whereNotes($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<delete_requests>|delete_requests whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<delete_requests>|delete_requests whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<delete_requests>|delete_requests newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<delete_requests>|delete_requests newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<delete_requests>|delete_requests query()

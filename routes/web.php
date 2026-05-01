@@ -23,6 +23,8 @@ require __DIR__.'/setups.php';
 require __DIR__.'/employees.php';
 require __DIR__.'/discount_mgmt.php';
 require __DIR__.'/branch_investment.php';
+require __DIR__.'/delete_requests.php';
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard');

@@ -147,20 +147,7 @@
                                             <th class="text-end">{{ number_format($totalFright) }} (+)</th>
                                             <th class="text-end">{{ number_format($netAmount, 0) }}</th>
                                         </tr>
-                                        @if ($sale->has_expense == 1 && $sale->show_expense == 1)
-                                            <tr>
-                                                <th class="text-start p-1 urdu" colspan="13">خرچہ (-)</th>
-                                                <th class="text-end p-1">
-                                                    {{ number_format($sale->expense_amount, 0) }}
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-start p-1 urdu" colspan="13">کل بقایا</th>
-                                                <th class="text-end p-1">
-                                                    {{ number_format($netAmount - $sale->expense_amount, 0) }}
-                                                </th>
-                                            </tr>
-                                        @endif
+
                                     </tfoot>
                                 </table><!--end table-->
                             </div>
