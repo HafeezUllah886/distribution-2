@@ -2,16 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\accounts;
-use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\expense_categories;
 use App\Models\expenses;
-use App\Models\method_transactions;
-use App\Models\staffPayments;
-use App\Models\transactions;
-use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -24,21 +18,18 @@ class ExpensesController extends Controller
     {
         $from = $request->start ?? date('Y-m-d');
         $to = $request->end ?? date('Y-m-d');
-        $categoryID = $request->category ?? "All";
-        if($categoryID == "All")
-        {
+        $categoryID = $request->category ?? 'All';
+        if ($categoryID == 'All') {
             $expenses = expenses::currentBranch()->whereBetween('date', [$from, $to])->orderby('id', 'desc')->get();
-        }
-        else
-        {
+        } else {
             $expenses = expenses::currentBranch()->whereBetween('date', [$from, $to])->where('categoryID', $categoryID)->orderby('id', 'desc')->get();
         }
         $currencies = currencymgmt::all();
-        foreach($currencies as $currency)
-        {
+        foreach ($currencies as $currency) {
             $currency->qty = getCurrencyBalance($currency->id, auth()->user()->id);
         }
         $categories = expense_categories::currentBranch()->get();
+
         return view('Finance.expense.index', compact('expenses', 'currencies', 'categories', 'from', 'to', 'categoryID'));
     }
 
@@ -55,24 +46,19 @@ class ExpensesController extends Controller
      */
     public function store(Request $request)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
-            if(!checkMethodExceed($request->method, auth()->user()->id, $request->amount))
-            {
-             throw new \Exception("Method Amount Exceed");
+            if (! checkMethodExceed($request->method, auth()->user()->id, $request->amount)) {
+                throw new \Exception('Method Amount Exceed');
             }
-            if(!checkUserAccountExceed(auth()->user()->id, $request->amount))
-            {
-             throw new \Exception("User Account Amount Exceed");
+            if (! checkUserAccountExceed(auth()->user()->id, $request->amount)) {
+                throw new \Exception('User Account Amount Exceed');
             }
-           if($request->method == 'Cash')
-           {
-             if(!checkCurrencyExceed(auth()->user()->id, $request->currencyID, $request->qty))
-             {
-                 throw new \Exception("Currency Qty Exceed");
-             }
-           }
+            if ($request->method == 'Cash') {
+                if (! checkCurrencyExceed(auth()->user()->id, $request->currencyID, $request->qty)) {
+                    throw new \Exception('Currency Qty Exceed');
+                }
+            }
             $ref = getRef();
             expenses::create(
                 [
@@ -90,26 +76,25 @@ class ExpensesController extends Controller
                 ]
             );
 
-            $notes = "Expense - Method ".$request->method." Notes : ".$request->notes;
+            $notes = 'Expense - Method '.$request->method.' Notes : '.$request->notes;
             createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
-           
-            createUserTransaction(auth()->user()->id, $request->date,0, $request->amount, $notes, $ref);
 
-            if($request->method == 'Cash')
-            {
+            createUserTransaction(auth()->user()->id, $request->date, 0, $request->amount, $notes, $ref);
+
+            if ($request->method == 'Cash') {
                 createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, $notes, $ref);
             }
-            
-            if($request->has('file')){
+
+            if ($request->has('file')) {
                 createAttachment($request->file('file'), $ref);
             }
 
             DB::commit();
+
             return back()->with('success', 'Expense Saved');
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -122,11 +107,9 @@ class ExpensesController extends Controller
         $expense = expenses::find($id);
         $currencies = currencymgmt::all();
 
-        if($expense->method == "Cash")
-        {
-          
-            foreach($currencies as $currency)
-            {
+        if ($expense->method == 'Cash') {
+
+            foreach ($currencies as $currency) {
                 $currenyTransaction = currency_transactions::where('currencyID', $currency->id)->where('refID', $expense->refID)->first();
 
                 $currency->qty = $currenyTransaction->db ?? 0;
@@ -158,24 +141,12 @@ class ExpensesController extends Controller
      */
     public function delete($ref)
     {
-        try
-        {
-            DB::beginTransaction();
-            expenses::where('refID', $ref)->delete();
-            users_transactions::where('refID', $ref)->delete();
-            currency_transactions::where('refID', $ref)->delete();
-            method_transactions::where('refID', $ref)->delete();
-            cheques::where('refID', $ref)->delete();
-            staffPayments::where('refID', $ref)->delete();
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('expenses.index')->with('success', "Expense Deleted");
-        }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('expenses.index')->with('error', $e->getMessage());
-        }
+        $expense = expenses::where('refID', $ref)->first();
+        $notes = 'Expense - Method '.$expense->method.' Notes : '.$expense->notes;
+        storeDeleteRequest(auth()->user()->id, $expense->branchID, $expense->refID, 'expenses', $notes);
+
+        session()->forget('confirmed_password');
+
+        return to_route('expenses.index')->with('success', 'Delete Request Sent to Branch Admin.');
     }
 }

@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\cheques;
+use App\Models\currency_transactions;
 use App\Models\delete_requests;
+use App\Models\expenses;
+use App\Models\method_transactions;
 use App\Models\order_delivery;
 use App\Models\orders;
 use App\Models\sales;
+use App\Models\staffPayments;
 use App\Models\stock;
 use App\Models\transactions;
+use App\Models\users_transactions;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -50,6 +56,9 @@ class DeleteRequestsController extends Controller
         if ($deleteRequest->model == 'sales') {
             $result = $this->deleteSales($deleteRequest->refID);
         }
+        if ($deleteRequest->model == 'expenses') {
+            $result = $this->deleteExpense($deleteRequest->refID);
+        }
 
         // Generic approval for other models if any
         $deleteRequest->update(['status' => 'approved']);
@@ -58,7 +67,6 @@ class DeleteRequestsController extends Controller
         } else {
             return to_route('delete_request.index')->with('success', 'Delete Request Approved');
         }
-
     }
 
     public function reject($id)
@@ -109,6 +117,7 @@ class DeleteRequestsController extends Controller
                     order_delivery::where('refID', $sale->refID)->delete();
                 }
                 $sale->delete();
+                $this->deleteExpense($ref);
             }
             DB::commit();
             session()->forget('confirmed_password');
@@ -127,5 +136,33 @@ class DeleteRequestsController extends Controller
             ];
         }
 
+    }
+
+    public function deleteExpense($ref)
+    {
+        try {
+            DB::beginTransaction();
+            expenses::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
+            staffPayments::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Expense Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
     }
 }
