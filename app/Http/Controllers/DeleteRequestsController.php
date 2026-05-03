@@ -148,6 +148,10 @@ class DeleteRequestsController extends Controller
             method_transactions::where('refID', $ref)->delete();
             cheques::where('refID', $ref)->delete();
             staffPayments::where('refID', $ref)->delete();
+            $sale = sales::where('refID', $ref)->first();
+            if ($sale) {
+                $sale->update(['has_expense' => 0, 'expense_amount' => 0]);
+            }
             DB::commit();
             session()->forget('confirmed_password');
 

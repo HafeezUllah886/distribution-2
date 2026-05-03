@@ -123,21 +123,23 @@
                                                             ->where('refID', $sale->refID)
                                                             ->first();
                                                     @endphp
-                                                    <li>
-                                                        <a href="{{ route('expenses.show', $expenseID->id) }}"
-                                                            class="dropdown-item">
-                                                            <i class="ri-list-check align-bottom me-2 text-muted"></i>
-                                                            View Expense
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="{{ route('expense.delete', $sale->refID) }}"
-                                                            class="dropdown-item">
-                                                            <i
-                                                                class="ri-delete-bin-2-fill align-bottom me-2 text-muted"></i>
-                                                            Delete Expense
-                                                        </a>
-                                                    </li>
+                                                    @if ($expenseID)
+                                                        <li>
+                                                            <a href="{{ route('expenses.show', $expenseID->id) }}"
+                                                                class="dropdown-item">
+                                                                <i class="ri-list-check align-bottom me-2 text-muted"></i>
+                                                                View Expense
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ route('expense.delete', $sale->refID) }}"
+                                                                class="dropdown-item">
+                                                                <i
+                                                                    class="ri-delete-bin-2-fill align-bottom me-2 text-muted"></i>
+                                                                Delete Expense
+                                                            </a>
+                                                        </li>
+                                                    @endif
                                                 @endif
 
                                                 @if (auth()->user()->role == 'Operator' && $sale->edit)
