@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\orderbooker_customers;
-use App\Models\orderbooker_products;
+use App\Models\stock;
 use Illuminate\Http\Request;
 
 class nonFinanancialInfoController extends Controller
@@ -19,8 +19,7 @@ class nonFinanancialInfoController extends Controller
 
         $products = [];
         foreach ($orderbooker_products as $product) {
-            if($product->product->status == "In-active")
-            {
+            if ($product->product->status == 'In-active') {
                 continue;
             }
             $discountValue = $product->product->price * $product->product->discountp / 100;
@@ -33,6 +32,7 @@ class nonFinanancialInfoController extends Controller
                 'units' => $product->product->units()->select('id', 'unit_name', 'value')->get(),
             ];
         }
+
         return [
             'products' => $products,
         ];
@@ -44,14 +44,43 @@ class nonFinanancialInfoController extends Controller
 
         $customers = accounts::customer()->whereIn('id', $orderbooker_customers->pluck('customerID'))->select('id', 'branchID', 'title', 'address', 'contact', 'email', 'c_type', 'credit_limit', 'areaID', 'status')->get();
 
-        foreach($customers as $customer)
-        {
+        foreach ($customers as $customer) {
             $customer->curren_balance = getAccountBalanceOrderbookerWise($customer->id, $request->user()->id);
             $customer->area = $customer->area->name;
         }
 
         return [
             'customers' => $customers,
+        ];
+    }
+
+    public function orderbooker_products_stock_report(Request $request)
+    {
+        $orderbooker_products = $request->user()->products()->with('product')->get();
+
+        $products = [];
+        foreach ($orderbooker_products as $product) {
+            if ($product->product->status == 'In-active') {
+                continue;
+            }
+
+            $cr = stock::where('productID', $product->product->id)->sum('cr');
+            $db = stock::where('productID', $product->product->id)->sum('db');
+            $stock = $cr - $db;
+
+            $products[] = [
+                'id' => $product->product->id,
+                'name' => $product->product->name,
+                'name_urdu' => $product->product->nameurdu,
+                'vendor_name' => $product->product->vendor->title,
+                'image' => asset($product->product->image_path ?? 'images/products/no-img.jpg'),
+                'units' => $product->product->units()->select('id', 'unit_name', 'value')->get(),
+                'stock' => $stock,
+            ];
+        }
+
+        return [
+            'products' => $products,
         ];
     }
 }

@@ -61,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/invoicepayments', [InvoicePaymentsHistory::class, 'index']);
 
     Route::get('/invoicepayments/delete', [InvoicePaymentsHistory::class, 'destroy']);
+    Route::get('/products/stock_report', [nonFinanancialInfoController::class, 'orderbooker_products_stock_report']);
 
     Route::post('/advancepayment/store', [CustomerAdvancePaymentAPIController::class, 'store']);
 

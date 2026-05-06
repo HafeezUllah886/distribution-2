@@ -19,15 +19,15 @@ class StockController extends Controller
     {
         $vendorID = $request->vendorID ?? null;
         $products = products::currentBranch();
-        if($vendorID != null)
-        {
+        if ($vendorID != null) {
             $products = $products->where('vendorID', $vendorID);
         }
         $products = $products->get();
-        
+
         $units = units::all();
         $warehouses = warehouses::currentBranch()->get();
         $vendors = accounts::vendor()->currentBranch()->get();
+
         return view('stock.index', compact('products', 'units', 'warehouses', 'vendors', 'vendorID'));
     }
 
@@ -59,17 +59,13 @@ class StockController extends Controller
         $warehouse = $request->warehouse;
         $product = products::find($id);
 
-        if($warehouse == 'all')
-        {
+        if ($warehouse == 'all') {
             $stocks = stock::where('productID', $id)->whereBetween('date', [$from, $to])->orderBy('date', 'asc')->orderBy('refID', 'asc')->get();
-
             $pre_cr = stock::where('productID', $id)->whereDate('date', '<', $from)->sum('cr');
             $pre_db = stock::where('productID', $id)->whereDate('date', '<', $from)->sum('db');
             $cur_cr = stock::where('productID', $id)->sum('cr');
             $cur_db = stock::where('productID', $id)->sum('db');
-        }
-        else
-        {
+        } else {
             $stocks = stock::where('productID', $id)->whereBetween('date', [$from, $to])->where('warehouseID', $warehouse)->orderBy('date', 'asc')->get();
 
             $pre_cr = stock::where('productID', $id)->whereDate('date', '<', $from)->where('warehouseID', $warehouse)->sum('cr');
@@ -82,8 +78,10 @@ class StockController extends Controller
         $cur_balance = $cur_cr - $cur_db;
 
         $unit = product_units::find($unitID);
+
         return view('stock.details', compact('product', 'pre_balance', 'cur_balance', 'stocks', 'unit', 'from', 'to'));
     }
+
     /**
      * Show the form for editing the specified resource.
      */
