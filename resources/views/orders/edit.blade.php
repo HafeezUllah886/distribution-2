@@ -44,13 +44,15 @@
                             <div class="col-1">
                                 <label for="freight_radio">Freight</label>
                                 <div class="form-check form-switch form-switch-lg" dir="ltr">
-                                    <input type="checkbox" class="form-check-input" onchange="checkCharges()" id="freight_radio" checked="">
+                                    <input type="checkbox" class="form-check-input" onchange="checkCharges()"
+                                        id="freight_radio" checked="">
                                 </div>
                             </div>
                             <div class="col-1">
                                 <label for="labor_radio">Labor</label>
                                 <div class="form-check form-switch form-switch-lg" dir="ltr">
-                                    <input type="checkbox" class="form-check-input" onchange="checkCharges()" id="labor_radio" checked="">
+                                    <input type="checkbox" class="form-check-input" onchange="checkCharges()"
+                                        id="labor_radio" checked="">
                                 </div>
                             </div>
                             <div class="col-12">
@@ -166,7 +168,8 @@
                                                     <span class="btn btn-sm btn-danger"
                                                         onclick="deleteRow({{ $id }})">X</span>
                                                 </td>
-                                                <input type="hidden" name="id[]" id="id_{{ $id }}" value="{{ $id }}">
+                                                <input type="hidden" name="id[]" id="id_{{ $id }}"
+                                                    value="{{ $id }}">
                                                 <input type="hidden" name="frightValue[]"
                                                     id="frightValue_{{ $id }}">
                                                 <input type="hidden" name="laborValue[]"
@@ -238,56 +241,58 @@
                         </div>
                     </form>
                 </div>
-                @if(auth()->user()->role == 'Branch Admin')
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-3">
-                            <h5>Last Recovery Date</h5>
-                            <p>{{ date('Y-m-d', strtotime($methodData['date'])) }}</p>
-                        </div>
-                        <div class="col-3">
-                            <h5>Last Sale Date</h5>
-                            <p>{{ $methodData['last_sale'] ? date('Y-m-d', strtotime($methodData['last_sale'])) : 'N/A' }}</p>
-                        </div>
-                        <div class="col-3">
-                            <h5>Last Sale Amount</h5>
-                            <p>{{ number_format($methodData['last_sale_amount'], 0) }}</p>
-                        </div>
-                        <div class="col-3">
-                            <h5>Last Balance</h5>
-                            <p>{{ number_format($methodData['last_balance'], 0) }}</p>
-                            <input type="hidden" id="last_balance" value="{{ $methodData['last_balance'] }}">
-                        </div>
-                        <div class="col-3">
-                            <h5>Cash</h5>
-                            <p>{{ number_format($methodData['Cash'], 0) }}</p>
-                        </div>
-                        <div class="col-3">
-                            <h5>Cheque</h5>
-                            <p>{{ number_format($methodData['Cheque'], 0) }}</p>
-                        </div>
-                        <div class="col-3">
-                            <h5>Online</h5>
-                            <p>{{ number_format($methodData['Online'], 0) }}</p>
-                        </div>
-                        <div class="col-3">
-                            <h5>Other</h5>
-                            <p>{{ number_format($methodData['Other'], 0) }}</p>
-                        </div>
-                        <div class="col-3">
-                            <h5>Total Receivings</h5>
-                            <p>{{ number_format($methodData['Cash'] + $methodData['Cheque'] + $methodData['Online'] + $methodData['Other'], 0) }}</p>
-                        </div>
-                        <div class="col-3">
-                            <h5>This Order</h5>
-                            <p id="this_order"></p>
-                        </div>
-                        <div class="col-3">
-                            <h5>Net Balance</h5>
-                            <p id="net_balance"></p>
+                @if (auth()->user()->role == 'Branch Admin')
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <h5>Last Recovery Date</h5>
+                                <p>{{ date('Y-m-d', strtotime($methodData['date'])) }}</p>
+                            </div>
+                            <div class="col-3">
+                                <h5>Last Sale Date</h5>
+                                <p>{{ $methodData['last_sale'] ? date('Y-m-d', strtotime($methodData['last_sale'])) : 'N/A' }}
+                                </p>
+                            </div>
+                            <div class="col-3">
+                                <h5>Last Sale Amount</h5>
+                                <p>{{ number_format($methodData['last_sale_amount'], 0) }}</p>
+                            </div>
+                            <div class="col-3">
+                                <h5>Last Balance</h5>
+                                <p>{{ number_format($methodData['last_balance'], 0) }}</p>
+                                <input type="hidden" id="last_balance" value="{{ $methodData['last_balance'] }}">
+                            </div>
+                            <div class="col-3">
+                                <h5>Cash</h5>
+                                <p>{{ number_format($methodData['Cash'], 0) }}</p>
+                            </div>
+                            <div class="col-3">
+                                <h5>Cheque</h5>
+                                <p>{{ number_format($methodData['Cheque'], 0) }}</p>
+                            </div>
+                            <div class="col-3">
+                                <h5>Online</h5>
+                                <p>{{ number_format($methodData['Online'], 0) }}</p>
+                            </div>
+                            <div class="col-3">
+                                <h5>Other</h5>
+                                <p>{{ number_format($methodData['Other'], 0) }}</p>
+                            </div>
+                            <div class="col-3">
+                                <h5>Total Receivings</h5>
+                                <p>{{ number_format($methodData['Cash'] + $methodData['Cheque'] + $methodData['Online'] + $methodData['Other'], 0) }}
+                                </p>
+                            </div>
+                            <div class="col-3">
+                                <h5>This Order</h5>
+                                <p id="this_order"></p>
+                            </div>
+                            <div class="col-3">
+                                <h5>Net Balance</h5>
+                                <p id="net_balance"></p>
+                            </div>
                         </div>
                     </div>
-                </div>
                 @endif
                 <!--end card-->
             </div>
@@ -444,7 +449,7 @@
                 var discountValue = price * discountp / 100;
                 qty = loose + (qty * unit);
                 var amount = ((price - discount - discountValue - claim) + fright) * qty;
-                $("#amount_" + id).val(amount.toFixed(2));
+                $("#amount_" + id).val(amount.toFixed(0));
                 $("#frightValue_" + id).val((fright * qty).toFixed(0));
                 $("#laborValue_" + id).val((labor * qty).toFixed(0));
                 $("#claimValue_" + id).val((claim * qty).toFixed(0));
@@ -525,10 +530,10 @@
                 var claim = $("#claim").val();
                 var net = total - claim;
 
-                $("#net").val(net.toFixed(2));
+                $("#net").val(net.toFixed(0));
 
                 var last_balance = $("#last_balance").val();
-             
+
                 var net_balance = parseFloat(last_balance) + total;
 
                 $("#this_order").text(total.toFixed(0));
@@ -544,51 +549,49 @@
                 updateTotal();
             }
 
-             function checkCharges() {
-            var freight = $("#freight_radio").is(':checked');
-            var labor = $("#labor_radio").is(':checked');
-            if (freight) {
-                $("input[id^='fright_']").each(function() {
-                    var inputId = $(this).attr('id');
-                    console.log(inputId);
-                    $(this).attr('readonly', false);
-                });
+            function checkCharges() {
+                var freight = $("#freight_radio").is(':checked');
+                var labor = $("#labor_radio").is(':checked');
+                if (freight) {
+                    $("input[id^='fright_']").each(function() {
+                        var inputId = $(this).attr('id');
+                        console.log(inputId);
+                        $(this).attr('readonly', false);
+                    });
 
-            } else {
-                $("input[id^='fright_']").each(function() {
-                    var inputId = $(this).attr('id');
-                    console.log(inputId);
-                    $(this).val(0);
-                    $(this).attr('readonly', true);
-                });
-            }
+                } else {
+                    $("input[id^='fright_']").each(function() {
+                        var inputId = $(this).attr('id');
+                        console.log(inputId);
+                        $(this).val(0);
+                        $(this).attr('readonly', true);
+                    });
+                }
 
-            if (labor) {
-                $("input[id^='labor_']").each(function() {
-                    var inputId = $(this).attr('id');
-                    console.log(inputId);
-                    $(this).attr('readonly', false);
-                });
+                if (labor) {
+                    $("input[id^='labor_']").each(function() {
+                        var inputId = $(this).attr('id');
+                        console.log(inputId);
+                        $(this).attr('readonly', false);
+                    });
 
-            } else {
-                $("input[id^='labor_']").each(function() {
-                    var inputId = $(this).attr('id');
-                    console.log(inputId);
-                    $(this).val(0);
-                    $(this).attr('readonly', true);
-                });
-            }
-            $("input[id^='id_']").each(function() {
+                } else {
+                    $("input[id^='labor_']").each(function() {
+                        var inputId = $(this).attr('id');
+                        console.log(inputId);
+                        $(this).val(0);
+                        $(this).attr('readonly', true);
+                    });
+                }
+                $("input[id^='id_']").each(function() {
                     var inputId = $(this).attr('id');
                     var inputValue = $(this).val();
                     updateChanges(inputValue);
                 });
-        }
+            }
 
             @foreach ($order->details as $product)
                 updateChanges({{ $product->productID }});
             @endforeach
-
-           
         </script>
     @endsection
