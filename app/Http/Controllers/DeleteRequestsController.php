@@ -93,6 +93,21 @@ class DeleteRequestsController extends Controller
 
     public function deleteSales($ref)
     {
+        $checkExpense = expenses::where('refID', $ref)->first();
+        if ($checkExpense) {
+            return [
+                'msg' => 'You can not delete this sale because it has an expense.',
+                'status' => 'error',
+            ];
+        }
+
+        $checkTransaction = users_transactions::where('refID', $ref)->first();
+        if ($checkTransaction) {
+            return [
+                'msg' => 'You can not delete this sale because it has a transaction.',
+                'status' => 'error',
+            ];
+        }
         try {
             DB::beginTransaction();
             $sale = sales::where('refID', $ref)->first();
@@ -140,6 +155,7 @@ class DeleteRequestsController extends Controller
 
     public function deleteExpense($ref)
     {
+
         try {
             DB::beginTransaction();
             expenses::where('refID', $ref)->delete();

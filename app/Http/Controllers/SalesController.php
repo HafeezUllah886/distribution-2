@@ -19,6 +19,7 @@ use App\Models\stock;
 use App\Models\transactions;
 use App\Models\units;
 use App\Models\User;
+use App\Models\users_transactions;
 use App\Models\warehouses;
 use Exception;
 use Illuminate\Http\Request;
@@ -408,6 +409,16 @@ class SalesController extends Controller
     public function destroy($id)
     {
         $sale = sales::find($id);
+        $checkExpense = expenses::where('refID', $sale->refID)->first();
+        if ($checkExpense) {
+            return back()->with('error', 'You can not delete this sale because it has an expense.');
+        }
+
+        $checkTransaction = users_transactions::where('refID', $sale->refID)->first();
+        if ($checkTransaction) {
+            return back()->with('error', 'You can not delete this sale because it has a transaction.');
+        }
+
         $customer = accounts::find($sale->customerID)->title;
         $area = $sale->customer->area->name;
         $notes = "Invoice No. $id Customer : $customer Area : $area Invoice Date: $sale->date";
