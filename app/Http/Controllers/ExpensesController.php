@@ -143,9 +143,13 @@ class ExpensesController extends Controller
     {
         $expense = expenses::where('refID', $ref)->first();
         $notes = 'Expense - Method '.$expense->method.' Notes : '.$expense->notes;
-        storeDeleteRequest(auth()->user()->id, $expense->branchID, $expense->refID, 'expenses', $notes);
+        $delete = storeDeleteRequest(auth()->user()->id, $expense->branchID, $expense->refID, 'expenses', $notes);
 
         session()->forget('confirmed_password');
+
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
+        }
 
         return to_route('expenses.index')->with('success', 'Delete Request Sent to Branch Admin.');
     }

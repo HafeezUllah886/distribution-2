@@ -422,9 +422,11 @@ class SalesController extends Controller
         $customer = accounts::find($sale->customerID)->title;
         $area = $sale->customer->area->name;
         $notes = "Invoice No. $id Customer : $customer Area : $area Invoice Date: $sale->date";
-        storeDeleteRequest(auth()->user()->id, $sale->branchID, $sale->refID, 'sales', $notes);
-
+        $delete = storeDeleteRequest(auth()->user()->id, $sale->branchID, $sale->refID, 'sales', $notes);
         session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
+        }
 
         return to_route('sale.index')->with('success', 'Delete Request Sent to Branch Admin.');
     }

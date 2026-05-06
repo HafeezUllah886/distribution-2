@@ -325,7 +325,7 @@ function storeDeleteRequest($user_id, $branchID, $refID, $model, $notes)
 {
     $check = delete_requests::where('refID', $refID)->first();
     if ($check) {
-        return false;
+        return 0;
     }
     delete_requests::create([
         'user_id' => $user_id,
