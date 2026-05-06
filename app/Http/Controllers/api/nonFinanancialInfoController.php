@@ -69,15 +69,21 @@ class nonFinanancialInfoController extends Controller
             $stock = $cr - $db;
 
             $unit = $product->product->units()->first();
+            $stock_info = packInfoWithOutName($unit->value, $stock);
+            $pack_qty = explode(',', $stock_info);
 
             $products[] = [
                 'id' => $product->product->id,
                 'name' => $product->product->name,
                 'name_urdu' => $product->product->nameurdu,
+                'price' => $product->product->price,
                 'vendor_name' => $product->product->vendor->title,
                 'image' => asset($product->product->image_path ?? 'images/products/no-img.jpg'),
+                'unit_name' => $unit->unit_name,
                 'pack_size' => $unit->value,
-                'stock' => packInfo($unit->value, $unit->unit_name, $stock),
+                'pack_qty' => (int) $pack_qty[0],
+                'loose_qty' => (int) $pack_qty[1],
+                'total_stock' => $stock,
             ];
         }
 
