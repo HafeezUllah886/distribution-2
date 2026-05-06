@@ -68,14 +68,16 @@ class nonFinanancialInfoController extends Controller
             $db = stock::where('productID', $product->product->id)->sum('db');
             $stock = $cr - $db;
 
+            $unit = $product->product->units()->first();
+
             $products[] = [
                 'id' => $product->product->id,
                 'name' => $product->product->name,
                 'name_urdu' => $product->product->nameurdu,
                 'vendor_name' => $product->product->vendor->title,
                 'image' => asset($product->product->image_path ?? 'images/products/no-img.jpg'),
-                'units' => $product->product->units()->select('id', 'unit_name', 'value')->get(),
-                'stock' => $stock,
+                'pack_size' => $unit->value,
+                'stock' => packInfo($unit->value, $unit->unit_name, $stock),
             ];
         }
 
