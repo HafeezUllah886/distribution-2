@@ -324,7 +324,7 @@ function projectNameShort()
 function storeDeleteRequest($user_id, $branchID, $refID, $model, $notes)
 {
     $check = delete_requests::where('refID', $refID)->first();
-    if ($check) {
+    if ($check && $check->status == 'pending') {
         return 0;
     }
     delete_requests::create([
