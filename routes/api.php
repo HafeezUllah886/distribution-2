@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\authController;
 use App\Http\Controllers\api\BalanceTargetAPIController;
 use App\Http\Controllers\api\CustomerAdvancePaymentAPIController;
+use App\Http\Controllers\api\CustomerBalanceReporController;
 use App\Http\Controllers\api\customerPaymentsReceivingContoller;
 use App\Http\Controllers\api\DailyCustomerWisePaymentsReport;
 use App\Http\Controllers\api\DailyProductsOrderReport;
@@ -71,5 +72,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/orderbookernotifications', [OrderbookerNotificationsController::class, 'index']);
     Route::get('/orderbookernotifications/read', [OrderbookerNotificationsController::class, 'read']);
+
+    Route::get('/customers/balance_report', [CustomerBalanceReporController::class, 'index']);
 
 });
