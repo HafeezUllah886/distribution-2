@@ -15,7 +15,7 @@ class CustomerBalanceReporController extends Controller
         $customer_id = orderbooker_customers::where('orderbookerID', $request->user()->id)->pluck('customerID')->toArray();
         $customers = accounts::whereIn('id', $customer_id)->active()->get();
         foreach ($customers as $customer) {
-            $balance = getAccountBalanceOrderbookerWise($customer, $request->user()->id);
+            $balance = getAccountBalanceOrderbookerWise($customer->id, $request->user()->id);
             $customer->balance = $balance;
             $customer->area_name = area::find($customer->areaID)->name;
 
