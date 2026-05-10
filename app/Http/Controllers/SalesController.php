@@ -421,7 +421,10 @@ class SalesController extends Controller
 
         $customer = accounts::find($sale->customerID)->title;
         $area = $sale->customer->area->name;
-        $notes = "Invoice No. $id Customer : $customer Area : $area Invoice Date: $sale->date";
+        $address = $sale->customer->address;
+        $orderbooker = accounts::find($sale->orderbookerID)->title;
+        $supplyman = accounts::find($sale->supplymanID)->title;
+        $notes = "Invoice Date: $sale->date | Invoice No.: $id | Invoice Amount: $sale->net | Customer : $customer | Area : $area | Address : $address | Orderbooker : $orderbooker | Supplyman : $supplyman Bilty No. : $sale->bilty | Transporter: $sale->transporter | Sale Notes: $sale->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $sale->branchID, $sale->refID, 'sales', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {
@@ -538,6 +541,7 @@ class SalesController extends Controller
                 }
             }
             $ref = $sale->refID;
+            $notes = 'Sale Expense Method '.$request->method.' Invoice Date : '.$sale->date.' Invoice Number : '.$sale->id.' Invoice Amount : '.$sale->amount.' Customer Name : '.$sale->customer->title.' Area : '.$sale->customer->area->name.' Address : '.$sale->customer->address.' Orderbooker : '.$sale->orderbooker->name.' Supplyman : '.$sale->supplyman->title.' Bilty Number : '.$sale->bilty.' Transport : '.$sale->transporter.' Notes : '.$request->notes;
             expenses::create(
                 [
                     'userID' => auth()->user()->id,
@@ -549,7 +553,7 @@ class SalesController extends Controller
                     'number' => $request->number,
                     'bank' => $request->bank,
                     'cheque_date' => $request->cheque_date,
-                    'notes' => $request->notes,
+                    'notes' => $notes,
                     'is_for_sale' => 1,
                     'refID' => $ref,
                 ]
@@ -562,7 +566,6 @@ class SalesController extends Controller
                 ]
             );
 
-            $notes = 'Sale Expense Method '.$request->method.' Invoice Date : '.$sale->date.' Invoice Number : '.$sale->id.' Invoice Amount : '.$sale->amount.' Customer Name : '.$sale->customer->title.' Area : '.$sale->customer->area->name.' Address : '.$sale->customer->address.' Orderbooker : '.$sale->orderbooker->name.' Bilty Number : '.$sale->bilty.' Transport : '.$sale->transporter.' Notes : '.$request->notes;
             createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
 
             createUserTransaction(auth()->user()->id, $request->date, 0, $request->amount, $notes, $ref);

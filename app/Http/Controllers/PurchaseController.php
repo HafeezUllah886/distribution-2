@@ -3,19 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\expense_categories;
+use App\Models\expenses;
 use App\Models\product_units;
 use App\Models\products;
 use App\Models\purchase;
 use App\Models\purchase_details;
-use App\Models\purchase_order;
 use App\Models\purchase_order_delivery;
-use App\Models\purchase_payments;
-use App\Models\expenses;
 use App\Models\stock;
 use App\Models\transactions;
 use App\Models\units;
 use App\Models\warehouses;
-use App\Models\expense_categories;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +30,7 @@ class PurchaseController extends Controller
         $vendorID = $request->vendorID ?? 'All';
         $status = $request->status ?? 'All';
 
-        $purchases = purchase::whereBetween("recdate", [$start, $end])->where('branchID', auth()->user()->branchID);
+        $purchases = purchase::whereBetween('recdate', [$start, $end])->where('branchID', auth()->user()->branchID);
         if ($vendorID != 'All') {
             $purchases->where('vendorID', $vendorID);
         }
@@ -41,7 +39,7 @@ class PurchaseController extends Controller
         }
         $purchases = $purchases->orderby('id', 'desc')->get();
         $vendors = accounts::vendor()->currentBranch()->get();
-      
+
         return view('purchase.index', compact('purchases', 'start', 'end', 'vendors', 'vendorID', 'status'));
     }
 
@@ -57,6 +55,7 @@ class PurchaseController extends Controller
         $unloaders = accounts::unloader()->currentBranch()->get();
         $freight_accounts = accounts::freight()->currentBranch()->get();
         $exp_categories = expense_categories::currentBranch()->get();
+
         return view('purchase.create', compact('products', 'units', 'vendor', 'warehouses', 'unloaders', 'freight_accounts', 'exp_categories'));
     }
 
@@ -66,34 +65,32 @@ class PurchaseController extends Controller
     public function store(Request $request)
     {
 
-       try
-        {
-            if($request->isNotFilled('id'))
-            {
+        try {
+            if ($request->isNotFilled('id')) {
                 throw new Exception('Please Select Atleast One Product');
             }
             DB::beginTransaction();
             $ref = getRef();
             $purchase = purchase::create(
                 [
-                  'vendorID'            => $request->vendorID,
-                  'branchID'            => Auth()->user()->branchID,
-                  'warehouseID'         => $request->warehouseID,
-                  'unloaderID'          => $request->unloaderID,
-                  'orderdate'           => $request->orderdate,
-                  'recdate'             => $request->recdate,
-                  'notes'               => $request->notes,
-                  'bilty'               => $request->bilty,
-                  'transporter'         => $request->transporter,
-                  'status'              => "Pending",
-                  'inv'                 => $request->inv,
-                  'driver_name'         => $request->driver,
-                  'driver_contact'      => $request->driver_contact,
-                  'cno'                 => $request->container,
-                  'freightID'           => $request->freightID,
-                  'expenseCategoryID'   => $request->expense_categoryID,
-                  'freight_status'      => $request->freight_status ? "Paid" : "Unpaid",
-                  'refID'               => $ref,
+                    'vendorID' => $request->vendorID,
+                    'branchID' => Auth()->user()->branchID,
+                    'warehouseID' => $request->warehouseID,
+                    'unloaderID' => $request->unloaderID,
+                    'orderdate' => $request->orderdate,
+                    'recdate' => $request->recdate,
+                    'notes' => $request->notes,
+                    'bilty' => $request->bilty,
+                    'transporter' => $request->transporter,
+                    'status' => 'Pending',
+                    'inv' => $request->inv,
+                    'driver_name' => $request->driver,
+                    'driver_contact' => $request->driver_contact,
+                    'cno' => $request->container,
+                    'freightID' => $request->freightID,
+                    'expenseCategoryID' => $request->expense_categoryID,
+                    'freight_status' => $request->freight_status ? 'Paid' : 'Unpaid',
+                    'refID' => $ref,
                 ]
             );
 
@@ -103,11 +100,10 @@ class PurchaseController extends Controller
             $totalLabor = 0;
             $totalFreight = 0;
             $vendor = accounts::find($request->vendorID)->title;
-            foreach($ids as $key => $id)
-            {
+            foreach ($ids as $key => $id) {
                 $unit = product_units::find($request->unit[$key]);
                 $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
-                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                $pc = $request->loose[$key] + ($request->qty[$key] * $unit->value);
                 $price = $request->price[$key];
                 $discount = $request->discount[$key];
                 $claim = $request->claim[$key];
@@ -121,27 +117,27 @@ class PurchaseController extends Controller
 
                 purchase_details::create(
                     [
-                        'purchaseID'    => $purchase->id,
-                        'warehouseID'   => $request->warehouseID,
-                        'branchID'        => Auth()->user()->branchID,
-                        'productID'     => $id,
-                        'price'         => $price,
-                        'discount'      => $discount,
-                        'discountp'     => $request->discountp[$key],
+                        'purchaseID' => $purchase->id,
+                        'warehouseID' => $request->warehouseID,
+                        'branchID' => Auth()->user()->branchID,
+                        'productID' => $id,
+                        'price' => $price,
+                        'discount' => $discount,
+                        'discountp' => $request->discountp[$key],
                         'discountvalue' => $discountvalue,
-                        'qty'           => $request->qty[$key],
-                        'pc'            => $pc,
-                        'loose'         => $request->loose[$key],
-                        'netprice'      => $netPrice,
-                        'amount'        => $amount,
-                        'price_amount'  => $price_amount,
-                        'date'          => $request->recdate,
-                        'bonus'         => $request->bonus[$key],
-                        'labor'         => $request->labor[$key],
-                        'fright'        => $request->fright[$key],
-                        'claim'         => $claim,
-                        'unitID'        => $unit->id,
-                        'refID'         => $ref,
+                        'qty' => $request->qty[$key],
+                        'pc' => $pc,
+                        'loose' => $request->loose[$key],
+                        'netprice' => $netPrice,
+                        'amount' => $amount,
+                        'price_amount' => $price_amount,
+                        'date' => $request->recdate,
+                        'bonus' => $request->bonus[$key],
+                        'labor' => $request->labor[$key],
+                        'fright' => $request->fright[$key],
+                        'claim' => $claim,
+                        'unitID' => $unit->id,
+                        'refID' => $ref,
                     ]
                 );
                 createStock($id, $qty, 0, $request->recdate, "Purchased from $vendor", $ref, $request->warehouseID);
@@ -157,41 +153,38 @@ class PurchaseController extends Controller
                 ]
             );
 
-            if($request->freight_status == "on")
-            {
+            if ($request->freight_status == 'on') {
                 $vendor_title = $purchase->vendor->title;
                 $fr_notes = "Freight Payment of Vendor: $vendor_title, Inv No: $request->inv, Bilty: $request->bilty, Vehicle No: $request->container, Transporter: $request->transporter, Driver:  $request->driver, Notes: $request->notes";
                 expenses::create(
                     [
-                        'userID'        => auth()->user()->id,
-                        'amount'        => $totalFreight,
-                        'branchID'      => auth()->user()->branchID,
-                        'categoryID'    => $request->expense_categoryID,
-                        'date'          => $request->recdate,
-                        'method'        => 'Other',
-                        'number'        => null,
-                        'bank'          => null,
-                        'cheque_date'   => $request->recdate,
-                        'notes'         => $fr_notes,
-                        'refID'         => $ref,
+                        'userID' => auth()->user()->id,
+                        'amount' => $totalFreight,
+                        'branchID' => auth()->user()->branchID,
+                        'categoryID' => $request->expense_categoryID,
+                        'date' => $request->recdate,
+                        'method' => 'Other',
+                        'number' => null,
+                        'bank' => null,
+                        'cheque_date' => $request->recdate,
+                        'notes' => $fr_notes,
+                        'refID' => $ref,
                     ]
                 );
 
                 createTransaction($request->freightID, $request->recdate, 0, $totalFreight, $fr_notes, $ref, auth()->user()->id);
-            }
-            else
-            {
-                 $vendor_title = $purchase->vendor->title;
+            } else {
+                $vendor_title = $purchase->vendor->title;
                 $fr_notes = "Freight Payment of Vendor: $vendor_title, Inv No: $request->inv, Bilty: $request->bilty, Vehicle No: $request->container, Transporter: $request->transporter, Driver:  $request->driver, Notes: $request->notes";
                 createTransaction($request->freightID, $request->recdate, 0, 0, $fr_notes, $ref, auth()->user()->id);
             }
 
             DB::commit();
-            return back()->with('success', "Purchase Created");
-        }
-        catch(\Exception $e)
-        {
+
+            return back()->with('success', 'Purchase Created');
+        } catch (\Exception $e) {
             DB::rollback();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -209,17 +202,18 @@ class PurchaseController extends Controller
      */
     public function edit(purchase $purchase)
     {
-       /*  if($purchase->orderID != null)
-        {
-            return back()->with('error', "This purchase can not be edited");
-        } */
+        /*  if($purchase->orderID != null)
+         {
+             return back()->with('error', "This purchase can not be edited");
+         } */
         $products = products::active()->vendor($purchase->vendorID)->orderby('name', 'asc')->get();
         $units = units::currentBranch()->get();
         $accounts = accounts::business()->currentBranch()->get();
         $warehouses = warehouses::currentBranch()->get();
         $unloaders = accounts::unloader()->currentBranch()->get();
-         $freight_accounts = accounts::freight()->currentBranch()->get();
+        $freight_accounts = accounts::freight()->currentBranch()->get();
         $exp_categories = expense_categories::currentBranch()->get();
+
         return view('purchase.edit', compact('products', 'units', 'accounts', 'purchase', 'warehouses', 'unloaders', 'freight_accounts', 'exp_categories'));
     }
 
@@ -228,20 +222,16 @@ class PurchaseController extends Controller
      */
     public function update(Request $request, purchase $purchase)
     {
-        try
-        {
-            if($request->isNotFilled('id'))
-            {
+        try {
+            if ($request->isNotFilled('id')) {
                 throw new Exception('Please Select Atleast One Product');
             }
             DB::beginTransaction();
-            foreach($purchase->details as $product)
-            {
+            foreach ($purchase->details as $product) {
                 stock::where('refID', $product->refID)->delete();
                 $product->delete();
             }
-            if($purchase->orderID != null)
-            {
+            if ($purchase->orderID != null) {
                 purchase_order_delivery::where('purchaseID', $purchase->id)->delete();
             }
             transactions::where('refID', $purchase->refID)->delete();
@@ -249,37 +239,36 @@ class PurchaseController extends Controller
             $ref = $purchase->refID;
             $purchase->update(
                 [
-                  'warehouseID'     => $request->warehouseID,
-                  'orderdate'       => $request->orderdate,
-                  'recdate'         => $request->recdate,
-                  'notes'           => $request->notes,
-                  'bilty'           => $request->bilty,
-                  'status'          => "Pending",
-                  'transporter'     => $request->transporter,
-                  'inv'             => $request->inv,
-                  'driver_name'         => $request->driver,
-                  'driver_contact'      => $request->driver_contact,
-                  'cno'                 => $request->container,
-                  'freightID'           => $request->freightID,
-                  'expenseCategoryID'   => $request->expense_categoryID,
-                  'freight_status'      => $request->freight_status ? "Paid" : "Unpaid",
-                  'refID'           => $ref,
-                  ]
+                    'warehouseID' => $request->warehouseID,
+                    'orderdate' => $request->orderdate,
+                    'recdate' => $request->recdate,
+                    'notes' => $request->notes,
+                    'bilty' => $request->bilty,
+                    'status' => 'Pending',
+                    'transporter' => $request->transporter,
+                    'inv' => $request->inv,
+                    'driver_name' => $request->driver,
+                    'driver_contact' => $request->driver_contact,
+                    'cno' => $request->container,
+                    'freightID' => $request->freightID,
+                    'expenseCategoryID' => $request->expense_categoryID,
+                    'freight_status' => $request->freight_status ? 'Paid' : 'Unpaid',
+                    'refID' => $ref,
+                ]
             );
 
             $ids = $request->id;
 
             $total = 0;
             $totalLabor = 0;
-              $totalFreight = 0;
+            $totalFreight = 0;
             $vendor = accounts::find($request->vendorID)->title;
-            foreach($ids as $key => $id)
-            {
+            foreach ($ids as $key => $id) {
                 $unit = product_units::find($request->unit[$key]);
                 $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
-                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
-                $price = $request->price[$key] ;
-                $discount = $request->discount[$key] ;
+                $pc = $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                $price = $request->price[$key];
+                $discount = $request->discount[$key];
                 $claim = $request->claim[$key];
                 $discountvalue = $request->price[$key] * $request->discountp[$key] / 100;
                 $netPrice = ($price - $discount - $discountvalue - $claim);
@@ -287,53 +276,52 @@ class PurchaseController extends Controller
                 $price_amount = $price * $pc;
                 $total += $amount;
                 $totalLabor += $request->labor[$key] * $pc;
-                 $totalFreight += $request->fright[$key] * $pc;
+                $totalFreight += $request->fright[$key] * $pc;
 
                 purchase_details::create(
                     [
-                        'purchaseID'    => $purchase->id,
-                        'warehouseID'   => $request->warehouseID,
-                        'branchID'      => auth()->user()->branchID,
-                        'productID'     => $id,
-                        'price'         => $price,
-                        'discount'      => $discount,
-                        'discountp'     => $request->discountp[$key],
+                        'purchaseID' => $purchase->id,
+                        'warehouseID' => $request->warehouseID,
+                        'branchID' => auth()->user()->branchID,
+                        'productID' => $id,
+                        'price' => $price,
+                        'discount' => $discount,
+                        'discountp' => $request->discountp[$key],
                         'discountvalue' => $discountvalue,
-                        'qty'           => $request->qty[$key],
-                        'pc'            => $pc,
-                        'loose'         => $request->loose[$key],
-                        'netprice'      => $netPrice,
-                        'amount'        => $amount,
-                        'price_amount'  => $price_amount,
-                        'date'          => $request->recdate,
-                        'bonus'         => $request->bonus[$key],
-                        'labor'         => $request->labor[$key],
-                        'fright'        => $request->fright[$key],
-                        'claim'         => $claim,
-                        'unitID'        => $unit->id,
-                        'refID'         => $ref,
+                        'qty' => $request->qty[$key],
+                        'pc' => $pc,
+                        'loose' => $request->loose[$key],
+                        'netprice' => $netPrice,
+                        'amount' => $amount,
+                        'price_amount' => $price_amount,
+                        'date' => $request->recdate,
+                        'bonus' => $request->bonus[$key],
+                        'labor' => $request->labor[$key],
+                        'fright' => $request->fright[$key],
+                        'claim' => $claim,
+                        'unitID' => $unit->id,
+                        'refID' => $ref,
                     ]
                 );
                 createStock($id, $qty, 0, $request->recdate, "Purchased from $vendor", $ref, $request->warehouseID);
 
-              if($purchase->orderID != null)
-              {
-                purchase_order_delivery::create(
-                    [
-                        'orderID'       => $purchase->orderID,
-                        'purchaseID'    => $purchase->id,
-                        'productID'     => $id,
-                        'warehouseID'   => $purchase->warehouseID,
-                        'qty'           => $request->qty[$key],
-                        'pc'            => $pc,
-                        'loose'         => $request->loose[$key],
-                        'amount'        => $amount,
-                        'unitID'        => $unit->id,
-                        'refID'         => $ref,
-                    ]
-                );
+                if ($purchase->orderID != null) {
+                    purchase_order_delivery::create(
+                        [
+                            'orderID' => $purchase->orderID,
+                            'purchaseID' => $purchase->id,
+                            'productID' => $id,
+                            'warehouseID' => $purchase->warehouseID,
+                            'qty' => $request->qty[$key],
+                            'pc' => $pc,
+                            'loose' => $request->loose[$key],
+                            'amount' => $amount,
+                            'unitID' => $unit->id,
+                            'refID' => $ref,
+                        ]
+                    );
 
-              }
+                }
             }
 
             $net = round($total, 0);
@@ -346,43 +334,39 @@ class PurchaseController extends Controller
                 ]
             );
 
-             if($request->freight_status == "on")
-            {
+            if ($request->freight_status == 'on') {
                 $vendor_title = $purchase->vendor->title;
                 $fr_notes = "Freight Payment of Vendor: $vendor_title, Inv No: $request->inv, Bilty: $request->bilty, Vehicle No: $request->container, Transporter: $request->transporter, Driver:  $request->driver, Notes: $request->notes";
                 expenses::create(
                     [
-                        'userID'        => auth()->user()->id,
-                        'amount'        => $totalFreight,
-                        'branchID'      => auth()->user()->branchID,
-                        'categoryID'    => $request->expense_categoryID,
-                        'date'          => $request->recdate,
-                        'method'        => 'Other',
-                        'number'        => null,
-                        'bank'          => null,
-                        'cheque_date'   => $request->recdate,
-                        'notes'         => $fr_notes,
-                        'refID'         => $ref,
+                        'userID' => auth()->user()->id,
+                        'amount' => $totalFreight,
+                        'branchID' => auth()->user()->branchID,
+                        'categoryID' => $request->expense_categoryID,
+                        'date' => $request->recdate,
+                        'method' => 'Other',
+                        'number' => null,
+                        'bank' => null,
+                        'cheque_date' => $request->recdate,
+                        'notes' => $fr_notes,
+                        'refID' => $ref,
                     ]
                 );
 
                 createTransaction($request->freightID, $request->recdate, 0, $totalFreight, $fr_notes, $ref, auth()->user()->id);
-    
-            }
-             else
-            {
-                 $vendor_title = $purchase->vendor->title;
+
+            } else {
+                $vendor_title = $purchase->vendor->title;
                 $fr_notes = "Freight Payment of Vendor: $vendor_title, Inv No: $request->inv, Bilty: $request->bilty, Vehicle No: $request->container, Transporter: $request->transporter, Driver:  $request->driver, Notes: $request->notes";
                 createTransaction($request->freightID, $request->recdate, 0, 0, $fr_notes, $ref, auth()->user()->id);
             }
 
-          
             DB::commit();
-            return back()->with('success', "Purchase Updated");
-        }
-        catch(\Exception $e)
-        {
+
+            return back()->with('success', 'Purchase Updated');
+        } catch (\Exception $e) {
             DB::rollback();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -393,36 +377,23 @@ class PurchaseController extends Controller
     public function destroy($id)
     {
 
-        try
-        {
-            DB::beginTransaction();
-            $purchase = purchase::find($id);
+        $purchase = purchase::find($id);
+        $vendor = $purchase->vendor->title;
+        $notes = "Purchase Date: $purchase->orderdate | Purchase No.: $id | Purchase Amount: $purchase->net | Vendor : $vendor | Bilty No. : $purchase->bilty | Transporter: $purchase->transporter | Purchase Notes: $purchase->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, $purchase->branchID, $purchase->refID, 'purchase', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
+        }
 
-            foreach($purchase->details as $product)
-            {
-                stock::where('refID', $product->refID)->delete();
-                $product->delete();
-            }
-            transactions::where('refID', $purchase->refID)->delete();
-            purchase_order_delivery::where('purchaseID', $purchase->id)->delete();
-            $purchase->delete();
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('purchase.index')->with('success', "Purchase Deleted");
-        }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('purchase.index')->with('error', $e->getMessage());
-        }
+        return to_route('purchase.index')->with('success', 'Purchase Delete Request Sent to Branch Admin');
     }
 
     public function getSignleProduct($id, $vendor)
     {
         $product = products::with('units')->find($id);
 
-         $purchases = purchase::where('vendorID', $vendor)->orderby('id','desc')->take('10')->pluck('id')->toArray();
+        $purchases = purchase::where('vendorID', $vendor)->orderby('id', 'desc')->take('10')->pluck('id')->toArray();
 
         // Get latest record to preserve expected fields in the view (price, fright, labor, claim, netprice)
         $latest = purchase_details::whereIn('purchaseID', $purchases)
@@ -431,9 +402,8 @@ class PurchaseController extends Controller
             ->select('price', 'fright', 'labor', 'claim', 'netprice', 'discount', 'discountp')
             ->first();
 
-        
-
         $product->last_price = $latest ?? ['price' => 0, 'discount' => 0, 'discountp' => 0, 'fright' => 0, 'labor' => 0, 'claim' => 0, 'netprice' => 0];
+
         return $product;
     }
 }

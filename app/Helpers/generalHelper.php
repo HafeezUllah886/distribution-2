@@ -335,4 +335,6 @@ function storeDeleteRequest($user_id, $branchID, $refID, $model, $notes)
         'notes' => $notes,
     ]);
 
+    return 1;
+
 }

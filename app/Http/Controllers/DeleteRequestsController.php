@@ -9,6 +9,8 @@ use App\Models\expenses;
 use App\Models\method_transactions;
 use App\Models\order_delivery;
 use App\Models\orders;
+use App\Models\purchase;
+use App\Models\purchase_order_delivery;
 use App\Models\sales;
 use App\Models\staffPayments;
 use App\Models\stock;
@@ -58,6 +60,9 @@ class DeleteRequestsController extends Controller
         }
         if ($deleteRequest->model == 'expenses') {
             $result = $this->deleteExpense($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'purchase') {
+            $result = $this->deletePurchase($deleteRequest->refID);
         }
 
         // Generic approval for other models if any
@@ -173,6 +178,39 @@ class DeleteRequestsController extends Controller
 
             return [
                 'msg' => 'Expense Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deletePurchase($ref)
+    {
+
+        try {
+            DB::beginTransaction();
+            $purchase = purchase::where('refID', $ref)->first();
+
+            foreach ($purchase->details as $product) {
+                stock::where('refID', $product->refID)->delete();
+                $product->delete();
+            }
+            transactions::where('refID', $purchase->refID)->delete();
+            purchase_order_delivery::where('purchaseID', $purchase->id)->delete();
+            $purchase->delete();
+
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Purchase Deleted',
                 'status' => 'success',
             ];
         } catch (\Exception $e) {
