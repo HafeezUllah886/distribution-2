@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StockTransfer;
-use App\Http\Controllers\Controller;
 use App\Models\product_units;
 use App\Models\products;
-use App\Models\stock;
+use App\Models\StockTransfer;
 use App\Models\StockTransferDetails;
 use App\Models\warehouses;
 use Illuminate\Http\Request;
@@ -23,7 +21,7 @@ class StockTransferController extends Controller
         $to = $request->end ?? date('Y-m-d');
         $stockTransfers = StockTransfer::with('details')->where('branchID', auth()->user()->branchID)->whereBetween('date', [$from, $to])->get();
         $warehouses = warehouses::currentBranch()->get();
-       
+
         return view('stock.transfer.index', compact('stockTransfers', 'warehouses', 'from', 'to'));
     }
 
@@ -32,15 +30,15 @@ class StockTransferController extends Controller
      */
     public function create(Request $request)
     {
-        if($request->fromWarehouse == $request->toWarehouse){
+        if ($request->fromWarehouse == $request->toWarehouse) {
             return redirect()->back()->with('error', 'From and To Warehouse cannot be the same');
         }
-            $warehouseFrom = warehouses::find($request->fromWarehouse);
-            $warehouseTo = warehouses::find($request->toWarehouse);
-            $products = products::currentBranch()->get();
-            foreach($products as $product){
-               $product->stock = getWarehouseProductStock($product->id, $warehouseFrom->id);
-            }
+        $warehouseFrom = warehouses::find($request->fromWarehouse);
+        $warehouseTo = warehouses::find($request->toWarehouse);
+        $products = products::currentBranch()->get();
+        foreach ($products as $product) {
+            $product->stock = getWarehouseProductStock($product->id, $warehouseFrom->id);
+        }
 
         return view('stock.transfer.create', compact('products', 'warehouseFrom', 'warehouseTo'));
     }
@@ -50,7 +48,7 @@ class StockTransferController extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        try {
             DB::beginTransaction();
             $ref = getRef();
             $stockTransfer = StockTransfer::create([
@@ -65,21 +63,20 @@ class StockTransferController extends Controller
 
             $ids = $request->id;
 
-            foreach($ids as $key => $id)
-            {
+            foreach ($ids as $key => $id) {
                 $unit = product_units::find($request->unit[$key]);
-                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                $pc = $request->loose[$key] + ($request->qty[$key] * $unit->value);
 
                 StockTransferDetails::create(
                     [
                         'stockTransferID' => $stockTransfer->id,
-                        'productID'       => $id,
-                        'branchID'        => Auth()->user()->branchID,
-                        'qty'             => $request->qty[$key],
-                        'loose'           => $request->loose[$key],
-                        'pc'              => $pc,
-                        'unitID'          => $unit->id,
-                        'refID'         => $ref,
+                        'productID' => $id,
+                        'branchID' => Auth()->user()->branchID,
+                        'qty' => $request->qty[$key],
+                        'loose' => $request->loose[$key],
+                        'pc' => $pc,
+                        'unitID' => $unit->id,
+                        'refID' => $ref,
                     ]
                 );
                 $fromWarehouse = warehouses::find($request->fromWarehouse);
@@ -88,9 +85,11 @@ class StockTransferController extends Controller
                 createStock($id, $pc, 0, now(), "Transfered from $fromWarehouse->name:  $request->notes", $ref, $toWarehouse->id);
             }
             DB::commit();
+
             return redirect()->route('stockTransfers.index')->with('success', 'Stock Transfer Created Successfully');
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
+
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -101,6 +100,7 @@ class StockTransferController extends Controller
     public function show($id)
     {
         $stockTransfer = StockTransfer::with('details')->find($id);
+
         return view('stock.transfer.details', compact('stockTransfer'));
     }
 
@@ -125,22 +125,16 @@ class StockTransferController extends Controller
      */
     public function destroy($ref)
     {
-        try
-        {
-            DB::beginTransaction();
-            $transfer = StockTransfer::where('refID', $ref)->first();
-            stock::where('refID', $ref)->delete();
-            $transfer->details()->delete();
-            $transfer->delete();
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('stockTransfers.index')->with('success', "Stock Transfer Deleted");
+        $transfer = StockTransfer::where('refID', $ref)->first();
+        $warehouseFrom = warehouses::find($transfer->from);
+        $warehouseTo = warehouses::find($transfer->to);
+        $notes = "Stock Transfer Date: $transfer->date | From: $warehouseFrom->name | To: $warehouseTo->name | Notes: $transfer->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, $transfer->branchID, $transfer->refID, 'stock_transfer', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('stockTransfers.index')->with('error', $e->getMessage());
-        }
+
+        return to_route('stockTransfers.index')->with('success', 'Stock Transfer Delete Request Sent to Branch Admin');
     }
 }

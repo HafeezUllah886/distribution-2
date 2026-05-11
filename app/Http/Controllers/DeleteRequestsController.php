@@ -7,15 +7,18 @@ use App\Models\currency_transactions;
 use App\Models\delete_requests;
 use App\Models\expenses;
 use App\Models\method_transactions;
+use App\Models\obsolete_stock;
 use App\Models\order_delivery;
 use App\Models\orders;
 use App\Models\purchase;
+use App\Models\purchase_order;
 use App\Models\purchase_order_delivery;
 use App\Models\returns;
 use App\Models\sale_payments;
 use App\Models\sales;
 use App\Models\staffPayments;
 use App\Models\stock;
+use App\Models\StockTransfer;
 use App\Models\transactions;
 use App\Models\users_transactions;
 use Carbon\Carbon;
@@ -68,6 +71,12 @@ class DeleteRequestsController extends Controller
         }
         if ($deleteRequest->model == 'returns') {
             $result = $this->deleteSalesReturns($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'stock_transfer') {
+            $result = $this->deleteStockTransfer($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'obsolete_stock') {
+            $result = $this->deleteObsoleteStock($deleteRequest->refID);
         }
 
         // Generic approval for other models if any
@@ -259,5 +268,79 @@ class DeleteRequestsController extends Controller
                 'status' => 'error',
             ];
         }
+    }
+
+    public function deletePurchaseOrder($ref)
+    {
+        try {
+            $order = purchase_order::where('refID', $ref)->first();
+            $order->details()->delete();
+            $order->delete();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Purchase Order Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteStockTransfer($ref)
+    {
+        try {
+            DB::beginTransaction();
+            $transfer = StockTransfer::where('refID', $ref)->first();
+            stock::where('refID', $ref)->delete();
+            $transfer->details()->delete();
+            $transfer->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Stock Transfer Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteObsoleteStock($ref)
+    {
+
+        try {
+            DB::beginTransaction();
+            obsolete_stock::where('refID', $ref)->delete();
+            stock::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Obsolete Stock Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+
     }
 }

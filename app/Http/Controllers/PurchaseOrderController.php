@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\purchase_order;
-use App\Http\Controllers\Controller;
 use App\Models\accounts;
-use App\Models\expenses;
 use App\Models\product_units;
 use App\Models\products;
 use App\Models\purchase;
-use App\Models\purchase_details;
+use App\Models\purchase_order;
 use App\Models\purchase_order_delivery;
 use App\Models\purchase_order_details;
 use App\Models\units;
-use App\Models\warehouses;
 use App\purchaseOrderTrait;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,8 +17,8 @@ use Illuminate\Support\Facades\DB;
 
 class PurchaseOrderController extends Controller
 {
-
     use purchaseOrderTrait;
+
     /**
      * Display a listing of the resource.
      */
@@ -33,7 +29,7 @@ class PurchaseOrderController extends Controller
         $vendorID = $request->vendorID ?? 'All';
         $status = $request->status ?? 'All';
 
-        $orders = purchase_order::whereBetween("date", [$start, $end])->where('branchID', auth()->user()->branchID)->orderby('id', 'desc');
+        $orders = purchase_order::whereBetween('date', [$start, $end])->where('branchID', auth()->user()->branchID)->orderby('id', 'desc');
         if ($vendorID != 'All') {
             $orders->where('vendorID', $vendorID);
         }
@@ -42,10 +38,11 @@ class PurchaseOrderController extends Controller
         }
         $orders = $orders->get();
         $vendors = accounts::vendor()->currentBranch()->get();
+
         return view('purchase_order.index', compact('orders', 'start', 'end', 'vendors', 'vendorID', 'status'));
     }
 
-    /** 
+    /**
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
@@ -53,7 +50,7 @@ class PurchaseOrderController extends Controller
         $products = products::active()->vendor($request->vendorID)->orderby('name', 'asc')->get();
         $units = units::all();
         $vendor = accounts::find($request->vendorID);
-       
+
         return view('purchase_order.create', compact('products', 'units', 'vendor'));
     }
 
@@ -62,27 +59,25 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
-        try
-        {
-            if($request->isNotFilled('id'))
-            {
+        try {
+            if ($request->isNotFilled('id')) {
                 throw new Exception('Please Select Atleast One Product');
             }
             DB::beginTransaction();
             $ref = getRef();
             $order = purchase_order::create(
                 [
-                  'vendorID'        => $request->vendorID,
-                  'branchID'        => Auth()->user()->branchID,
-                  'date'            => $request->date,
-                  'notes'           => $request->notes,
-                  'bilty'           => $request->bilty,
-                  'vehicle'         => $request->vehicle,
-                  'driver_name'     => $request->driver,
-                  'driver_contact'  => $request->driver_contact,
-                  'transporter'     => $request->transporter,
-                  'inv'             => $request->inv,
-                  'refID'           => $ref,
+                    'vendorID' => $request->vendorID,
+                    'branchID' => Auth()->user()->branchID,
+                    'date' => $request->date,
+                    'notes' => $request->notes,
+                    'bilty' => $request->bilty,
+                    'vehicle' => $request->vehicle,
+                    'driver_name' => $request->driver,
+                    'driver_contact' => $request->driver_contact,
+                    'transporter' => $request->transporter,
+                    'inv' => $request->inv,
+                    'refID' => $ref,
                 ]
             );
 
@@ -91,11 +86,10 @@ class PurchaseOrderController extends Controller
             $totalLabor = 0;
             $totalFreight = 0;
 
-            foreach($ids as $key => $id)
-            {
+            foreach ($ids as $key => $id) {
                 $unit = product_units::find($request->unit[$key]);
                 $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
-                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                $pc = $request->loose[$key] + ($request->qty[$key] * $unit->value);
                 $price = $request->price[$key];
                 $discount = $request->discount[$key];
                 $claim = $request->claim[$key];
@@ -105,40 +99,39 @@ class PurchaseOrderController extends Controller
                 $price_amount = $price * $pc;
                 $total += $amount;
                 $totalLabor += $request->labor[$key] * $pc;
-                 $totalFreight += $request->fright[$key] * $pc;
+                $totalFreight += $request->fright[$key] * $pc;
 
                 purchase_order_details::create(
                     [
-                        'orderID'       => $order->id,
-                        'productID'     => $id,
-                        'price'         => $price,
-                        'discount'      => $discount,
-                        'discountp'     => $request->discountp[$key],
+                        'orderID' => $order->id,
+                        'productID' => $id,
+                        'price' => $price,
+                        'discount' => $discount,
+                        'discountp' => $request->discountp[$key],
                         'discountvalue' => $discountvalue,
-                        'qty'           => $request->qty[$key],
-                        'pc'            => $pc,
-                        'loose'         => $request->loose[$key],
-                        'netprice'      => $netPrice,
-                        'amount'        => $amount,
-                        'price_amount'  => $price_amount,
-                        'date'          => $request->date,
-                        'bonus'         => $request->bonus[$key],
-                        'labor'         => $request->labor[$key],
-                        'fright'        => $request->fright[$key],
-                        'claim'         => $claim,
-                        'unitID'        => $unit->id,
-                        'refID'         => $ref,
+                        'qty' => $request->qty[$key],
+                        'pc' => $pc,
+                        'loose' => $request->loose[$key],
+                        'netprice' => $netPrice,
+                        'amount' => $amount,
+                        'price_amount' => $price_amount,
+                        'date' => $request->date,
+                        'bonus' => $request->bonus[$key],
+                        'labor' => $request->labor[$key],
+                        'fright' => $request->fright[$key],
+                        'claim' => $claim,
+                        'unitID' => $unit->id,
+                        'refID' => $ref,
                     ]
                 );
             }
 
-
             DB::commit();
-            return back()->with('success', "Purchase Order Created");
-        }
-        catch(\Exception $e)
-        {
+
+            return back()->with('success', 'Purchase Order Created');
+        } catch (\Exception $e) {
             DB::rollback();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -150,6 +143,7 @@ class PurchaseOrderController extends Controller
     {
         $this->checkStatus($id);
         $order = purchase_order::with('vendor', 'details.product', 'details.unit')->findOrFail($id);
+
         return view('purchase_order.view', compact('order'));
     }
 
@@ -163,15 +157,14 @@ class PurchaseOrderController extends Controller
         $order = purchase_order::with('vendor', 'details.product', 'details.unit')->findOrFail($id);
         $products = products::active()->vendor($order->vendorID)->orderby('name', 'asc')->get();
 
-        foreach($order->details as $product)
-        {
+        foreach ($order->details as $product) {
             $received = purchase_order_delivery::where('orderID', $id)->where('productID', $product->productID)->sum('pc');
             $product->received = $received;
         }
-        
 
         $units = units::all();
         $vendor = accounts::find($order->vendorID);
+
         return view('purchase_order.edit', compact('order', 'products', 'units', 'vendor'));
     }
 
@@ -183,34 +176,32 @@ class PurchaseOrderController extends Controller
         $this->checkStatus($id);
         $this->validateOrder($id);
 
-        try
-        {
+        try {
             DB::beginTransaction();
 
             $order = purchase_order::findOrFail($id);
             $order->details()->delete();
 
             $order->update([
-                'vendorID'        => $request->vendorID,
-                'date'            => $request->date,
-                'notes'           => $request->notes,
-                'bilty'           => $request->bilty,
-                'driver_name'     => $request->driver,
-                'vehicle'         => $request->vehicle,
-                'driver_contact'  => $request->driver_contact,
-                'transporter'     => $request->transporter,
-                'inv'             => $request->inv,
+                'vendorID' => $request->vendorID,
+                'date' => $request->date,
+                'notes' => $request->notes,
+                'bilty' => $request->bilty,
+                'driver_name' => $request->driver,
+                'vehicle' => $request->vehicle,
+                'driver_contact' => $request->driver_contact,
+                'transporter' => $request->transporter,
+                'inv' => $request->inv,
             ]);
 
             $ids = $request->id;
             $total = 0;
             $totalLabor = 0;
 
-            foreach($ids as $key => $id)
-            {
+            foreach ($ids as $key => $id) {
                 $unit = product_units::find($request->unit[$key]);
                 $qty = ($request->qty[$key] * $unit->value) + $request->bonus[$key] + $request->loose[$key];
-                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                $pc = $request->loose[$key] + ($request->qty[$key] * $unit->value);
                 $price = $request->price[$key];
                 $discount = $request->discount[$key];
                 $claim = $request->claim[$key];
@@ -223,35 +214,35 @@ class PurchaseOrderController extends Controller
 
                 purchase_order_details::create(
                     [
-                        'orderID'       => $order->id,
-                        'productID'     => $id,
-                        'price'         => $price,
-                        'discount'      => $discount,
-                        'discountp'     => $request->discountp[$key],
+                        'orderID' => $order->id,
+                        'productID' => $id,
+                        'price' => $price,
+                        'discount' => $discount,
+                        'discountp' => $request->discountp[$key],
                         'discountvalue' => $discountvalue,
-                        'qty'           => $request->qty[$key],
-                        'pc'            => $pc,
-                        'loose'         => $request->loose[$key],
-                        'netprice'      => $netPrice,
-                        'amount'        => $amount,
-                        'price_amount'  => $price_amount,
-                        'date'          => $request->date,
-                        'bonus'         => $request->bonus[$key],
-                        'labor'         => $request->labor[$key],
-                        'fright'        => $request->fright[$key],
-                        'claim'         => $claim,
-                        'unitID'        => $unit->id,
-                        'refID'         => $order->refID,
+                        'qty' => $request->qty[$key],
+                        'pc' => $pc,
+                        'loose' => $request->loose[$key],
+                        'netprice' => $netPrice,
+                        'amount' => $amount,
+                        'price_amount' => $price_amount,
+                        'date' => $request->date,
+                        'bonus' => $request->bonus[$key],
+                        'labor' => $request->labor[$key],
+                        'fright' => $request->fright[$key],
+                        'claim' => $claim,
+                        'unitID' => $unit->id,
+                        'refID' => $order->refID,
                     ]
                 );
             }
 
             DB::commit();
-            return back()->with('success', "Purchase Order Updated");
-        }
-        catch(\Exception $e)
-        {
+
+            return back()->with('success', 'Purchase Order Updated');
+        } catch (\Exception $e) {
             DB::rollback();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -261,32 +252,28 @@ class PurchaseOrderController extends Controller
      */
     public function delete($id)
     {
-        try
-        {
-            $order = purchase_order::findOrFail($id);
-            $order->details()->delete();
-            $order->delete();
-            session()->forget('confirmed_password');
-            return to_route('purchase_order.index')->with('success', "Purchase Order Deleted");
+        $order = purchase_order::findOrFail($id);
+        $vendor = accounts::findOrFail($order->vendorID);
+        $notes = "Purchase Order Date: $order->date | Purchase Order No.: $order->id | Purchase Order Amount: $order->net | Vendor : $vendor->title | Notes: $order->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, $order->branchID, $order->refID, 'purchase_order', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
-        catch(\Exception $e)
-        {
-            session()->forget('confirmed_password');
-            return to_route('purchase_order.index')->with('error', $e->getMessage());
-        }
+
+        return to_route('purchase_order.index')->with('success', 'Purchase Order Delete Request Sent to Branch Admin');
     }
 
     public function validateOrder($id)
     {
         $order = purchase_order::findOrFail($id);
 
-     /*    if($order->status != "Pending")
-        {
-            return redirect()->route('purchase_order.index')->with('error', 'Order cannot be edited');
-        } */
+        /*    if($order->status != "Pending")
+           {
+               return redirect()->route('purchase_order.index')->with('error', 'Order cannot be edited');
+           } */
 
-        if($order->branchID != Auth()->user()->branchID)
-        {
+        if ($order->branchID != Auth()->user()->branchID) {
             return redirect()->route('purchase_order.index')->with('error', 'Order does not belong to current branch');
         }
 
@@ -296,28 +283,23 @@ class PurchaseOrderController extends Controller
     public function checkStatus($orderID)
     {
         $order = purchase_order::findOrFail($orderID);
-       
-            $order_pc = $order->details->sum('pc');
-            $delivered_pc = $order->delivered_items->sum('pc');
 
-            if($order_pc == $delivered_pc)
-            {
-                $order->status = "Completed";
-              
-            }
+        $order_pc = $order->details->sum('pc');
+        $delivered_pc = $order->delivered_items->sum('pc');
 
-            if($order_pc > $delivered_pc)
-            {
-                $order->status = "Under Process";
-               
-            }
-            if($delivered_pc == 0)
-            {
-                $order->status = "Pending";
-               
-            }
-            $order->save();
+        if ($order_pc == $delivered_pc) {
+            $order->status = 'Completed';
+
+        }
+
+        if ($order_pc > $delivered_pc) {
+            $order->status = 'Under Process';
+
+        }
+        if ($delivered_pc == 0) {
+            $order->status = 'Pending';
+
+        }
+        $order->save();
     }
-
-
 }

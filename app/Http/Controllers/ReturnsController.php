@@ -298,8 +298,9 @@ class ReturnsController extends Controller
     public function destroy($id)
     {
         $return = returns::find($id);
-
-        $notes = "Sales Return Date: $return->date | Sales Return No.: $return->id | Sales Return Amount: $return->net | Customer : $return->customer->title | Orderbooker : $return->orderbooker->title | Sales Return Notes: $return->notes";
+        $customer = $return->customer;
+        $orderbooker = $return->orderbooker;
+        $notes = "Sales Return Date: $return->date | Sales Return No.: $return->id | Sales Return Amount: $return->net | Customer : $customer->title | Orderbooker : $orderbooker->name | Sales Return Notes: $return->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $return->branchID, $return->refID, 'returns', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {

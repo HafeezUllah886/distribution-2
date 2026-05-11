@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\obsolete_stock;
-use App\Http\Controllers\Controller;
 use App\Models\product_units;
 use App\Models\products;
-use App\Models\stock;
 use App\Models\warehouses;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,14 +19,13 @@ class ObsoleteStockController extends Controller
     {
         $from = $request->start ?? date('Y-m-d');
         $to = $request->end ?? date('Y-m-d');
-        $reason = $request->reason ?? "All";
-        $obsoletes = obsolete_stock::currentBranch()->whereBetween("date", [$from, $to])->orderBy('id', 'desc');
-        if($reason != "All")
-        {
+        $reason = $request->reason ?? 'All';
+        $obsoletes = obsolete_stock::currentBranch()->whereBetween('date', [$from, $to])->orderBy('id', 'desc');
+        if ($reason != 'All') {
             $obsoletes->where('reason', $reason);
         }
         $obsoletes = $obsoletes->get();
-        
+
         return view('stock.obsolete.index', compact('obsoletes', 'from', 'to', 'reason'));
     }
 
@@ -39,6 +36,7 @@ class ObsoleteStockController extends Controller
     {
         $products = products::currentBranch()->get();
         $warehouses = warehouses::currentBranch()->get();
+
         return view('stock.obsolete.create', compact('products', 'warehouses'));
     }
 
@@ -47,52 +45,49 @@ class ObsoleteStockController extends Controller
      */
     public function store(Request $request)
     {
-        try
-        {
-            if($request->isNotFilled('id'))
-            {
+        try {
+            if ($request->isNotFilled('id')) {
                 throw new Exception('Please Select Atleast One Product');
-            } 
+            }
             DB::beginTransaction();
-            foreach($request->id as $key => $id)
-            {
+            foreach ($request->id as $key => $id) {
                 $unit = product_units::find($request->unit[$key]);
-                $pc =   $request->loose[$key] + ($request->qty[$key] * $unit->value);
+                $pc = $request->loose[$key] + ($request->qty[$key] * $unit->value);
                 $amount = $request->price[$key] * $pc;
                 $ref = getRef();
 
                 obsolete_stock::create(
                     [
-                        'productID'       => $id,
-                        'branchID'        => Auth()->user()->branchID,
-                        'warehouseID'     => $request->warehouseID,
-                        'unitID'          => $request->unit[$key],
-                        'unitValue'       => $unit->value,
-                        'pc'              => $pc,
-                        'qty'             => $request->qty[$key],
-                        'loose'           => $request->loose[$key],
-                        'reason'          => $request->reason[$key],
-                        'date'            => $request->date,
-                        'notes'           => $request->notes[$key],
-                        'refID'           => $ref,
-                        'amount'          => $amount,
-                        'price'           => $request->price[$key],
+                        'productID' => $id,
+                        'branchID' => Auth()->user()->branchID,
+                        'warehouseID' => $request->warehouseID,
+                        'unitID' => $request->unit[$key],
+                        'unitValue' => $unit->value,
+                        'pc' => $pc,
+                        'qty' => $request->qty[$key],
+                        'loose' => $request->loose[$key],
+                        'reason' => $request->reason[$key],
+                        'date' => $request->date,
+                        'notes' => $request->notes[$key],
+                        'refID' => $ref,
+                        'amount' => $amount,
+                        'price' => $request->price[$key],
                     ]
                 );
 
                 $reason = $request->reason[$key];
                 $notes = $request->notes[$key];
                 createStock($id, 0, $pc, $request->date, "Obsolete | $reason | $notes", $ref, $request->warehouseID);
-            }       
+            }
 
             DB::commit();
-            return back()->with('success', "Obsolete Stock Created");
-        }
-        catch(\Exception $e)
-        {
+
+            return back()->with('success', 'Obsolete Stock Created');
+        } catch (\Exception $e) {
             DB::rollback();
+
             return back()->with('error', $e->getMessage());
-        } 
+        }
     }
 
     /**
@@ -124,22 +119,16 @@ class ObsoleteStockController extends Controller
      */
     public function destroy($ref)
     {
+        $obsolete = obsolete_stock::where('refID', $ref)->first();
+        $warehouse = warehouses::find($obsolete->warehouseID);
+        $notes = "Obsolete Stock Date: $obsolete->date | Warehouse: $warehouse->name | Reason: $obsolete->reason | Notes: $obsolete->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, $obsolete->branchID, $obsolete->refID, 'obsolete_stock', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
+        }
 
-        try
-        {
-            DB::beginTransaction();
-            obsolete_stock::where('refID', $ref)->delete();
-            stock::where('refID', $ref)->delete();
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('obsolete.index')->with('success', "Obsolete Stock Deleted");
-        }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('obsolete.index')->with('error', $e->getMessage());
-        }
-        
+        return to_route('obsolete.index')->with('success', 'Obsolete Stock Delete Request Sent to Branch Admin');
+
     }
 }
