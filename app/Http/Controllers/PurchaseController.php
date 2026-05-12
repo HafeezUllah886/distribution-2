@@ -379,7 +379,9 @@ class PurchaseController extends Controller
 
         $purchase = purchase::find($id);
         $vendor = $purchase->vendor->title;
-        $notes = "Purchase Date: $purchase->orderdate | Purchase No.: $id | Purchase Amount: $purchase->net | Vendor : $vendor | Bilty No. : $purchase->bilty | Transporter: $purchase->transporter | Purchase Notes: $purchase->notes";
+        $unloader = $purchase->unloader ? $purchase->unloader->title : 'N/A';
+        $warehouse = $purchase->warehouse ? $purchase->warehouse->title : 'N/A';
+        $notes = "Purchase Date: $purchase->orderdate | Purchase No.: $id | Purchase Amount: $purchase->net | Vendor : $vendor | Bilty No. : $purchase->bilty | Transporter: $purchase->transporter | Purchase Notes: $purchase->notes | UNLOADER: $unloader | WAREHOUSE: $warehouse | DRIVER NAME: $purchase->driver_name | VEHICLE NO.: $purchase->cno | FREIGHT STATUS: $purchase->freight_status";
         $delete = storeDeleteRequest(auth()->user()->id, $purchase->branchID, $purchase->refID, 'purchase', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {
