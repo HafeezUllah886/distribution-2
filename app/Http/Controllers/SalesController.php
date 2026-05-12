@@ -422,7 +422,7 @@ class SalesController extends Controller
         $customer = accounts::find($sale->customerID)->title;
         $area = $sale->customer->area->name;
         $address = $sale->customer->address;
-        $orderbooker = accounts::find($sale->orderbookerID)->title;
+        $orderbooker = User::find($sale->orderbookerID)->name;
         $supplyman = accounts::find($sale->supplymanID)->title;
         $notes = "Invoice Date: $sale->date | Invoice No.: $id | Invoice Amount: $sale->net | Customer : $customer | Area : $area | Address : $address | Orderbooker : $orderbooker | Supplyman : $supplyman Bilty No. : $sale->bilty | Transporter: $sale->transporter | Sale Notes: $sale->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $sale->branchID, $sale->refID, 'sales', $notes);
