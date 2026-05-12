@@ -254,7 +254,7 @@ class PurchaseOrderController extends Controller
     {
         $order = purchase_order::findOrFail($id);
         $vendor = accounts::findOrFail($order->vendorID);
-        $notes = "Purchase Order Date: $order->date | Purchase Order No.: $order->id | Purchase Order Amount: $order->net | Vendor : $vendor->title | Notes: $order->notes";
+        $notes = "Purchase Order Date: $order->date | Purchase Order No. #$order->id | Vendor : $vendor->title | Notes: $order->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $order->branchID, $order->refID, 'purchase_order', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {

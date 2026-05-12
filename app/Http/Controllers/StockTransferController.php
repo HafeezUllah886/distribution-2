@@ -6,6 +6,7 @@ use App\Models\product_units;
 use App\Models\products;
 use App\Models\StockTransfer;
 use App\Models\StockTransferDetails;
+use App\Models\User;
 use App\Models\warehouses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -128,7 +129,8 @@ class StockTransferController extends Controller
         $transfer = StockTransfer::where('refID', $ref)->first();
         $warehouseFrom = warehouses::find($transfer->from);
         $warehouseTo = warehouses::find($transfer->to);
-        $notes = "Stock Transfer Date: $transfer->date | From: $warehouseFrom->name | To: $warehouseTo->name | Notes: $transfer->notes";
+        $created_by = User::find($transfer->createdBy)->name;
+        $notes = "Stock Transfer Date: $transfer->date | From: $warehouseFrom->name | To: $warehouseTo->name | Notes: $transfer->notes | Created By: $created_by";
         $delete = storeDeleteRequest(auth()->user()->id, $transfer->branchID, $transfer->refID, 'stock_transfer', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {
