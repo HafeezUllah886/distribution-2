@@ -103,21 +103,16 @@ class GenerateSalaryController extends Controller
      */
     public function delete($ref)
     {
-        try {
-            DB::beginTransaction();
-            $salary = generate_salary::where('refID', $ref)->first();
-            if (!$salary) {
-                return redirect()->back()->with('error', 'Salary not found');
-            }
-            employee_ledger::where('refID', $ref)->delete();
-            $salary->delete();
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('generate_salary.index')->with('success', 'Salary deleted successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->back()->with('error', $e->getMessage());
+        $salary = generate_salary::where('refID', $ref)->first();
+        $employee = employee::find($salary->employeeID);
+        $month = date('F Y', strtotime($salary->month));
+        $notes = "Generate Salary Employee: $employee->name | Month: $month | Amount: $salary->amount";
+        $delete = storeDeleteRequest(auth()->user()->id, $salary->branchID, $salary->refID, 'generate_salary', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
+
+        return to_route('generate_salary.index')->with('success', 'Generate Salary Delete Request Sent to Branch Admin');
     }
 }

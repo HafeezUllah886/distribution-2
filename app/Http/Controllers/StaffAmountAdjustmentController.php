@@ -136,24 +136,16 @@ class StaffAmountAdjustmentController extends Controller
     
     public function delete($ref)
     {
-        try
-        {
-            DB::beginTransaction();
-            staffAmountAdjustment::where('refID', $ref)->delete();
-            users_transactions::where('refID', $ref)->delete();
-            currency_transactions::where('refID', $ref)->delete();
-            method_transactions::where('refID', $ref)->delete();
-            cheques::where('refID', $ref)->delete();
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('staff_amounts_adjustments.index')->with('success', "Adjustment Deleted");
+        $adj = staffAmountAdjustment::where('refID', $ref)->first();
+        $staff = User::find($adj->staffID);
+        $notes = "Staff Amount Adjustment Date: $adj->date | Staff: $staff->name | Type: $adj->type | Amount: $adj->amount | Notes: $adj->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, $adj->branchID, $adj->refID, 'staff_amount_adjustment', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('staff_amounts_adjustments.index')->with('error', $e->getMessage());
-        }
+
+        return to_route('staff_amounts_adjustments.index')->with('success', 'Staff Amount Adjustment Delete Request Sent to Branch Admin');
     }
 }
 

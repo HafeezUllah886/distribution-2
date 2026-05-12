@@ -145,27 +145,16 @@ class CustomerAdvancePaymentController extends Controller
      */
     public function delete($ref)
     {
-        try{
-            DB::beginTransaction();
-            customerAdvanceConsumption::where('refID', $ref)->delete();
-            CustomerAdvancePayment::where('refID', $ref)->delete();
-            sale_payments::where('refID', $ref)->delete();
-            transactions::where('refID', $ref)->delete();
-            currency_transactions::where('refID', $ref)->delete();
-            users_transactions::where('refID', $ref)->delete();
-            method_transactions::where('refID', $ref)->delete();
-            transactions_que::where('refID', $ref)->delete();
-            cheques::where('refID', $ref)->delete();
-            DB::commit();
-            session()->forget('confirmed_password');
-            return to_route('customer_advances.index')->with('success', "Payment Deleted");
+        $advance = CustomerAdvancePayment::where('refID', $ref)->first();
+        $customer = accounts::find($advance->customerID);
+        $notes = "Customer Advance Date: $advance->date | Customer: $customer->title | Method: $advance->method | Amount: $advance->amount";
+        $delete = storeDeleteRequest(auth()->user()->id, $advance->branchID, $advance->refID, 'customer_advance', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return to_route('customer_advances.index')->with('error', $e->getMessage());
-        }
+
+        return to_route('customer_advances.index')->with('success', 'Customer Advance Delete Request Sent to Branch Admin');
     }
 
     public function pay($id)

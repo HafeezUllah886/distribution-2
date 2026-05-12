@@ -264,36 +264,14 @@ class FixedAssetsController extends Controller
      */
     public function delete($ref)
     {
-        try
-        {
-            DB::beginTransaction();
-            $fixed = fixed_assets::where('refID', $ref)->first();
-            if($fixed->status() == 'Sold')
-            {
-                $sale = fixed_assets_sales::where('fixedAssetID', $fixed->id)->first();
-               
-                users_transactions::where('refID', $sale->refID)->delete();
-                currency_transactions::where('refID', $sale->refID)->delete();
-                method_transactions::where('refID', $sale->refID)->delete();
-                cheques::where('refID', $sale->refID)->delete();
-                staffPayments::where('refID', $sale->refID)->delete();
-                 $sale->delete();
-            }
-            $fixed->delete();
-            users_transactions::where('refID', $ref)->delete();
-            currency_transactions::where('refID', $ref)->delete();
-            method_transactions::where('refID', $ref)->delete();
-            cheques::where('refID', $ref)->delete();
-            staffPayments::where('refID', $ref)->delete();
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('fixed_assets.index')->with('success', "Expense Deleted");
+        $asset = fixed_assets::where('refID', $ref)->first();
+        $notes = "Fixed Asset: $asset->name | Purchase Date: $asset->purchase_date | Purchase Price: $asset->purchase_price | Status: ".$asset->status();
+        $delete = storeDeleteRequest(auth()->user()->id, $asset->branchID, $asset->refID, 'fixed_asset', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('fixed_assets.index')->with('error', $e->getMessage());
-        }
+
+        return to_route('fixed_assets.index')->with('success', 'Fixed Asset Delete Request Sent to Branch Admin');
     }
 }

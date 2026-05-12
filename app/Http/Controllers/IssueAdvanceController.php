@@ -175,23 +175,15 @@ class IssueAdvanceController extends Controller
      */
     public function delete($ref)
     {
-        try {
-            DB::beginTransaction();
-            issue_advance::where('refID', $ref)->delete();
-            transactions::where('refID', $ref)->delete();
-            users_transactions::where('refID', $ref)->delete();
-            currency_transactions::where('refID', $ref)->delete();
-            method_transactions::where('refID', $ref)->delete();
-            cheques::where('refID', $ref)->delete();
-            employee_ledger::where('refID', $ref)->delete();
-            
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('issue_advance.index')->with('success', "Advance Deleted");
-        } catch (\Exception $e) {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('issue_advance.index')->with('error', $e->getMessage());
+        $advance = issue_advance::where('refID', $ref)->first();
+        $employee = employee::find($advance->employeeID);
+        $notes = "Issue Advance Date: $advance->date | Employee: $employee->name | Amount: $advance->amount | Notes: $advance->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, $advance->branchID, $advance->refID, 'issue_advance', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
+
+        return to_route('issue_advance.index')->with('success', 'Issue Advance Delete Request Sent to Branch Admin');
     }
 }

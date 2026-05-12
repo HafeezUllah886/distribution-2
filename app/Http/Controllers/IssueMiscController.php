@@ -172,23 +172,15 @@ class IssueMiscController extends Controller
      */
     public function delete($ref)
     {
-        try {
-            DB::beginTransaction();
-            issue_misc::where('refID', $ref)->delete();
-            transactions::where('refID', $ref)->delete();
-            users_transactions::where('refID', $ref)->delete();
-            currency_transactions::where('refID', $ref)->delete();
-            method_transactions::where('refID', $ref)->delete();
-            cheques::where('refID', $ref)->delete();
-            employee_ledger::where('refID', $ref)->delete();
-            
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('issue_misc.index')->with('success', "Misc Deleted");
-        } catch (\Exception $e) {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('issue_misc.index')->with('error', $e->getMessage());
+        $misc = issue_misc::where('refID', $ref)->first();
+        $employee = employee::find($misc->employeeID);
+        $notes = "Issue Misc Date: $misc->date | Employee: $employee->name | Amount: $misc->amount | Notes: $misc->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, $misc->branchID, $misc->refID, 'issue_misc', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
+
+        return to_route('issue_misc.index')->with('success', 'Issue Misc Delete Request Sent to Branch Admin');
     }
 }

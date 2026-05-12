@@ -2,19 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\area;
-use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
-use App\Models\method_transactions;
 use App\Models\payments;
-use App\Models\staffPayments;
-use App\Models\transactions;
-use App\Models\transactions_que;
 use App\Models\User;
-use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -31,21 +24,17 @@ class PaymentsController extends Controller
         $area = $request->area ?? 'All';
 
         $payments = payments::currentBranch()->whereBetween('date', [$start, $end])->orderBy('id', 'desc');
-        if($type != 'All')
-        {
+        if ($type != 'All') {
             $accounts = accounts::where('type', $type)->currentBranch()->active()->get();
             $payments = $payments->whereIn('receiverID', $accounts->pluck('id'));
             $type = [$type];
-        }
-        else
-        {
+        } else {
             $type = ['Business', 'Vendor', 'Supply Man', 'Unloader', 'Customer', 'Freight', 'Personal'];
         }
         $payments = $payments->get();
 
         $receivers = accounts::whereIn('type', $type)->currentBranch()->active();
-        if($area != 'All')
-        {
+        if ($area != 'All') {
             $receivers = $receivers->where('areaID', $area);
         }
         $receivers = $receivers->get();
@@ -53,12 +42,12 @@ class PaymentsController extends Controller
         $areas = area::currentBranch()->get();
 
         $currencies = currencymgmt::all();
-        foreach($currencies as $currency)
-        {
+        foreach ($currencies as $currency) {
             $currency->qty = getCurrencyBalance($currency->id, auth()->user()->id);
         }
         $type = $request->type;
         $orderbookers = User::orderbookers()->currentBranch()->get();
+
         return view('Finance.payments.index', compact('payments', 'receivers', 'currencies', 'areas', 'type', 'area', 'orderbookers', 'start', 'end'));
     }
 
@@ -75,37 +64,33 @@ class PaymentsController extends Controller
      */
     public function store(Request $request)
     {
-        try{ 
+        try {
             DB::beginTransaction();
-           if(!checkMethodExceed($request->method, auth()->user()->id, $request->amount))
-           {
-            throw new \Exception("Method Amount Exceed");
-           }
-           if(!checkUserAccountExceed(auth()->user()->id, $request->amount))
-           {
-            throw new \Exception("User Account Amount Exceed");
-           }
-          if($request->method == 'Cash')
-          {
-            if(!checkCurrencyExceed(auth()->user()->id, $request->currencyID, $request->qty))
-            {
-                throw new \Exception("Currency Qty Exceed");
+            if (! checkMethodExceed($request->method, auth()->user()->id, $request->amount)) {
+                throw new \Exception('Method Amount Exceed');
             }
-          }
+            if (! checkUserAccountExceed(auth()->user()->id, $request->amount)) {
+                throw new \Exception('User Account Amount Exceed');
+            }
+            if ($request->method == 'Cash') {
+                if (! checkCurrencyExceed(auth()->user()->id, $request->currencyID, $request->qty)) {
+                    throw new \Exception('Currency Qty Exceed');
+                }
+            }
             $ref = getRef();
             payments::create(
                 [
-                    'receiverID'    => $request->receiverID,
-                    'date'          => $request->date,
-                    'amount'        => $request->amount,
-                    'method'        => $request->method,
-                    'number'        => $request->number,
-                    'bank'          => $request->bank,
-                    'cheque_date'   => $request->cheque_date,
-                    'branchID'      => auth()->user()->branchID,
-                    'notes'         => $request->notes,
-                    'userID'        => auth()->user()->id,
-                    'refID'         => $ref,
+                    'receiverID' => $request->receiverID,
+                    'date' => $request->date,
+                    'amount' => $request->amount,
+                    'method' => $request->method,
+                    'number' => $request->number,
+                    'bank' => $request->bank,
+                    'cheque_date' => $request->cheque_date,
+                    'branchID' => auth()->user()->branchID,
+                    'notes' => $request->notes,
+                    'userID' => auth()->user()->id,
+                    'refID' => $ref,
                 ]
             );
             $receiver = accounts::find($request->receiverID);
@@ -113,27 +98,26 @@ class PaymentsController extends Controller
             $notes = "Payment to $receiver->title ($receiver->type) Method $request->method Notes : $request->notes";
 
             createTransaction($request->receiverID, $request->date, $request->amount, 0, $notes, $ref, $request->orderbookerID);
-            createMethodTransaction(auth()->user()->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
-           
-            createUserTransaction(auth()->user()->id, $request->date,0, $request->amount, $notes, $ref);
+            createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
 
-            if($request->method == 'Cash')
-            {
+            createUserTransaction(auth()->user()->id, $request->date, 0, $request->amount, $notes, $ref);
+
+            if ($request->method == 'Cash') {
                 createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, $notes, $ref);
             }
-            
-            if($request->has('file')){
+
+            if ($request->has('file')) {
                 createAttachment($request->file('file'), $ref);
             }
 
-          DB::commit();
-            return back()->with('success', "Payment Saved");
-        }
-        catch(\Exception $e)
-        {
+            DB::commit();
+
+            return back()->with('success', 'Payment Saved');
+        } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->with('error', $e->getMessage());
-        } 
+        }
     }
 
     /**
@@ -143,17 +127,16 @@ class PaymentsController extends Controller
     {
         $payment = payments::find($id);
         $currencies = currencymgmt::all();
-        if($payment->method == "Cash")
-        {
-          
-            foreach($currencies as $currency)
-            {
+        if ($payment->method == 'Cash') {
+
+            foreach ($currencies as $currency) {
                 $currenyTransaction = currency_transactions::where('currencyID', $currency->id)->where('refID', $payment->refID)->first();
 
                 $currency->qty = $currenyTransaction->db ?? 0;
             }
 
         }
+
         return view('Finance.payments.receipt', compact('payment', 'currencies'));
     }
 
@@ -178,30 +161,15 @@ class PaymentsController extends Controller
      */
     public function delete($ref)
     {
-        try
-        {
-            DB::beginTransaction();
-            payments::where('refID', $ref)->delete();
-            staffPayments::where('refID', $ref)->delete();
-            transactions::where('refID', $ref)->delete();
-            users_transactions::where('refID', $ref)->delete();
-            currency_transactions::where('refID', $ref)->delete();
-            transactions_que::where('refID', $ref)->delete();
-            method_transactions::where('refID', $ref)->delete();
-            cheques::where('refID', $ref)->delete();
+        $payment = payments::where('refID', $ref)->first();
+        $receiver = accounts::find($payment->receiverID);
+        $notes = "Payment Date: $payment->date | Receiver: $receiver->title | Method: $payment->method | Amount: $payment->amount";
+        $delete = storeDeleteRequest(auth()->user()->id, $payment->branchID, $payment->refID, 'payment', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
+        }
 
-            transactions_que::where('trefID', $ref)->update([
-                'status' => 'pending'
-            ]);
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('payments.index')->with('success', "Payment Deleted");
-        }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('payments.index')->with('error', $e->getMessage());
-        }
+        return to_route('payments.index')->with('success', 'Payment Delete Request Sent to Branch Admin');
     }
 }

@@ -179,23 +179,15 @@ class IssueSalaryController extends Controller
      */
     public function delete($ref)
     {
-        try {
-            DB::beginTransaction();
-            issue_salary::where('refID', $ref)->delete();
-            transactions::where('refID', $ref)->delete();
-            users_transactions::where('refID', $ref)->delete();
-            currency_transactions::where('refID', $ref)->delete();
-            method_transactions::where('refID', $ref)->delete();
-            cheques::where('refID', $ref)->delete();
-            employee_ledger::where('refID', $ref)->delete();
-            
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('issue_salary.index')->with('success', "Salary Deleted");
-        } catch (\Exception $e) {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('issue_salary.index')->with('error', $e->getMessage());
+        $salary = issue_salary::where('refID', $ref)->first();
+        $employee = employee::find($salary->employeeID);
+        $notes = "Issue Salary Date: $salary->date | Employee: $employee->name | Amount: $salary->amount | Notes: $salary->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, $salary->branchID, $salary->refID, 'issue_salary', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
+
+        return to_route('issue_salary.index')->with('success', 'Issue Salary Delete Request Sent to Branch Admin');
     }
 }

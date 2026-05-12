@@ -173,25 +173,15 @@ class PaymentsReceivingController extends Controller
      */
     public function delete($ref)
     {
-        try
-        {
-            DB::beginTransaction();
-            paymentsReceiving::where('refID', $ref)->delete();
-            transactions::where('refID', $ref)->delete();
-            users_transactions::where('refID', $ref)->delete();
-            currency_transactions::where('refID', $ref)->delete();
-            method_transactions::where('refID', $ref)->delete();
-            transactions_que::where('refID', $ref)->delete();
-            cheques::where('refID', $ref)->delete();
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('payments_receiving.index')->with('success', "Payment Deleted");
+        $receiving = paymentsReceiving::where('refID', $ref)->first();
+        $depositer = accounts::find($receiving->depositerID);
+        $notes = "Payment Receiving Date: $receiving->date | Depositer: $depositer->title | Method: $receiving->method | Amount: $receiving->amount";
+        $delete = storeDeleteRequest(auth()->user()->id, $receiving->branchID, $receiving->refID, 'payment_receiving', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('payments_receiving.index')->with('error', $e->getMessage());
-        }
+
+        return to_route('payments_receiving.index')->with('success', 'Payment Receiving Delete Request Sent to Branch Admin');
     }
 }

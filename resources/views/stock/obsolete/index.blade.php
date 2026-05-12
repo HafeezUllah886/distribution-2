@@ -50,6 +50,7 @@
                             <th>Reason</th>
                             <th>Amount</th>
                             <th>Notes</th>
+                            <th>Created By</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
@@ -63,6 +64,7 @@
                                     <td>{{ $item->reason }}</td>
                                     <td>{{ $item->amount }}</td>
                                     <td>{{ $item->notes }}</td>
+                                    <td>{{ $item->createdByUser->name ?? 'N/A' }}</td>
                                     <td>
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#view_{{$item->id}}">View</button>
                                         <a href="{{ route('obsolete.delete', $item->refID) }}"
@@ -156,6 +158,14 @@
                                                     </div>
                                                     <div class="col-9">
                                                         <h6>{{ $item->notes }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <h6>Created By</h6>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <h6>{{ $item->createdByUser->name ?? 'N/A' }}</h6>
                                                     </div>
                                                 </div>
                                             </div>

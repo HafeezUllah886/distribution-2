@@ -2,24 +2,41 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\accountsAdjustment;
 use App\Models\cheques;
 use App\Models\currency_transactions;
+use App\Models\customerAdvanceConsumption;
+use App\Models\CustomerAdvancePayment;
 use App\Models\delete_requests;
+use App\Models\employee_ledger;
+use App\Models\employee_ledger_adjustment;
 use App\Models\expenses;
+use App\Models\fixed_assets;
+use App\Models\fixed_assets_sales;
+use App\Models\generate_salary;
+use App\Models\issue_advance;
+use App\Models\issue_misc;
+use App\Models\issue_salary;
 use App\Models\method_transactions;
 use App\Models\obsolete_stock;
 use App\Models\order_delivery;
 use App\Models\orders;
+use App\Models\payments;
+use App\Models\paymentsReceiving;
 use App\Models\purchase;
 use App\Models\purchase_order;
 use App\Models\purchase_order_delivery;
 use App\Models\returns;
 use App\Models\sale_payments;
 use App\Models\sales;
+use App\Models\staffAmountAdjustment;
 use App\Models\staffPayments;
 use App\Models\stock;
+use App\Models\stockAdjustment;
 use App\Models\StockTransfer;
 use App\Models\transactions;
+use App\Models\transactions_que;
+use App\Models\transfer;
 use App\Models\users_transactions;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -77,6 +94,48 @@ class DeleteRequestsController extends Controller
         }
         if ($deleteRequest->model == 'obsolete_stock') {
             $result = $this->deleteObsoleteStock($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'accounts_adjustment') {
+            $result = $this->deleteAccountsAdjustment($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'staff_payment') {
+            $result = $this->deleteStaffPayment($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'payment') {
+            $result = $this->deletePayment($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'payment_receiving') {
+            $result = $this->deletePaymentReceiving($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'transfer') {
+            $result = $this->deleteTransfer($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'stock_adjustment') {
+            $result = $this->deleteStockAdjustment($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'issue_salary') {
+            $result = $this->deleteIssueSalary($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'customer_advance') {
+            $result = $this->deleteCustomerAdvance($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'fixed_asset') {
+            $result = $this->deleteFixedAsset($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'issue_misc') {
+            $result = $this->deleteIssueMisc($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'issue_advance') {
+            $result = $this->deleteIssueAdvance($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'generate_salary') {
+            $result = $this->deleteGenerateSalary($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'employee_ledger_adjustment') {
+            $result = $this->deleteEmployeeLedgerAdjustment($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'staff_amount_adjustment') {
+            $result = $this->deleteStaffAmountAdjustment($deleteRequest->refID);
         }
 
         // Generic approval for other models if any
@@ -342,5 +401,406 @@ class DeleteRequestsController extends Controller
             ];
         }
 
+    }
+
+    public function deleteAccountsAdjustment($ref)
+    {
+        try {
+            DB::beginTransaction();
+            accountsAdjustment::where('refID', $ref)->delete();
+            transactions::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Accounts Adjustment Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteStaffPayment($ref)
+    {
+        try {
+            DB::beginTransaction();
+            staffPayments::where('refID', $ref)->delete();
+            payments::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
+            expenses::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
+            transactions_que::where('trefID', $ref)->update(['status' => 'pending']);
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Staff Payment Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deletePayment($ref)
+    {
+        try {
+            DB::beginTransaction();
+            payments::where('refID', $ref)->delete();
+            staffPayments::where('refID', $ref)->delete();
+            transactions::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+            transactions_que::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
+            transactions_que::where('trefID', $ref)->update(['status' => 'pending']);
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Vendor Payment Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deletePaymentReceiving($ref)
+    {
+        try {
+            DB::beginTransaction();
+            paymentsReceiving::where('refID', $ref)->delete();
+            transactions::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
+            transactions_que::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Payment Receiving Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteTransfer($ref)
+    {
+        try {
+            DB::beginTransaction();
+            transfer::where('refID', $ref)->delete();
+            transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Transfer Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteStockAdjustment($ref)
+    {
+        try {
+            DB::beginTransaction();
+            stockAdjustment::where('refID', $ref)->delete();
+            stock::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Stock Adjustment Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteIssueSalary($ref)
+    {
+        try {
+            DB::beginTransaction();
+            issue_salary::where('refID', $ref)->delete();
+            transactions::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
+            employee_ledger::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Issue Salary Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteCustomerAdvance($ref)
+    {
+        try {
+            DB::beginTransaction();
+            customerAdvanceConsumption::where('refID', $ref)->delete();
+            CustomerAdvancePayment::where('refID', $ref)->delete();
+            sale_payments::where('refID', $ref)->delete();
+            transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
+            transactions_que::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Customer Advance Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteFixedAsset($ref)
+    {
+        try {
+            DB::beginTransaction();
+            $fixed = fixed_assets::where('refID', $ref)->first();
+            if ($fixed->status() == 'Sold') {
+                $sale = fixed_assets_sales::where('fixedAssetID', $fixed->id)->first();
+                users_transactions::where('refID', $sale->refID)->delete();
+                currency_transactions::where('refID', $sale->refID)->delete();
+                method_transactions::where('refID', $sale->refID)->delete();
+                cheques::where('refID', $sale->refID)->delete();
+                staffPayments::where('refID', $sale->refID)->delete();
+                $sale->delete();
+            }
+            $fixed->delete();
+            users_transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
+            staffPayments::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Fixed Asset Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteIssueMisc($ref)
+    {
+        try {
+            DB::beginTransaction();
+            issue_misc::where('refID', $ref)->delete();
+            transactions::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
+            employee_ledger::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Issue Misc Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteIssueAdvance($ref)
+    {
+        try {
+            DB::beginTransaction();
+            issue_advance::where('refID', $ref)->delete();
+            transactions::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
+            employee_ledger::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Issue Advance Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteGenerateSalary($ref)
+    {
+        try {
+            DB::beginTransaction();
+            $salary = generate_salary::where('refID', $ref)->first();
+            if (! $salary) {
+                return [
+                    'msg' => 'Salary not found',
+                    'status' => 'error',
+                ];
+            }
+            employee_ledger::where('refID', $ref)->delete();
+            $salary->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Generate Salary Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteEmployeeLedgerAdjustment($ref)
+    {
+        try {
+            DB::beginTransaction();
+            employee_ledger_adjustment::where('refID', $ref)->delete();
+            employee_ledger::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Employee Ledger Adjustment Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteStaffAmountAdjustment($ref)
+    {
+        try {
+            DB::beginTransaction();
+            staffAmountAdjustment::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Staff Amount Adjustment Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
     }
 }

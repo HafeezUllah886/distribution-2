@@ -123,20 +123,16 @@ class StockAdjustmentController extends Controller
      */
     public function destroy($ref)
     {
-        try
-        {
-            DB::beginTransaction();
-            stockAdjustment::where('refID', $ref)->delete();
-            stock::where('refID', $ref)->delete();
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('stockAdjustments.index')->with('success', "Stock Adjustment Deleted");
+        $adj = stockAdjustment::where('refID', $ref)->first();
+        $product = products::find($adj->productID);
+        $warehouse = warehouses::find($adj->warehouseID);
+        $notes = "Stock Adjustment Date: $adj->date | Product: $product->name | Warehouse: $warehouse->name | Qty: $adj->qty | Type: $adj->type | Notes: $adj->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, $adj->branchID, $adj->refID, 'stock_adjustment', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('stockAdjustments.index')->with('error', $e->getMessage());
-        }
+
+        return to_route('stockAdjustments.index')->with('success', 'Stock Adjustment Delete Request Sent to Branch Admin');
     }
 }

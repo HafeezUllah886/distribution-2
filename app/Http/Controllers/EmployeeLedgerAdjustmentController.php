@@ -118,20 +118,15 @@ class EmployeeLedgerAdjustmentController extends Controller
      */
     public function delete($ref)
     {
-        try
-        {
-            DB::beginTransaction();
-            employee_ledger_adjustment::where('refID', $ref)->delete();
-            employee_ledger::where('refID', $ref)->delete();
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('employee_adjustments.index')->with('success', "Adjustment Deleted");
+        $adj = employee_ledger_adjustment::where('refID', $ref)->first();
+        $employee = employee::find($adj->employeeID);
+        $notes = "Employee Ledger Adjustment Date: $adj->date | Employee: $employee->name | Amount: $adj->amount | Notes: $adj->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, $adj->branchID, $adj->refID, 'employee_ledger_adjustment', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('employee_adjustments.index')->with('error', $e->getMessage());
-        }
+
+        return to_route('employee_adjustments.index')->with('success', 'Employee Ledger Adjustment Delete Request Sent to Branch Admin');
     }
 }

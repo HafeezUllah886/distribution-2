@@ -32,6 +32,11 @@ class obsolete_stock extends Model
         return $this->belongsTo(branches::class, 'branchID');
     }
 
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'createdBy');
+    }
+
     public function scopeCurrentBranch($query)
     {
         return $query->where('branchID', Auth()->user()->branchID);

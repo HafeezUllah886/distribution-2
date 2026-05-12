@@ -107,22 +107,16 @@ class TransferController extends Controller
      */
     public function delete($ref)
     {
-        try
-        {
-            DB::beginTransaction();
-            transfer::where('refID', $ref)->delete();
-            transactions::where('refID', $ref)->delete();
-            currency_transactions::where('refID', $ref)->delete();
+        $trans = transfer::where('refID', $ref)->first();
+        $from = accounts::find($trans->from);
+        $to = accounts::find($trans->to);
+        $notes = "Transfer Date: $trans->date | From: $from->title | To: $to->title | Amount: $trans->amount | Notes: $trans->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, $trans->branchID, $trans->refID, 'transfer', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
+        }
 
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('transfers.index')->with('success', "Transfer Deleted");
-        }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('transfers.index')->with('error', $e->getMessage());
-        }
+        return to_route('transfers.index')->with('success', 'Transfer Delete Request Sent to Branch Admin');
     }
 }

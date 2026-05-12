@@ -208,27 +208,17 @@ class StaffPaymentsController extends Controller
      */
     public function delete($ref)
     {
-        try{
-            DB::beginTransaction();
-            staffPayments::where('refID', $ref)->delete();
-            payments::where('refID', $ref)->delete();
-            users_transactions::where('refID', $ref)->delete();
-            currency_transactions::where('refID', $ref)->delete();
-            method_transactions::where('refID', $ref)->delete();
-            expenses::where('refID', $ref)->delete();
-            cheques::where('refID', $ref)->delete();
-            transactions_que::where('trefID', $ref)->update([
-                'status' => 'pending'
-            ]);
-            DB::commit();
-            session()->forget('confirmed_password');
-            return to_route('staff_payments.index')->with('success', "Payment Deleted");
+        $payment = staffPayments::where('refID', $ref)->first();
+        $staff = accounts::find($payment->fromID);
+        $method = $payment->method;
+        $amount = $payment->amount;
+        $notes = "Staff Payment Date: $payment->date | Staff: $staff->title | Method: $method | Amount: $amount";
+        $delete = storeDeleteRequest(auth()->user()->id, $payment->branchID, $payment->refID, 'staff_payment', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return to_route('staff_payments.index')->with('error', $e->getMessage());
-        }
+
+        return to_route('staff_payments.index')->with('success', 'Staff Payment Delete Request Sent to Branch Admin');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\obsolete_stock;
 use App\Models\product_units;
 use App\Models\products;
+use App\Models\User;
 use App\Models\warehouses;
 use Exception;
 use Illuminate\Http\Request;
@@ -72,6 +73,7 @@ class ObsoleteStockController extends Controller
                         'refID' => $ref,
                         'amount' => $amount,
                         'price' => $request->price[$key],
+                        'createdBy' => auth()->user()->id,
                     ]
                 );
 
@@ -121,7 +123,8 @@ class ObsoleteStockController extends Controller
     {
         $obsolete = obsolete_stock::where('refID', $ref)->first();
         $warehouse = warehouses::find($obsolete->warehouseID);
-        $notes = "Obsolete Stock Date: $obsolete->date | Warehouse: $warehouse->name | Reason: $obsolete->reason | Notes: $obsolete->notes";
+        $createdBy = User::find($obsolete->createdBy)->name;
+        $notes = "Obsolete Stock Date: $obsolete->date | Warehouse: $warehouse->name | Reason: $obsolete->reason | Notes: $obsolete->notes | Created By: $createdBy";
         $delete = storeDeleteRequest(auth()->user()->id, $obsolete->branchID, $obsolete->refID, 'obsolete_stock', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {

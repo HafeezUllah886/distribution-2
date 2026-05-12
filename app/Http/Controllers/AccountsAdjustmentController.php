@@ -141,20 +141,14 @@ class AccountsAdjustmentController extends Controller
 
     public function delete($ref)
     {
-        try
-        {
-            DB::beginTransaction();
-            accountsAdjustment::where('refID', $ref)->delete();
-            transactions::where('refID', $ref)->delete();
-            DB::commit();
-            session()->forget('confirmed_password');
-            return redirect()->route('accounts_adjustments.index')->with('success', "Adjustment Deleted");
+        $adj = accountsAdjustment::where('refID', $ref)->first();
+        $notes = "Accounts Adjustment Date: $adj->date | Amount: $adj->amount | Notes: $adj->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, $adj->branchID, $adj->refID, 'accounts_adjustment', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
-        catch(\Exception $e)
-        {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-            return redirect()->route('accounts_adjustments.index')->with('error', $e->getMessage());
-        }
+
+        return to_route('accounts_adjustments.index')->with('success', 'Accounts Adjustment Delete Request Sent to Branch Admin');
     }
 }
