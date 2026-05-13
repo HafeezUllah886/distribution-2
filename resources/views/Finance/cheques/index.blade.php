@@ -37,7 +37,7 @@
             </form>
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h3> {{$status}} Cheques</h3>
+                    <h3> {{ $status }} Cheques</h3>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -89,12 +89,12 @@
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 @if ($tran->forwarded == 'No' && $tran->status == 'pending')
                                                     <li>
-                                                        <a class="dropdown-item" onclick="forwardCheque({{ $tran->id }})"><i
+                                                        <a class="dropdown-item"
+                                                            onclick="forwardCheque({{ $tran->id }})"><i
                                                                 class="ri-arrow-right-circle-line align-bottom me-2 text-muted"></i>
                                                             Forward
                                                         </a>
                                                     </li>
-                                                   
                                                 @else
                                                     <li>
                                                         <a class="dropdown-item"
@@ -121,7 +121,7 @@
                                                         </li>
                                                     @endif
                                                 @endif
-                                                @if ($tran->forwarded == 'No')
+                                                @if ($tran->forwarded == 'No' && $tran->status != 'bounced')
                                                     <li>
                                                         <a class="dropdown-item text-danger"
                                                             href="{{ route('cheques.status', ['id' => $tran->id, 'status' => 'bounced']) }}">
@@ -142,21 +142,17 @@
         </div>
     </div>
 
-    <div id="forwardModal" class="modal fade"
-        tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+    <div id="forwardModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
         style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="myModalLabel">Forward Cheque
                     </h5>
-                    <button type="button" class="btn-close"
-                        data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
-                <form
-                    action="{{ route('cheques.forwardCreate') }}"
-                    enctype="multipart/form-data" method="get">
+                <form action="{{ route('cheques.forwardCreate') }}" enctype="multipart/form-data" method="get">
                     @csrf
                     <input type="hidden" name="id" id="chequeID">
                     <div class="modal-body">
@@ -183,10 +179,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light"
-                            data-bs-dismiss="modal">Close</button>
-                        <button type="submit"
-                            class="btn btn-primary">Continue</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Continue</button>
                     </div>
                 </form>
             </div><!-- /.modal-content -->
@@ -213,15 +207,15 @@
     <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
         /* $(document).ready(function() {
-                $('div[id^="forwardModal_"]').on('show.bs.modal', function() {
-                    console.log('Modal opened');
-                    $(this).find('.selectize').selectize({
-                        create: false,
-                        sortField: 'text'
+                    $('div[id^="forwardModal_"]').on('show.bs.modal', function() {
+                        console.log('Modal opened');
+                        $(this).find('.selectize').selectize({
+                            create: false,
+                            sortField: 'text'
+                        });
                     });
                 });
-            });
-            */
+                */
         $(".selectize").selectize();
 
         function forwardCheque(id) {
