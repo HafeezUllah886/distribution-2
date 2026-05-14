@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\employee_ledger_adjustment;
-use App\Http\Controllers\Controller;
 use App\Models\employee;
-use App\Models\employee_ledger;
+use App\Models\employee_ledger_adjustment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,17 +17,15 @@ class EmployeeLedgerAdjustmentController extends Controller
         $start = $request->start ?? date('Y-m-d');
         $end = $request->end ?? date('Y-m-d');
         $type = $request->type ?? 'All';
-        
+
         $adjustments = employee_ledger_adjustment::currentBranch()->whereBetween('date', [$start, $end]);
-        if($type != "All")
-        {
+        if ($type != 'All') {
             $adjustments->where('type', $type);
-          
+
         }
-       
+
         $adjustments = $adjustments->get();
-        
-      
+
         $employees = employee::currentBranch()->get();
 
         return view('employees.adjustments.index', compact('adjustments', 'employees', 'start', 'end', 'type'));
@@ -48,9 +44,8 @@ class EmployeeLedgerAdjustmentController extends Controller
      */
     public function store(Request $request)
     {
-        try
-        { 
-            
+        try {
+
             DB::beginTransaction();
             $ref = getRef();
             employee_ledger_adjustment::create(
@@ -62,31 +57,27 @@ class EmployeeLedgerAdjustmentController extends Controller
                     'type' => $request->type,
                     'amount' => $request->amount,
                     'notes' => $request->notes,
-                    'refID' => $ref
+                    'refID' => $ref,
                 ]
             );
 
             $employee = employee::find($request->employeeID);
             $user = auth()->user()->name;
 
-            if($request->type == 'credit')
-            {
+            if ($request->type == 'credit') {
                 createEmployeeTransaction($request->employeeID, $request->date, $request->amount, 0, "Amount Adjusted: $request->notes", $ref);
-            }
-            else
-            {
+            } else {
                 createEmployeeTransaction($request->employeeID, $request->date, 0, $request->amount, "Amount Adjusted: $request->notes", $ref);
             }
 
-           DB::commit();
-            return back()->with('success', "Adjustment Created");
-        }
-        catch(\Exception $e)
-        {
+            DB::commit();
+
+            return back()->with('success', 'Adjustment Created');
+        } catch (\Exception $e) {
             DB::rollBack();
 
             return back()->with('error', $e->getMessage());
-        } 
+        }
     }
 
     /**
@@ -120,7 +111,8 @@ class EmployeeLedgerAdjustmentController extends Controller
     {
         $adj = employee_ledger_adjustment::where('refID', $ref)->first();
         $employee = employee::find($adj->employeeID);
-        $notes = "Employee Ledger Adjustment Date: $adj->date | Employee: $employee->name | Amount: $adj->amount | Notes: $adj->notes";
+        $type = $adj->type;
+        $notes = "Employee Ledger Adjustment Date: $adj->date | Employee: $employee->name | Type: $type | Amount: $adj->amount | Notes: $adj->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $adj->branchID, $adj->refID, 'employee_ledger_adjustment', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {
