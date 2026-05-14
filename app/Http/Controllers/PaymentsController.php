@@ -163,7 +163,12 @@ class PaymentsController extends Controller
     {
         $payment = payments::where('refID', $ref)->first();
         $receiver = accounts::find($payment->receiverID);
-        $notes = "Payment Date: $payment->date | Receiver: $receiver->title | Method: $payment->method | Amount: $payment->amount";
+        $paid_by = User::find($payment->userID);
+        $number = $payment->number;
+        $bank = $payment->bank;
+        $cheque_date = $payment->cheque_date;
+
+        $notes = "Payment Date: $payment->date | Receiver: $receiver->title | Paid By: $paid_by->name | Method: $payment->method | Bank: $bank | Number: $number | Cheque Date: $cheque_date | Amount: $payment->amount | Notes: $payment->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $payment->branchID, $payment->refID, 'payment', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {
