@@ -2,23 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\accounts;
-use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
-use App\Models\expense_categories;
 use App\Models\expenses;
 use App\Models\fixed_assets;
 use App\Models\fixed_assets_categories;
 use App\Models\fixed_assets_sales;
-use App\Models\method_transactions;
-use App\Models\staffPayments;
-use App\Models\transactions;
-use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
-use function PHPUnit\Framework\isFinite;
 
 class FixedAssetsController extends Controller
 {
@@ -29,37 +20,31 @@ class FixedAssetsController extends Controller
     {
         $from = $request->start ?? null;
         $to = $request->end ?? null;
-        $categoryID = $request->category ?? "All";
-        $status = $request->status ?? "All";
+        $categoryID = $request->category ?? 'All';
+        $status = $request->status ?? 'All';
 
         $fixed_assets = fixed_assets::currentBranch()->orderby('id', 'desc');
-        if($categoryID !== "All")
-        {
+        if ($categoryID !== 'All') {
             $fixed_assets = $fixed_assets->where('categoryID', $categoryID);
         }
-        if($from !== null && $to !== null)
-        {
+        if ($from !== null && $to !== null) {
             $fixed_assets = $fixed_assets->whereBetween('date', [$from, $to]);
         }
-        if($status !== "All")
-        {
-            if($status === "Sold")
-            {
+        if ($status !== 'All') {
+            if ($status === 'Sold') {
                 $fixed_assets = $fixed_assets->whereHas('sale');
-            }
-            else
-            {
+            } else {
                 $fixed_assets = $fixed_assets->whereDoesntHave('sale');
             }
         }
         $fixed_assets = $fixed_assets->get();
 
         $currencies = currencymgmt::all();
-        foreach($currencies as $currency)
-        {
+        foreach ($currencies as $currency) {
             $currency->qty = getCurrencyBalance($currency->id, auth()->user()->id);
         }
         $categories = fixed_assets_categories::all();
+
         return view('Finance.fixed_assets.index', compact('fixed_assets', 'currencies', 'categories', 'from', 'to', 'categoryID', 'status'));
     }
 
@@ -76,24 +61,19 @@ class FixedAssetsController extends Controller
      */
     public function store(Request $request)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
-            if(!checkMethodExceed($request->method, auth()->user()->id, $request->amount))
-            {
-             throw new \Exception("Method Amount Exceed");
+            if (! checkMethodExceed($request->method, auth()->user()->id, $request->amount)) {
+                throw new \Exception('Method Amount Exceed');
             }
-            if(!checkUserAccountExceed(auth()->user()->id, $request->amount))
-            {
-             throw new \Exception("User Account Amount Exceed");
+            if (! checkUserAccountExceed(auth()->user()->id, $request->amount)) {
+                throw new \Exception('User Account Amount Exceed');
             }
-           if($request->method == 'Cash')
-           {
-             if(!checkCurrencyExceed(auth()->user()->id, $request->currencyID, $request->qty))
-             {
-                 throw new \Exception("Currency Qty Exceed");
-             }
-           }
+            if ($request->method == 'Cash') {
+                if (! checkCurrencyExceed(auth()->user()->id, $request->currencyID, $request->qty)) {
+                    throw new \Exception('Currency Qty Exceed');
+                }
+            }
             $ref = getRef();
             fixed_assets::create(
                 [
@@ -111,30 +91,28 @@ class FixedAssetsController extends Controller
                     'refID' => $ref,
                 ]
             );
-            if($request->purchase_status == 'new')
-            {
+            if ($request->purchase_status == 'new') {
                 $category_name = fixed_assets_categories::find($request->category)->name;
-                $notes = "Fixed Asset Purchase Category: $category_name Item: $request->item_description - Method ".$request->method." Notes : ".$request->notes;
-            createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
-           
-            createUserTransaction(auth()->user()->id, $request->date,0, $request->amount, $notes, $ref);
+                $notes = "Fixed Asset Purchase Category: $category_name Item: $request->item_description - Method ".$request->method.' Notes : '.$request->notes;
+                createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
 
-            if($request->method == 'Cash')
-            {
-                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, $notes, $ref);
+                createUserTransaction(auth()->user()->id, $request->date, 0, $request->amount, $notes, $ref);
+
+                if ($request->method == 'Cash') {
+                    createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, $notes, $ref);
+                }
             }
-            }
-            
-            if($request->has('file')){
+
+            if ($request->has('file')) {
                 createAttachment($request->file('file'), $ref);
             }
 
             DB::commit();
+
             return redirect()->route('fixed_assets.index')->with('success', 'Fixed Asset Purchase Saved');
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->with('error', $e->getMessage());
         }
     }
@@ -142,16 +120,14 @@ class FixedAssetsController extends Controller
     /**
      * Display the specified resource.
      */
-     public function show($id)
+    public function show($id)
     {
         $asset = fixed_assets::find($id);
         $currencies = currencymgmt::all();
 
-        if($asset->method == "Cash")
-        {
-          
-            foreach($currencies as $currency)
-            {
+        if ($asset->method == 'Cash') {
+
+            foreach ($currencies as $currency) {
                 $currenyTransaction = currency_transactions::where('currencyID', $currency->id)->where('refID', $asset->refID)->first();
 
                 $currency->qty = $currenyTransaction->db ?? 0;
@@ -161,12 +137,9 @@ class FixedAssetsController extends Controller
 
         $sale_currencies = currencymgmt::all();
 
-        if($asset->status() == "Sold")
-        {
-            if($asset->sale->method == "Cash")
-            {
-                foreach($sale_currencies as $currency)
-                {
+        if ($asset->status() == 'Sold') {
+            if ($asset->sale->method == 'Cash') {
+                foreach ($sale_currencies as $currency) {
                     $currenyTransaction = currency_transactions::where('currencyID', $currency->id)->where('refID', $asset->sale->refID)->first();
 
                     $currency->qty = $currenyTransaction->cr ?? 0;
@@ -181,66 +154,62 @@ class FixedAssetsController extends Controller
     {
         $asset = fixed_assets::find($id);
         $currencies = currencymgmt::all();
-        foreach($currencies as $currency)
-        {
+        foreach ($currencies as $currency) {
             $currency->qty = getCurrencyBalance($currency->id, auth()->user()->id);
         }
+
         return view('Finance.fixed_assets.sale', compact('asset', 'currencies'));
     }
 
     public function sale(Request $request)
     {
-         try{ 
+        try {
             DB::beginTransaction();
             $ref = getRef();
             fixed_assets_sales::create(
                 [
-                    'fixedAssetID'  => $request->id,
-                    'date'          => $request->date,
-                    'amount'        => $request->amount,
-                    'method'        => $request->method,
-                    'number'        => $request->number,
-                    'bank'          => $request->bank,
-                    'cheque_date'   => $request->cheque_date,
-                    'notes'         => $request->notes,
-                    'refID'         => $ref,
+                    'fixedAssetID' => $request->id,
+                    'date' => $request->date,
+                    'amount' => $request->amount,
+                    'method' => $request->method,
+                    'number' => $request->number,
+                    'bank' => $request->bank,
+                    'cheque_date' => $request->cheque_date,
+                    'notes' => $request->notes,
+                    'refID' => $ref,
                 ]
             );
             $user_name = auth()->user()->name;
-            if($request->method == 'Cheque')
-            {
+            if ($request->method == 'Cheque') {
 
-                throw new \Exception("Cheque Receiving Not Allowed");
-            }
-            else
-            {
+                throw new \Exception('Cheque Receiving Not Allowed');
+            } else {
                 $asset = fixed_assets::find($request->id);
                 $category = fixed_assets_categories::find($asset->categoryID)->name;
                 $notes = "Fixed Asset Sold Category: $category Item: $asset->item_description - Method $request->method Notes : $request->notes";
                 $notes1 = "Fixed Asset Sold Category: $category Item: $asset->item_description - Method $request->method Notes : $request->notes";
             }
-            
-            createMethodTransaction(auth()->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
-    
+
+            createMethodTransaction(auth()->user()->id, $request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
+
             createUserTransaction(auth()->user()->id, $request->date, $request->amount, 0, $notes, $ref);
 
-            if($request->method == 'Cash')
-            {
+            if ($request->method == 'Cash') {
                 createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, $notes, $ref);
             }
 
-            if($request->has('file')){
+            if ($request->has('file')) {
                 createAttachment($request->file('file'), $ref);
             }
 
-          DB::commit();
-            return back()->with('success', "Payment Saved");
-        }
-        catch(\Exception $e)
-        {
+            DB::commit();
+
+            return back()->with('success', 'Payment Saved');
+        } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->with('error', $e->getMessage());
-        } 
+        }
     }
 
     /**
@@ -265,7 +234,8 @@ class FixedAssetsController extends Controller
     public function delete($ref)
     {
         $asset = fixed_assets::where('refID', $ref)->first();
-        $notes = "Fixed Asset: $asset->name | Purchase Date: $asset->purchase_date | Purchase Price: $asset->purchase_price | Status: ".$asset->status();
+        $category = fixed_assets_categories::find($asset->categoryID)->name;
+        $notes = "Fixed Asset: $asset->item_description | Category: $category | Purcahse Date: $asset->date | Purchase Status : ".$asset->purchase_status.' | Purchase Price: '.$asset->amount.' | Status: '.$asset->status().' | Notes : '.$asset->notes;
         $delete = storeDeleteRequest(auth()->user()->id, $asset->branchID, $asset->refID, 'fixed_asset', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {

@@ -2,19 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\staffPayments;
-use App\Http\Controllers\Controller;
 use App\Models\accounts;
-use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\expense_categories;
 use App\Models\expenses;
-use App\Models\method_transactions;
-use App\Models\payments;
-use App\Models\transactions_que;
+use App\Models\staffPayments;
 use App\Models\User;
-use App\Models\users_transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -31,12 +25,10 @@ class StaffPaymentsController extends Controller
         $method = $request->method ?? 'All';
 
         $receivings = staffPayments::where('receivedBy', auth()->user()->id)->whereBetween('date', [$start, $end])->orderBy('id', 'desc');
-        if($from != 'All')
-        {
+        if ($from != 'All') {
             $receivings->where('fromID', $from);
         }
-        if($method != 'All')
-        {
+        if ($method != 'All') {
             $receivings->where('method', $method);
         }
         $receivings = $receivings->get();
@@ -46,6 +38,7 @@ class StaffPaymentsController extends Controller
         $orderbookers = User::orderbookers()->currentBranch()->active()->get();
 
         $expense_categories = expense_categories::currentBranch()->get();
+
         return view('Finance.staff_payments.index', compact('receivings', 'users', 'currencies', 'customers', 'orderbookers', 'start', 'end', 'from', 'method', 'expense_categories'));
     }
 
@@ -62,9 +55,9 @@ class StaffPaymentsController extends Controller
      */
     public function store(Request $request)
     {
-      
-       try{ 
-            DB::beginTransaction(); 
+
+        try {
+            DB::beginTransaction();
             $staff = User::find($request->fromID);
             /* if(!checkMethodExceed($request->method,$request->fromID, $request->amount))
             {
@@ -74,61 +67,54 @@ class StaffPaymentsController extends Controller
             {
              throw new \Exception("User Account Amount Exceed");
             } */
-           if($request->method == 'Cash')
-           {
-            if($staff->cashable == 'yes')
-            {
-                if(!checkCurrencyExceed($request->fromID, $request->currencyID, $request->qty))
-                {
-                    throw new \Exception("Currency Qty Exceed");
+            if ($request->method == 'Cash') {
+                if ($staff->cashable == 'yes') {
+                    if (! checkCurrencyExceed($request->fromID, $request->currencyID, $request->qty)) {
+                        throw new \Exception('Currency Qty Exceed');
+                    }
                 }
             }
-           }
             $ref = getRef();
             staffPayments::create(
                 [
-                    'fromID'        => $request->fromID,
-                    'date'          => $request->date,
-                    'amount'        => $request->amount,
-                    'method'        => $request->method,
-                    'number'        => $request->number,
-                    'bank'          => $request->bank,
-                    'cheque_date'   => $request->cheque_date,
-                    'notes'         => $request->notes,
-                    'receivedBy'    => auth()->id(),
-                    'refID'         => $ref,
+                    'fromID' => $request->fromID,
+                    'date' => $request->date,
+                    'amount' => $request->amount,
+                    'method' => $request->method,
+                    'number' => $request->number,
+                    'bank' => $request->bank,
+                    'cheque_date' => $request->cheque_date,
+                    'notes' => $request->notes,
+                    'receivedBy' => auth()->id(),
+                    'refID' => $ref,
                 ]
             );
-            
+
             $user_name = auth()->user()->name;
             $notes = "Payment received from staff: $staff->name Method $request->method Notes : $request->notes";
             $notes1 = "Payment submitted to $user_name Method $request->method Notes : $request->notes";
 
-            createUserTransaction(auth()->id(), $request->date,$request->amount, 0, $notes, $ref);
-            createUserTransaction($request->fromID, $request->date,0, $request->amount, $notes1, $ref);
-           
-            createMethodTransaction($staff->id,$request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes1, $ref);
-            createMethodTransaction(auth()->user()->id,$request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
+            createUserTransaction(auth()->id(), $request->date, $request->amount, 0, $notes, $ref);
+            createUserTransaction($request->fromID, $request->date, 0, $request->amount, $notes1, $ref);
 
-            if($request->method == 'Cash')
-            {
+            createMethodTransaction($staff->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, $notes1, $ref);
+            createMethodTransaction(auth()->user()->id, $request->method, $request->amount, 0, $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
+
+            if ($request->method == 'Cash') {
                 createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'cr', $request->date, $notes, $ref);
                 createCurrencyTransaction($request->fromID, $request->currencyID, $request->qty, 'db', $request->date, $notes1, $ref);
             }
-            if($request->method == 'Cheque')
-            {
+            if ($request->method == 'Cheque') {
                 saveCheque($request->customerID, auth()->user()->id, $request->orderbookerID, $request->cheque_date, $request->amount, $request->number, $request->bank, $request->notes, $ref);
             }
-            if($request->has('file')){
+            if ($request->has('file')) {
                 createAttachment($request->file('file'), $ref);
             }
 
-            if($request->has('expense_id'))
-            {
-                foreach($request->expense_id as $key => $expense_id)
-                {
+            if ($request->has('expense_id')) {
+                foreach ($request->expense_id as $key => $expense_id) {
                     $nottt = $request->expense_note[$key];
-                     expenses::create(
+                    expenses::create(
                         [
                             'userID' => $request->fromID,
                             'amount' => $request->expense_amount[$key],
@@ -145,26 +131,25 @@ class StaffPaymentsController extends Controller
                     );
                     $category = expense_categories::find($expense_id);
 
-                     $notes = "Expense during staff payment received from: $staff->name Category: $category->name  Method ".$request->method." Notes : ".$nottt;
+                    $notes = "Expense during staff payment received from: $staff->name Category: $category->name  Method ".$request->method.' Notes : '.$nottt;
                     createMethodTransaction($request->fromID, $request->method, 0, $request->expense_amount[$key], $request->date, $request->number, $request->bank, $request->cheque_date, $notes, $ref);
-                
-                    createUserTransaction($request->fromID, $request->date,0, $request->expense_amount[$key], $notes, $ref);
 
-                    if($request->method == 'Cash')
-                    {
+                    createUserTransaction($request->fromID, $request->date, 0, $request->expense_amount[$key], $notes, $ref);
+
+                    if ($request->method == 'Cash') {
                         createCurrencyTransaction($request->fromID, $request->currencyID, $request->qty, 'db', $request->date, $notes, $ref);
                     }
                 }
             }
 
             DB::commit();
-            return back()->with('success', "Payment Saved");
-        }
-        catch(\Exception $e)
-        {
+
+            return back()->with('success', 'Payment Saved');
+        } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->with('error', $e->getMessage());
-        }  
+        }
     }
 
     /**
@@ -174,16 +159,15 @@ class StaffPaymentsController extends Controller
     {
         $receiving = staffPayments::find($id);
         $currencies = currencymgmt::all();
-        if($receiving->method == "Cash")
-        {
-            foreach($currencies as $currency)
-            {
+        if ($receiving->method == 'Cash') {
+            foreach ($currencies as $currency) {
                 $currenyTransaction = currency_transactions::where('currencyID', $currency->id)->where('refID', $receiving->refID)->first();
 
                 $currency->qty = $currenyTransaction->cr ?? 0;
             }
 
         }
+
         return view('Finance.staff_payments.receipt', compact('receiving', 'currencies'));
     }
 
@@ -213,7 +197,7 @@ class StaffPaymentsController extends Controller
         $method = $payment->method;
         $amount = $payment->amount;
         $notes = "Staff Payment Date: $payment->date | Staff: $staff->title | Method: $method | Amount: $amount";
-        $delete = storeDeleteRequest(auth()->user()->id, $payment->branchID, $payment->refID, 'staff_payment', $notes);
+        $delete = storeDeleteRequest(auth()->user()->id, auth()->user()->branchID, $payment->refID, 'staff_payment', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {
             return back()->with('error', 'This record is already requested for deletion.');
