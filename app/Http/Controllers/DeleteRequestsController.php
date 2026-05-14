@@ -13,6 +13,7 @@ use App\Models\employee_ledger_adjustment;
 use App\Models\expenses;
 use App\Models\fixed_assets;
 use App\Models\fixed_assets_sales;
+use App\Models\bulk_payments;
 use App\Models\generate_salary;
 use App\Models\issue_advance;
 use App\Models\issue_misc;
@@ -136,6 +137,9 @@ class DeleteRequestsController extends Controller
         }
         if ($deleteRequest->model == 'staff_amount_adjustment') {
             $result = $this->deleteStaffAmountAdjustment($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'bulk_payment') {
+            $result = $this->deleteBulkPayment($deleteRequest->refID);
         }
 
         // Generic approval for other models if any
@@ -791,6 +795,36 @@ class DeleteRequestsController extends Controller
 
             return [
                 'msg' => 'Staff Amount Adjustment Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteBulkPayment($ref)
+    {
+        try {
+            DB::beginTransaction();
+            bulk_payments::where('refID', $ref)->delete();
+            sale_payments::where('refID', $ref)->delete();
+            transactions::where('refID', $ref)->delete();
+            currency_transactions::where('refID', $ref)->delete();
+            users_transactions::where('refID', $ref)->delete();
+            method_transactions::where('refID', $ref)->delete();
+            transactions_que::where('refID', $ref)->delete();
+            cheques::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Bulk Payment Deleted',
                 'status' => 'success',
             ];
         } catch (\Exception $e) {
