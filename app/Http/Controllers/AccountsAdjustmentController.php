@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\accountsAdjustment;
-use App\Http\Controllers\Controller;
 use App\Models\accounts;
+use App\Models\accountsAdjustment;
 use App\Models\area;
-use App\Models\transactions;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,23 +20,19 @@ class AccountsAdjustmentController extends Controller
         $end = $request->end ?? lastDayOfMonth();
         $type = $request->type ?? 'All';
         $area = $request->area ?? 'All';
-        
+
         $accountsAdjustments = accountsAdjustment::currentBranch()->whereBetween('date', [$start, $end]);
-        if($type != "All")
-        {
+        if ($type != 'All') {
             $accounts = accounts::where('type', $type)->currentBranch()->active()->get();
             $accountsAdjustments->whereIn('accountID', $accounts->pluck('id'));
             $type = [$type];
-        }
-        else
-        {
+        } else {
             $type = ['Business', 'Vendor', 'Supply Man', 'Unloader', 'Customer', 'Personal', 'Freight'];
         }
-        
+
         $accountsAdjustments = $accountsAdjustments->get();
         $accounts = accounts::whereIn('type', $type)->currentBranch()->active();
-        if($area != 'All')
-        {
+        if ($area != 'All') {
             $accounts = $accounts->where('areaID', $area);
         }
         $accounts = $accounts->get();
@@ -63,8 +57,7 @@ class AccountsAdjustmentController extends Controller
      */
     public function store(Request $request)
     {
-        try
-        { 
+        try {
             /* $request->validate([
                 'file' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             ]); */
@@ -79,31 +72,27 @@ class AccountsAdjustmentController extends Controller
                     'type' => $request->type,
                     'amount' => $request->amount,
                     'notes' => $request->notes,
-                    'refID' => $ref
+                    'refID' => $ref,
                 ]
             );
 
             $account = accounts::find($request->accountID);
             $user = auth()->user()->name;
 
-            if($request->type == 'credit')
-            {
+            if ($request->type == 'credit') {
                 createTransaction($request->accountID, $request->date, $request->amount, 0, "Amount Adjusted: $request->notes", $ref, $request->orderbookerID);
-            }
-            else
-            {
+            } else {
                 createTransaction($request->accountID, $request->date, 0, $request->amount, "Amount Adjusted: $request->notes", $ref, $request->orderbookerID);
             }
 
-           DB::commit();
-            return back()->with('success', "Adjustment Created");
-        }
-        catch(\Exception $e)
-        {
+            DB::commit();
+
+            return back()->with('success', 'Adjustment Created');
+        } catch (\Exception $e) {
             DB::rollBack();
 
             return back()->with('error', $e->getMessage());
-        } 
+        }
     }
 
     /**
@@ -138,11 +127,12 @@ class AccountsAdjustmentController extends Controller
         //
     }
 
-
     public function delete($ref)
     {
         $adj = accountsAdjustment::where('refID', $ref)->first();
-        $notes = "Accounts Adjustment Date: $adj->date | Amount: $adj->amount | Notes: $adj->notes";
+        $account = $adj->account->title;
+        $type = $adj->type;
+        $notes = "Accounts Adjustment Date: $adj->date | Amount: $adj->amount | Account: $account | Type: $type | Notes: $adj->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $adj->branchID, $adj->refID, 'accounts_adjustment', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {
