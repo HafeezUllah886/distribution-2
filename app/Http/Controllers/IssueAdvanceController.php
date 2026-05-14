@@ -2,17 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\issue_advance;
-use App\Http\Controllers\Controller;
-use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\currencymgmt;
 use App\Models\employee;
-use App\Models\employee_ledger;
-use App\Models\method_transactions;
-use App\Models\transactions;
-use App\Models\users_transactions;
-
+use App\Models\issue_advance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -25,15 +18,15 @@ class IssueAdvanceController extends Controller
     {
         $start = $request->from ?? date('Y-m-d');
         $end = $request->to ?? date('Y-m-d');
-        $desig = $request->designation ?? "All";
-        $dept = $request->department ?? "All";   
+        $desig = $request->designation ?? 'All';
+        $dept = $request->department ?? 'All';
         $advance = issue_advance::currentBranch()->whereBetween('date', [$start, $end]);
-        if($desig != "All"){
+        if ($desig != 'All') {
             $advance = $advance->whereHas('employee', function ($query) use ($desig) {
                 $query->where('designation', $desig);
             });
         }
-        if($dept != "All"){
+        if ($dept != 'All') {
             $advance = $advance->whereHas('employee', function ($query) use ($dept) {
                 $query->where('department', $dept);
             });
@@ -43,6 +36,7 @@ class IssueAdvanceController extends Controller
 
         $designations = employee::currentBranch()->get()->unique('designation')->pluck('designation')->toArray();
         $departments = employee::currentBranch()->get()->unique('department')->pluck('department')->toArray();
+
         return view('employees.issue_advance.index', compact('advances', 'employees', 'start', 'end', 'desig', 'dept', 'designations', 'departments'));
     }
 
@@ -52,15 +46,15 @@ class IssueAdvanceController extends Controller
     public function create(Request $request)
     {
         $employee = $request->employee;
-       
+
         $employee = employee::find($employee);
         $balance = getEmployeeBalance($employee->id);
 
         $currencies = currencymgmt::all();
-        foreach($currencies as $currency)
-        {
+        foreach ($currencies as $currency) {
             $currency->qty = getCurrencyBalance($currency->id, auth()->user()->id);
         }
+
         return view('employees.issue_advance.create', compact('employee', 'currencies', 'balance'));
     }
 
@@ -69,34 +63,29 @@ class IssueAdvanceController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         try {
 
             DB::beginTransaction();
 
-            if(!checkMethodExceed($request->method, auth()->user()->id, $request->amount))
-           {
-            throw new \Exception("Method Amount Exceed");
-           }
-           if(!checkUserAccountExceed(auth()->user()->id, $request->amount))
-           {
-            throw new \Exception("User Account Amount Exceed");
-           }
-          if($request->method == 'Cash')
-          {
-            if(!checkCurrencyExceed(auth()->user()->id, $request->currencyID, $request->qty))
-            {
-                throw new \Exception("Currency Qty Exceed");
+            if (! checkMethodExceed($request->method, auth()->user()->id, $request->amount)) {
+                throw new \Exception('Method Amount Exceed');
             }
-          }
+            if (! checkUserAccountExceed(auth()->user()->id, $request->amount)) {
+                throw new \Exception('User Account Amount Exceed');
+            }
+            if ($request->method == 'Cash') {
+                if (! checkCurrencyExceed(auth()->user()->id, $request->currencyID, $request->qty)) {
+                    throw new \Exception('Currency Qty Exceed');
+                }
+            }
 
-          $employee = employee::find($request->employeeID);
+            $employee = employee::find($request->employeeID);
 
-          $balance = getEmployeeBalance($request->employeeID) + $employee->limit;
-          if($request->amount > $balance)
-          {
-            throw new \Exception("limit Exceed");
-          }
+            $balance = getEmployeeBalance($request->employeeID) + $employee->limit;
+            if ($request->amount > $balance) {
+                throw new \Exception('limit Exceed');
+            }
             $ref = getRef();
             $advance = issue_advance::create([
                 'employeeID' => $request->employeeID,
@@ -108,26 +97,27 @@ class IssueAdvanceController extends Controller
                 'bank' => $request->bank,
                 'cheque_date' => $request->cheque_date,
                 'notes' => $request->notes,
-                'refID' =>  $ref,
+                'refID' => $ref,
             ]);
 
-            createEmployeeTransaction($request->employeeID, $request->date, $request->amount, 0, 'Advance Issued- notes : ' . $request->notes, $ref);
-            createUserTransaction(auth()->user()->id, $request->date, 0, $request->amount, 'Advance Issued to ' . $employee->name . '- notes : ' . $request->notes, $ref);
-            createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, 'Advance Issued to ' . $employee->name . '- notes : ' . $request->notes, $ref);
+            createEmployeeTransaction($request->employeeID, $request->date, $request->amount, 0, 'Advance Issued- notes : '.$request->notes, $ref);
+            createUserTransaction(auth()->user()->id, $request->date, 0, $request->amount, 'Advance Issued to '.$employee->name.'- notes : '.$request->notes, $ref);
+            createMethodTransaction(auth()->user()->id, $request->method, 0, $request->amount, $request->date, $request->number, $request->bank, $request->cheque_date, 'Advance Issued to '.$employee->name.'- notes : '.$request->notes, $ref);
 
-            if($request->method == 'Cash')
-            {
-                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, 'Advance Issued to ' . $employee->name . '- notes : ' . $request->notes, $ref);
+            if ($request->method == 'Cash') {
+                createCurrencyTransaction(auth()->user()->id, $request->currencyID, $request->qty, 'db', $request->date, 'Advance Issued to '.$employee->name.'- notes : '.$request->notes, $ref);
             }
-            
-            if($request->has('file')){
+
+            if ($request->has('file')) {
                 createAttachment($request->file('file'), $ref);
             }
             DB::commit();
+
             return to_route('issue_advance.index')->with('success', 'Advance Issued Successfully');
-            
+
         } catch (\Exception $th) {
             DB::rollBack();
+
             return to_route('issue_advance.index')->with('error', $th->getMessage());
         }
     }
@@ -140,17 +130,16 @@ class IssueAdvanceController extends Controller
         //
         $advance = issue_advance::find($id);
         $currencies = currencymgmt::all();
-        if($advance->method == "Cash")
-        {
-          
-            foreach($currencies as $currency)
-            {
+        if ($advance->method == 'Cash') {
+
+            foreach ($currencies as $currency) {
                 $currenyTransaction = currency_transactions::where('currencyID', $currency->id)->where('refID', $advance->refID)->first();
 
                 $currency->qty = $currenyTransaction->db ?? 0;
             }
 
         }
+
         return view('employees.issue_advance.receipt', compact('advance', 'currencies'));
     }
 
@@ -177,7 +166,10 @@ class IssueAdvanceController extends Controller
     {
         $advance = issue_advance::where('refID', $ref)->first();
         $employee = employee::find($advance->employeeID);
-        $notes = "Issue Advance Date: $advance->date | Employee: $employee->name | Amount: $advance->amount | Notes: $advance->notes";
+        $designation = $employee->designation;
+        $department = $employee->department;
+        $address = $employee->address;
+        $notes = "Issue Advance Date: $advance->date | Employee: $employee->name  | Designation :  $designation | Department : $department | Address :  $address | Amount: $advance->amount | Notes: $advance->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $advance->branchID, $advance->refID, 'issue_advance', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {

@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\generate_salary;
-use App\Http\Controllers\Controller;
 use App\Models\employee;
-use App\Models\employee_ledger;
+use App\Models\generate_salary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,6 +17,7 @@ class GenerateSalaryController extends Controller
         $start = $request->start ?? firstDayOfMonth();
         $end = $request->end ?? lastDayOfMonth();
         $salaries = generate_salary::whereBetween('date', [$start, $end])->currentBranch()->get();
+
         return view('employees.generate_salary.index', compact('salaries', 'start', 'end'));
     }
 
@@ -28,6 +27,7 @@ class GenerateSalaryController extends Controller
     public function create()
     {
         $employees = employee::currentBranch()->active()->get();
+
         return view('employees.generate_salary.create', compact('employees'));
     }
 
@@ -39,39 +39,41 @@ class GenerateSalaryController extends Controller
 
         try {
             DB::beginTransaction();
-        $generated = 0;
-        $skipped = 0;
+            $generated = 0;
+            $skipped = 0;
 
-        $month = $request->month . '-' . 1;
+            $month = $request->month.'-'. 1;
 
-        $month_name = date('M Y', strtotime($month));
+            $month_name = date('M Y', strtotime($month));
 
-        foreach ($request->employees as $index => $employeeId) {
+            foreach ($request->employees as $index => $employeeId) {
 
-            $check = generate_salary::where('employeeID', $employeeId)->where('month', $month)->count();
-            if ($check > 0) {
-                $skipped++;
-               continue;
+                $check = generate_salary::where('employeeID', $employeeId)->where('month', $month)->count();
+                if ($check > 0) {
+                    $skipped++;
+
+                    continue;
+                }
+                $ref = getRef();
+                generate_salary::create([
+                    'branchID' => auth()->user()->branchID,
+                    'employeeID' => $employeeId,
+                    'salary' => $request->salary[$employeeId],
+                    'month' => $month,
+                    'date' => $request->date,
+                    'refID' => $ref,
+                ]);
+                createEmployeeTransaction($employeeId, $request->date, 0, $request->salary[$employeeId], 'Salary generated for the month of '.$month_name, $ref);
+                $generated++;
             }
-            $ref = getRef();
-            generate_salary::create([
-                'branchID' => auth()->user()->branchID,
-                'employeeID' => $employeeId,
-                'salary' => $request->salary[$employeeId],
-                'month' => $month,
-                'date' => $request->date,
-                'refID' => $ref,
-            ]);
-            createEmployeeTransaction($employeeId, $request->date, 0, $request->salary[$employeeId], 'Salary generated for the month of ' . $month_name, $ref);
-            $generated++;
-        }
-        DB::commit();
+            DB::commit();
 
-        return redirect()->route('generate_salary.index')->with('success', "$generated salaries generated successfully. $skipped salaries skipped (already generated).");
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return redirect()->back()->with('error', $e->getMessage());
-    }
+            return redirect()->route('generate_salary.index')->with('success', "$generated salaries generated successfully. $skipped salaries skipped (already generated).");
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -106,7 +108,7 @@ class GenerateSalaryController extends Controller
         $salary = generate_salary::where('refID', $ref)->first();
         $employee = employee::find($salary->employeeID);
         $month = date('F Y', strtotime($salary->month));
-        $notes = "Generate Salary Employee: $employee->name | Month: $month | Amount: $salary->amount";
+        $notes = "Generate Salary Employee: $employee->name | Month: $month | Amount: $salary->salary";
         $delete = storeDeleteRequest(auth()->user()->id, $salary->branchID, $salary->refID, 'generate_salary', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {
