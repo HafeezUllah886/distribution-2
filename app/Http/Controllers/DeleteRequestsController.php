@@ -141,6 +141,9 @@ class DeleteRequestsController extends Controller
         if ($deleteRequest->model == 'bulk_payment') {
             $result = $this->deleteBulkPayment($deleteRequest->refID);
         }
+        if ($deleteRequest->model == 'customer_advance_consumption') {
+            $result = $this->deleteCustomerAdvanceConsumption($deleteRequest->refID);
+        }
 
         // Generic approval for other models if any
         $deleteRequest->update(['status' => 'approved']);
@@ -825,6 +828,31 @@ class DeleteRequestsController extends Controller
 
             return [
                 'msg' => 'Bulk Payment Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteCustomerAdvanceConsumption($ref)
+    {
+        try {
+            DB::beginTransaction();
+            customerAdvanceConsumption::where('refID', $ref)->delete();
+            transactions::where('refID', $ref)->delete();
+            sale_payments::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Customer Advance Consumption Deleted',
                 'status' => 'success',
             ];
         } catch (\Exception $e) {

@@ -137,11 +137,11 @@ class CustomerAdvancePaymentController extends Controller
         $advance = CustomerAdvancePayment::where('refID', $ref)->first();
         $customer = accounts::find($advance->customerID);
         $orderbooker = $advance->orderbooker->name;
-        $number = $advance->number;
-        $bank = $advance->bank;
-        $cheque_date = $advance->cheque_date;
+        $number = $advance->number ?? 'N/A';
+        $bank = $advance->bank ?? 'N/A';
+        $cheque_date = $advance->cheque_date ?? 'N/A';
 
-        $notes = "Customer Advance Date: $advance->date | Customer: $customer->title | Method: $advance->method | Amount: $advance->amount | Bank: $bank | Cheque Date: $cheque_date | Number: $number | Notes: $advance->notes";
+        $notes = "Customer Advance Date: $advance->date | Customer: $customer->title | Orderbooker: $orderbooker | Method: $advance->method | Amount: $advance->amount | Bank: $bank | Cheque Date: $cheque_date | Number: $number | Notes: $advance->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $advance->branchID, $advance->refID, 'customer_advance', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {
@@ -254,20 +254,19 @@ class CustomerAdvancePaymentController extends Controller
 
     public function delete_consumption($ref)
     {
-        try {
-            DB::beginTransaction();
-            customerAdvanceConsumption::where('refID', $ref)->delete();
-            transactions::where('refID', $ref)->delete();
-            sale_payments::where('refID', $ref)->delete();
-            DB::commit();
-            session()->forget('confirmed_password');
+        $consumption = customerAdvanceConsumption::where('refID', $ref)->first();
+        $advance = CustomerAdvancePayment::find($consumption->customer_advanceID);
+        $customer = accounts::find($consumption->customerID);
+        $consumption_orderbooker = User::find($consumption->consumption_orderbookerID);
+        $orderbooker = User::find($consumption->advance_orderbookerID);
 
-            return to_route('customer_advances.index')->with('success', 'Payment Deleted');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            session()->forget('confirmed_password');
-
-            return to_route('customer_advances.index')->with('error', $e->getMessage());
+        $notes = "Advance Consumption Date: $consumption->date | Customer: $customer->title | Advance Orderbooker: $orderbooker->name | Consumption Orderbooker: $consumption_orderbooker->name | Invoice Date: $consumption->inv_date | Amount: $consumption->amount | Advance Amount: $advance->amount | Remaining Advance: " . $advance->remainingAmount();
+        $delete = storeDeleteRequest(auth()->user()->id, $consumption->branchID, $consumption->refID, 'customer_advance_consumption', $notes);
+        session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
         }
+
+        return to_route('customer_advances.index')->with('success', 'Advance Consumption Delete Request Sent to Branch Admin');
     }
 }
