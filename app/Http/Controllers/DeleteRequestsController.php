@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accountsAdjustment;
+use App\Models\bulk_payments;
 use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\customerAdvanceConsumption;
@@ -13,7 +14,6 @@ use App\Models\employee_ledger_adjustment;
 use App\Models\expenses;
 use App\Models\fixed_assets;
 use App\Models\fixed_assets_sales;
-use App\Models\bulk_payments;
 use App\Models\generate_salary;
 use App\Models\issue_advance;
 use App\Models\issue_misc;
@@ -147,6 +147,19 @@ class DeleteRequestsController extends Controller
 
         // Generic approval for other models if any
         $deleteRequest->update(['status' => 'approved']);
+
+        // Send notification to the user who requested the deletion
+        $modelName = ucfirst(str_replace('_', ' ', $deleteRequest->model));
+        createUserNotification(
+            $deleteRequest->user_id,
+            'Delete Request Approved',
+            "Your delete request for $modelName has been approved by ".auth()->user()->name.' Note:'.$deleteRequest->notes,
+            'success',
+            'delete_request',
+            $deleteRequest->id,
+            'delete_requests'
+        );
+
         if (isset($result) && $result['status'] == 'error') {
             return to_route('delete_request.index')->with('error', $result['msg']);
         } else {
@@ -164,6 +177,18 @@ class DeleteRequestsController extends Controller
 
         $deleteRequest->status = 'rejected';
         $deleteRequest->save();
+
+        // Send notification to the user who requested the deletion
+        $modelName = ucfirst(str_replace('_', ' ', $deleteRequest->model));
+        createUserNotification(
+            $deleteRequest->user_id,
+            'Delete Request Rejected',
+            "Your delete request for $modelName has been rejected by ".auth()->user()->name.' Note:'.$deleteRequest->notes,
+            'error',
+            'delete_request',
+            $deleteRequest->id,
+            'delete_requests'
+        );
 
         return to_route('delete_request.index')->with('success', 'Delete Request Rejected');
     }

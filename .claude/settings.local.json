@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-Content \"c:\\\\sites\\\\distribution-2\\\\app\\\\Helpers\\\\generalHelper.php\")",
+      "Bash(Measure-Object -Line)",
+      "Bash(powershell -Command \"\\(Get-Content 'c:\\\\sites\\\\distribution-2\\\\app\\\\Helpers\\\\generalHelper.php'\\).Count\")",
+      "Bash(php artisan *)"
+    ]
+  }
+}

@@ -338,3 +338,16 @@ function storeDeleteRequest($user_id, $branchID, $refID, $model, $notes)
     return 1;
 
 }
+
+function createUserNotification($user_id, $title, $message, $type = 'info', $source = null, $reference_id = null, $reference_type = null)
+{
+    \App\Models\Notification::create([
+        'user_id' => $user_id,
+        'title' => $title,
+        'message' => $message,
+        'type' => $type,
+        'source' => $source,
+        'reference_id' => $reference_id,
+        'reference_type' => $reference_type,
+    ]);
+}

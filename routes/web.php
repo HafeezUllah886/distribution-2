@@ -24,6 +24,7 @@ require __DIR__.'/employees.php';
 require __DIR__.'/discount_mgmt.php';
 require __DIR__.'/branch_investment.php';
 require __DIR__.'/delete_requests.php';
+require __DIR__.'/notifications.php';
 
 
 Route::middleware('auth')->group(function () {

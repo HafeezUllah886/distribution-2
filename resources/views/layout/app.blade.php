@@ -25,6 +25,18 @@
 
     <link href="{{ asset('assets/libs/toastify/toastify.min.css') }}" rel="stylesheet" type="text/css" />
 
+    <style>
+        .notification-dropdown {
+            overflow-x: hidden !important;
+        }
+        .notification-list {
+            overflow-x: hidden !important;
+        }
+        .notification-list .dropdown-item {
+            overflow: hidden !important;
+        }
+    </style>
+
 
     @yield('page-css')
 
@@ -87,6 +99,34 @@
                                 class="btn btn-icon btn-topbar material-shadow-none btn-ghost-secondary rounded-circle light-dark-mode">
                                 <i class='bx bx-moon fs-22'></i>
                             </button>
+                        </div>
+                        <div class="dropdown ms-1 header-item">
+                            <button type="button"
+                                class="btn btn-icon btn-topbar material-shadow-none btn-ghost-secondary rounded-circle position-relative"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                onclick="loadNotifications()">
+                                <i class='bx bx-bell fs-22'></i>
+                                <span
+                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge"
+                                    style="display: none;">
+                                    <span class="notification-count">0</span>
+                                </span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-lg p-0 notification-dropdown"
+                                style="width: 320px; max-height: 450px; overflow-y: auto; overflow-x: hidden;">
+                                <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                                    <h6 class="m-0">Notifications</h6>
+                                    <button class="btn btn-sm btn-link p-0" onclick="markAllRead()">Mark all
+                                        read</button>
+                                </div>
+                                <div class="notification-list" style="overflow-x: hidden;">
+                                    <div class="text-center p-3 text-muted">Loading...</div>
+                                </div>
+                                <div class="p-2 border-top text-center">
+                                    <a href="{{ route('notifications.index') }}" class="btn btn-sm btn-light">View
+                                        All</a>
+                                </div>
+                            </div>
                         </div>
                         <div class="dropdown ms-sm-3 header-item topbar-user">
                             <button type="button" class="btn material-shadow-none" id="page-header-user-dropdown"
@@ -256,6 +296,96 @@
 
             window.open(route, '_blank', `width=${width},height=${height}`);
         }
+
+        // Notifications
+        function loadNotifications() {
+            $.get('{{ route('notifications.list') }}', function(response) {
+                var notifications = response.notifications;
+                var count = response.unread_count;
+
+                // Update badge
+                if (count > 0) {
+                    $('.notification-badge').show();
+                    $('.notification-count').text(count > 9 ? '9+' : count);
+                } else {
+                    $('.notification-badge').hide();
+                }
+
+                // Build list
+                if (notifications.length > 0) {
+                    var html = '';
+                    notifications.forEach(function(n) {
+                        var iconClass = 'info';
+                        var icon = 'bx-info-circle';
+                        if (n.type === 'success') {
+                            iconClass = 'success';
+                            icon = 'bx-check-circle';
+                        } else if (n.type === 'error') {
+                            iconClass = 'danger';
+                            icon = 'bx-x-circle';
+                        } else if (n.type === 'warning') {
+                            iconClass = 'warning';
+                            icon = 'bx-exclamation-circle';
+                        }
+
+                        var unreadClass = n.status === 'unread' ? 'bg-light' : '';
+
+                        html += `
+                            <div class="dropdown-item notify-item ${unreadClass} py-2" onclick="markNotificationRead(${n.id})" style="white-space: normal; display: flex; align-items: flex-start;">
+                                <div class="notify-icon bg-${iconClass} rounded-circle flex-shrink-0 me-2" style="width:32px; height:32px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bx ${icon} text-white"></i>
+                                </div>
+                                <div class="notify-content" style="min-width: 0; max-width: 100%; overflow: hidden;">
+                                    <p class="notify-subject mb-1 fw-semibold" style="white-space: normal; word-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${n.title}</p>
+                                    <p class="text-muted font-12 mb-1" style="white-space: normal; word-wrap: break-word; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${n.message}</p>
+                                    <p class="text-muted font-10 mb-0">${formatDate(n.created_at)}</p>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    $('.notification-list').html(html);
+                } else {
+                    $('.notification-list').html('<div class="text-center p-3 text-muted">No notifications</div>');
+                }
+            });
+        }
+
+        function formatDate(dateString) {
+            var date = new Date(dateString);
+            var now = new Date();
+            var diff = now - date;
+            var minutes = Math.floor(diff / 60000);
+            var hours = Math.floor(diff / 3600000);
+            var days = Math.floor(diff / 86400000);
+
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return minutes + ' min ago';
+            if (hours < 24) return hours + ' hr ago';
+            if (days < 7) return days + ' days ago';
+            return date.toLocaleDateString();
+        }
+
+        function markNotificationRead(id) {
+            $.post('{{ route('notifications.mark-as-read', ':id') }}'.replace(':id', id), {
+                _token: '{{ csrf_token() }}'
+            }, function(response) {
+                loadNotifications();
+            });
+        }
+
+        function markAllRead() {
+            $.post('{{ route('notifications.mark-all-read') }}', {
+                _token: '{{ csrf_token() }}'
+            }, function(response) {
+                loadNotifications();
+            });
+        }
+
+        // Check for new notifications periodically
+        $(document).ready(function() {
+            loadNotifications();
+            setInterval(loadNotifications, 30000); // Check every 30 seconds
+        });
     </script>
 
     @yield('page-js')
