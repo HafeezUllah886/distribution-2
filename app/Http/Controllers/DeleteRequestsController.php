@@ -167,7 +167,7 @@ class DeleteRequestsController extends Controller
         }
     }
 
-    public function reject($id)
+    public function reject(Request $request, $id)
     {
         $deleteRequest = delete_requests::find($id);
 
@@ -176,14 +176,18 @@ class DeleteRequestsController extends Controller
         }
 
         $deleteRequest->status = 'rejected';
+        if ($request->has('notes')) {
+            $deleteRequest->notes = $request->notes;
+        }
         $deleteRequest->save();
 
         // Send notification to the user who requested the deletion
         $modelName = ucfirst(str_replace('_', ' ', $deleteRequest->model));
+        $notesText = $request->has('notes') ? ' Note: '.$request->notes : '';
         createUserNotification(
             $deleteRequest->user_id,
             'Delete Request Rejected',
-            "Your delete request for $modelName has been rejected by ".auth()->user()->name.' Note:'.$deleteRequest->notes,
+            "Your delete request for $modelName has been rejected by ".auth()->user()->name.$notesText,
             'error',
             'delete_request',
             $deleteRequest->id,

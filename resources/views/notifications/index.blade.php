@@ -34,7 +34,8 @@
                                             @endif
                                         </td>
                                         <td>{{ $notification->title }}</td>
-                                        <td style="max-width:300px; white-space:normal; word-break:break-word;">{{ $notification->message }}</td>
+                                        <td style="max-width:300px; white-space:normal; word-break:break-word;">
+                                            {{ $notification->message }}</td>
                                         <td>
                                             @switch($notification->type)
                                                 @case('success')
@@ -63,10 +64,7 @@
                                         </td>
                                         <td>{{ $notification->created_at->format('d M Y, h:i A') }}</td>
                                         <td>
-                                            @if ($notification->status == 'unread')
-                                                <button class="btn btn-sm btn-primary"
-                                                    onclick="markAsRead({{ $notification->id }})">Mark Read</button>
-                                            @endif
+
                                             <button class="btn btn-sm btn-danger"
                                                 onclick="deleteNotification({{ $notification->id }})">Delete</button>
                                         </td>

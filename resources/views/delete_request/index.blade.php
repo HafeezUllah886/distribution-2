@@ -96,12 +96,14 @@
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item"
-                                                            href="{{ route('delete_request.reject', $req->id) }}">
+                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                            data-bs-toggle="modal" data-bs-target="#rejectModal{{ $req->id }}">
                                                             <i class="ri-close-line align-bottom me-2 text-muted"></i>
                                                             Reject
                                                         </a>
                                                     </li>
+
+
                                                 @endif
 
                                                 <li>
@@ -125,6 +127,33 @@
         </div>
     </div>
     <!-- Default Modals -->
+    @foreach ($delete_req as $req)
+        @if ($req->status == 'pending')
+            <!-- Reject Modal -->
+            <div class="modal fade" id="rejectModal{{ $req->id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ $req->id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="rejectModalLabel{{ $req->id }}">Reject Request</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{{ route('delete_request.reject', $req->id) }}" method="GET">
+                            <div class="modal-body pb-0 text-start">
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Rejection Notes</label>
+                                    <textarea class="form-control" name="notes" id="notes" rows="3" required placeholder="Enter reason for rejection..."></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Reject Request</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endforeach
 
 
 @endsection

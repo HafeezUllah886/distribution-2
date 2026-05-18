@@ -7,6 +7,7 @@ use App\Models\purchase_details;
 use App\Models\ref;
 use App\Models\sale_details;
 use App\Models\sales;
+use App\Models\User;
 use Carbon\Carbon;
 
 function getRef()
@@ -327,12 +328,25 @@ function storeDeleteRequest($user_id, $branchID, $refID, $model, $notes)
     if ($check && $check->status == 'pending') {
         return 0;
     }
-    delete_requests::create([
+    $notification = delete_requests::create([
         'user_id' => $user_id,
         'branchID' => $branchID,
         'refID' => $refID,
         'model' => $model,
         'notes' => $notes,
+    ]);
+
+    $notification_for = User::where('role', 'Branch Admin')->where('branchID', $branchID)->first();
+
+    $user = User::where('id', $user_id)->first();
+    \App\Models\Notification::create([
+        'user_id' => $notification_for->id,
+        'title' => 'Delete Request',
+        'message' => 'Delete request received for '.$model.' from '.$user->name,
+        'type' => 'info',
+        'source' => 'delete_request',
+        'reference_id' => $notification->id,
+        'reference_type' => 'delete_request',
     ]);
 
     return 1;
