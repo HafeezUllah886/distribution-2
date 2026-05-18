@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\accounts;
 use App\Models\accountsAdjustment;
 use App\Models\area;
+use App\Models\transactions;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -132,7 +133,11 @@ class AccountsAdjustmentController extends Controller
         $adj = accountsAdjustment::where('refID', $ref)->first();
         $account = $adj->account->title;
         $type = $adj->type;
-        $notes = "Accounts Adjustment Date: $adj->date | Amount: $adj->amount | Account: $account | Type: $type | Notes: $adj->notes";
+        $adjustedBy = $adj->user->name;
+        $area = $adj->account->area->name;
+        $orderbookerID = transactions::where('refID', $ref)->first()->orderbookerID;
+        $orderbooker = User::find($orderbookerID)->name;
+        $notes = "Accounts Adjustment Date: $adj->date | Amount: $adj->amount | Account: $account | Type: $type | Notes: $adj->notes | Adjusted By: $adjustedBy | Area: $area | Orderbooker: $orderbooker";
         $delete = storeDeleteRequest(auth()->user()->id, $adj->branchID, $adj->refID, 'accounts_adjustment', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {

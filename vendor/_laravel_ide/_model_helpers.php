@@ -315,7 +315,29 @@ namespace App\Models {
 	/**
 	 * App\Models\Notification
 	 *
+	 * @property \Illuminate\Support\Carbon|null $updated_at
+	 * @property \Illuminate\Support\Carbon|null $created_at
+	 * @property string|null $reference_type
+	 * @property int|null $reference_id
+	 * @property string|null $source
+	 * @property string $status
+	 * @property string $type
+	 * @property string $message
+	 * @property string $title
+	 * @property int $user_id
+	 * @property int $id
 	 * @property-read \App\Models\User $user
+	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereId($value)
+	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereUserId($value)
+	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereTitle($value)
+	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereMessage($value)
+	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereType($value)
+	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereStatus($value)
+	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereSource($value)
+	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereReferenceId($value)
+	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereReferenceType($value)
+	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereCreatedAt($value)
+	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification whereUpdatedAt($value)
 	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification newModelQuery()
 	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification newQuery()
 	 * @method static \Illuminate\Database\Eloquent\Builder<Notification>|Notification query()
