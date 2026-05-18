@@ -169,7 +169,7 @@ class IssueAdvanceController extends Controller
         $designation = $employee->designation;
         $department = $employee->department;
         $address = $employee->address;
-        $notes = "Issue Advance Date: $advance->date | Employee: $employee->name  | Designation :  $designation | Department : $department | Address :  $address | Amount: $advance->amount | Notes: $advance->notes";
+        $notes = "Issue Advance Date: $advance->date | Employee: $employee->name  | Designation :  $designation | Department : $department | Address :  $address | Amount: $advance->advance | Notes: $advance->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $advance->branchID, $advance->refID, 'issue_advance', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {

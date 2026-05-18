@@ -108,7 +108,11 @@ class GenerateSalaryController extends Controller
         $salary = generate_salary::where('refID', $ref)->first();
         $employee = employee::find($salary->employeeID);
         $month = date('F Y', strtotime($salary->month));
-        $notes = "Generate Salary Employee: $employee->name | Month: $month | Amount: $salary->salary";
+        $designation = $employee->designation;
+        $department = $employee->department;
+        $address = $employee->address;
+
+        $notes = "Generate Salary Employee: $employee->name | Month: $month | Amount: $salary->salary | Designation: $designation | Department: $department | Address: $address | Date: $salary->date";
         $delete = storeDeleteRequest(auth()->user()->id, $salary->branchID, $salary->refID, 'generate_salary', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {

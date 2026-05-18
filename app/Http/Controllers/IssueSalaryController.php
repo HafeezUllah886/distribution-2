@@ -174,7 +174,8 @@ class IssueSalaryController extends Controller
         $designation = $employee->designation;
         $department = $employee->department;
         $address = $employee->address;
-        $notes = "Issue Salary Date: $salary->date | Employee: $employee->name  | Designation :  $designation | Department : $department | Address :  $address | Amount: $salary->salary | Notes: $salary->notes";
+        $salaryMonth = date('F Y', strtotime($salary->month));
+        $notes = "Issue Salary Date: $salary->date | Employee: $employee->name  | Designation :  $designation | Department : $department | Address :  $address | Salary Month : $salaryMonth | Amount: $salary->salary | Notes: $salary->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $salary->branchID, $salary->refID, 'issue_salary', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {

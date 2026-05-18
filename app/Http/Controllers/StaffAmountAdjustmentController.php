@@ -124,11 +124,9 @@ class StaffAmountAdjustmentController extends Controller
     public function delete($ref)
     {
         $adj = staffAmountAdjustment::where('refID', $ref)->first();
-        $staff = User::find($adj->staffID);
-        $bank = $adj->bank;
-        $number = $adj->number;
-        $cheque_date = $adj->cheque_date;
-        $notes = "Staff Amount Adjustment Date: $adj->date | Staff: $staff->name | Bank: $bank | Number: $number | Cheque Date: $cheque_date | Type: $adj->type | Amount: $adj->amount | Notes: $adj->notes";
+        $staff = User::find($adj->staffID)->name;
+        $adjustedBy = $adj->user->name;
+        $notes = "Staff Amount Adjustment Date: $adj->date | Staff: $staff | Adjusted By: $adjustedBy | Type: $adj->type | Amount: $adj->amount | Notes: $adj->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $adj->branchID, $adj->refID, 'staff_amount_adjustment', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {

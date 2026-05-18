@@ -10,7 +10,6 @@ use App\Models\CustomerAdvancePayment;
 use App\Models\orderbooker_customers;
 use App\Models\sale_payments;
 use App\Models\sales;
-use App\Models\transactions;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -137,11 +136,15 @@ class CustomerAdvancePaymentController extends Controller
         $advance = CustomerAdvancePayment::where('refID', $ref)->first();
         $customer = accounts::find($advance->customerID);
         $orderbooker = $advance->orderbooker->name;
+        $method = $advance->method;
         $number = $advance->number ?? 'N/A';
         $bank = $advance->bank ?? 'N/A';
         $cheque_date = $advance->cheque_date ?? 'N/A';
+        $consumedAmount = $advance->consumedAmount();
+        $remainingAmount = $advance->remainingAmount();
+        $area = $customer->area->name;
 
-        $notes = "Customer Advance Date: $advance->date | Customer: $customer->title | Orderbooker: $orderbooker | Method: $advance->method | Amount: $advance->amount | Bank: $bank | Cheque Date: $cheque_date | Number: $number | Notes: $advance->notes";
+        $notes = "Customer Advance Date: $advance->date | Customer: $customer->title | Area: $area | Orderbooker: $orderbooker | Method: $advance->method | Amount: $advance->amount | Consumed Amount: $consumedAmount | Remaining Amount: $remainingAmount | Bank: $bank | Cheque Date: $cheque_date | Number: $number | Notes: $advance->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $advance->branchID, $advance->refID, 'customer_advance', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {
@@ -259,8 +262,10 @@ class CustomerAdvancePaymentController extends Controller
         $customer = accounts::find($consumption->customerID);
         $consumption_orderbooker = User::find($consumption->consumption_orderbookerID);
         $orderbooker = User::find($consumption->advance_orderbookerID);
+        $invoiceNo = $consumption->invoice->id;
+        $area = $customer->area->name;
 
-        $notes = "Advance Consumption Date: $consumption->date | Customer: $customer->title | Advance Orderbooker: $orderbooker->name | Consumption Orderbooker: $consumption_orderbooker->name | Invoice Date: $consumption->inv_date | Amount: $consumption->amount | Advance Amount: $advance->amount | Remaining Advance: " . $advance->remainingAmount();
+        $notes = "Advance Consumption Date: $consumption->date | Customer: $customer->title | Area: $area | Advance Orderbooker: $orderbooker->name | Consumption Orderbooker: $consumption_orderbooker->name | Invoice No: $invoiceNo | Invoice Date: $consumption->inv_date | Amount: $consumption->amount | Advance Amount: $advance->amount | Remaining Advance: ".$advance->remainingAmount();
         $delete = storeDeleteRequest(auth()->user()->id, $consumption->branchID, $consumption->refID, 'customer_advance_consumption', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {
