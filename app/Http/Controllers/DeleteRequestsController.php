@@ -64,7 +64,7 @@ class DeleteRequestsController extends Controller
             $delete_req->where('status', $status);
         }
 
-        $delete_req = $delete_req->orderBy('id', 'desc')->get();
+        $delete_req = $delete_req->orderBy('id', 'desc')->currentBranch()->get();
 
         return view('delete_request.index', compact('delete_req', 'from', 'to', 'status'));
     }

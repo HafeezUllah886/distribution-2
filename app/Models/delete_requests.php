@@ -15,4 +15,9 @@ class delete_requests extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+     public function scopeCurrentBranch($query)
+    {
+        return $query->where('branchID', auth()->user()->branchID);
+    }
 }
