@@ -9,6 +9,7 @@ use App\Models\currency_transactions;
 use App\Models\customerAdvanceConsumption;
 use App\Models\CustomerAdvancePayment;
 use App\Models\delete_requests;
+use App\Models\User;
 use App\Models\employee_ledger;
 use App\Models\employee_ledger_adjustment;
 use App\Models\expenses;
@@ -53,6 +54,8 @@ class DeleteRequestsController extends Controller
         $from = $request->from ?? Carbon::now()->startOfMonth()->format('Y-m-d');
         $to = $request->to ?? Carbon::now()->endOfMonth()->format('Y-m-d');
         $status = $request->status ?? 'pending';
+        $requested_by = $request->requested_by ?? 'all';
+        $model_filter = $request->model_filter ?? 'all';
 
         $delete_req = delete_requests::with('user')
             ->whereBetween('created_at', [
@@ -64,9 +67,20 @@ class DeleteRequestsController extends Controller
             $delete_req->where('status', $status);
         }
 
+        if ($requested_by != 'all') {
+            $delete_req->where('user_id', $requested_by);
+        }
+
+        if ($model_filter != 'all') {
+            $delete_req->where('model', $model_filter);
+        }
+
         $delete_req = $delete_req->orderBy('id', 'desc')->currentBranch()->get();
 
-        return view('delete_request.index', compact('delete_req', 'from', 'to', 'status'));
+        $users = User::where('branchID', auth()->user()->branchID)->orderBy('name')->get();
+        $models = delete_requests::currentBranch()->distinct()->pluck('model')->filter()->sort()->values();
+
+        return view('delete_request.index', compact('delete_req', 'from', 'to', 'status', 'requested_by', 'model_filter', 'users', 'models'));
     }
 
     public function approve($id)

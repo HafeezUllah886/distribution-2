@@ -31,6 +31,32 @@
                     </div>
 
                     <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Requested By</span>
+                            <select name="requested_by" class="form-control">
+                                <option value="all">All</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}" @selected($requested_by == $user->id)>{{ $user->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Model</span>
+                            <select name="model_filter" class="form-control">
+                                <option value="all">All</option>
+                                @foreach ($models as $mdl)
+                                    <option value="{{ $mdl }}" @selected($model_filter == $mdl)>
+                                        {{ ucwords(str_replace('_', ' ', $mdl)) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
                         <input type="submit" value="Filter" class="btn btn-success w-100">
                     </div>
                 </div>
@@ -97,13 +123,12 @@
                                                     </li>
                                                     <li>
                                                         <a class="dropdown-item" href="javascript:void(0);"
-                                                            data-bs-toggle="modal" data-bs-target="#rejectModal{{ $req->id }}">
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#rejectModal{{ $req->id }}">
                                                             <i class="ri-close-line align-bottom me-2 text-muted"></i>
                                                             Reject
                                                         </a>
                                                     </li>
-
-
                                                 @endif
 
                                                 <li>
@@ -130,7 +155,8 @@
     @foreach ($delete_req as $req)
         @if ($req->status == 'pending')
             <!-- Reject Modal -->
-            <div class="modal fade" id="rejectModal{{ $req->id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ $req->id }}" aria-hidden="true">
+            <div class="modal fade" id="rejectModal{{ $req->id }}" tabindex="-1"
+                aria-labelledby="rejectModalLabel{{ $req->id }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -141,7 +167,8 @@
                             <div class="modal-body pb-0 text-start">
                                 <div class="mb-3">
                                     <label for="notes" class="form-label">Rejection Notes</label>
-                                    <textarea class="form-control" name="notes" id="notes" rows="3" required placeholder="Enter reason for rejection..."></textarea>
+                                    <textarea class="form-control" name="notes" id="notes" rows="3" required
+                                        placeholder="Enter reason for rejection..."></textarea>
                                 </div>
                             </div>
                             <div class="modal-footer">
