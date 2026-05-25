@@ -83,7 +83,7 @@
         </div>
     @endsection
 
-    @push('page-js')
+    @section('page-js')
         <script>
             function markAsRead(id) {
                 $.post('{{ route('notifications.mark-as-read', ':id') }}'.replace(':id', id), {
@@ -108,7 +108,7 @@
             function deleteNotification(id) {
                 if (confirm('Are you sure you want to delete this notification?')) {
                     $.ajax({
-                        url: '{{ route('notifications.destroy', ':id') }}'.replace(':id', id),
+                        url: '{{ url('notifications') }}/' + id,
                         type: 'DELETE',
                         data: {
                             _token: '{{ csrf_token() }}'
@@ -139,4 +139,4 @@
                 }
             }
         </script>
-    @endpush
+    @endsection
