@@ -83,7 +83,7 @@ class DeleteRequestsController extends Controller
         return view('delete_request.index', compact('delete_req', 'from', 'to', 'status', 'requested_by', 'model_filter', 'users', 'models'));
     }
 
-    public function approve($id)
+    public function approve(Request $request, $id)
     {
         $deleteRequest = delete_requests::find($id);
 
@@ -167,7 +167,7 @@ class DeleteRequestsController extends Controller
         createUserNotification(
             $deleteRequest->user_id,
             'Delete Request Approved',
-            "Your delete request for $modelName has been approved by ".auth()->user()->name.' Note:'.$deleteRequest->notes,
+            "Your delete request for $modelName has been approved by ".auth()->user()->name.' Note: '.$request->notes,
             'success',
             'delete_request',
             $deleteRequest->id,
@@ -190,9 +190,6 @@ class DeleteRequestsController extends Controller
         }
 
         $deleteRequest->status = 'rejected';
-        if ($request->has('notes')) {
-            $deleteRequest->notes = $request->notes;
-        }
         $deleteRequest->save();
 
         // Send notification to the user who requested the deletion

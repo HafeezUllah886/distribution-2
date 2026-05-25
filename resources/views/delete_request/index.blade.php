@@ -115,8 +115,9 @@
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 @if ($req->status == 'pending')
                                                     <li>
-                                                        <a class="dropdown-item"
-                                                            href="{{ route('delete_request.approve', $req->id) }}">
+                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#approveModal{{ $req->id }}">
                                                             <i class="ri-check-line align-bottom me-2 text-muted"></i>
                                                             Approve
                                                         </a>
@@ -154,6 +155,32 @@
     <!-- Default Modals -->
     @foreach ($delete_req as $req)
         @if ($req->status == 'pending')
+            <!-- Approve Modal -->
+            <div class="modal fade" id="approveModal{{ $req->id }}" tabindex="-1"
+                aria-labelledby="approveModalLabel{{ $req->id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="approveModalLabel{{ $req->id }}">Approve Request</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="{{ route('delete_request.approve', $req->id) }}" method="GET">
+                            <div class="modal-body pb-0 text-start">
+                                <div class="mb-3">
+                                    <label for="approvalNotes{{ $req->id }}" class="form-label">Approval Notes</label>
+                                    <textarea class="form-control" name="notes" id="approvalNotes{{ $req->id }}" rows="3" required
+                                        placeholder="Enter approval notes..."></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-success">Approve Request</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <!-- Reject Modal -->
             <div class="modal fade" id="rejectModal{{ $req->id }}" tabindex="-1"
                 aria-labelledby="rejectModalLabel{{ $req->id }}" aria-hidden="true">
@@ -166,8 +193,8 @@
                         <form action="{{ route('delete_request.reject', $req->id) }}" method="GET">
                             <div class="modal-body pb-0 text-start">
                                 <div class="mb-3">
-                                    <label for="notes" class="form-label">Rejection Notes</label>
-                                    <textarea class="form-control" name="notes" id="notes" rows="3" required
+                                    <label for="rejectionNotes{{ $req->id }}" class="form-label">Rejection Notes</label>
+                                    <textarea class="form-control" name="notes" id="rejectionNotes{{ $req->id }}" rows="3" required
                                         placeholder="Enter reason for rejection..."></textarea>
                                 </div>
                             </div>
