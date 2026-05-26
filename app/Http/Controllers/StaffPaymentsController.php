@@ -193,10 +193,10 @@ class StaffPaymentsController extends Controller
     public function delete($ref)
     {
         $payment = staffPayments::where('refID', $ref)->first();
-        $staff = accounts::find($payment->fromID);
+        $staff = User::find($payment->fromID);
         $method = $payment->method;
         $amount = $payment->amount;
-        $notes = "Staff Payment Date: $payment->date | Staff: $staff->title | Method: $method | Amount: $amount";
+        $notes = "Staff Payment Date: $payment->date | Staff: $staff->name | Method: $method | Amount: $amount";
         $delete = storeDeleteRequest(auth()->user()->id, auth()->user()->branchID, $payment->refID, 'staff_payment', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {

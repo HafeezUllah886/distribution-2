@@ -176,7 +176,10 @@ class BulkInvoicePaymentsReceivingController extends Controller
         $bank = $bulkPayment->bank;
         $number = $bulkPayment->number;
         $cheque_date = $bulkPayment->cheque_date;
-        $notes = "Bulk Payment Date: $bulkPayment->date | Payment No.: $ref | Amount: $bulkPayment->amount | Customer: $customer | Method: $payment, Bank: $bank, Cheque No.: $number, Cheque Date: $cheque_date | Invoice IDs: $bulkPayment->invoiceIDs | Notes: $bulkPayment->notes";
+        $received_by = User::find($bulkPayment->userID)->name;
+        $area = area::find($bulkPayment->customer->areaID)->name;
+        $orderbooker = user::find($bulkPayment->orderbookerID)->name;
+        $notes = "Bulk Payment Date: $bulkPayment->date | Amount: $bulkPayment->amount | Customer: $customer | Area: $area | Orderbooker: $orderbooker | Method: $payment, Bank: $bank, Cheque No.: $number, Cheque Date: $cheque_date | Invoice IDs: $bulkPayment->invoiceIDs | Received By: $received_by | Notes: $bulkPayment->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $bulkPayment->branchID, $bulkPayment->refID, 'bulk_payment', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {
