@@ -267,12 +267,14 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($areas as $area)
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>{{ $area->name }} </td>
-                                                        <td>{{ number_format($area->currentBalance, 2) }}</td>
-                                                        <td>{{ number_format($area->lastYearBalance, 2) }}</td>
-                                                    </tr>
+                                                    @if ($area->currentBalance > 0 || $area->lastYearBalance > 0)
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ $area->name }} </td>
+                                                            <td>{{ number_format($area->currentBalance, 2) }}</td>
+                                                            <td>{{ number_format($area->lastYearBalance, 2) }}</td>
+                                                        </tr>
+                                                    @endif
                                                 @endforeach
                                             </table>
                                         </div>
