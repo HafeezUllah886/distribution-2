@@ -9,7 +9,6 @@ use App\Models\currency_transactions;
 use App\Models\customerAdvanceConsumption;
 use App\Models\CustomerAdvancePayment;
 use App\Models\delete_requests;
-use App\Models\User;
 use App\Models\employee_ledger;
 use App\Models\employee_ledger_adjustment;
 use App\Models\expenses;
@@ -39,6 +38,7 @@ use App\Models\StockTransfer;
 use App\Models\transactions;
 use App\Models\transactions_que;
 use App\Models\transfer;
+use App\Models\User;
 use App\Models\users_transactions;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -160,14 +160,15 @@ class DeleteRequestsController extends Controller
         }
 
         // Generic approval for other models if any
-        $deleteRequest->update(['status' => 'approved']);
+        $delete_notes = $deleteRequest->notes.' Approval Notes: '.$request->notes;
+        $deleteRequest->update(['status' => 'approved', 'notes' => $delete_notes]);
 
         // Send notification to the user who requested the deletion
         $modelName = ucfirst(str_replace('_', ' ', $deleteRequest->model));
         createUserNotification(
             $deleteRequest->user_id,
             'Delete Request Approved',
-            "Your delete request for $modelName has been approved by ".auth()->user()->name.' Note: '.$request->notes,
+            "Your delete request for $modelName has been approved by ".auth()->user()->name,
             'success',
             'delete_request',
             $deleteRequest->id,
@@ -189,7 +190,9 @@ class DeleteRequestsController extends Controller
             return redirect()->back()->with('error', 'Request already '.$deleteRequest->status);
         }
 
+        $delete_notes = $deleteRequest->notes.' Rejection Notes: '.$request->notes;
         $deleteRequest->status = 'rejected';
+        $deleteRequest->notes = $delete_notes;
         $deleteRequest->save();
 
         // Send notification to the user who requested the deletion
@@ -198,7 +201,7 @@ class DeleteRequestsController extends Controller
         createUserNotification(
             $deleteRequest->user_id,
             'Delete Request Rejected',
-            "Your delete request for $modelName has been rejected by ".auth()->user()->name.$notesText,
+            "Your delete request for $modelName has been rejected by ".auth()->user()->name,
             'error',
             'delete_request',
             $deleteRequest->id,

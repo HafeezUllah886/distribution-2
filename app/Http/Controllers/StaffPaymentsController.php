@@ -196,7 +196,11 @@ class StaffPaymentsController extends Controller
         $staff = User::find($payment->fromID);
         $method = $payment->method;
         $amount = $payment->amount;
-        $notes = "Staff Payment Date: $payment->date | Staff: $staff->name | Method: $method | Amount: $amount";
+        $number = $payment->number;
+        $bank = $payment->bank;
+        $cheque_date = $payment->cheque_date;
+        $notes = $payment->notes;
+        $notes = "Staff Payment Date: $payment->date | Staff: $staff->name | Method: $method  Number: $number Bank : $bank Cheque Date : $cheque_date | Amount: $amount | Notes : $notes";
         $delete = storeDeleteRequest(auth()->user()->id, auth()->user()->branchID, $payment->refID, 'staff_payment', $notes);
         session()->forget('confirmed_password');
         if ($delete == 0) {
