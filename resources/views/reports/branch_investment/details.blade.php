@@ -300,12 +300,15 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($vendors as $vendor)
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>{{ $vendor->title }}</td>
-                                                        <td>{{ number_format($vendor->currentBalance, 2) }}</td>
-                                                        <td>{{ number_format($vendor->lastYearBalance, 2) }}</td>
-                                                    </tr>
+                                                    @if ($vendor->currentBalance > 0 || $vendor->lastYearBalance > 0)
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ $vendor->title }}</td>
+                                                            <td>{{ number_format($vendor->currentBalance, 2) }}</td>
+                                                            <td>{{ number_format($vendor->lastYearBalance, 2) }}</td>
+
+                                                        </tr>
+                                                    @endif
                                                 @endforeach
                                             </table>
                                         </div>
@@ -331,12 +334,14 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($business as $busines)
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>{{ $busines->title }}</td>
-                                                        <td>{{ number_format($busines->currentBalance, 2) }}</td>
-                                                        <td>{{ number_format($busines->lastYearBalance, 2) }}</td>
-                                                    </tr>
+                                                    @if ($busines->currentBalance > 0 || $busines->lastYearBalance > 0)
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ $busines->title }}</td>
+                                                            <td>{{ number_format($busines->currentBalance, 2) }}</td>
+                                                            <td>{{ number_format($busines->lastYearBalance, 2) }}</td>
+                                                        </tr>
+                                                    @endif
                                                 @endforeach
                                             </table>
                                         </div>
@@ -362,12 +367,14 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($unloaders as $unloader)
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>{{ $unloader->title }}</td>
-                                                        <td>{{ number_format($unloader->currentBalance, 2) }}</td>
-                                                        <td>{{ number_format($unloader->lastYearBalance, 2) }}</td>
-                                                    </tr>
+                                                    @if ($unloader->currentBalance > 0 || $unloader->lastYearBalance > 0)
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ $unloader->title }}</td>
+                                                            <td>{{ number_format($unloader->currentBalance, 2) }}</td>
+                                                            <td>{{ number_format($unloader->lastYearBalance, 2) }}</td>
+                                                        </tr>
+                                                    @endif
                                                 @endforeach
                                             </table>
                                         </div>
@@ -393,12 +400,14 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($supplymans as $supplyman)
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>{{ $supplyman->title }}</td>
-                                                        <td>{{ number_format($supplyman->currentBalance, 2) }}</td>
-                                                        <td>{{ number_format($supplyman->lastYearBalance, 2) }}</td>
-                                                    </tr>
+                                                    @if ($supplyman->currentBalance > 0 || $supplyman->lastYearBalance > 0)
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ $supplyman->title }}</td>
+                                                            <td>{{ number_format($supplyman->currentBalance, 2) }}</td>
+                                                            <td>{{ number_format($supplyman->lastYearBalance, 2) }}</td>
+                                                        </tr>
+                                                    @endif
                                                 @endforeach
                                             </table>
                                         </div>
@@ -424,12 +433,14 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($freights as $freight)
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>{{ $freight->title }}</td>
-                                                        <td>{{ number_format($freight->currentBalance, 2) }}</td>
-                                                        <td>{{ number_format($freight->lastYearBalance, 2) }}</td>
-                                                    </tr>
+                                                    @if ($freight->currentBalance > 0 || $freight->lastYearBalance > 0)
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ $freight->title }}</td>
+                                                            <td>{{ number_format($freight->currentBalance, 2) }}</td>
+                                                            <td>{{ number_format($freight->lastYearBalance, 2) }}</td>
+                                                        </tr>
+                                                    @endif
                                                 @endforeach
                                             </table>
                                         </div>
@@ -456,12 +467,14 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($staff as $staf)
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>{{ $staf->name }}</td>
-                                                        <td>{{ number_format($staf->currentBalance, 2) }}</td>
-                                                        <td>{{ number_format($staf->lastYearBalance, 2) }}</td>
-                                                    </tr>
+                                                    @if ($staf->currentBalance > 0 || $staf->lastYearBalance > 0)
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ $staf->name }}</td>
+                                                            <td>{{ number_format($staf->currentBalance, 2) }}</td>
+                                                            <td>{{ number_format($staf->lastYearBalance, 2) }}</td>
+                                                        </tr>
+                                                    @endif
                                                 @endforeach
                                             </table>
                                         </div>
@@ -489,12 +502,14 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($personal as $person)
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>{{ $person->title }}</td>
-                                                        <td>{{ number_format($person->currentBalance, 2) }}</td>
-                                                        <td>{{ number_format($person->lastYearBalance, 2) }}</td>
-                                                    </tr>
+                                                    @if ($person->currentBalance > 0 || $person->lastYearBalance > 0)
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ $person->title }}</td>
+                                                            <td>{{ number_format($person->currentBalance, 2) }}</td>
+                                                            <td>{{ number_format($person->lastYearBalance, 2) }}</td>
+                                                        </tr>
+                                                    @endif
                                                 @endforeach
                                             </table>
                                         </div>
@@ -522,12 +537,14 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($employees as $employee)
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>{{ $employee->name }}</td>
-                                                        <td>{{ number_format($employee->currentBalance, 2) }}</td>
-                                                        <td>{{ number_format($employee->lastYearBalance, 2) }}</td>
-                                                    </tr>
+                                                    @if ($employee->currentBalance > 0 || $employee->lastYearBalance > 0)
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ $employee->name }}</td>
+                                                            <td>{{ number_format($employee->currentBalance, 2) }}</td>
+                                                            <td>{{ number_format($employee->lastYearBalance, 2) }}</td>
+                                                        </tr>
+                                                    @endif
                                                 @endforeach
                                             </table>
                                         </div>
@@ -563,12 +580,16 @@
                                                         </th>
                                                     </tr>
                                                     @foreach ($vProducts as $product)
-                                                        <tr>
-                                                            <td></td>
-                                                            <td>{{ $product->name }}</td>
-                                                            <td>{{ number_format($product->currentStockValue, 2) }}</td>
-                                                            <td>{{ number_format($product->lastYearStockValue, 2) }}</td>
-                                                        </tr>
+                                                        @if ($product->currentStockValue > 0 || $product->lastYearStockValue > 0)
+                                                            <tr>
+                                                                <td></td>
+                                                                <td>{{ $product->name }}</td>
+                                                                <td>{{ number_format($product->currentStockValue, 2) }}
+                                                                </td>
+                                                                <td>{{ number_format($product->lastYearStockValue, 2) }}
+                                                                </td>
+                                                            </tr>
+                                                        @endif
                                                     @endforeach
                                                     <tr>
                                                         <th colspan="2"
@@ -617,12 +638,16 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($fixed_assets as $fixed_asset)
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>{{ $fixed_asset->item_description }}</td>
-                                                        <td>{{ number_format($fixed_asset->currentBalance, 2) }}</td>
-                                                        <td>{{ number_format($fixed_asset->lastYearBalance, 2) }}</td>
-                                                    </tr>
+                                                    @if ($fixed_asset->currentBalance > 0 || $fixed_asset->lastYearBalance > 0)
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ $fixed_asset->item_description }}</td>
+                                                            <td>{{ number_format($fixed_asset->currentBalance, 2) }}
+                                                            </td>
+                                                            <td>{{ number_format($fixed_asset->lastYearBalance, 2) }}
+                                                            </td>
+                                                        </tr>
+                                                    @endif
                                                 @endforeach
                                             </table>
                                         </div>
@@ -648,14 +673,18 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($investors as $investor)
-                                                    <tr>
-                                                        <td></td>
-                                                        <td>{{ $investor->title }}</td>
-                                                        <td>({{ number_format($investor->currentPercentage, 2) }}%)
-                                                            {{ number_format($investor->currentBalance, 2) }}</td>
-                                                        <td>({{ number_format($investor->lastYearPercentage, 2) }}%)
-                                                            {{ number_format($investor->lastYearBalance, 2) }}</td>
-                                                    </tr>
+                                                    @if ($investor->currentBalance > 0 || $investor->lastYearBalance > 0)
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>{{ $investor->title }}</td>
+                                                            <td>({{ number_format($investor->currentPercentage, 2) }}%)
+                                                                {{ number_format($investor->currentBalance, 2) }}
+                                                            </td>
+                                                            <td>({{ number_format($investor->lastYearPercentage, 2) }}%)
+                                                                {{ number_format($investor->lastYearBalance, 2) }}
+                                                            </td>
+                                                        </tr>
+                                                    @endif
                                                 @endforeach
                                             </table>
                                         </div>
