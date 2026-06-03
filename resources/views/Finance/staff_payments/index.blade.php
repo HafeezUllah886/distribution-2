@@ -88,7 +88,7 @@
                                     <td>{{ $tran->method }}</td>
                                     <td>{{ $tran->number }}</td>
                                     <td>{{ $tran->bank }}</td>
-                                    <td>{{ $tran->remarks }}</td>
+                                    <td>{{ date('d M Y', strtotime($tran->cheque_date)) }}</td>
                                     <td>{{ $tran->notes }}</td>
                                     <td>{{ number_format($tran->amount) }}</td>
                                     <td>
@@ -180,33 +180,36 @@
                                     <label for="notes">Notes</label>
                                     <textarea name="notes" required id="notes" cols="30" class="form-control" rows="2"></textarea>
                                 </div>
-                                 <div class="row">
-                                     <div class="col-12">
+                                <div class="row">
+                                    <div class="col-12">
                                         <div class="form-group mt-2">
                                             <label for="category">Expense Category</label>
-                                            <select name="category" id="category" onchange="addExpenses(this.value)" class="selectize">
+                                            <select name="category" id="category" onchange="addExpenses(this.value)"
+                                                class="selectize">
                                                 <option value=""></option>
                                                 @foreach ($expense_categories as $expense_category)
-                                                    <option value="{{ $expense_category->id }}" data-title="{{ $expense_category->name }}"> {{ $expense_category->name }}</option>
+                                                    <option value="{{ $expense_category->id }}"
+                                                        data-title="{{ $expense_category->name }}">
+                                                        {{ $expense_category->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row mt-1 g-0" id="expense_inputs">
-                                    
+
                                 </div>
                                 <div class="row">
-                                    <div class="col-4 text-end" >Total</div>
+                                    <div class="col-4 text-end">Total</div>
                                     <div class="col-2" id="expense_total">0</div>
                                     <div class="col-2">Grand Total</div>
                                     <div class="col-2" id="grand_total">0</div>
                                 </div>
-                               
+
                             </div>
-                            
+
                         </div>
-                       
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
@@ -270,17 +273,17 @@
         });
 
         function addExpenses(id) {
-    var name = $("#category").find(":selected").text();
-    var expenseId = id.toString();
-    
-    // Check if this category is already added
-    var existingInput = $(`input[name='expense_id[]'][value='${expenseId}']`);
-    if (existingInput.length > 0) {
-        alert('This category has already been added!');
-        return;
-    }
+            var name = $("#category").find(":selected").text();
+            var expenseId = id.toString();
 
-    var html = `<div class='row mb-1 g-1 expense-row' data-expense-id='${expenseId}'>
+            // Check if this category is already added
+            var existingInput = $(`input[name='expense_id[]'][value='${expenseId}']`);
+            if (existingInput.length > 0) {
+                alert('This category has already been added!');
+                return;
+            }
+
+            var html = `<div class='row mb-1 g-1 expense-row' data-expense-id='${expenseId}'>
         <div class='col-4 d-flex align-items-center'>
             <span>${name}</span>
         </div>
@@ -295,29 +298,29 @@
             <button type='button' class='btn btn-sm btn-danger remove-expense'>&times;</button>
         </div>
     </div>`;
-    
-    $("#expense_inputs").append(html);
-    calculateTotal();
-}
 
-// Add click handler for remove buttons
-$(document).on('click', '.remove-expense', function() {
-    $(this).closest('.expense-row').remove();
-    calculateTotal();
-});
+            $("#expense_inputs").append(html);
+            calculateTotal();
+        }
+
+        // Add click handler for remove buttons
+        $(document).on('click', '.remove-expense', function() {
+            $(this).closest('.expense-row').remove();
+            calculateTotal();
+        });
 
 
-function calculateTotal() {
-    var total = 0;
-    $('input[name="expense_amount[]"]').each(function() {
-        var amount = parseFloat($(this).val()) || 0;
-        total += amount;
-    });
-    $('#expense_total').text(total.toFixed(2));
-    var amount = $('#amount').val();
-    var g_total = parseInt(total) + parseInt(amount);
-    $('#grand_total').text(g_total.toFixed(2));
+        function calculateTotal() {
+            var total = 0;
+            $('input[name="expense_amount[]"]').each(function() {
+                var amount = parseFloat($(this).val()) || 0;
+                total += amount;
+            });
+            $('#expense_total').text(total.toFixed(2));
+            var amount = $('#amount').val();
+            var g_total = parseInt(total) + parseInt(amount);
+            $('#grand_total').text(g_total.toFixed(2));
 
-}
+        }
     </script>
 @endsection
