@@ -96,7 +96,7 @@
                                     <td>{{ $req->created_at->format('d M Y') }}</td>
                                     <td>{{ $req->refID }}</td>
                                     <td>{{ $req->model }}</td>
-                                    <td>{{ $req->notes }}</td>
+                                    <td>{!! $req->notes !!}</td>
                                     <td>
                                         @if ($req->status == 'pending')
                                             <span class="badge bg-warning">{{ $req->status }}</span>
@@ -188,12 +188,14 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="rejectModalLabel{{ $req->id }}">Reject Request</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <form action="{{ route('delete_request.reject', $req->id) }}" method="GET">
                             <div class="modal-body pb-0 text-start">
                                 <div class="mb-3">
-                                    <label for="rejectionNotes{{ $req->id }}" class="form-label">Rejection Notes</label>
+                                    <label for="rejectionNotes{{ $req->id }}" class="form-label">Rejection
+                                        Notes</label>
                                     <textarea class="form-control" name="notes" id="rejectionNotes{{ $req->id }}" rows="3" required
                                         placeholder="Enter reason for rejection..."></textarea>
                                 </div>

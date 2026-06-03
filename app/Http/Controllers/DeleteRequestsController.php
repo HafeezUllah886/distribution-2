@@ -160,7 +160,7 @@ class DeleteRequestsController extends Controller
         }
 
         // Generic approval for other models if any
-        $delete_notes = $deleteRequest->notes.' Approval Notes: '.$request->notes;
+        $delete_notes = $deleteRequest->notes.'<span class="text-success"> Approval Notes: '.$request->notes.'</span>';
         $deleteRequest->update(['status' => 'approved', 'notes' => $delete_notes]);
 
         // Send notification to the user who requested the deletion
@@ -190,7 +190,7 @@ class DeleteRequestsController extends Controller
             return redirect()->back()->with('error', 'Request already '.$deleteRequest->status);
         }
 
-        $delete_notes = $deleteRequest->notes.' Rejection Notes: '.$request->notes;
+        $delete_notes = $deleteRequest->notes.'<span class="text-danger"> Rejection Notes: '.$request->notes.'</span>';
         $deleteRequest->status = 'rejected';
         $deleteRequest->notes = $delete_notes;
         $deleteRequest->save();
