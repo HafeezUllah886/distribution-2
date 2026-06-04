@@ -42,7 +42,7 @@ class nonFinanancialInfoController extends Controller
     {
         $orderbooker_customers = orderbooker_customers::where('orderbookerID', $request->user()->id)->get();
 
-        $customers = accounts::customer()->whereIn('id', $orderbooker_customers->pluck('customerID'))->select('id', 'branchID', 'title', 'address', 'contact', 'email', 'c_type', 'credit_limit', 'areaID', 'status')->get();
+        $customers = accounts::customer()->whereIn('id', $orderbooker_customers->pluck('customerID'))->select('id', 'branchID', 'title', 'title_urdu', 'address', 'contact', 'email', 'c_type', 'credit_limit', 'areaID', 'status')->get();
 
         foreach ($customers as $customer) {
             $customer->curren_balance = getAccountBalanceOrderbookerWise($customer->id, $request->user()->id);
