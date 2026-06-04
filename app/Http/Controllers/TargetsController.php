@@ -122,6 +122,7 @@ class TargetsController extends Controller
         try {
             DB::beginTransaction();
             $unit = product_units::find($request->unitID);
+            $refID = getRef();
             $target = targets::create(
                 [
                     'branchID' => auth()->user()->branchID,
@@ -133,6 +134,7 @@ class TargetsController extends Controller
                     'startDate' => $request->startDate,
                     'endDate' => $request->endDate,
                     'notes' => $request->notes,
+                    'refID' => $refID,
                 ]
             );
 
@@ -236,8 +238,15 @@ class TargetsController extends Controller
     {
         $target = targets::find($id);
 
-        $target->delete();
+        $orderbooker = $target->orderbooker->name;
+        $product = $target->product->name;
+
+        $notes = "Order Booker: $orderbooker| Product: $product | Start Date : $target->startDate | End Date : $target->endDate | Notes : $target->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, auth()->user()->branchID, $target->refID, 'targets', $notes);
         session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
+        }
 
         return to_route('targets.index')->with('success', 'Target Deletes');
     }

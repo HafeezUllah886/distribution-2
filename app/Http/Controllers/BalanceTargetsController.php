@@ -107,6 +107,7 @@ class BalanceTargetsController extends Controller
     {
         try {
             DB::beginTransaction();
+            $refID = getRef();
             balance_targets::create(
                 [
                     'branchID' => auth()->user()->branchID,
@@ -117,6 +118,7 @@ class BalanceTargetsController extends Controller
                     'startDate' => $request->startDate,
                     'endDate' => $request->endDate,
                     'notes' => $request->notes,
+                    'refID' => $refID,
                 ]
             );
 
@@ -215,8 +217,15 @@ class BalanceTargetsController extends Controller
     {
         $target = balance_targets::find($id);
 
-        $target->delete();
+        $orderbooker = $target->orderbooker->name;
+        $customer = $target->customer->title;
+
+        $notes = "Order Booker: $orderbooker| Customer: $customer | Start Date : $target->startDate | End Date : $target->endDate | Starting Balance : $target->start_value, Target Balance: $target->target_value, Notes : $target->notes";
+        $delete = storeDeleteRequest(auth()->user()->id, auth()->user()->branchID, $target->refID, 'balance_targets', $notes);
         session()->forget('confirmed_password');
+        if ($delete == 0) {
+            return back()->with('error', 'This record is already requested for deletion.');
+        }
 
         return back()->with('success', 'Balance Target Deleted');
     }

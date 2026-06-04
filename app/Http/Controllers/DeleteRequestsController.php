@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accountsAdjustment;
+use App\Models\balance_targets;
 use App\Models\bulk_payments;
 use App\Models\cheques;
 use App\Models\currency_transactions;
@@ -35,6 +36,7 @@ use App\Models\staffPayments;
 use App\Models\stock;
 use App\Models\stockAdjustment;
 use App\Models\StockTransfer;
+use App\Models\targets;
 use App\Models\transactions;
 use App\Models\transactions_que;
 use App\Models\transfer;
@@ -157,6 +159,12 @@ class DeleteRequestsController extends Controller
         }
         if ($deleteRequest->model == 'customer_advance_consumption') {
             $result = $this->deleteCustomerAdvanceConsumption($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'targets') {
+            $result = $this->deleteTargets($deleteRequest->refID);
+        }
+        if ($deleteRequest->model == 'balance_targets') {
+            $result = $this->deleteBalanceTargets($deleteRequest->refID);
         }
 
         // Generic approval for other models if any
@@ -896,6 +904,52 @@ class DeleteRequestsController extends Controller
 
             return [
                 'msg' => 'Customer Advance Consumption Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteTargets($ref)
+    {
+        try {
+            DB::beginTransaction();
+            targets::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Targets Deleted',
+                'status' => 'success',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => $e->getMessage(),
+                'status' => 'error',
+            ];
+        }
+    }
+
+    public function deleteBalanceTargets($ref)
+    {
+        try {
+            DB::beginTransaction();
+            balance_targets::where('refID', $ref)->delete();
+            DB::commit();
+            session()->forget('confirmed_password');
+
+            return [
+                'msg' => 'Balance Targets Deleted',
                 'status' => 'success',
             ];
         } catch (\Exception $e) {
