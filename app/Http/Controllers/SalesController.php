@@ -105,6 +105,7 @@ class SalesController extends Controller
                     'transporter' => $request->transporter,
                     'notes' => $request->notes,
                     'refID' => $ref,
+                    'branch_admin_viewed' => false,
                 ]
             );
 
@@ -586,5 +587,30 @@ class SalesController extends Controller
 
             return back()->with('error', $e->getMessage());
         }
+    }
+
+    public function unviewed(Request $request)
+    {
+        $start = $request->start ?? firstDayOfMonth();
+        $end = $request->end ?? now()->toDateString();
+        $bookerID = $request->orderbookerID ?? null;
+        $supplymanID = $request->supplymanID ?? null;
+
+        $sales = sales::with('customer', 'customer.area')->where('branch_admin_viewed', false)->where('branchID', auth()->user()->branchID)->orderby('id', 'desc')->get();
+        if ($start && $end) {
+            $sales = $sales->whereBetween('date', [$start, $end]);
+        }
+        if ($bookerID) {
+            $sales = $sales->where('orderbookerID', $bookerID);
+        }
+        if ($supplymanID) {
+            $sales = $sales->where('supplymanID', $supplymanID);
+        }
+
+        $orderbookers = User::orderbookers()->currentBranch()->active()->get();
+
+        $supplymen = accounts::supplyMen()->currentBranch()->get();
+
+        return view('sales.unviewed', compact('sales', 'start', 'end', 'orderbookers', 'bookerID', 'supplymen'));
     }
 }

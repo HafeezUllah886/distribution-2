@@ -72,6 +72,10 @@
                                 <a href="{{ route('sale.index', ['start' => firstDayOfMonth(), 'end' => now()->toDateString()]) }}"
                                     class="nav-link" data-key="t-chat"> Sales History</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('sale.unviewed') }}" class="nav-link" data-key="t-chat"> Un Viewed
+                                    Sales</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
