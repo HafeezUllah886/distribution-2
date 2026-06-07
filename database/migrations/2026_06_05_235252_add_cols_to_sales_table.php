@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('sales', function (Blueprint $table) {
             $table->boolean('branch_admin_viewed')->default(true);
-            $table->text('reason')->nullable();
+            $table->text('remarks')->nullable();
         });
     }
 
@@ -24,7 +24,7 @@ return new class extends Migration
     {
         Schema::table('sales', function (Blueprint $table) {
             $table->dropColumn('branch_admin_viewed');
-            $table->dropColumn('reason');
+            $table->dropColumn('remarks');
         });
     }
 };

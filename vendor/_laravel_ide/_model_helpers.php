@@ -18141,6 +18141,8 @@ namespace App\Models {
     /**
      * App\Models\sales
      *
+     * @property string|null $remarks
+     * @property bool $branch_admin_viewed
      * @property float $expense_amount
      * @property bool $has_expense
      * @property \Illuminate\Support\Carbon|null $updated_at
@@ -18187,6 +18189,8 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales whereHasExpense($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales whereExpenseAmount($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales whereBranchAdminViewed($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales whereRemarks($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<sales>|sales query()

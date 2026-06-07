@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\accounts;
+use App\Models\area;
 use App\Models\currencymgmt;
 use App\Models\discountManagement;
 use App\Models\expense_categories;
@@ -595,6 +596,7 @@ class SalesController extends Controller
         $end = $request->end ?? now()->toDateString();
         $bookerID = $request->orderbookerID ?? null;
         $supplymanID = $request->supplymanID ?? null;
+        $areaID = $request->areaID ?? null;
 
         $sales = sales::with('customer', 'customer.area')->where('branch_admin_viewed', false)->where('branchID', auth()->user()->branchID)->orderby('id', 'desc')->get();
         if ($start && $end) {
@@ -606,11 +608,39 @@ class SalesController extends Controller
         if ($supplymanID) {
             $sales = $sales->where('supplymanID', $supplymanID);
         }
+        if ($areaID) {
+            $sales = $sales->where('customer.areaID', $areaID);
+        }
 
         $orderbookers = User::orderbookers()->currentBranch()->active()->get();
 
         $supplymen = accounts::supplyMen()->currentBranch()->get();
+        $areas = area::currentBranch()->get();
 
-        return view('sales.unviewed', compact('sales', 'start', 'end', 'orderbookers', 'bookerID', 'supplymen'));
+        return view('sales.unviewed', compact('sales', 'start', 'end', 'orderbookers', 'bookerID', 'supplymen', 'areas', 'areaID'));
+    }
+
+    public function addRemark(Request $request)
+    {
+        $sale = sales::find($request->saleID);
+        $sale->update(
+            [
+                'remarks' => $request->remarks,
+            ]
+        );
+
+        return back()->with('success', 'Remark Added');
+    }
+
+    public function markasviewed(Request $request)
+    {
+        $sale = sales::find($request->id);
+        $sale->update(
+            [
+                'branch_admin_viewed' => true,
+            ]
+        );
+
+        return back()->with('success', 'Sale Marked as Viewed');
     }
 }

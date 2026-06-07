@@ -24,6 +24,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('sales/minor_edit', [SalesController::class, 'minor_edit'])->name('sale.minor_edit');
     Route::get('sales/unviewed', [SalesController::class, 'unviewed'])->name('sale.unviewed');
+    Route::post('sales/addRemark', [SalesController::class, 'addRemark'])->name('sale.addRemark');
+    Route::get('sales/markasviewed/{id}', [SalesController::class, 'markasviewed'])->name('sale.markasviewed');
 
     Route::get('orderbooker/getcustomers/{id}', [SalesController::class, 'orderbooker_customers'])->name('sale.getCustomers');
 });
