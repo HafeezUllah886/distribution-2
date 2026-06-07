@@ -592,16 +592,13 @@ class SalesController extends Controller
 
     public function unviewed(Request $request)
     {
-        $start = $request->start ?? firstDayOfMonth();
-        $end = $request->end ?? now()->toDateString();
+
         $bookerID = $request->orderbookerID ?? null;
         $supplymanID = $request->supplymanID ?? null;
         $areaID = $request->areaID ?? null;
 
         $sales = sales::with('customer', 'customer.area')->where('branch_admin_viewed', false)->where('branchID', auth()->user()->branchID)->orderby('id', 'desc')->get();
-        if ($start && $end) {
-            $sales = $sales->whereBetween('date', [$start, $end]);
-        }
+
         if ($bookerID) {
             $sales = $sales->where('orderbookerID', $bookerID);
         }
@@ -614,10 +611,10 @@ class SalesController extends Controller
 
         $orderbookers = User::orderbookers()->currentBranch()->active()->get();
 
-        $supplymen = accounts::supplyMen()->currentBranch()->get();
+        $supplymans = accounts::supplyMen()->currentBranch()->get();
         $areas = area::currentBranch()->get();
 
-        return view('sales.unviewed', compact('sales', 'start', 'end', 'orderbookers', 'bookerID', 'supplymen', 'areas', 'areaID'));
+        return view('sales.unviewed', compact('sales', 'orderbookers', 'bookerID', 'supplymans', 'areas', 'areaID', 'supplymanID'));
     }
 
     public function addRemark(Request $request)
