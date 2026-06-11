@@ -267,7 +267,7 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($areas as $area)
-                                                    @if ($area->currentBalance > 0 || $area->lastYearBalance > 0)
+                                                    @if ($area->currentBalance != 0 || $area->lastYearBalance != 0)
                                                         <tr>
                                                             <td></td>
                                                             <td>{{ $area->name }} </td>
@@ -300,7 +300,7 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($vendors as $vendor)
-                                                    @if ($vendor->currentBalance > 0 || $vendor->lastYearBalance > 0)
+                                                    @if ($vendor->currentBalance != 0 || $vendor->lastYearBalance != 0)
                                                         <tr>
                                                             <td></td>
                                                             <td>{{ $vendor->title }}</td>
@@ -334,7 +334,7 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($business as $busines)
-                                                    @if ($busines->currentBalance > 0 || $busines->lastYearBalance > 0)
+                                                    @if ($busines->currentBalance != 0 || $busines->lastYearBalance != 0)
                                                         <tr>
                                                             <td></td>
                                                             <td>{{ $busines->title }}</td>
@@ -367,7 +367,7 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($unloaders as $unloader)
-                                                    @if ($unloader->currentBalance > 0 || $unloader->lastYearBalance > 0)
+                                                    @if ($unloader->currentBalance != 0 || $unloader->lastYearBalance != 0)
                                                         <tr>
                                                             <td></td>
                                                             <td>{{ $unloader->title }}</td>
@@ -400,7 +400,7 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($supplymans as $supplyman)
-                                                    @if ($supplyman->currentBalance > 0 || $supplyman->lastYearBalance > 0)
+                                                    @if ($supplyman->currentBalance != 0 || $supplyman->lastYearBalance != 0)
                                                         <tr>
                                                             <td></td>
                                                             <td>{{ $supplyman->title }}</td>
@@ -433,7 +433,7 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($freights as $freight)
-                                                    @if ($freight->currentBalance > 0 || $freight->lastYearBalance > 0)
+                                                    @if ($freight->currentBalance != 0 || $freight->lastYearBalance != 0)
                                                         <tr>
                                                             <td></td>
                                                             <td>{{ $freight->title }}</td>
@@ -467,7 +467,7 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($staff as $staf)
-                                                    @if ($staf->currentBalance > 0 || $staf->lastYearBalance > 0)
+                                                    @if ($staf->currentBalance != 0 || $staf->lastYearBalance != 0)
                                                         <tr>
                                                             <td></td>
                                                             <td>{{ $staf->name }}</td>
@@ -502,7 +502,7 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($personal as $person)
-                                                    @if ($person->currentBalance > 0 || $person->lastYearBalance > 0)
+                                                    @if ($person->currentBalance != 0 || $person->lastYearBalance != 0)
                                                         <tr>
                                                             <td></td>
                                                             <td>{{ $person->title }}</td>
@@ -537,7 +537,7 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($employees as $employee)
-                                                    @if ($employee->currentBalance > 0 || $employee->lastYearBalance > 0)
+                                                    @if ($employee->currentBalance != 0 || $employee->lastYearBalance != 0)
                                                         <tr>
                                                             <td></td>
                                                             <td>{{ $employee->name }}</td>
@@ -580,7 +580,7 @@
                                                         </th>
                                                     </tr>
                                                     @foreach ($vProducts as $product)
-                                                        @if ($product->currentStockValue > 0 || $product->lastYearStockValue > 0)
+                                                        @if ($product->currentStockValue != 0 || $product->lastYearStockValue != 0)
                                                             <tr>
                                                                 <td></td>
                                                                 <td>{{ $product->name }}</td>
@@ -638,7 +638,7 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($fixed_assets as $fixed_asset)
-                                                    @if ($fixed_asset->currentBalance > 0 || $fixed_asset->lastYearBalance > 0)
+                                                    @if ($fixed_asset->currentBalance != 0 || $fixed_asset->lastYearBalance != 0)
                                                         <tr>
                                                             <td></td>
                                                             <td>{{ $fixed_asset->item_description }}</td>
@@ -673,7 +673,7 @@
                                         <div class="accordion-body">
                                             <table class="detail-table">
                                                 @foreach ($investors as $investor)
-                                                    @if ($investor->currentBalance > 0 || $investor->lastYearBalance > 0)
+                                                    @if ($investor->currentBalance != 0 || $investor->lastYearBalance != 0)
                                                         <tr>
                                                             <td></td>
                                                             <td>{{ $investor->title }}</td>
