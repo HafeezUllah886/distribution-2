@@ -41,7 +41,7 @@ class profitController extends Controller
     {
         $from = $request->from;
         $to = $request->to;
-        $branch = $request->branch;
+        $branch = auth()->user()->branchID;
         $vendor = $request->vendor;
         $product_ids = $request->product;
         $warehouse = $request->warehouse;
