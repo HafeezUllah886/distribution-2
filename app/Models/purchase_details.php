@@ -8,7 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class purchase_details extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
+
+    public function purchase()
+    {
+        return $this->belongsTo(purchase::class, 'purchaseID');
+    }
 
     public function product()
     {
@@ -19,5 +25,4 @@ class purchase_details extends Model
     {
         return $this->belongsTo(product_units::class, 'unitID');
     }
-
 }
