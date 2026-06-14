@@ -148,41 +148,30 @@
                                                             <table class="table table-sm table-bordered">
                                                                 <thead class="table-dark">
                                                                     <tr>
-                                                                        <th>Date</th>
-                                                                        <th>Customer</th>
-                                                                        <th>Order Booker</th>
                                                                         <th>Qty</th>
-                                                                        <th>Price</th>
-                                                                        <th>Discount</th>
-                                                                        <th>Freight</th>
-                                                                        <th>Labour</th>
-                                                                        <th>Claim</th>
                                                                         <th>Net Price</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    @foreach ($item['sales']['details'] as $sale_detail)
+                                                                    @php
+                                                                        $grouped_sales = [];
+                                                                        foreach ($item['sales']['details'] as $sale_detail) {
+                                                                            $net_price = $sale_detail->price + $sale_detail->fright + $sale_detail->labor - ($sale_detail->discountvalue + $sale_detail->discount + $sale_detail->claim);
+                                                                            $net_price_key = (string)round($net_price, 2);
+                                                                            if (isset($grouped_sales[$net_price_key])) {
+                                                                                $grouped_sales[$net_price_key]['qty'] += $sale_detail->qty;
+                                                                            } else {
+                                                                                $grouped_sales[$net_price_key] = [
+                                                                                    'qty' => $sale_detail->qty,
+                                                                                    'net_price' => $net_price
+                                                                                ];
+                                                                            }
+                                                                        }
+                                                                    @endphp
+                                                                    @foreach ($grouped_sales as $group)
                                                                         <tr>
-                                                                            <td>{{ date('d M Y', strtotime($sale_detail->date)) }}
-                                                                            </td>
-                                                                            <td>{{ $sale_detail->sale->customer->title ?? 'N/A' }}
-                                                                            </td>
-                                                                            <td>{{ $sale_detail->sale->orderbooker->name ?? 'N/A' }}
-                                                                            </td>
-                                                                            <td>{{ number_format($sale_detail->qty, 2) }}
-                                                                            </td>
-                                                                            <td>{{ number_format($sale_detail->price, 2) }}
-                                                                            </td>
-                                                                            <td>{{ number_format($sale_detail->discountvalue, 2) }}
-                                                                            </td>
-                                                                            <td>{{ number_format($sale_detail->fright, 2) }}
-                                                                            </td>
-                                                                            <td>{{ number_format($sale_detail->labor, 2) }}
-                                                                            </td>
-                                                                            <td>{{ number_format($sale_detail->claim, 2) }}
-                                                                            </td>
-                                                                            <td>{{ number_format($sale_detail->price + $sale_detail->fright + $sale_detail->labor - ($sale_detail->discountvalue + $sale_detail->discount + $sale_detail->claim), 2) }}
-                                                                            </td>
+                                                                            <td>{{ number_format($group['qty'], 2) }}</td>
+                                                                            <td>{{ number_format($group['net_price'], 2) }}</td>
                                                                         </tr>
                                                                     @endforeach
                                                                 </tbody>
