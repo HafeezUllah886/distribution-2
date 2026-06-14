@@ -181,7 +181,7 @@
                                                                             </td>
                                                                             <td>{{ number_format($sale_detail->claim, 2) }}
                                                                             </td>
-                                                                            <td>{{ number_format($sale_detail->netprice, 2) }}
+                                                                            <td>{{ number_format($sale_detail->price + $sale_detail->fright + $sale_detail->labor - ($sale_detail->discountvalue + $sale_detail->discount + $sale_detail->claim), 2) }}
                                                                             </td>
                                                                         </tr>
                                                                     @endforeach
