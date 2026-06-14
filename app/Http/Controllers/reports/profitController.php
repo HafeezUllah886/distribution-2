@@ -196,6 +196,7 @@ class profitController extends Controller
             if ($total_profit != 0 || $sold_qty > 0) {
                 $data[] = [
                     'name' => $prod->name,
+                    'vendor' => $prod->vendor->title ?? 'Unknown Vendor',
                     'unit' => $unit_name,
                     'pack_size' => $unit,
                     'purchase' => [
