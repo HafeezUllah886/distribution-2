@@ -91,11 +91,11 @@ class profitController extends Controller
 
                 if ($last_purchase_data) {
                     $purchase_price = $last_purchase_data->price;
-                    $purchase_discount = $last_purchase_data->discountvalue;
+                    $purchase_discount = $last_purchase_data->discountvalue + $last_purchase_data->discount;
                     $purchase_freight = $last_purchase_data->fright;
                     $purchase_labor = $last_purchase_data->labor;
                     $purchase_claim = $last_purchase_data->claim;
-                    $purchase_net = $last_purchase_data->netprice;
+                    $purchase_net = ($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim);
                 } else {
                     $purchase_price = $prod->pprice;
                     $purchase_discount = $prod->discount;
@@ -106,11 +106,11 @@ class profitController extends Controller
                 }
             } else {
                 $purchase_price = $purchases_data->avg('price');
-                $purchase_discount = $purchases_data->avg('discountvalue');
+                $purchase_discount = $purchases_data->avg('discountvalue') + $purchases_data->avg('discount');
                 $purchase_freight = $purchases_data->avg('fright');
                 $purchase_labor = $purchases_data->avg('labor');
                 $purchase_claim = $purchases_data->avg('claim');
-                $purchase_net = $purchases_data->avg('netprice');
+                $purchase_net = ($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim);
             }
 
             // --- SALES LOGIC ---
@@ -154,11 +154,11 @@ class profitController extends Controller
                 $sold_qty = 0;
             } else {
                 $sale_price = $sales_data_collection->avg('price');
-                $sale_discount = $sales_data_collection->avg('discountvalue');
+                $sale_discount = $sales_data_collection->avg('discountvalue') + $sales_data_collection->avg('discount');
                 $sale_freight = $sales_data_collection->avg('fright');
                 $sale_labor = $sales_data_collection->avg('labor');
                 $sale_claim = $sales_data_collection->avg('claim');
-                $sale_net = $sales_data_collection->avg('netprice');
+                $sale_net = ($sale_price + $sale_freight + $sale_labor) - ($sale_discount + $sale_claim);
                 $sold_qty = $sales_data_collection->sum('qty');
             }
 
