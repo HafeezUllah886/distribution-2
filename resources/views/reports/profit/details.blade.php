@@ -264,43 +264,63 @@
                                                                 <table class="table table-sm table-bordered">
                                                                     <thead class="table-dark">
                                                                         <tr>
-                                                                            {{--  <th>Date</th>
-                                                                        <th>Customer</th>
-                                                                        <th>Order Booker</th> --}}
+
                                                                             <th>Qty</th>
-                                                                            {{--  <th>Price</th>
-                                                                        <th>Discount</th>
-                                                                        <th>Freight</th>
-                                                                        <th>Labour</th>
-                                                                        <th>Claim</th> --}}
+                                                                            <th>Price</th>
+                                                                            <th>Discount</th>
+                                                                            <th>Freight</th>
+                                                                            <th>Labour</th>
+                                                                            <th>Claim</th>
                                                                             <th>Net Price</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
+                                                                        @php
+                                                                            $total_qty = 0;
+                                                                            $total_price = 0;
+                                                                            $total_discount = 0;
+                                                                            $total_freight = 0;
+                                                                            $total_labor = 0;
+                                                                            $total_claim = 0;
+                                                                            $total_net = 0;
+                                                                        @endphp
                                                                         @foreach ($item['sales']['details'] as $sale_detail)
-                                                                            <tr>
-                                                                                {{--  <td>{{ date('d M Y', strtotime($sale_detail->date)) }}
-                                                                            </td>
-                                                                            <td>{{ $sale_detail->sale->customer->title ?? 'N/A' }}
-                                                                            </td>
-                                                                            <td>{{ $sale_detail->sale->orderbooker->name ?? 'N/A' }}
-                                                                            </td> --}}
-                                                                                <td>{{ number_format($sale_detail->pc / $ps, 2) }}
-                                                                                </td>
-                                                                                {{--  <td>{{ number_format($sale_detail->price, 2) }}
-                                                                            </td>
-                                                                            <td>{{ number_format($sale_detail->discountvalue, 2) }}
-                                                                            </td>
-                                                                            <td>{{ number_format($sale_detail->fright, 2) }}
-                                                                            </td>
-                                                                            <td>{{ number_format($sale_detail->labor, 2) }}
-                                                                            </td>
-                                                                            <td>{{ number_format($sale_detail->claim, 2) }}
-                                                                            </td> --}}
-                                                                                <td>{{ number_format(($sale_detail->price + $sale_detail->fright + $sale_detail->labor - ($sale_detail->discountvalue + $sale_detail->discount + $sale_detail->claim)) * $ps, 2) }}
-                                                                                </td>
-                                                                            </tr>
+                                                                            @php
+                                                                                $qty = $sale_detail->pc / $ps;
+                                                                                $total_qty += $qty;
+                                                                                $total_price +=
+                                                                                    $sale_detail->price * $qty * $ps;
+                                                                                $total_discount +=
+                                                                                    $sale_detail->discountvalue *
+                                                                                    $qty *
+                                                                                    $ps;
+                                                                                $total_freight +=
+                                                                                    $sale_detail->fright * $qty * $ps;
+                                                                                $total_labor +=
+                                                                                    $sale_detail->labor * $qty * $ps;
+                                                                                $total_claim +=
+                                                                                    $sale_detail->claim * $qty * $ps;
+                                                                                $total_net +=
+                                                                                    ($sale_detail->price +
+                                                                                        $sale_detail->fright +
+                                                                                        $sale_detail->labor -
+                                                                                        ($sale_detail->discountvalue +
+                                                                                            $sale_detail->discount +
+                                                                                            $sale_detail->claim)) *
+                                                                                    $ps;
+                                                                            @endphp
                                                                         @endforeach
+                                                                        <tr>
+                                                                            <td>{{ number_format($total_qty, 2) }}</td>
+                                                                            <td>{{ number_format($total_price, 2) }}</td>
+                                                                            <td>{{ number_format($total_discount, 2) }}
+                                                                            </td>
+                                                                            <td>{{ number_format($total_freight, 2) }}</td>
+                                                                            <td>{{ number_format($total_labor, 2) }}</td>
+                                                                            <td>{{ number_format($total_claim, 2) }}</td>
+                                                                            <td>{{ number_format($total_net, 2) }}</td>
+
+                                                                        </tr>
                                                                     </tbody>
                                                                 </table>
                                                             @else
