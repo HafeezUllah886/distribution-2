@@ -110,7 +110,7 @@ class profitController extends Controller
                 $purchase_freight = $purchases_data->avg('fright');
                 $purchase_labor = $purchases_data->avg('labor');
                 $purchase_claim = $purchases_data->avg('claim');
-                $purchase_net = ($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim);
+                $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim)) * $unit;
             }
 
             // --- SALES LOGIC ---
@@ -158,8 +158,8 @@ class profitController extends Controller
                 $sale_freight = $sales_data_collection->avg('fright');
                 $sale_labor = $sales_data_collection->avg('labor');
                 $sale_claim = $sales_data_collection->avg('claim');
-                $sale_net = ($sale_price + $sale_freight + $sale_labor) - ($sale_discount + $sale_claim);
-                $sold_qty = $sales_data_collection->sum('qty');
+                $sale_net = (($sale_price + $sale_freight + $sale_labor) - ($sale_discount + $sale_claim)) * $unit;
+                $sold_qty = $sales_data_collection->sum('pc') / $unit;
             }
 
             $returns_query = returnsDetails::where('productID', $prod->id)
@@ -187,7 +187,7 @@ class profitController extends Controller
                         });
                     }
                 });
-            $return_qty = $returns_query->sum('qty');
+            $return_qty = $returns_query->sum('pc') / $unit;
             $net_sale_qty = $sold_qty - $return_qty;
 
             $ppu = $sale_net - $purchase_net;
@@ -200,19 +200,19 @@ class profitController extends Controller
                     'unit' => $unit_name,
                     'pack_size' => $unit,
                     'purchase' => [
-                        'price' => $purchase_price,
-                        'discount' => $purchase_discount,
-                        'freight' => $purchase_freight,
-                        'labor' => $purchase_labor,
-                        'claim' => $purchase_claim,
+                        'price' => $purchase_price * $unit,
+                        'discount' => $purchase_discount * $unit,
+                        'freight' => $purchase_freight * $unit,
+                        'labor' => $purchase_labor * $unit,
+                        'claim' => $purchase_claim * $unit,
                         'net' => $purchase_net,
                     ],
                     'sales' => [
-                        'price' => $sale_price,
-                        'discount' => $sale_discount,
-                        'freight' => $sale_freight,
-                        'labor' => $sale_labor,
-                        'claim' => $sale_claim,
+                        'price' => $sale_price * $unit,
+                        'discount' => $sale_discount * $unit,
+                        'freight' => $sale_freight * $unit,
+                        'labor' => $sale_labor * $unit,
+                        'claim' => $sale_claim * $unit,
                         'net' => $sale_net,
                         'details' => $sales_data_collection,
                     ],
