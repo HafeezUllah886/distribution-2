@@ -52,132 +52,208 @@
                                 <table class="table table-bordered text-center align-middle mb-0">
                                     <thead>
                                         <tr class="table-active">
-                                            <th scope="col" rowspan="2" class="p-1" style="width: 50px;">#</th>
-                                            <th scope="col" rowspan="2" class="p-1">Product</th>
-                                            <th scope="col" rowspan="2" class="p-1">Unit</th>
-                                            <th scope="col" rowspan="2" class="p-1">Pack Size</th>
-                                            <th scope="col" colspan="6" class="p-1">Purchase</th>
-                                            <th scope="col" colspan="6" class="p-1">Sales</th>
-                                            <th scope="col" rowspan="2" class="text-end p-1">Sold Qty</th>
-                                            <th scope="col" rowspan="2" class="text-end p-1">Return Qty</th>
-                                            <th scope="col" rowspan="2" class="text-end p-1">Net Sale Qty</th>
-                                            <th scope="col" rowspan="2" class="text-end p-1">Profit / Unit</th>
-                                            <th scope="col" rowspan="2" class="text-end p-1">Total Profit</th>
+                                            <th scope="col" rowspan="2" class="p-1 align-middle" style="width: 50px;">#</th>
+                                            <th scope="col" rowspan="2" class="p-1 align-middle">Product</th>
+                                            <th scope="col" rowspan="2" class="p-1 align-middle">Unit</th>
+                                            <th scope="col" rowspan="2" class="p-1 align-middle">Pack Size</th>
+                                            <th scope="col" colspan="6" class="p-1 align-middle">Purchase</th>
+                                            <th scope="col" colspan="6" class="p-1 align-middle">Sales</th>
+                                            <th scope="col" rowspan="2" class="text-end p-1 align-middle">Sold Qty</th>
+                                            <th scope="col" rowspan="2" class="text-end p-1 align-middle">Return Qty</th>
+                                            <th scope="col" rowspan="2" class="text-end p-1 align-middle">Net Sale Qty</th>
+                                            <th scope="col" rowspan="2" class="text-end p-1 align-middle">Profit / Unit</th>
+                                            <th scope="col" rowspan="2" class="text-end p-1 align-middle">Total Profit</th>
                                         </tr>
                                         <tr class="table-active">
                                             <!-- Purchase Sub -->
-                                            <th scope="col" class="text-end p-1">Price / Unit</th>
-                                            <th scope="col" class="text-end p-1">Discount</th>
-                                            <th scope="col" class="text-end p-1">Freight</th>
-                                            <th scope="col" class="text-end p-1">Labour</th>
-                                            <th scope="col" class="text-end p-1">Claim</th>
-                                            <th scope="col" class="text-end p-1">Net Price (Avg)</th>
+                                            <th scope="col" class="text-end p-1 align-middle">Price / Pack</th>
+                                            <th scope="col" class="text-end p-1 align-middle">Discount</th>
+                                            <th scope="col" class="text-end p-1 align-middle">Freight</th>
+                                            <th scope="col" class="text-end p-1 align-middle">Labour</th>
+                                            <th scope="col" class="text-end p-1 align-middle">Claim</th>
+                                            <th scope="col" class="text-end p-1 align-middle">Net Price (Avg)</th>
                                             <!-- Sales Sub -->
-                                            <th scope="col" class="text-end p-1">Price / Unit</th>
-                                            <th scope="col" class="text-end p-1">Discount</th>
-                                            <th scope="col" class="text-end p-1">Freight</th>
-                                            <th scope="col" class="text-end p-1">Labour</th>
-                                            <th scope="col" class="text-end p-1">Claim</th>
-                                            <th scope="col" class="text-end p-1">Net Price (Avg)</th>
+                                            <th scope="col" class="text-end p-1 align-middle">Price / Pack</th>
+                                            <th scope="col" class="text-end p-1 align-middle">Discount</th>
+                                            <th scope="col" class="text-end p-1 align-middle">Freight</th>
+                                            <th scope="col" class="text-end p-1 align-middle">Labour</th>
+                                            <th scope="col" class="text-end p-1 align-middle">Claim</th>
+                                            <th scope="col" class="text-end p-1 align-middle">Net Price (Avg)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php
                                             $total_profit_sum = 0;
                                             $groupedData = collect($data)->groupBy('vendor');
+                                            $grand_totals = [
+                                                'pur_price' => 0, 'pur_discount' => 0, 'pur_freight' => 0, 'pur_labor' => 0, 'pur_claim' => 0, 'pur_net' => 0,
+                                                'sal_price' => 0, 'sal_discount' => 0, 'sal_freight' => 0, 'sal_labor' => 0, 'sal_claim' => 0, 'sal_net' => 0,
+                                                'sold_qty' => 0, 'return_qty' => 0, 'net_sale_qty' => 0, 'profit_per_unit' => 0, 'total_profit' => 0
+                                            ];
                                         @endphp
                                         @foreach ($groupedData as $vendor => $items)
+                                            @php
+                                                $vendor_totals = [
+                                                    'pur_price' => 0, 'pur_discount' => 0, 'pur_freight' => 0, 'pur_labor' => 0, 'pur_claim' => 0, 'pur_net' => 0,
+                                                    'sal_price' => 0, 'sal_discount' => 0, 'sal_freight' => 0, 'sal_labor' => 0, 'sal_claim' => 0, 'sal_net' => 0,
+                                                    'sold_qty' => 0, 'return_qty' => 0, 'net_sale_qty' => 0, 'profit_per_unit' => 0, 'total_profit' => 0
+                                                ];
+                                            @endphp
                                             <tr>
-                                                <td colspan="21" class="text-start fw-bold bg-light fs-5">{{ $vendor }}</td>
+                                                <td colspan="21" class="text-start fw-bold bg-light fs-5">
+                                                    {{ $vendor }}</td>
                                             </tr>
                                             @foreach ($items as $index => $item)
                                                 @php
                                                     $total_profit_sum += $item['total_profit'];
                                                     $uniqueKey = \Illuminate\Support\Str::slug($vendor) . '-' . $index;
+                                                    
+                                                    $ps = $item['pack_size'] ?? 1;
+                                                    $pur_price = $item['purchase']['price'] * $ps;
+                                                    $pur_discount = $item['purchase']['discount'] * $ps;
+                                                    $pur_freight = $item['purchase']['freight'] * $ps;
+                                                    $pur_labor = $item['purchase']['labor'] * $ps;
+                                                    $pur_claim = $item['purchase']['claim'] * $ps;
+                                                    $pur_net = $item['purchase']['net'] * $ps;
+
+                                                    $sal_price = $item['sales']['price'] * $ps;
+                                                    $sal_discount = $item['sales']['discount'] * $ps;
+                                                    $sal_freight = $item['sales']['freight'] * $ps;
+                                                    $sal_labor = $item['sales']['labor'] * $ps;
+                                                    $sal_claim = $item['sales']['claim'] * $ps;
+                                                    $sal_net = $item['sales']['net'] * $ps;
+
+                                                    $vendor_totals['pur_price'] += $pur_price;
+                                                    $vendor_totals['pur_discount'] += $pur_discount;
+                                                    $vendor_totals['pur_freight'] += $pur_freight;
+                                                    $vendor_totals['pur_labor'] += $pur_labor;
+                                                    $vendor_totals['pur_claim'] += $pur_claim;
+                                                    $vendor_totals['pur_net'] += $pur_net;
+
+                                                    $vendor_totals['sal_price'] += $sal_price;
+                                                    $vendor_totals['sal_discount'] += $sal_discount;
+                                                    $vendor_totals['sal_freight'] += $sal_freight;
+                                                    $vendor_totals['sal_labor'] += $sal_labor;
+                                                    $vendor_totals['sal_claim'] += $sal_claim;
+                                                    $vendor_totals['sal_net'] += $sal_net;
+
+                                                    $vendor_totals['sold_qty'] += $item['sold_qty'];
+                                                    $vendor_totals['return_qty'] += $item['return_qty'];
+                                                    $vendor_totals['net_sale_qty'] += $item['net_sale_qty'];
+                                                    $vendor_totals['profit_per_unit'] += $item['profit_per_unit'];
+                                                    $vendor_totals['total_profit'] += $item['total_profit'];
+
+                                                    $grand_totals['pur_price'] += $pur_price;
+                                                    $grand_totals['pur_discount'] += $pur_discount;
+                                                    $grand_totals['pur_freight'] += $pur_freight;
+                                                    $grand_totals['pur_labor'] += $pur_labor;
+                                                    $grand_totals['pur_claim'] += $pur_claim;
+                                                    $grand_totals['pur_net'] += $pur_net;
+
+                                                    $grand_totals['sal_price'] += $sal_price;
+                                                    $grand_totals['sal_discount'] += $sal_discount;
+                                                    $grand_totals['sal_freight'] += $sal_freight;
+                                                    $grand_totals['sal_labor'] += $sal_labor;
+                                                    $grand_totals['sal_claim'] += $sal_claim;
+                                                    $grand_totals['sal_net'] += $sal_net;
+
+                                                    $grand_totals['sold_qty'] += $item['sold_qty'];
+                                                    $grand_totals['return_qty'] += $item['return_qty'];
+                                                    $grand_totals['net_sale_qty'] += $item['net_sale_qty'];
+                                                    $grand_totals['profit_per_unit'] += $item['profit_per_unit'];
+                                                    $grand_totals['total_profit'] += $item['total_profit'];
                                                 @endphp
                                                 <tr data-bs-toggle="collapse" data-bs-target="#collapse-{{ $uniqueKey }}"
                                                     style="cursor: pointer;" title="Click to view sales details">
                                                     <td class="p-1">{{ $index + 1 }}</td>
                                                     <td class="text-start p-1">{{ $item['name'] }}</td>
-                                                <td class="text-start p-1">{{ $item['unit'] }}</td>
-                                                <td class="text-start p-1">{{ $item['pack_size'] }}</td>
-                                                <!-- Purchase -->
-                                                <td class="text-end p-1">{{ number_format($item['purchase']['price'], 2) }}
-                                                </td>
-                                                <td class="text-end p-1">
-                                                    {{ number_format($item['purchase']['discount'], 2) }}
-                                                </td>
-                                                <td class="text-end p-1">
-                                                    {{ number_format($item['purchase']['freight'], 2) }}
-                                                </td>
-                                                <td class="text-end p-1">
-                                                    {{ number_format($item['purchase']['labor'], 2) }}
-                                                </td>
-                                                <td class="text-end p-1">
-                                                    {{ number_format($item['purchase']['claim'], 2) }}
-                                                </td>
-                                                <td class="text-end p-1 fw-bold">
-                                                    {{ number_format($item['purchase']['net'], 2) }}</td>
-                                                <!-- Sales -->
-                                                <td class="text-end p-1">{{ number_format($item['sales']['price'], 2) }}
-                                                </td>
-                                                <td class="text-end p-1">
-                                                    {{ number_format($item['sales']['discount'], 2) }}
-                                                </td>
-                                                <td class="text-end p-1">{{ number_format($item['sales']['freight'], 2) }}
-                                                </td>
-                                                <td class="text-end p-1">{{ number_format($item['sales']['labor'], 2) }}
-                                                </td>
-                                                <td class="text-end p-1">{{ number_format($item['sales']['claim'], 2) }}
-                                                </td>
-                                                <td class="text-end fw-bold p-1">
-                                                    {{ number_format($item['sales']['net'], 2) }}
-                                                </td>
+                                                    <td class="text-start p-1">{{ $item['unit'] }}</td>
+                                                    <td class="text-start p-1">{{ $item['pack_size'] }}</td>
+                                                    <!-- Purchase -->
+                                                    <td class="text-end p-1">
+                                                        {{ number_format($pur_price, 2) }}
+                                                    </td>
+                                                    <td class="text-end p-1">
+                                                        {{ number_format($pur_discount, 2) }}
+                                                    </td>
+                                                    <td class="text-end p-1">
+                                                        {{ number_format($pur_freight, 2) }}
+                                                    </td>
+                                                    <td class="text-end p-1">
+                                                        {{ number_format($pur_labor, 2) }}
+                                                    </td>
+                                                    <td class="text-end p-1">
+                                                        {{ number_format($pur_claim, 2) }}
+                                                    </td>
+                                                    <td class="text-end p-1 fw-bold">
+                                                        {{ number_format($pur_net, 2) }}</td>
+                                                    <!-- Sales -->
+                                                    <td class="text-end p-1">
+                                                        {{ number_format($sal_price, 2) }}
+                                                    </td>
+                                                    <td class="text-end p-1">
+                                                        {{ number_format($sal_discount, 2) }}
+                                                    </td>
+                                                    <td class="text-end p-1">
+                                                        {{ number_format($sal_freight, 2) }}
+                                                    </td>
+                                                    <td class="text-end p-1">
+                                                        {{ number_format($sal_labor, 2) }}
+                                                    </td>
+                                                    <td class="text-end p-1">
+                                                        {{ number_format($sal_claim, 2) }}
+                                                    </td>
+                                                    <td class="text-end fw-bold p-1">
+                                                        {{ number_format($sal_net, 2) }}
+                                                    </td>
 
-                                                <td class="text-end p-1">{{ number_format($item['sold_qty'], 2) }}</td>
-                                                <td class="text-end p-1">{{ number_format($item['return_qty'], 2) }}</td>
-                                                <td class="text-end fw-bold p-1">
-                                                    {{ number_format($item['net_sale_qty'], 2) }}
-                                                </td>
-                                                <td class="text-end p-1">{{ number_format($item['profit_per_unit'], 2) }}
-                                                </td>
-                                                <td class="text-end fw-bold p-1">
-                                                    {{ number_format($item['total_profit'], 2) }}
-                                                </td>
-                                            </tr>
-                                            <!-- Accordion content -->
-                                            <tr class="collapse p-0" id="collapse-{{ $uniqueKey }}">
-                                                <td colspan="21" class="p-0">
-                                                    <div class="card card-body m-0 bg-light">
-                                                        <h5 class="mb-2">Sales Details for {{ $item['name'] }}</h5>
-                                                        @if ($item['sales']['details']->count() > 0)
-                                                            <table class="table table-sm table-bordered">
-                                                                <thead class="table-dark">
-                                                                    <tr>
-                                                                        {{--  <th>Date</th>
+                                                    <td class="text-end p-1">{{ number_format($item['sold_qty'], 2) }}
+                                                    </td>
+                                                    <td class="text-end p-1">{{ number_format($item['return_qty'], 2) }}
+                                                    </td>
+                                                    <td class="text-end fw-bold p-1">
+                                                        {{ number_format($item['net_sale_qty'], 2) }}
+                                                    </td>
+                                                    <td class="text-end p-1">
+                                                        {{ number_format($item['profit_per_unit'], 2) }}
+                                                    </td>
+                                                    <td class="text-end fw-bold p-1">
+                                                        {{ number_format($item['total_profit'], 2) }}
+                                                    </td>
+                                                </tr>
+                                                <!-- Accordion content -->
+                                                <tr class="collapse p-0" id="collapse-{{ $uniqueKey }}">
+                                                    <td colspan="21" class="p-0">
+                                                        <div class="card card-body m-0 bg-light">
+                                                            <h5 class="mb-2">Sales Details for {{ $item['name'] }}</h5>
+                                                            @if ($item['sales']['details']->count() > 0)
+                                                                <table class="table table-sm table-bordered">
+                                                                    <thead class="table-dark">
+                                                                        <tr>
+                                                                            {{--  <th>Date</th>
                                                                         <th>Customer</th>
                                                                         <th>Order Booker</th> --}}
-                                                                        <th>Qty</th>
-                                                                        {{--  <th>Price</th>
+                                                                            <th>Qty</th>
+                                                                            {{--  <th>Price</th>
                                                                         <th>Discount</th>
                                                                         <th>Freight</th>
                                                                         <th>Labour</th>
                                                                         <th>Claim</th> --}}
-                                                                        <th>Net Price</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach ($item['sales']['details'] as $sale_detail)
-                                                                        <tr>
-                                                                            {{--  <td>{{ date('d M Y', strtotime($sale_detail->date)) }}
+                                                                            <th>Net Price</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach ($item['sales']['details'] as $sale_detail)
+                                                                            <tr>
+                                                                                {{--  <td>{{ date('d M Y', strtotime($sale_detail->date)) }}
                                                                             </td>
                                                                             <td>{{ $sale_detail->sale->customer->title ?? 'N/A' }}
                                                                             </td>
                                                                             <td>{{ $sale_detail->sale->orderbooker->name ?? 'N/A' }}
                                                                             </td> --}}
-                                                                            <td>{{ number_format($sale_detail->qty, 2) }}
-                                                                            </td>
-                                                                            {{--  <td>{{ number_format($sale_detail->price, 2) }}
+                                                                                <td>{{ number_format($sale_detail->qty, 2) }}
+                                                                                </td>
+                                                                                {{--  <td>{{ number_format($sale_detail->price, 2) }}
                                                                             </td>
                                                                             <td>{{ number_format($sale_detail->discountvalue, 2) }}
                                                                             </td>
@@ -187,21 +263,65 @@
                                                                             </td>
                                                                             <td>{{ number_format($sale_detail->claim, 2) }}
                                                                             </td> --}}
-                                                                            <td>{{ number_format($sale_detail->price + $sale_detail->fright + $sale_detail->labor - ($sale_detail->discountvalue + $sale_detail->discount + $sale_detail->claim), 2) }}
-                                                                            </td>
-                                                                        </tr>
-                                                                    @endforeach
-                                                                </tbody>
-                                                            </table>
-                                                        @else
-                                                            <p class="text-muted">No sales found for this product in the
-                                                                selected criteria.</p>
-                                                        @endif
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                                                <td>{{ number_format($sale_detail->price + $sale_detail->fright + $sale_detail->labor - ($sale_detail->discountvalue + $sale_detail->discount + $sale_detail->claim), 2) }}
+                                                                                </td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                    </tbody>
+                                                                </table>
+                                                            @else
+                                                                <p class="text-muted">No sales found for this product in
+                                                                    the
+                                                                    selected criteria.</p>
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             @endforeach
+                                            <!-- Vendor Totals -->
+                                            <tr class="table-info fw-bold">
+                                                <td colspan="4" class="text-end p-1">Vendor Total:</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['pur_price'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['pur_discount'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['pur_freight'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['pur_labor'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['pur_claim'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['pur_net'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['sal_price'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['sal_discount'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['sal_freight'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['sal_labor'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['sal_claim'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['sal_net'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['sold_qty'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['return_qty'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['net_sale_qty'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['profit_per_unit'], 2) }}</td>
+                                                <td class="text-end p-1">{{ number_format($vendor_totals['total_profit'], 2) }}</td>
+                                            </tr>
                                         @endforeach
+
+                                        <!-- Grand Totals -->
+                                        <tr class="table-warning fw-bold">
+                                            <td colspan="4" class="text-end p-1">Grand Total:</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['pur_price'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['pur_discount'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['pur_freight'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['pur_labor'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['pur_claim'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['pur_net'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['sal_price'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['sal_discount'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['sal_freight'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['sal_labor'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['sal_claim'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['sal_net'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['sold_qty'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['return_qty'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['net_sale_qty'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['profit_per_unit'], 2) }}</td>
+                                            <td class="text-end p-1">{{ number_format($grand_totals['total_profit'], 2) }}</td>
+                                        </tr>
 
                                         <!-- Totals -->
                                         <tr class="table-active">
