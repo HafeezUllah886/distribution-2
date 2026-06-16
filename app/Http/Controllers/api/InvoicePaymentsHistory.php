@@ -23,12 +23,12 @@ class InvoicePaymentsHistory extends Controller
         $payments = sale_payments::whereBetween('date', [$start_date, $end_date])->where('userID', $request->user()->id)->get();
 
         $data = [];
-        foreach($payments as $payment)
-        {
+        foreach ($payments as $payment) {
             $data[] = [
                 'salesID' => $payment->salesID,
                 'paymentID' => $payment->id,
                 'customer' => $payment->bill->customer->title,
+                'title_urdu' => $payment->bill->customer->title_urdu,
                 'method' => $payment->method,
                 'number' => $payment->number,
                 'bank' => $payment->bank,
@@ -47,26 +47,24 @@ class InvoicePaymentsHistory extends Controller
                 'data' => [
                     'payments' => $data,
                     'start_date' => $start_date,
-                    'end_date' => $end_date,  
+                    'end_date' => $end_date,
                 ],
-            ]
+            ],
         ], 200);
     }
 
     public function destroy(Request $request)
     {
         $payment = sale_payments::find($request->id);
-        if($payment->userID != $request->user()->id)
-        {
+        if ($payment->userID != $request->user()->id) {
             return response()->json([
                 'status' => 'Unauthorised',
                 'data' => [
                     'message' => 'You are not authorized to delete this payment',
-                ]
-            ], 401); 
+                ],
+            ], 401);
         }
-        try
-        {
+        try {
             DB::beginTransaction();
             sale_payments::where('refID', $request->refID)->delete();
             transactions::where('refID', $request->refID)->delete();
@@ -76,21 +74,21 @@ class InvoicePaymentsHistory extends Controller
             transactions_que::where('refID', $request->refID)->delete();
             cheques::where('refID', $request->refID)->delete();
             DB::commit();
+
             return response()->json([
                 'status' => 'success',
                 'data' => [
                     'message' => 'Payment deleted successfully',
-                ]
+                ],
             ], 200);
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'status' => 'error',
                 'data' => [
                     'message' => $e->getMessage(),
-                ]
+                ],
             ], 500);
         }
     }

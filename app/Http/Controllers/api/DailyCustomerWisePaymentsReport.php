@@ -15,47 +15,45 @@ class DailyCustomerWisePaymentsReport extends Controller
     {
         $from = $request->from ?? date('Y-m-d');
         $to = $request->to ?? date('Y-m-d');
-        
+
         $customers = orderbooker_customers::where('orderbookerID', $request->user()->id)->pluck('customerID')->toArray();
 
         $methods = ['Cash', 'Cheque', 'Online', 'Other'];
         $methodData = [];
-        foreach($customers as $customer)
-        {
-            $customerTitle = $customer . "-" .accounts::find($customer)->title;
+        foreach ($customers as $customer) {
+            $customer_info = accounts::find($customer);
+            $customerTitle = $customer.'-'.$customer_info->title;
             $sales_payment = sale_payments::where('customerID', $customer)->where('orderbookerID', $request->user()->id)->whereBetween('date', [$from, $to])->where('userID', $request->user()->id)->sum('amount');
             $payment_receiving = paymentsReceiving::where('depositerID', $customer)->where('orderbookerID', $request->user()->id)->whereBetween('date', [$from, $to])->where('userID', $request->user()->id)->sum('amount');
 
             $total = $sales_payment + $payment_receiving;
-            if($total > 0)
-            {
-                foreach($methods as $method)
-                {
+            if ($total > 0) {
+                $methodData[$customerTitle]['title_urdu'] = $customer_info->title_urdu;
+                $methodData[$customerTitle]['address_urdu'] = $customer_info->address_urdu;
+                foreach ($methods as $method) {
                     $sales_payment = sale_payments::where('customerID', $customer)->where('orderbookerID', $request->user()->id)->whereBetween('date', [$from, $to])->where('userID', $request->user()->id)->where('method', $method)->sum('amount');
                     $payment_receiving = paymentsReceiving::where('depositerID', $customer)->where('orderbookerID', $request->user()->id)->whereBetween('date', [$from, $to])->where('userID', $request->user()->id)->where('method', $method)->sum('amount');
                     $methodData[$customerTitle][$method] = $sales_payment + $payment_receiving;
                 }
             }
-           
+
         }
 
         $totalMethodData = [];
-        foreach($methods as $method)
-        {
+        foreach ($methods as $method) {
             $totalMethodData[$method] = 0;
-            foreach($methodData as $customer)
-            {
+            foreach ($methodData as $customer) {
                 $totalMethodData[$method] += $customer[$method];
             }
         }
 
         if (empty($methodData)) {
-            $methodData = (object)[]; // Forces it to be returned as {}
+            $methodData = (object) []; // Forces it to be returned as {}
         }
-       
+
         return response()->json([
             'status' => 'success',
-            'data' => compact('methodData', 'totalMethodData') 
+            'data' => compact('methodData', 'totalMethodData'),
         ], 200);
     }
 }
