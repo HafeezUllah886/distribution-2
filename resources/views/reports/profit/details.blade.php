@@ -277,31 +277,61 @@
                                                                     <tbody>
                                                                         @php
                                                                             $total_qty = 0;
+                                                                            $grouped_details = [];
+                                                                            foreach (
+                                                                                $item['sales']['details']
+                                                                                as $detail
+                                                                            ) {
+                                                                                $key =
+                                                                                    $detail->price .
+                                                                                    '_' .
+                                                                                    $detail->discountvalue .
+                                                                                    '_' .
+                                                                                    $detail->discount .
+                                                                                    '_' .
+                                                                                    $detail->fright .
+                                                                                    '_' .
+                                                                                    $detail->labor .
+                                                                                    '_' .
+                                                                                    $detail->claim;
+                                                                                if (!isset($grouped_details[$key])) {
+                                                                                    $grouped_details[
+                                                                                        $key
+                                                                                    ] = clone $detail;
+                                                                                    $grouped_details[$key]->pc = 0;
+                                                                                }
+                                                                                $grouped_details[$key]->pc +=
+                                                                                    $detail->pc;
+                                                                            }
                                                                         @endphp
 
-                                                                        @foreach ($item['sales']['details'] as $sale_detail)
+                                                                        @foreach ($grouped_details as $sale_detail)
                                                                             @php
-                                                                                $total_qty += $sale_detail->pc / $ps;
+                                                                                $qty = $sale_detail->pc / $ps;
+                                                                                $total_qty += $qty;
+                                                                                $discount =
+                                                                                    ($sale_detail->discountvalue +
+                                                                                        $sale_detail->discount) *
+                                                                                    $ps;
+                                                                                $price = $sale_detail->price * $ps;
+                                                                                $fright = $sale_detail->fright * $ps;
+                                                                                $labor = $sale_detail->labor * $ps;
+                                                                                $claim = $sale_detail->claim * $ps;
                                                                             @endphp
                                                                             <tr>
-                                                                                <td>{{ number_format($sale_detail->pc / $ps, 2) }}
+                                                                                <td>{{ number_format($qty, 2) }}
                                                                                 </td>
-                                                                                <td>{{ number_format($sale_detail->price * $ps, 2) }}
+                                                                                <td>{{ number_format($price, 2) }}
                                                                                 </td>
-                                                                                <td>{{ number_format($sale_detail->discountvalue + $sale_detail->discount, 2) * $ps }}
+                                                                                <td>{{ number_format($discount, 2) }}
                                                                                 </td>
-                                                                                <td>{{ number_format($sale_detail->fright * $ps, 2) }}
+                                                                                <td>{{ number_format($fright, 2) }}
                                                                                 </td>
-                                                                                <td>{{ number_format($sale_detail->labor * $ps, 2) }}
+                                                                                <td>{{ number_format($labor, 2) }}
                                                                                 </td>
-                                                                                <td>{{ number_format($sale_detail->claim * $ps, 2) }}
+                                                                                <td>{{ number_format($claim, 2) }}
                                                                                 </td>
-                                                                                <td>{{ number_format(
-                                                                                    $sale_detail->price * $sale_detail->fright +
-                                                                                        $sale_detail->labor -
-                                                                                        ($sale_detail->discountvalue + $sale_detail->discount + $sale_detail->claim),
-                                                                                    2,
-                                                                                ) }}
+                                                                                <td>{{ number_format($price - $discount + $fright + $labor - $claim, 2) }}
                                                                                 </td>
 
                                                                             </tr>
