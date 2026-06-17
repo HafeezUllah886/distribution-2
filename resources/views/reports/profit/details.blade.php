@@ -277,48 +277,50 @@
                                                                     <tbody>
                                                                         @php
                                                                             $total_qty = 0;
-                                                                            $total_price = 0;
-                                                                            $total_discount = 0;
-                                                                            $total_freight = 0;
-                                                                            $total_labor = 0;
-                                                                            $total_claim = 0;
-                                                                            $total_net = 0;
                                                                         @endphp
+
                                                                         @foreach ($item['sales']['details'] as $sale_detail)
                                                                             @php
-                                                                                $qty = $sale_detail->pc / $ps;
-                                                                                $total_qty += $qty;
-                                                                                $total_price +=
-                                                                                    $sale_detail->price * $qty * $ps;
-                                                                                $total_discount +=
-                                                                                    $sale_detail->discountvalue *
-                                                                                    $qty *
-                                                                                    $ps;
-                                                                                $total_freight +=
-                                                                                    $sale_detail->fright * $qty * $ps;
-                                                                                $total_labor +=
-                                                                                    $sale_detail->labor * $qty * $ps;
-                                                                                $total_claim +=
-                                                                                    $sale_detail->claim * $qty * $ps;
-                                                                                $total_net +=
-                                                                                    ($sale_detail->price +
-                                                                                        $sale_detail->fright +
-                                                                                        $sale_detail->labor -
-                                                                                        ($sale_detail->discountvalue +
-                                                                                            $sale_detail->discount +
-                                                                                            $sale_detail->claim)) *
-                                                                                    $ps;
+                                                                                $total_qty += $sale_detail->pc / $ps;
                                                                             @endphp
+                                                                            <tr>
+                                                                                <td>{{ number_format($sale_detail->pc / $ps, 2) }}
+                                                                                </td>
+                                                                                <td>{{ number_format($sale_detail->price * $ps, 2) }}
+                                                                                </td>
+                                                                                <td>{{ number_format($sale_detail->discountvalue + $sale_detail->discount, 2) * $ps }}
+                                                                                </td>
+                                                                                <td>{{ number_format($sale_detail->fright * $ps, 2) }}
+                                                                                </td>
+                                                                                <td>{{ number_format($sale_detail->labor * $ps, 2) }}
+                                                                                </td>
+                                                                                <td>{{ number_format($sale_detail->claim * $ps, 2) }}
+                                                                                </td>
+                                                                                <td>{{ number_format(
+                                                                                    $sale_detail->price * $sale_detail->fright +
+                                                                                        $sale_detail->labor -
+                                                                                        ($sale_detail->discountvalue + $sale_detail->discount + $sale_detail->claim),
+                                                                                    2,
+                                                                                ) }}
+                                                                                </td>
+
+                                                                            </tr>
                                                                         @endforeach
                                                                         <tr>
-                                                                            <td>{{ number_format($total_qty, 2) }}</td>
-                                                                            <td>{{ number_format($total_price, 2) }}</td>
-                                                                            <td>{{ number_format($total_discount, 2) }}
-                                                                            </td>
-                                                                            <td>{{ number_format($total_freight, 2) }}</td>
-                                                                            <td>{{ number_format($total_labor, 2) }}</td>
-                                                                            <td>{{ number_format($total_claim, 2) }}</td>
-                                                                            <td>{{ number_format($total_net, 2) }}</td>
+                                                                            <th>{{ number_format($total_qty, 2) }}
+                                                                            </th>
+                                                                            <th>{{ number_format($item['sales']['details']->avg('price') * $ps, 2) }}
+                                                                            </th>
+                                                                            <th>{{ number_format(($item['sales']['details']->avg('discountvalue') + $item['sales']['details']->avg('discount')) * $ps, 2) }}
+                                                                            </th>
+                                                                            <th>{{ number_format($item['sales']['details']->avg('fright') * $ps, 2) }}
+                                                                            </th>
+                                                                            <th>{{ number_format($item['sales']['details']->avg('labor') * $ps, 2) }}
+                                                                            </th>
+                                                                            <th>{{ number_format($item['sales']['details']->avg('claim') * $ps, 2) }}
+                                                                            </th>
+                                                                            <th>{{ number_format(($item['sales']['details']->avg('price') + $item['sales']['details']->avg('fright') + $item['sales']['details']->avg('labor') - ($item['sales']['details']->avg('discountvalue') + $item['sales']['details']->avg('discount') + $item['sales']['details']->avg('claim'))) * $ps, 2) }}
+                                                                            </th>
 
                                                                         </tr>
                                                                     </tbody>
