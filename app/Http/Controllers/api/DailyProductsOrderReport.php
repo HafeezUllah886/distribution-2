@@ -23,6 +23,9 @@ class DailyProductsOrderReport extends Controller
         $productData = [];
         foreach ($products as $product) {
             $product = products::find($product);
+            if ($product->statu == 'Inactive') {
+                continue;
+            }
             $unit_value = $product->units[0]->value;
             $pc = order_details::whereIn('orderID', $orders)->where('productID', $product->id)->sum('pc');
 
