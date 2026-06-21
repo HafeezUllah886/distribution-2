@@ -105,26 +105,11 @@ class profitController extends Controller
                     $purchase_net = ($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim);
                 }
             } else {
-                $purchase_price = 0;
-                $purchase_discount = 0;
-                $purchase_discountP = 0;
-                $purchase_freight = 0;
-                $purchase_labor = 0;
-                $purchase_claim = 0;
-                foreach ($purchases_data as $pd) {
-                    $purchase_price += $pd->price * $pd->pc;
-                    $purchase_discount += $pd->discount * $pd->pc;
-                    $purchase_discountP += $pd->discountvalue * $pd->pc;
-                    $purchase_freight += $pd->fright * $pd->pc;
-                    $purchase_labor += $pd->labor * $pd->pc;
-                    $purchase_claim += $pd->claim * $pd->pc;
-                }
-                $total_pc = $purchases_data->sum('pc');
-                $purchase_price = $purchase_price / $total_pc;
-                $purchase_discount = ($purchase_discount / $total_pc) + ($purchase_discountP / $total_pc);
-                $purchase_freight = $purchase_freight / $total_pc;
-                $purchase_labor = $purchase_labor / $total_pc;
-                $purchase_claim = $purchase_claim / $total_pc;
+                $purchase_price = $purchases_data->avg('price');
+                $purchase_discount = $purchases_data->avg('discountvalue') + $purchases_data->avg('discount');
+                $purchase_freight = $purchases_data->avg('fright');
+                $purchase_labor = $purchases_data->avg('labor');
+                $purchase_claim = $purchases_data->avg('claim');
                 $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim)) * $unit;
             }
 
