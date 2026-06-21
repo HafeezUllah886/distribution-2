@@ -26,6 +26,7 @@ class OrderBookerInvoices extends Controller
                 'customer_contact' => $invoice->customer->contact,
                 'area' => $invoice->customer->area->name,
                 'supply_man' => $invoice->supplyman->title,
+                'supply_man_urdu' => $invoice->supplyman->title_urdu,
                 'orderID' => $invoice->orderID,
                 'invoice_date' => $invoice->date,
                 'order_date' => $invoice->orderdate,
