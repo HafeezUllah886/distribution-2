@@ -168,13 +168,28 @@ class profitController extends Controller
                 $sale_net = 0;
                 $sold_qty = 0;
             } else {
-                $sale_price = $sales_data_collection->avg('price');
-                $sale_discount = $sales_data_collection->avg('discountvalue') + $sales_data_collection->avg('discount');
-                $sale_freight = $sales_data_collection->avg('fright');
-                $sale_labor = $sales_data_collection->avg('labor');
-                $sale_claim = $sales_data_collection->avg('claim');
+                $sale_price = 0;
+                $sale_discount = 0;
+                $sale_discountP = 0;
+                $sale_freight = 0;
+                $sale_labor = 0;
+                $sale_claim = 0;
+                foreach ($sales_data_collection as $sd) {
+                    $sale_price += $sd->price * $sd->pc;
+                    $sale_discount += $sd->discount * $sd->pc;
+                    $sale_discountP += $sd->discountvalue * $sd->pc;
+                    $sale_freight += $sd->fright * $sd->pc;
+                    $sale_labor += $sd->labor * $sd->pc;
+                    $sale_claim += $sd->claim * $sd->pc;
+                }
+                $total_pc = $sales_data_collection->sum('pc');
+                $sale_price = $sale_price / $total_pc;
+                $sale_discount = ($sale_discount / $total_pc) + ($sale_discountP / $total_pc);
+                $sale_freight = $sale_freight / $total_pc;
+                $sale_labor = $sale_labor / $total_pc;
+                $sale_claim = $sale_claim / $total_pc;
                 $sale_net = (($sale_price + $sale_freight + $sale_labor) - ($sale_discount + $sale_claim)) * $unit;
-                $sold_qty = $sales_data_collection->sum('pc') / $unit;
+                $sold_qty = $total_pc / $unit;
             }
 
             $returns_query = returnsDetails::where('productID', $prod->id)
