@@ -307,16 +307,16 @@
 
                                                                         @foreach ($grouped_details as $sale_detail)
                                                                             @php
-                                                                                $qty = $sale_detail->pc / $ps;
+                                                                                $pc = $sale_detail->pc;
+                                                                                $qty = $pc / $ps;
                                                                                 $total_qty += $qty;
                                                                                 $discount =
-                                                                                    ($sale_detail->discountvalue +
-                                                                                        $sale_detail->discount) *
-                                                                                    $ps;
-                                                                                $price = $sale_detail->price * $ps;
-                                                                                $fright = $sale_detail->fright * $ps;
-                                                                                $labor = $sale_detail->labor * $ps;
-                                                                                $claim = $sale_detail->claim * $ps;
+                                                                                    $sale_detail->discountvalue * $pc +
+                                                                                    $sale_detail->discount * $pc;
+                                                                                $price = $sale_detail->price * $pc;
+                                                                                $fright = $sale_detail->fright * $pc;
+                                                                                $labor = $sale_detail->labor * $pc;
+                                                                                $claim = $sale_detail->claim * $pc;
                                                                             @endphp
                                                                             <tr>
                                                                                 <td>{{ number_format($qty, 2) }}
@@ -336,7 +336,7 @@
 
                                                                             </tr>
                                                                         @endforeach
-                                                                        <tr>
+                                                                        {{--  <tr>
                                                                             <th>{{ number_format($total_qty, 2) }}
                                                                             </th>
                                                                             <th>{{ number_format($item['sales']['details']->avg('price') * $ps, 2) }}
@@ -353,7 +353,7 @@
                                                                             </th>
 
                                                                         </tr>
-                                                                    </tbody>
+                                                                    </tbody> --}}
                                                                 </table>
                                                             @else
                                                                 <p class="text-muted">No sales found for this product in
