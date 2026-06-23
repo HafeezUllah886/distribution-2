@@ -336,7 +336,7 @@
 
                                                                             </tr>
                                                                         @endforeach
-                                                                        <tr>
+                                                                        {{--  <tr>
                                                                             <th>{{ number_format($total_qty, 2) }}
                                                                             </th>
                                                                             <th>{{ number_format($item['sales']['details']->avg('price') * $ps, 2) }}
@@ -352,7 +352,7 @@
                                                                             <th>{{ number_format(($item['sales']['details']->avg('price') + $item['sales']['details']->avg('fright') + $item['sales']['details']->avg('labor') - ($item['sales']['details']->avg('discountvalue') + $item['sales']['details']->avg('discount') + $item['sales']['details']->avg('claim'))) * $ps, 2) }}
                                                                             </th>
 
-                                                                        </tr>
+                                                                        </tr> --}}
                                                                     </tbody>
                                                                 </table>
                                                             @else
@@ -442,12 +442,12 @@
 
                                                                             </tr>
                                                                         @endforeach
-                                                                        <tr>
+                                                                        {{--  <tr>
                                                                             <th>{{ number_format($total_ret_qty, 2) }}
                                                                             </th>
                                                                             <th>{{ number_format($item['returns']['details']->avg('price') * $ps, 2) }}
                                                                             </th>
-                                                                            {{--  <th>{{ number_format(($item['returns']['details']->avg('discountvalue') + $item['returns']['details']->avg('discount')) * $ps, 2) }}
+                                                                             <th>{{ number_format(($item['returns']['details']->avg('discountvalue') + $item['returns']['details']->avg('discount')) * $ps, 2) }}
                                                                             </th>
                                                                             <th>{{ number_format($item['returns']['details']->avg('fright') * $ps, 2) }}
                                                                             </th>
@@ -456,9 +456,9 @@
                                                                             <th>{{ number_format($item['returns']['details']->avg('claim') * $ps, 2) }}
                                                                             </th>
                                                                             <th>{{ number_format(($item['returns']['details']->avg('price') + $item['returns']['details']->avg('fright') + $item['returns']['details']->avg('labor') - ($item['returns']['details']->avg('discountvalue') + $item['returns']['details']->avg('discount') + $item['returns']['details']->avg('claim'))) * $ps, 2) }}
-                                                                            </th> --}}
+                                                                            </th>
 
-                                                                        </tr>
+                                                                        </tr> --}}
                                                                     </tbody>
                                                                 </table>
                                                             @else
