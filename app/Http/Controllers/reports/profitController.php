@@ -271,7 +271,7 @@ class profitController extends Controller
         $expenses = $expenses_query->get()->groupBy('categoryID');
 
         $salaries = \App\Models\generate_salary::where('branchID', auth()->user()->branchID)
-            ->whereBetween('month', [$from, $to])
+            ->whereBetween('date', [$from, $to])
             ->sum('salary');
 
         $branch_name = branches::find(auth()->user()->branchID)->name;

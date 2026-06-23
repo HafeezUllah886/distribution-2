@@ -362,7 +362,7 @@
                                                             @endif
 
                                                             <hr>
-                                                            <h5 class="mb-2 mt-4">Sale Returns Details for
+                                                            <h5 class="mb-2">Sale Returns Details for
                                                                 {{ $item['name'] }}</h5>
                                                             @if ($item['returns']['details']->count() > 0)
                                                                 <table class="table table-sm table-bordered">
