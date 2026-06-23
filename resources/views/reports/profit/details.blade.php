@@ -362,7 +362,8 @@
                                                             @endif
 
                                                             <hr>
-                                                            <h5 class="mb-2 mt-4">Sale Returns Details for {{ $item['name'] }}</h5>
+                                                            <h5 class="mb-2 mt-4">Sale Returns Details for
+                                                                {{ $item['name'] }}</h5>
                                                             @if ($item['returns']['details']->count() > 0)
                                                                 <table class="table table-sm table-bordered">
                                                                     <thead class="table-dark">
@@ -370,11 +371,11 @@
 
                                                                             <th>Qty</th>
                                                                             <th>Price</th>
-                                                                            <th>Discount</th>
+                                                                            {{-- <th>Discount</th>
                                                                             <th>Freight</th>
                                                                             <th>Labour</th>
                                                                             <th>Claim</th>
-                                                                            <th>Net Price</th>
+                                                                            <th>Net Price</th> --}}
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -397,7 +398,9 @@
                                                                                     $detail->labor .
                                                                                     '_' .
                                                                                     $detail->claim;
-                                                                                if (!isset($grouped_ret_details[$key])) {
+                                                                                if (
+                                                                                    !isset($grouped_ret_details[$key])
+                                                                                ) {
                                                                                     $grouped_ret_details[
                                                                                         $key
                                                                                     ] = clone $detail;
@@ -426,7 +429,7 @@
                                                                                 </td>
                                                                                 <td>{{ number_format($price, 2) }}
                                                                                 </td>
-                                                                                <td>{{ number_format($discount, 2) }}
+                                                                                {{--  <td>{{ number_format($discount, 2) }}
                                                                                 </td>
                                                                                 <td>{{ number_format($fright, 2) }}
                                                                                 </td>
@@ -435,7 +438,7 @@
                                                                                 <td>{{ number_format($claim, 2) }}
                                                                                 </td>
                                                                                 <td>{{ number_format($price - $discount + $fright + $labor - $claim, 2) }}
-                                                                                </td>
+                                                                                </td> --}}
 
                                                                             </tr>
                                                                         @endforeach
@@ -444,7 +447,7 @@
                                                                             </th>
                                                                             <th>{{ number_format($item['returns']['details']->avg('price') * $ps, 2) }}
                                                                             </th>
-                                                                            <th>{{ number_format(($item['returns']['details']->avg('discountvalue') + $item['returns']['details']->avg('discount')) * $ps, 2) }}
+                                                                            {{--  <th>{{ number_format(($item['returns']['details']->avg('discountvalue') + $item['returns']['details']->avg('discount')) * $ps, 2) }}
                                                                             </th>
                                                                             <th>{{ number_format($item['returns']['details']->avg('fright') * $ps, 2) }}
                                                                             </th>
@@ -453,13 +456,14 @@
                                                                             <th>{{ number_format($item['returns']['details']->avg('claim') * $ps, 2) }}
                                                                             </th>
                                                                             <th>{{ number_format(($item['returns']['details']->avg('price') + $item['returns']['details']->avg('fright') + $item['returns']['details']->avg('labor') - ($item['returns']['details']->avg('discountvalue') + $item['returns']['details']->avg('discount') + $item['returns']['details']->avg('claim'))) * $ps, 2) }}
-                                                                            </th>
+                                                                            </th> --}}
 
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
                                                             @else
-                                                                <p class="text-muted">No sale returns found for this product in
+                                                                <p class="text-muted">No sale returns found for this
+                                                                    product in
                                                                     the
                                                                     selected criteria.</p>
                                                             @endif
