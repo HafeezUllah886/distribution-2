@@ -217,7 +217,8 @@ class profitController extends Controller
                         });
                     }
                 });
-            $return_qty = $returns_query->sum('pc') / $unit;
+            $returns_data_collection = $returns_query->get();
+            $return_qty = $returns_data_collection->sum('pc') / $unit;
             $net_sale_qty = $sold_qty - $return_qty;
 
             $ppu = $sale_net - $purchase_net;
@@ -245,6 +246,9 @@ class profitController extends Controller
                         'claim' => $sale_claim * $unit,
                         'net' => $sale_net,
                         'details' => $sales_data_collection,
+                    ],
+                    'returns' => [
+                        'details' => $returns_data_collection,
                     ],
                     'sold_qty' => $sold_qty,
                     'return_qty' => $return_qty,

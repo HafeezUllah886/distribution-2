@@ -360,6 +360,109 @@
                                                                     the
                                                                     selected criteria.</p>
                                                             @endif
+
+                                                            <hr>
+                                                            <h5 class="mb-2 mt-4">Sale Returns Details for {{ $item['name'] }}</h5>
+                                                            @if ($item['returns']['details']->count() > 0)
+                                                                <table class="table table-sm table-bordered">
+                                                                    <thead class="table-dark">
+                                                                        <tr>
+
+                                                                            <th>Qty</th>
+                                                                            <th>Price</th>
+                                                                            <th>Discount</th>
+                                                                            <th>Freight</th>
+                                                                            <th>Labour</th>
+                                                                            <th>Claim</th>
+                                                                            <th>Net Price</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @php
+                                                                            $total_ret_qty = 0;
+                                                                            $grouped_ret_details = [];
+                                                                            foreach (
+                                                                                $item['returns']['details']
+                                                                                as $detail
+                                                                            ) {
+                                                                                $key =
+                                                                                    $detail->price .
+                                                                                    '_' .
+                                                                                    $detail->discountvalue .
+                                                                                    '_' .
+                                                                                    $detail->discount .
+                                                                                    '_' .
+                                                                                    $detail->fright .
+                                                                                    '_' .
+                                                                                    $detail->labor .
+                                                                                    '_' .
+                                                                                    $detail->claim;
+                                                                                if (!isset($grouped_ret_details[$key])) {
+                                                                                    $grouped_ret_details[
+                                                                                        $key
+                                                                                    ] = clone $detail;
+                                                                                    $grouped_ret_details[$key]->pc = 0;
+                                                                                }
+                                                                                $grouped_ret_details[$key]->pc +=
+                                                                                    $detail->pc;
+                                                                            }
+                                                                        @endphp
+
+                                                                        @foreach ($grouped_ret_details as $ret_detail)
+                                                                            @php
+                                                                                $qty = $ret_detail->pc / $ps;
+                                                                                $total_ret_qty += $qty;
+                                                                                $discount =
+                                                                                    ($ret_detail->discountvalue +
+                                                                                        $ret_detail->discount) *
+                                                                                    $ps;
+                                                                                $price = $ret_detail->price * $ps;
+                                                                                $fright = $ret_detail->fright * $ps;
+                                                                                $labor = $ret_detail->labor * $ps;
+                                                                                $claim = $ret_detail->claim * $ps;
+                                                                            @endphp
+                                                                            <tr>
+                                                                                <td>{{ number_format($qty, 2) }}
+                                                                                </td>
+                                                                                <td>{{ number_format($price, 2) }}
+                                                                                </td>
+                                                                                <td>{{ number_format($discount, 2) }}
+                                                                                </td>
+                                                                                <td>{{ number_format($fright, 2) }}
+                                                                                </td>
+                                                                                <td>{{ number_format($labor, 2) }}
+                                                                                </td>
+                                                                                <td>{{ number_format($claim, 2) }}
+                                                                                </td>
+                                                                                <td>{{ number_format($price - $discount + $fright + $labor - $claim, 2) }}
+                                                                                </td>
+
+                                                                            </tr>
+                                                                        @endforeach
+                                                                        <tr>
+                                                                            <th>{{ number_format($total_ret_qty, 2) }}
+                                                                            </th>
+                                                                            <th>{{ number_format($item['returns']['details']->avg('price') * $ps, 2) }}
+                                                                            </th>
+                                                                            <th>{{ number_format(($item['returns']['details']->avg('discountvalue') + $item['returns']['details']->avg('discount')) * $ps, 2) }}
+                                                                            </th>
+                                                                            <th>{{ number_format($item['returns']['details']->avg('fright') * $ps, 2) }}
+                                                                            </th>
+                                                                            <th>{{ number_format($item['returns']['details']->avg('labor') * $ps, 2) }}
+                                                                            </th>
+                                                                            <th>{{ number_format($item['returns']['details']->avg('claim') * $ps, 2) }}
+                                                                            </th>
+                                                                            <th>{{ number_format(($item['returns']['details']->avg('price') + $item['returns']['details']->avg('fright') + $item['returns']['details']->avg('labor') - ($item['returns']['details']->avg('discountvalue') + $item['returns']['details']->avg('discount') + $item['returns']['details']->avg('claim'))) * $ps, 2) }}
+                                                                            </th>
+
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            @else
+                                                                <p class="text-muted">No sale returns found for this product in
+                                                                    the
+                                                                    selected criteria.</p>
+                                                            @endif
                                                         </div>
                                                     </td>
                                                 </tr>
