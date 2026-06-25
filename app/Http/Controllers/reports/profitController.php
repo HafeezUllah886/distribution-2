@@ -102,7 +102,7 @@ class profitController extends Controller
                     $purchase_freight = $prod->fright;
                     $purchase_labor = $prod->labor;
                     $purchase_claim = $prod->claim;
-                    $purchase_net = ($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim);
+                    $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim)) * $unit;
                 }
             } else {
                 $purchase_price = 0;
