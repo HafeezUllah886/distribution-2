@@ -41,6 +41,17 @@
                                     {{-- <h5 class="fs-14 mb-0"><span id="total-amount">{{ \Carbon\Carbon::now()->format('h:i A') }}</span></h5> --}}
                                 </div>
                                 <!--end col-->
+                                @if (isset($filters))
+                                    @foreach ($filters as $key => $value)
+                                        @if ($value != 'All')
+                                            <div class="col-lg-3 col-6">
+                                                <p class="text-muted mb-2 text-uppercase fw-semibold">{{ $key }}
+                                                </p>
+                                                <h5 class="fs-14 mb-0">{{ $value }}</h5>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                @endif
                             </div>
                             <!--end row-->
                         </div>
@@ -473,30 +484,42 @@
                                             @endforeach
                                             <!-- Vendor Totals -->
                                             <tr class="table-info fw-bold">
-                                                <td colspan="4" class="text-end p-1">Vendor Total:</td>
+                                                <td colspan="4" class="text-end p-1">{{ $vendor }} Total:</td>
                                                 <td class="text-end p-1">
-                                                    {{ number_format($vendor_totals['pur_price'], 2) }}</td>
-                                                <td class="text-end p-1">
-                                                    {{ number_format($vendor_totals['pur_discount'], 2) }}</td>
-                                                <td class="text-end p-1">
-                                                    {{ number_format($vendor_totals['pur_freight'], 2) }}</td>
-                                                <td class="text-end p-1">
-                                                    {{ number_format($vendor_totals['pur_labor'], 2) }}</td>
-                                                <td class="text-end p-1">
-                                                    {{ number_format($vendor_totals['pur_claim'], 2) }}</td>
-                                                <td class="text-end p-1">{{ number_format($vendor_totals['pur_net'], 2) }}
+                                                    {{ number_format($vendor_totals['pur_price'] / max(1, count($items)), 2) }}
                                                 </td>
                                                 <td class="text-end p-1">
-                                                    {{ number_format($vendor_totals['sal_price'], 2) }}</td>
+                                                    {{ number_format($vendor_totals['pur_discount'] / max(1, count($items)), 2) }}
+                                                </td>
                                                 <td class="text-end p-1">
-                                                    {{ number_format($vendor_totals['sal_discount'], 2) }}</td>
+                                                    {{ number_format($vendor_totals['pur_freight'] / max(1, count($items)), 2) }}
+                                                </td>
                                                 <td class="text-end p-1">
-                                                    {{ number_format($vendor_totals['sal_freight'], 2) }}</td>
+                                                    {{ number_format($vendor_totals['pur_labor'] / max(1, count($items)), 2) }}
+                                                </td>
                                                 <td class="text-end p-1">
-                                                    {{ number_format($vendor_totals['sal_labor'], 2) }}</td>
+                                                    {{ number_format($vendor_totals['pur_claim'] / max(1, count($items)), 2) }}
+                                                </td>
                                                 <td class="text-end p-1">
-                                                    {{ number_format($vendor_totals['sal_claim'], 2) }}</td>
-                                                <td class="text-end p-1">{{ number_format($vendor_totals['sal_net'], 2) }}
+                                                    {{ number_format($vendor_totals['pur_net'] / max(1, count($items)), 2) }}
+                                                </td>
+                                                <td class="text-end p-1">
+                                                    {{ number_format($vendor_totals['sal_price'] / max(1, count($items)), 2) }}
+                                                </td>
+                                                <td class="text-end p-1">
+                                                    {{ number_format($vendor_totals['sal_discount'] / max(1, count($items)), 2) }}
+                                                </td>
+                                                <td class="text-end p-1">
+                                                    {{ number_format($vendor_totals['sal_freight'] / max(1, count($items)), 2) }}
+                                                </td>
+                                                <td class="text-end p-1">
+                                                    {{ number_format($vendor_totals['sal_labor'] / max(1, count($items)), 2) }}
+                                                </td>
+                                                <td class="text-end p-1">
+                                                    {{ number_format($vendor_totals['sal_claim'] / max(1, count($items)), 2) }}
+                                                </td>
+                                                <td class="text-end p-1">
+                                                    {{ number_format($vendor_totals['sal_net'] / max(1, count($items)), 2) }}
                                                 </td>
                                                 <td class="text-end p-1">
                                                     {{ number_format($vendor_totals['sold_qty'], 2) }}</td>
@@ -505,7 +528,8 @@
                                                 <td class="text-end p-1">
                                                     {{ number_format($vendor_totals['net_sale_qty'], 2) }}</td>
                                                 <td class="text-end p-1">
-                                                    {{ number_format($vendor_totals['profit_per_unit'], 2) }}</td>
+                                                    {{ number_format($vendor_totals['profit_per_unit'] / max(1, count($items)), 2) }}
+                                                </td>
                                                 <td class="text-end p-1">
                                                     {{ number_format($vendor_totals['total_profit'], 2) }}</td>
                                             </tr>
@@ -514,28 +538,42 @@
                                         <!-- Grand Totals -->
                                         <tr class="table-warning fw-bold">
                                             <td colspan="4" class="text-end p-1">Grand Total:</td>
-                                            <td class="text-end p-1">{{ number_format($grand_totals['pur_price'], 2) }}
+                                            <td class="text-end p-1">
+                                                {{ number_format($grand_totals['pur_price'] / max(1, count($data)), 2) }}
                                             </td>
-                                            <td class="text-end p-1">{{ number_format($grand_totals['pur_discount'], 2) }}
+                                            <td class="text-end p-1">
+                                                {{ number_format($grand_totals['pur_discount'] / max(1, count($data)), 2) }}
                                             </td>
-                                            <td class="text-end p-1">{{ number_format($grand_totals['pur_freight'], 2) }}
+                                            <td class="text-end p-1">
+                                                {{ number_format($grand_totals['pur_freight'] / max(1, count($data)), 2) }}
                                             </td>
-                                            <td class="text-end p-1">{{ number_format($grand_totals['pur_labor'], 2) }}
+                                            <td class="text-end p-1">
+                                                {{ number_format($grand_totals['pur_labor'] / max(1, count($data)), 2) }}
                                             </td>
-                                            <td class="text-end p-1">{{ number_format($grand_totals['pur_claim'], 2) }}
+                                            <td class="text-end p-1">
+                                                {{ number_format($grand_totals['pur_claim'] / max(1, count($data)), 2) }}
                                             </td>
-                                            <td class="text-end p-1">{{ number_format($grand_totals['pur_net'], 2) }}</td>
-                                            <td class="text-end p-1">{{ number_format($grand_totals['sal_price'], 2) }}
+                                            <td class="text-end p-1">
+                                                {{ number_format($grand_totals['pur_net'] / max(1, count($data)), 2) }}
                                             </td>
-                                            <td class="text-end p-1">{{ number_format($grand_totals['sal_discount'], 2) }}
+                                            <td class="text-end p-1">
+                                                {{ number_format($grand_totals['sal_price'] / max(1, count($data)), 2) }}
                                             </td>
-                                            <td class="text-end p-1">{{ number_format($grand_totals['sal_freight'], 2) }}
+                                            <td class="text-end p-1">
+                                                {{ number_format($grand_totals['sal_discount'] / max(1, count($data)), 2) }}
                                             </td>
-                                            <td class="text-end p-1">{{ number_format($grand_totals['sal_labor'], 2) }}
+                                            <td class="text-end p-1">
+                                                {{ number_format($grand_totals['sal_freight'] / max(1, count($data)), 2) }}
                                             </td>
-                                            <td class="text-end p-1">{{ number_format($grand_totals['sal_claim'], 2) }}
+                                            <td class="text-end p-1">
+                                                {{ number_format($grand_totals['sal_labor'] / max(1, count($data)), 2) }}
                                             </td>
-                                            <td class="text-end p-1">{{ number_format($grand_totals['sal_net'], 2) }}</td>
+                                            <td class="text-end p-1">
+                                                {{ number_format($grand_totals['sal_claim'] / max(1, count($data)), 2) }}
+                                            </td>
+                                            <td class="text-end p-1">
+                                                {{ number_format($grand_totals['sal_net'] / max(1, count($data)), 2) }}
+                                            </td>
                                             <td class="text-end p-1">{{ number_format($grand_totals['sold_qty'], 2) }}
                                             </td>
                                             <td class="text-end p-1">{{ number_format($grand_totals['return_qty'], 2) }}
@@ -543,7 +581,8 @@
                                             <td class="text-end p-1">{{ number_format($grand_totals['net_sale_qty'], 2) }}
                                             </td>
                                             <td class="text-end p-1">
-                                                {{ number_format($grand_totals['profit_per_unit'], 2) }}</td>
+                                                {{ number_format($grand_totals['profit_per_unit'] / max(1, count($data)), 2) }}
+                                            </td>
                                             <td class="text-end p-1">{{ number_format($grand_totals['total_profit'], 2) }}
                                             </td>
                                         </tr>
@@ -594,17 +633,21 @@
                                             <td colspan="20" class="text-end p-1">Employees Salaries</td>
                                             <td class="text-end text-danger p-1">-{{ number_format($salaries, 2) }}</td>
                                         </tr>
+                                        <tr>
+                                            <td colspan="20" class="text-end p-1">Issue Misc</td>
+                                            <td class="text-end text-danger p-1">-{{ number_format($issue_misc, 2) }}</td>
+                                        </tr>
                                         <tr class="table-active">
                                             <th colspan="20" class="text-end text-danger p-1">Total Deductions</th>
                                             <th class="text-end text-danger p-1">
-                                                -{{ number_format($total_expenses + $salaries, 2) }}</th>
+                                                -{{ number_format($total_expenses + $salaries + $issue_misc, 2) }}</th>
                                         </tr>
 
                                         <!-- Net Profit -->
                                         <tr class="table-success">
                                             <th colspan="20" class="text-end text-success p-1">Net Profit</th>
                                             <th class="text-end text-success p-1">
-                                                {{ number_format($total_profit_sum - ($total_expenses + $salaries), 2) }}
+                                                {{ number_format($total_profit_sum - ($total_expenses + $salaries + $issue_misc), 2) }}
                                             </th>
                                         </tr>
                                     </tbody>

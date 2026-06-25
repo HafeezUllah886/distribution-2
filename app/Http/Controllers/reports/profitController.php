@@ -95,10 +95,10 @@ class profitController extends Controller
                     $purchase_freight = $last_purchase_data->fright;
                     $purchase_labor = $last_purchase_data->labor;
                     $purchase_claim = $last_purchase_data->claim;
-                    $purchase_net = ($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim);
+                    $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim)) * $unit;
                 } else {
                     $purchase_price = $prod->pprice;
-                    $purchase_discount = $prod->discount;
+                    $purchase_discount = 0;
                     $purchase_freight = $prod->fright;
                     $purchase_labor = $prod->labor;
                     $purchase_claim = $prod->claim;
@@ -160,12 +160,12 @@ class profitController extends Controller
             $sales_data_collection = $sales_query->get();
 
             if ($sales_data_collection->isEmpty()) {
-                $sale_price = 0;
+                $sale_price = $prod->price;
                 $sale_discount = 0;
-                $sale_freight = 0;
-                $sale_labor = 0;
-                $sale_claim = 0;
-                $sale_net = 0;
+                $sale_freight = $prod->sfright;
+                $sale_labor = $prod->labor;
+                $sale_claim = $prod->sclaim;
+                $sale_net = (($sale_price + $sale_freight + $sale_labor) - ($sale_discount + $sale_claim)) * $unit;
                 $sold_qty = 0;
             } else {
                 $sale_price = 0;
@@ -274,6 +274,10 @@ class profitController extends Controller
             ->whereBetween('date', [$from, $to])
             ->sum('salary');
 
+        $issue_misc = \App\Models\issue_misc::where('branchID', auth()->user()->branchID)
+            ->whereBetween('date', [$from, $to])
+            ->sum('amount');
+
         $branch_name = branches::find(auth()->user()->branchID)->name;
 
         $expense_categories = \App\Models\expense_categories::all()->keyBy('id');
@@ -297,6 +301,26 @@ class profitController extends Controller
             $total_expenses += $sum;
         }
 
-        return view('reports.profit.details', compact('from', 'to', 'data', 'expenses_data', 'total_expenses', 'salaries', 'branch_name'));
+        $vendors_list = $vendor ? accounts::whereIn('id', $vendor)->pluck('title')->toArray() : ['All'];
+        $products_list = $product_ids ? products::whereIn('id', $product_ids)->pluck('name')->toArray() : ['All'];
+        $warehouses_list = $warehouse ? \App\Models\warehouses::whereIn('id', $warehouse)->pluck('name')->toArray() : ['All'];
+        $towns_list = $town ? \App\Models\town::whereIn('id', $town)->pluck('name')->toArray() : ['All'];
+        $areas_list = $area ? \App\Models\area::whereIn('id', $area)->pluck('name')->toArray() : ['All'];
+        $customers_list = $customer ? accounts::whereIn('id', $customer)->pluck('title')->toArray() : ['All'];
+        $orderbookers_list = $orderbooker ? \App\Models\User::whereIn('id', $orderbooker)->pluck('name')->toArray() : ['All'];
+        $expense_categories_list = $expense_category_filter ? \App\Models\expense_categories::whereIn('id', $expense_category_filter)->pluck('name')->toArray() : ['All'];
+
+        $filters = [
+            'Vendors' => implode(', ', $vendors_list),
+            'Products' => implode(', ', $products_list),
+            'Warehouses' => implode(', ', $warehouses_list),
+            'Towns' => implode(', ', $towns_list),
+            'Areas' => implode(', ', $areas_list),
+            'Customers' => implode(', ', $customers_list),
+            'Orderbookers' => implode(', ', $orderbookers_list),
+            'Expense Categories' => implode(', ', $expense_categories_list),
+        ];
+
+        return view('reports.profit.details', compact('from', 'to', 'data', 'expenses_data', 'total_expenses', 'salaries', 'issue_misc', 'branch_name', 'filters'));
     }
 }
