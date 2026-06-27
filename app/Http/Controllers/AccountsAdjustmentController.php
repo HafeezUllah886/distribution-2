@@ -28,7 +28,7 @@ class AccountsAdjustmentController extends Controller
             $accountsAdjustments->whereIn('accountID', $accounts->pluck('id'));
             $type = [$type];
         } else {
-            $type = ['Business', 'Vendor', 'Supply Man', 'Unloader', 'Customer', 'Personal', 'Freight'];
+            $type = ['Business', 'Vendor', 'Supply Man', 'Unloader', 'Customer', 'Personal', 'Freight', 'Investor'];
         }
 
         $accountsAdjustments = $accountsAdjustments->get();
