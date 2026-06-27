@@ -633,9 +633,39 @@
                                             <td colspan="20" class="text-end p-1">Employees Salaries</td>
                                             <td class="text-end text-danger p-1">-{{ number_format($salaries, 2) }}</td>
                                         </tr>
-                                        <tr>
+                                        <tr data-bs-toggle="collapse" data-bs-target="#collapse-issue-misc"
+                                            style="cursor: pointer;" title="Click to view category wise issue misc">
                                             <td colspan="20" class="text-end p-1">Issue Misc</td>
                                             <td class="text-end text-danger p-1">-{{ number_format($issue_misc, 2) }}</td>
+                                        </tr>
+                                        <!-- Issue Misc Accordion content -->
+                                        <tr class="collapse p-0" id="collapse-issue-misc">
+                                            <td colspan="21" class="p-0">
+                                                <div class="card card-body m-0 bg-light">
+                                                    <h5 class="mb-2">Category Wise Issue Misc</h5>
+                                                    @if (count($issue_misc_data) > 0)
+                                                        <table class="table table-sm table-bordered text-start mb-0">
+                                                            <thead class="table-dark">
+                                                                <tr>
+                                                                    <th>Category Name</th>
+                                                                    <th style="width: 20%" class="text-end">Amount</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($issue_misc_data as $cat_name => $misc_data)
+                                                                    <tr>
+                                                                        <td class="p-1">{{ $cat_name }}</td>
+                                                                        <td class="text-end text-danger p-1">
+                                                                            {{ number_format($misc_data['sum'], 2) }}</td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    @else
+                                                        <p class="text-muted">No issue misc found.</p>
+                                                    @endif
+                                                </div>
+                                            </td>
                                         </tr>
                                         <tr class="table-active">
                                             <th colspan="20" class="text-end text-danger p-1">Total Deductions</th>

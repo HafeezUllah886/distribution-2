@@ -274,9 +274,27 @@ class profitController extends Controller
             ->whereBetween('date', [$from, $to])
             ->sum('salary');
 
-        $issue_misc = \App\Models\issue_misc::where('branchID', auth()->user()->branchID)
-            ->whereBetween('date', [$from, $to])
-            ->sum('amount');
+        $issue_misc_categories = \App\Models\employees_payment_cats::all()->keyBy('id');
+        $issue_misc_query = \App\Models\issue_misc::where('branchID', auth()->user()->branchID)
+            ->whereBetween('date', [$from, $to]);
+        $issue_miscs = $issue_misc_query->get()->groupBy('catID');
+        $issue_misc = $issue_misc_query->sum('amount');
+        $issue_misc_data = [];
+
+        foreach ($issue_miscs as $catID => $items) {
+            $cat_name = isset($issue_misc_categories[$catID]) ? $issue_misc_categories[$catID]->name : 'Other';
+            $sum = $items->sum('amount');
+
+            if (! isset($issue_misc_data[$cat_name])) {
+                $issue_misc_data[$cat_name] = [
+                    'sum' => 0,
+                    'details' => collect(),
+                ];
+            }
+
+            $issue_misc_data[$cat_name]['sum'] += $sum;
+            $issue_misc_data[$cat_name]['details'] = $issue_misc_data[$cat_name]['details']->merge($items);
+        }
 
         $branch_name = branches::find(auth()->user()->branchID)->name;
 
@@ -321,6 +339,6 @@ class profitController extends Controller
             'Expense Categories' => implode(', ', $expense_categories_list),
         ];
 
-        return view('reports.profit.details', compact('from', 'to', 'data', 'expenses_data', 'total_expenses', 'salaries', 'issue_misc', 'branch_name', 'filters'));
+        return view('reports.profit.details', compact('from', 'to', 'data', 'expenses_data', 'total_expenses', 'salaries', 'issue_misc', 'issue_misc_data', 'branch_name', 'filters'));
     }
 }
