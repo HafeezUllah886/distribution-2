@@ -421,7 +421,7 @@ class SalesController extends Controller
             return back()->with('error', 'You can not delete this sale because it has a transaction.');
         }
 
-        $checkPayments = sale_payments::where('saleID', $sale->id)->get();
+        $checkPayments = sale_payments::where('salesID', $sale->id)->get();
         if ($checkPayments->count() > 0) {
             return back()->with('error', 'You can not delete this sale because it has payments.');
         }
