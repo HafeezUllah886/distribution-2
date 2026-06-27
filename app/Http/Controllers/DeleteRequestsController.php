@@ -244,6 +244,14 @@ class DeleteRequestsController extends Controller
                 'status' => 'error',
             ];
         }
+
+        $checkPayments = sale_payments::where('salesID', $sale->id)->get();
+        if ($checkPayments->count() > 0) {
+            return [
+                'msg' => 'You can not delete this sale because it has payments.',
+                'status' => 'error',
+            ];
+        }
         try {
             DB::beginTransaction();
             $sale = sales::where('refID', $ref)->first();
