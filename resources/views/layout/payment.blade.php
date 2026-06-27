@@ -13,10 +13,13 @@
         </tr>
         @foreach ($currencies as $currency)
             <tr class="cash">
-                <td>{{$currency->title}} <span class="text-danger">{{$currency->qty ? "(".$currency->qty.")" : ""}}</span></td>
+                <td>{{ $currency->title }} <span
+                        class="text-danger">{{ $currency->qty ? '(' . $currency->qty . ')' : '' }}</span></td>
                 <td>
-                    <input type="number" class="form-control form-control-sm" data-value="{{$currency->value}}" id="currency_{{$currency->id}}" oninput="updateTotal()" name="qty[]" value="0">
-                    <input type="hidden" class="form-control" id="currencyID_{{$currency->id}}" name="currencyID[]" value="{{$currency->id}}">
+                    <input type="number" class="form-control form-control-sm" data-value="{{ $currency->value }}"
+                        id="currency_{{ $currency->id }}" oninput="updateTotal()" name="qty[]" value="0">
+                    <input type="hidden" class="form-control" id="currencyID_{{ $currency->id }}" name="currencyID[]"
+                        value="{{ $currency->id }}">
                 </td>
             </tr>
         @endforeach
@@ -24,7 +27,8 @@
         <tr>
             <td>Amount</td>
             <td>
-                <input type="number" class="form-control form-control-sm" min="1" readonly id="amount" name="amount" value="0">
+                <input type="number" class="form-control form-control-sm" min="1" readonly id="amount"
+                    name="amount" value="0">
             </td>
         </tr>
         <tr class="non-cash d-none">
@@ -56,7 +60,7 @@
 </table>
 
 <script>
-     function updateTotal() {
+    function updateTotal() {
         var total = 0;
         $("input[id^='currency_']").each(function() {
             var inputId = $(this).attr('id');
@@ -69,7 +73,7 @@
     }
 
     function check_method() {
-        
+
         if ($("#method").val() == "Cash") {
             $(".non-cash").addClass("d-none");
             $(".cash").removeClass("d-none");
@@ -79,17 +83,15 @@
             $(".cash").addClass("d-none");
             $("#amount").attr("readonly", false);
         }
-        if($("#method").val() == "Cheque")
-        {
+        if ($("#method").val() == "Cheque") {
             $(".check_customer").removeClass("d-none");
             $(".check_orderbooker").removeClass("d-none");
-        }
-        else
-        {
+        } else {
             $(".check_customer").addClass("d-none");
             $(".check_orderbooker").addClass("d-none");
         }
+        if ($("#method").val() == "Other") {
+            $("#amount").attr("step", "any");
+        }
     }
-    
-
-    </script>
+</script>
