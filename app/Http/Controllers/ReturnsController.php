@@ -302,7 +302,7 @@ class ReturnsController extends Controller
         $orderbooker = $return->orderbooker;
         $amount = number_format($return->net, 0);
         $return_status = $return->status;
-        $area = $return->customer->area->title;
+        $area = $return->customer->area->name;
         $notes = "Sales Return Date: $return->date | Sales Return No.: $return->id | Sales Return Amount: $amount | Customer : $customer->title | Orderbooker : $orderbooker->name | Area : $area | Status : $return_status | Sales Return Notes: $return->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $return->branchID, $return->refID, 'returns', $notes);
         session()->forget('confirmed_password');
