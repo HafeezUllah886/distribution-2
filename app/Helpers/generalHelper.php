@@ -269,7 +269,7 @@ function avg_cost_branch_wise($id, $branch)
         $purchase_price = $purchase_amount / $purchase_qty + $purchases->avg('fright') + $purchases->avg('labor');
     } else {
         $product = products::find($id);
-        $purchase_price = $$product->pprice + $product->fright + $product->labor - $product->claim;
+        $purchase_price = $product->pprice + $product->fright + $product->labor - $product->claim;
     }
 
     return $purchase_price;
