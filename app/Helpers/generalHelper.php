@@ -263,6 +263,7 @@ function avg_cost_branch_wise($id, $branch)
         ->whereIn('purchaseID', $purchase)
         ->get();
 
+<<<<<<< HEAD
     $purchase_price = $purchases->sum('price');
     $purchase_discount = $purchases->sum('discount') + $purchases->sum('discountValue');
     $purchase_fright = $purchases->sum('fright');
@@ -278,6 +279,13 @@ function avg_cost_branch_wise($id, $branch)
         $price = $purchase_price / $purchase_qty;
 
         $purchase_price = ($price + $fright + $labor - $discount - $claim) * 144;
+=======
+    $purchase_amount = $purchases->sum('amount');
+    $purchase_qty = $purchases->sum('pc');
+
+    if ($purchase_qty > 0) {
+        $purchase_price = $purchase_amount / $purchase_qty + $purchases->avg('fright') + $purchases->avg('labor');
+>>>>>>> parent of da4184f2 (changes done)
     } else {
         $product = products::find($id);
         $purchase_price = $product->pprice + $product->fright + $product->labor - $product->claim - $product->discount;
