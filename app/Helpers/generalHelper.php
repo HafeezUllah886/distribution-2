@@ -245,7 +245,8 @@ function avg_sale_price_branch_wise($id, $branch)
     if ($sale_qty > 0) {
         $sale_price = $sale_amount / $sale_qty;
     } else {
-        $sale_price = 0;
+        $product = products::find($id);
+        $sale_price = $product->price - $product->discount;
     }
 
     return $sale_price;
@@ -262,20 +263,24 @@ function avg_cost_branch_wise($id, $branch)
         ->whereIn('purchaseID', $purchase)
         ->get();
 
-    $purchase_amount = $purchases->sum('amount');
+    $purchase_price = $purchases->sum('price');
+    $purchase_discount = $purchases->sum('discount') + $purchases->sum('discountValue');
     $purchase_fright = $purchases->sum('fright');
     $purchase_labor = $purchases->sum('labor');
+    $purchase_claim = $purchases->sum('claim');
     $purchase_qty = $purchases->sum('pc');
 
     if ($purchase_qty > 0) {
         $fright = $purchase_fright / $purchase_qty;
         $labor = $purchase_labor / $purchase_qty;
-        $amount = $purchase_amount / $purchase_qty;
+        $claim = $purchase_claim / $purchase_qty;
+        $discount = $purchase_discount / $purchase_qty;
+        $price = $purchase_price / $purchase_qty;
 
-        $purchase_price = $amount + $fright + $labor;
+        $purchase_price = $price - ($discount + $claim) + ($fright + $labor);
     } else {
         $product = products::find($id);
-        $purchase_price = $product->pprice + $product->fright + $product->labor - $product->claim;
+        $purchase_price = $product->pprice + $product->fright + $product->labor - $product->claim - $product->discount;
     }
 
     return $purchase_price;
