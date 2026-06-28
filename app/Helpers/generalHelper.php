@@ -2,6 +2,7 @@
 
 use App\Models\delete_requests;
 use App\Models\orderbooker_notifications;
+use App\Models\products;
 use App\Models\purchase;
 use App\Models\purchase_details;
 use App\Models\ref;
@@ -267,7 +268,8 @@ function avg_cost_branch_wise($id, $branch)
     if ($purchase_qty > 0) {
         $purchase_price = $purchase_amount / $purchase_qty + $purchases->avg('fright') + $purchases->avg('labor');
     } else {
-        $purchase_price = 0;
+        $product = products::find($id);
+        $purchase_price = $$product->pprice + $product->fright + $product->labor - $product->claim;
     }
 
     return $purchase_price;
