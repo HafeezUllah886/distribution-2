@@ -263,10 +263,16 @@ function avg_cost_branch_wise($id, $branch)
         ->get();
 
     $purchase_amount = $purchases->sum('amount');
+    $purchase_fright = $purchases->sum('fright');
+    $purchase_labor = $purchases->sum('labor');
     $purchase_qty = $purchases->sum('pc');
 
     if ($purchase_qty > 0) {
-        $purchase_price = $purchase_amount / $purchase_qty + $purchases->avg('fright') + $purchases->avg('labor');
+        $fright = $purchase_fright / $purchase_qty;
+        $labor = $purchase_labor / $purchase_qty;
+        $amount = $purchase_amount / $purchase_qty;
+
+        $purchase_price = $amount + $fright + $labor;
     } else {
         $product = products::find($id);
         $purchase_price = $product->pprice + $product->fright + $product->labor - $product->claim;
