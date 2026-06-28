@@ -277,7 +277,7 @@ function avg_cost_branch_wise($id, $branch)
         $discount = $purchase_discount / $purchase_qty;
         $price = $purchase_price / $purchase_qty;
 
-        $purchase_price = ($price - ($discount + $claim) + ($fright + $labor)) * $purchase_qty;
+        $purchase_price = ($price - ($discount + $claim) + ($fright + $labor)) * 144;
     } else {
         $product = products::find($id);
         $purchase_price = $product->pprice + $product->fright + $product->labor - $product->claim - $product->discount;
