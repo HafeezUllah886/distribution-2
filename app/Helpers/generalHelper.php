@@ -292,12 +292,12 @@ function avg_cost_branch_wise($id, $branch)
         $purchase_labor = 0;
         $purchase_claim = 0;
         foreach ($purchases_data as $pd) {
-            $purchase_price += $pd->price * $pd->pc;
-            $purchase_discount += $pd->discount * $pd->pc;
-            $purchase_discountP += $pd->discountvalue * $pd->pc;
-            $purchase_freight += $pd->fright * $pd->pc;
-            $purchase_labor += $pd->labor * $pd->pc;
-            $purchase_claim += $pd->claim * $pd->pc;
+            $purchase_price += $pd->price * $unit;
+            $purchase_discount += $pd->discount * $unit;
+            $purchase_discountP += $pd->discountvalue * $unit;
+            $purchase_freight += $pd->fright * $unit;
+            $purchase_labor += $pd->labor * $unit;
+            $purchase_claim += $pd->claim * $unit;
         }
         $total_pc = $purchases_data->sum('pc');
         $purchase_price = $purchase_price / $total_pc;
