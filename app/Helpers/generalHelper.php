@@ -274,7 +274,7 @@ function avg_cost_branch_wise($id, $branch)
             $purchase_freight = $last_purchase_data->fright;
             $purchase_labor = $last_purchase_data->labor;
             $purchase_claim = $last_purchase_data->claim;
-            $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim)) * $unit;
+            $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim));
         } else {
             $product = products::find($id);
             $purchase_price = $product->pprice;
@@ -282,7 +282,7 @@ function avg_cost_branch_wise($id, $branch)
             $purchase_freight = $product->fright;
             $purchase_labor = $product->labor;
             $purchase_claim = $product->claim;
-            $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim)) * $unit;
+            $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim));
         }
     } else {
         $purchase_price = 0;
@@ -305,7 +305,7 @@ function avg_cost_branch_wise($id, $branch)
         $purchase_freight = $purchase_freight / $total_pc;
         $purchase_labor = $purchase_labor / $total_pc;
         $purchase_claim = $purchase_claim / $total_pc;
-        $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim)) * $unit;
+        $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim));
     }
 
     return $purchase_net;
