@@ -291,6 +291,7 @@ function avg_cost_branch_wise($id, $branch)
         $purchase_freight = 0;
         $purchase_labor = 0;
         $purchase_claim = 0;
+        $total_qty = 0;
         foreach ($purchases_data as $pd) {
             $purchase_price += $pd->price * $pd->pc;
             $purchase_discount += $pd->discount * $pd->pc;
@@ -298,12 +299,22 @@ function avg_cost_branch_wise($id, $branch)
             $purchase_freight += $pd->fright * $pd->pc;
             $purchase_labor += $pd->labor * $pd->pc;
             $purchase_claim += $pd->claim * $pd->pc;
+            $total_qty += $pd->pc;
         }
-        $purchase_price = $purchase_price / $unit;
-        $purchase_discount = ($purchase_discount / $unit) + ($purchase_discountP / $unit);
-        $purchase_freight = $purchase_freight / $unit;
-        $purchase_labor = $purchase_labor / $unit;
-        $purchase_claim = $purchase_claim / $unit;
+
+        if ($total_qty > 0) {
+            $purchase_price = $purchase_price / $total_qty;
+            $purchase_discount = ($purchase_discount / $total_qty) + ($purchase_discountP / $total_qty);
+            $purchase_freight = $purchase_freight / $total_qty;
+            $purchase_labor = $purchase_labor / $total_qty;
+            $purchase_claim = $purchase_claim / $total_qty;
+        } else {
+            $purchase_price = 0;
+            $purchase_discount = 0;
+            $purchase_freight = 0;
+            $purchase_labor = 0;
+            $purchase_claim = 0;
+        }
         $purchase_net = ((($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim)));
     }
 
