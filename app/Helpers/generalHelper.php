@@ -300,11 +300,11 @@ function avg_cost_branch_wise($id, $branch)
             $purchase_claim += $pd->claim * $unit;
         }
         $total_pc = $purchases_data->sum('pc');
-        $purchase_price = $purchase_price / $total_pc;
-        $purchase_discount = ($purchase_discount / $total_pc) + ($purchase_discountP / $total_pc);
-        $purchase_freight = $purchase_freight / $total_pc;
-        $purchase_labor = $purchase_labor / $total_pc;
-        $purchase_claim = $purchase_claim / $total_pc;
+        $purchase_price = $purchase_price;
+        $purchase_discount = ($purchase_discount) + ($purchase_discountP);
+        $purchase_freight = $purchase_freight;
+        $purchase_labor = $purchase_labor;
+        $purchase_claim = $purchase_claim;
         $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim));
     }
 
