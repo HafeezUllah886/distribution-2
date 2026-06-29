@@ -305,7 +305,7 @@ function avg_cost_branch_wise($id, $branch)
         $purchase_freight = $purchase_freight;
         $purchase_labor = $purchase_labor;
         $purchase_claim = $purchase_claim;
-        $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim));
+        $purchase_net = ((($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim)) / $unit);
     }
 
     return $purchase_net;
