@@ -285,12 +285,12 @@ function avg_cost_branch_wise($id, $branch)
             $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim));
         }
     } else {
-        $purchase_price = $purchase_date->avg('price');
-        $purchase_discount = $purchase_date->avg('discount');
-        $purchase_discountP = $purchase_date->avg('discountvalue');
-        $purchase_freight = $purchase_date->avg('fright');
-        $purchase_labor = $purchase_date->avg('labor');
-        $purchase_claim = $purchase_date->avg('claim');
+        $purchase_price = $purchases_data->avg('price');
+        $purchase_discount = $purchases_data->avg('discount');
+        $purchase_discountP = $purchases_data->avg('discountvalue');
+        $purchase_freight = $purchases_data->avg('fright');
+        $purchase_labor = $purchases_data->avg('labor');
+        $purchase_claim = $purchases_data->avg('claim');
         $purchase_discount = $purchase_discount + $purchase_discountP;
 
         $purchase_net = ((($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim)));
