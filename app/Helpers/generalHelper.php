@@ -203,25 +203,22 @@ function avg_cost_warehouse_wise($id, $warehouse)
 function avg_purchase_price_branch_wise($id, $branch)
 {
 
-    $purchase = purchase::where('branchID', $branch)
+    $purchase = purchase_details::where('productID', $id)
+        ->whereHas('purchase', function ($q) use ($branch) {
+            $q->where('branchID', $branch);
+        })
         ->latest()
         ->take(10)
-        ->pluck('id')->toArray();
-
-    $purchases = purchase_details::where('productID', $id)
-        ->whereIn('purchaseID', $purchase)
         ->get();
 
-    $purchase_amount = $purchases->sum('price_amount');
-    $purchase_qty = $purchases->sum('pc');
-    $purchase_fright = $purchases->avg('fright');
+    $unit = products::find($id)->units->first() ? products::find($id)->units->first()->value : 1;
 
-    $purchase_labor = $purchases->avg('labor');
+    if ($purchase->isEmpty()) {
+        $product = products::find($id);
 
-    if ($purchase_qty > 0) {
-        $purchase_price = ($purchase_amount / $purchase_qty) + $purchase_fright + $purchase_labor;
+        $purchase_price = $product->price * $unit;
     } else {
-        $purchase_price = 0;
+        $purchase_price = $purchase->avg('price') * $unit;
     }
 
     return $purchase_price;
@@ -230,23 +227,21 @@ function avg_purchase_price_branch_wise($id, $branch)
 function avg_sale_price_branch_wise($id, $branch)
 {
 
-    $sale = sales::where('branchID', $branch)
+    $sale = sale_details::where('productID', $id)
+        ->whereHas('sale', function ($q) use ($branch) {
+            $q->where('branchID', $branch);
+        })
         ->latest()
         ->take(20)
-        ->pluck('id')->toArray();
-
-    $sales = sale_details::where('productID', $id)
-        ->whereIn('saleID', $sale)
         ->get();
+    $unit = products::find($id)->units->first() ? products::find($id)->units->first()->value : 1;
 
-    $sale_amount = $sales->sum('price_amount');
-    $sale_qty = $sales->sum('pc');
-
-    if ($sale_qty > 0) {
-        $sale_price = $sale_amount / $sale_qty;
-    } else {
+    if ($sale->isEmpty()) {
         $product = products::find($id);
-        $sale_price = $product->price - $product->discount;
+
+        $sale_price = $product->price * $unit;
+    } else {
+        $sale_price = $sale->avg('price') * $unit;
     }
 
     return $sale_price;
