@@ -216,9 +216,9 @@ function avg_purchase_price_branch_wise($id, $branch)
     if ($purchase->isEmpty()) {
         $product = products::find($id);
 
-        $purchase_price = $product->price * $unit;
+        $purchase_price = $product->price;
     } else {
-        $purchase_price = $purchase->avg('price') * $unit;
+        $purchase_price = $purchase->avg('price');
     }
 
     return $purchase_price;
@@ -239,9 +239,9 @@ function avg_sale_price_branch_wise($id, $branch)
     if ($sale->isEmpty()) {
         $product = products::find($id);
 
-        $sale_price = $product->price * $unit;
+        $sale_price = $product->price;
     } else {
-        $sale_price = $sale->avg('price') * $unit;
+        $sale_price = $sale->avg('price');
     }
 
     return $sale_price;
