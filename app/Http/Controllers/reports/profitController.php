@@ -270,9 +270,27 @@ class profitController extends Controller
 
         $expenses = $expenses_query->get()->groupBy('categoryID');
 
-        $salaries = \App\Models\generate_salary::where('branchID', auth()->user()->branchID)
-            ->whereBetween('date', [$from, $to])
-            ->sum('salary');
+        $salaries_query = \App\Models\generate_salary::with('employee')->where('branchID', auth()->user()->branchID)
+            ->whereBetween('date', [$from, $to]);
+
+        $salaries = $salaries_query->sum('salary');
+        $salaries_details = $salaries_query->get()->groupBy('employeeID');
+        $salaries_data = [];
+
+        foreach ($salaries_details as $empID => $items) {
+            $emp_name = $items->first()->employee->name ?? 'Unknown Employee';
+            $sum = $items->sum('salary');
+
+            if (! isset($salaries_data[$emp_name])) {
+                $salaries_data[$emp_name] = [
+                    'sum' => 0,
+                    'details' => collect(),
+                ];
+            }
+
+            $salaries_data[$emp_name]['sum'] += $sum;
+            $salaries_data[$emp_name]['details'] = $salaries_data[$emp_name]['details']->merge($items);
+        }
 
         $issue_misc_categories = \App\Models\employees_payment_cats::all()->keyBy('id');
         $issue_misc_query = \App\Models\issue_misc::where('branchID', auth()->user()->branchID)
@@ -339,6 +357,6 @@ class profitController extends Controller
             'Expense Categories' => implode(', ', $expense_categories_list),
         ];
 
-        return view('reports.profit.details', compact('from', 'to', 'data', 'expenses_data', 'total_expenses', 'salaries', 'issue_misc', 'issue_misc_data', 'branch_name', 'filters'));
+        return view('reports.profit.details', compact('from', 'to', 'data', 'expenses_data', 'total_expenses', 'salaries', 'salaries_data', 'issue_misc', 'issue_misc_data', 'branch_name', 'filters'));
     }
 }

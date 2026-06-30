@@ -629,9 +629,39 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr data-bs-toggle="collapse" data-bs-target="#collapse-salaries"
+                                            style="cursor: pointer;" title="Click to view employee wise salaries">
                                             <td colspan="20" class="text-end p-1">Employees Salaries</td>
                                             <td class="text-end text-danger p-1">-{{ number_format($salaries, 2) }}</td>
+                                        </tr>
+                                        <!-- Salaries Accordion content -->
+                                        <tr class="collapse p-0" id="collapse-salaries">
+                                            <td colspan="21" class="p-0">
+                                                <div class="card card-body m-0 bg-light">
+                                                    <h5 class="mb-2">Employee Wise Salaries</h5>
+                                                    @if (isset($salaries_data) && count($salaries_data) > 0)
+                                                        <table class="table table-sm table-bordered text-start mb-0">
+                                                            <thead class="table-dark">
+                                                                <tr>
+                                                                    <th>Employee Name</th>
+                                                                    <th style="width: 20%" class="text-end">Amount</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($salaries_data as $emp_name => $sal_data)
+                                                                    <tr>
+                                                                        <td class="p-1">{{ $emp_name }}</td>
+                                                                        <td class="text-end text-danger p-1">
+                                                                            {{ number_format($sal_data['sum'], 2) }}</td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    @else
+                                                        <p class="text-muted">No salaries found.</p>
+                                                    @endif
+                                                </div>
+                                            </td>
                                         </tr>
                                         <tr data-bs-toggle="collapse" data-bs-target="#collapse-issue-misc"
                                             style="cursor: pointer;" title="Click to view category wise issue misc">
