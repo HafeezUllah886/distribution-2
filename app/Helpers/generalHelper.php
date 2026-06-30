@@ -145,14 +145,12 @@ function avg_purchase_price_warehouse_wise($id, $warehouse)
         ->latest()
         ->take(10)
         ->get();
-
-    $purchase_amount = $purchases->sum('price_amount');
-    $purchase_qty = $purchases->sum('pc');
-
-    if ($purchase_qty > 0) {
-        $purchase_price = $purchase_amount / $purchase_qty;
+    $unit = products::find($id)->units->first() ? products::find($id)->units->first()->value : 1;
+    if ($purchases->isEmpty()) {
+        $product = products::find($id);
+        $purchase_price = $product->price;
     } else {
-        $purchase_price = 0;
+        $purchase_price = $purchases->avg('price');
     }
 
     return $purchase_price;
@@ -165,13 +163,12 @@ function avg_sale_price_warehouse_wise($id, $warehouse)
         ->take(20)
         ->get();
 
-    $sale_amount = $sales->sum('price_amount');
-    $sale_qty = $sales->sum('pc');
-
-    if ($sale_qty > 0) {
-        $sale_price = $sale_amount / $sale_qty;
+    $unit = products::find($id)->units->first() ? products::find($id)->units->first()->value : 1;
+    if ($sales->isEmpty()) {
+        $product = products::find($id);
+        $sale_price = $product->price;
     } else {
-        $sale_price = 0;
+        $sale_price = $sales->avg('price');
     }
 
     return $sale_price;
@@ -180,24 +177,32 @@ function avg_sale_price_warehouse_wise($id, $warehouse)
 function avg_cost_warehouse_wise($id, $warehouse)
 {
     $purchases = purchase_details::where('productID', $id)
-        ->where('warehouseID', $warehouse)
-        ->latest()
-        ->take(10)
-        ->get();
+        ->where('warehouseID', $warehouse);
+    $purchases_data = $purchases->latest()->take(10)->get();
+    $unit = products::find($id)->units->first() ? products::find($id)->units->first()->value : 1;
 
-    $purchase_amount = $purchases->sum('amount');
-    $purchase_qty = $purchases->sum('pc');
-    $purchase_fright = $purchases->avg('fright');
+    if ($purchases_data->isEmpty()) {
 
-    $purchase_labor = $purchases->avg('labor');
-
-    if ($purchase_qty > 0) {
-        $purchase_price = ($purchase_amount / $purchase_qty) + $purchase_fright + $purchase_labor;
+        $product = products::find($id);
+        $purchase_price = $product->pprice;
+        $purchase_discount = 0;
+        $purchase_freight = $product->fright;
+        $purchase_labor = $product->labor;
+        $purchase_claim = $product->claim;
+        $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim));
     } else {
-        $purchase_price = 0;
+        $purchase_price = $purchases_data->avg('price');
+        $purchase_discount = $purchases_data->avg('discount');
+        $purchase_discountP = $purchases_data->avg('discountvalue');
+        $purchase_freight = $purchases_data->avg('fright');
+        $purchase_labor = $purchases_data->avg('labor');
+        $purchase_claim = $purchases_data->avg('claim');
+        $purchase_discount = $purchase_discount + $purchase_discountP;
+
+        $purchase_net = ((($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim)));
     }
 
-    return $purchase_price;
+    return $purchase_net;
 }
 
 function avg_purchase_price_branch_wise($id, $branch)
@@ -257,28 +262,15 @@ function avg_cost_branch_wise($id, $branch)
     $unit = products::find($id)->units->first() ? products::find($id)->units->first()->value : 1;
 
     if ($purchases_data->isEmpty()) {
-        $last_purchase = purchase_details::where('productID', $id)
-            ->whereHas('purchase', function ($q) use ($branch) {
-                $q->where('branchID', $branch);
-            });
-        $last_purchase_data = $last_purchase->latest('date')->first();
 
-        if ($last_purchase_data) {
-            $purchase_price = $last_purchase_data->price;
-            $purchase_discount = $last_purchase_data->discountvalue + $last_purchase_data->discount;
-            $purchase_freight = $last_purchase_data->fright;
-            $purchase_labor = $last_purchase_data->labor;
-            $purchase_claim = $last_purchase_data->claim;
-            $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim));
-        } else {
-            $product = products::find($id);
-            $purchase_price = $product->pprice;
-            $purchase_discount = 0;
-            $purchase_freight = $product->fright;
-            $purchase_labor = $product->labor;
-            $purchase_claim = $product->claim;
-            $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim));
-        }
+        $product = products::find($id);
+        $purchase_price = $product->pprice;
+        $purchase_discount = 0;
+        $purchase_freight = $product->fright;
+        $purchase_labor = $product->labor;
+        $purchase_claim = $product->claim;
+        $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim));
+
     } else {
         $purchase_price = $purchases_data->avg('price');
         $purchase_discount = $purchases_data->avg('discount');
