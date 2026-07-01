@@ -245,7 +245,7 @@ class DeleteRequestsController extends Controller
             ];
         }
 
-        $checkPayments = sale_payments::where('salesID', $sale->id)->get();
+        $checkPayments = sale_payments::where('refID', $ref)->get();
         if ($checkPayments->count() > 0) {
             return [
                 'msg' => 'You can not delete this sale because it has payments.',
