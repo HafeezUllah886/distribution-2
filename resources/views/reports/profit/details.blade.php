@@ -342,7 +342,7 @@
                                                                                 </td>
                                                                                 <td>{{ number_format($claim, 2) }}
                                                                                 </td>
-                                                                                <td>{{ number_format($price - $discount + $fright + $labor - $claim, 2) }}
+                                                                                <td>{{ number_format($price - $discount - $fright - $labor - $claim, 2) }}
                                                                                 </td>
 
                                                                             </tr>

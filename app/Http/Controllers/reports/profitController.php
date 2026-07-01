@@ -165,7 +165,7 @@ class profitController extends Controller
                 $sale_freight = $prod->sfright;
                 $sale_labor = $prod->labor;
                 $sale_claim = $prod->sclaim;
-                $sale_net = (($sale_price + $sale_freight + $sale_labor) - ($sale_discount + $sale_claim)) * $unit;
+                $sale_net = ($sale_price - $sale_freight - $sale_labor - $sale_discount - $sale_claim) * $unit;
                 $sold_qty = 0;
             } else {
                 $sale_price = 0;
@@ -188,7 +188,7 @@ class profitController extends Controller
                 $sale_freight = $sale_freight / $total_pc;
                 $sale_labor = $sale_labor / $total_pc;
                 $sale_claim = $sale_claim / $total_pc;
-                $sale_net = (($sale_price + $sale_freight + $sale_labor) - ($sale_discount + $sale_claim)) * $unit;
+                $sale_net = ($sale_price - $sale_freight - $sale_labor - $sale_discount - $sale_claim) * $unit;
                 $sold_qty = $total_pc / $unit;
             }
 
@@ -344,7 +344,7 @@ class profitController extends Controller
         $areas_list = $area ? \App\Models\area::whereIn('id', $area)->pluck('name')->toArray() : ['All'];
         $customers_list = $customer ? accounts::whereIn('id', $customer)->pluck('title')->toArray() : ['All'];
         $orderbookers_list = $orderbooker ? \App\Models\User::whereIn('id', $orderbooker)->pluck('name')->toArray() : ['All'];
-        $expense_categories_list = $expense_category_filter ? \App\Models\expense_categories::whereIn('id', $expense_category_filter)->pluck('name')->toArray() : ['All'];
+        $expense_categories_list = $expense_category_filter ? \App\Models\expense_categories::whereIn('id', $expense_category_filter)->where('branchID', auth()->user()->branchID)->pluck('name')->toArray() : ['All'];
 
         $filters = [
             'Vendors' => implode(', ', $vendors_list),
