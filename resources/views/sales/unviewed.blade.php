@@ -5,7 +5,22 @@
             <form>
                 <div class="row">
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">From</span>
+                            <input type="date" name="fromDate" id="fromDate" class="form-control"
+                                value="{{ $fromDate }}">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">To</span>
+                            <input type="date" name="toDate" id="toDate" class="form-control"
+                                value="{{ $toDate }}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">Area</span>
                             <select name="areaID" id="areaID" class="form-control">
@@ -17,7 +32,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">Orderbooker</span>
                             <select name="orderbookerID" id="orderbookerID" class="form-control">
@@ -29,7 +44,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">Supply Man</span>
                             <select name="supplymanID" id="supplymanID" class="form-control">
@@ -41,7 +56,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <input type="submit" value="Filter" class="btn btn-success w-100">
                     </div>
                 </div>

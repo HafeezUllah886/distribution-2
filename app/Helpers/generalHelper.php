@@ -199,7 +199,7 @@ function avg_cost_warehouse_wise($id, $warehouse)
         $purchase_claim = $purchases_data->avg('claim');
         $purchase_discount = $purchase_discount + $purchase_discountP;
 
-        $purchase_net = ((($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim)));
+        $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim));
     }
 
     return $purchase_net;
@@ -254,10 +254,7 @@ function avg_sale_price_branch_wise($id, $branch)
 
 function avg_cost_branch_wise($id, $branch)
 {
-    $purchases = purchase_details::where('productID', $id)
-        ->whereHas('purchase', function ($q) use ($branch) {
-            $q->where('branchID', $branch);
-        });
+    $purchases = purchase_details::where('productID', $id)->where('branchID', $branch);
     $purchases_data = $purchases->latest()->take(10)->get();
     $unit = products::find($id)->units->first() ? products::find($id)->units->first()->value : 1;
 
@@ -280,7 +277,7 @@ function avg_cost_branch_wise($id, $branch)
         $purchase_claim = $purchases_data->avg('claim');
         $purchase_discount = $purchase_discount + $purchase_discountP;
 
-        $purchase_net = ((($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim)));
+        $purchase_net = (($purchase_price + $purchase_freight + $purchase_labor) - ($purchase_discount + $purchase_claim));
     }
 
     return $purchase_net;

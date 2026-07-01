@@ -601,6 +601,8 @@ class SalesController extends Controller
         $bookerID = $request->orderbookerID ?? null;
         $supplymanID = $request->supplymanID ?? null;
         $areaID = $request->areaID ?? null;
+        $fromDate = $request->fromDate ?? firstDayOfMonth();
+        $toDate = $request->toDate ?? lastDayOfMonth();
 
         $sales = sales::with('customer', 'customer.area')->where('branch_admin_viewed', false)->where('branchID', auth()->user()->branchID)->orderby('id', 'desc')->get();
 
@@ -613,13 +615,19 @@ class SalesController extends Controller
         if ($areaID) {
             $sales = $sales->where('customer.areaID', $areaID);
         }
+        if ($fromDate) {
+            $sales = $sales->where('date', '>=', $fromDate);
+        }
+        if ($toDate) {
+            $sales = $sales->where('date', '<=', $toDate);
+        }
 
         $orderbookers = User::orderbookers()->currentBranch()->active()->get();
 
         $supplymans = accounts::supplyMen()->currentBranch()->get();
         $areas = area::currentBranch()->get();
 
-        return view('sales.unviewed', compact('sales', 'orderbookers', 'bookerID', 'supplymans', 'areas', 'areaID', 'supplymanID'));
+        return view('sales.unviewed', compact('sales', 'orderbookers', 'bookerID', 'supplymans', 'areas', 'areaID', 'supplymanID', 'fromDate', 'toDate'));
     }
 
     public function addRemark(Request $request)
