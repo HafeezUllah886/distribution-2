@@ -106,12 +106,9 @@
                                                 $totalFright = 0;
                                                 $totalClaim = 0;
                                                 $totalLabor = 0;
+                                                $totalDiscount = 0;
                                                 $netQty += $item->details->sum('qty');
                                                 $netLoose += $item->details->sum('loose');
-                                                $discount =
-                                                    $item->details->sum('discount') +
-                                                    $item->details->sum('discountvalue');
-                                                $netDiscount += $discount;
 
                                             @endphp
                                             @foreach ($item->details as $key => $product)
@@ -120,13 +117,15 @@
                                                     $fright = $product->fright * $qty;
                                                     $claim = $product->claim * $qty;
                                                     $labor = $product->labor * $qty;
+                                                    $discount = ($product->discount + $product->discountvalue) * $qty;
                                                     $totalFright += $fright;
                                                     $totalClaim += $claim;
                                                     $totalLabor += $labor;
-
+                                                    $totalDiscount += $discount;
                                                 @endphp
                                             @endforeach
                                             @php
+                                                $netDiscount += $totalDiscount;
                                                 $netFright += $totalFright;
                                                 $netClaim += $totalClaim;
                                                 $netLabor += $totalLabor;
@@ -140,7 +139,7 @@
                                                 <td>{{ date('d M Y', strtotime($item->date)) }}</td>
                                                 <td class="text-end">{{ number_format($item->details->sum('qty'), 0) }},
                                                     {{ $item->details->sum('loose') }}</td>
-                                                <td class="text-end">{{ number_format($discount, 0) }}</td>
+                                                <td class="text-end">{{ number_format($totalDiscount, 0) }}</td>
                                                 <td class="text-end">{{ number_format($totalFright, 0) }}</td>
                                                 <td class="text-end">{{ number_format($totalLabor, 0) }}</td>
                                                 <td class="text-end">{{ number_format($totalClaim, 0) }}</td>
