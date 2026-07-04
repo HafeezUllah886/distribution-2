@@ -21,13 +21,25 @@ class CustomerAdvancePaymentController extends Controller
      */
     public function index(Request $request)
     {
-        $from = $request->from ?? firstDayOfMonth();
-        $to = $request->to ?? date('Y-m-d');
-        $orderbooker = $request->orderbooker ?? null;
+        $from = $request->from ?? null;
+        $to = $request->to ?? null;
+        $orderbooker = $request->orderbookerID ?? null;
 
-        $advances = CustomerAdvancePayment::whereBetween('date', [$from, $to])->currentBranch();
+        $advances = CustomerAdvancePayment::currentBranch();
         if ($orderbooker) {
             $advances = $advances->where('orderbookerID', $orderbooker);
+        }
+
+        if ($from && $to) {
+            $advances = $advances->whereBetween('date', [$from, $to]);
+        } elseif ($from) {
+            $advances = $advances->where('date', '>=', $from);
+        } elseif ($to) {
+            $advances = $advances->where('date', '<=', $to);
+        } else {
+            $advances = $advances->filter(function ($advance) {
+                return $advance->remainingAmount() > 0;
+            });
         }
         $advances = $advances->orderBy('date', 'desc')->get();
 
