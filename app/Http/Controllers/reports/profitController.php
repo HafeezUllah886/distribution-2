@@ -32,7 +32,7 @@ class profitController extends Controller
         $vendors = accounts::vendor()->currentBranch()->get();
         $customers = accounts::customer()->currentBranch()->get();
         $orderbookers = \App\Models\User::orderbookers()->currentBranch()->get();
-        $expense_categories = \App\Models\expense_categories::all();
+        $expense_categories = \App\Models\expense_categories::currentBranch()->get();
 
         return view('reports.profit.index', compact('branches', 'vendors', 'warehouses', 'towns', 'areas', 'products', 'customers', 'orderbookers', 'expense_categories'));
     }

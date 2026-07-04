@@ -36,13 +36,13 @@ class CustomerAdvancePaymentController extends Controller
             $advances = $advances->where('date', '>=', $from);
         } elseif ($to) {
             $advances = $advances->where('date', '<=', $to);
-        } else {
+        }
+        $advances = $advances->orderBy('date', 'desc')->get();
+        if (! $from && ! $to) {
             $advances = $advances->filter(function ($advance) {
                 return $advance->remainingAmount() > 0;
             });
         }
-        $advances = $advances->orderBy('date', 'desc')->get();
-
         $orderbookers = User::orderbookers()->currentBranch()->active()->get();
 
         $customers = accounts::customer()->currentBranch()->active()->get();
