@@ -573,6 +573,9 @@
                                                 @foreach ($products->groupBy(function ($p) {
             return $p->vendor->title ?? 'Unknown Vendor';
         }) as $vendorName => $vProducts)
+                                                    @if ($vProducts->sum('currentStockValue') == 0 && $vProducts->sum('lastYearStockValue') == 0)
+                                                        @continue
+                                                    @endif
                                                     <tr>
                                                         <th colspan="4"
                                                             style="background: #f8f9fa; padding: 4px 16px; font-weight: 600; text-align: left; border-bottom: 1px solid #dee2e6;">

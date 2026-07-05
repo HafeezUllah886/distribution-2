@@ -156,7 +156,6 @@
                                             <th class="text-end">{{ number_format($netFright, 0) }}</th>
                                             <th class="text-end">{{ number_format($netLabor, 0) }}</th>
                                             <th class="text-end">{{ number_format($netClaim, 0) }}</th>
-
                                             <th class="text-end">{{ number_format($sales->sum('net'), 0) }}</th>
                                             <th class="text-end">{{ number_format($totalPaid, 0) }}</th>
                                             <th class="text-end">{{ number_format($totalDue, 0) }}</th>
