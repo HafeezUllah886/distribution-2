@@ -62,9 +62,11 @@
                 </div>
             </form>
             <div class="card">
-                <div class="card-header d-flex justify-content-between">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h3>Un Viewed Sales</h3>
-
+                    @if (auth()->user()->role == 'Branch Admin')
+                        <a href="{{ route('sale.markAllViewed', request()->query()) }}" class="btn btn-primary" onclick="return confirm('Are you sure you want to mark all filtered sales as received?')">Mark All as Received</a>
+                    @endif
                 </div>
                 <div class="card-body">
                     @if ($errors->any())

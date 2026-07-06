@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('sales/unviewed', [SalesController::class, 'unviewed'])->name('sale.unviewed');
     Route::post('sales/addRemark', [SalesController::class, 'addRemark'])->name('sale.addRemark');
     Route::get('sales/markasviewed/{id}', [SalesController::class, 'markasviewed'])->name('sale.markasviewed');
+    Route::get('sales/markallviewed', [SalesController::class, 'markAllViewed'])->name('sale.markAllViewed');
 
     Route::get('orderbooker/getcustomers/{id}', [SalesController::class, 'orderbooker_customers'])->name('sale.getCustomers');
 });

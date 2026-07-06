@@ -70,4 +70,19 @@ class OrderBookerInvoices extends Controller
             ],
         ], 200);
     }
+
+    public function renderInvoice($id, $lang)
+    {
+        $sale = sales::with('details.product', 'details.unit', 'customer', 'supplyman', 'orderbooker', 'branch')->find($id);
+
+        if (! $sale) {
+            return response('Invoice not found', 404);
+        }
+
+        if ($lang == 'ur') {
+            return view('sales.urdu', compact('sale'))->render();
+        }
+
+        return view('sales.view', compact('sale'))->render();
+    }
 }

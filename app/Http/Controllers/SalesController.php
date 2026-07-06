@@ -653,4 +653,38 @@ class SalesController extends Controller
 
         return back()->with('success', 'Sale Marked as Viewed');
     }
+
+    public function markAllViewed(Request $request)
+    {
+        $bookerID = $request->orderbookerID ?? null;
+        $supplymanID = $request->supplymanID ?? null;
+        $areaID = $request->areaID ?? null;
+        $fromDate = $request->fromDate ?? firstDayOfMonth();
+        $toDate = $request->toDate ?? lastDayOfMonth();
+
+        $sales = sales::with('customer')->where('branch_admin_viewed', false)->where('branchID', auth()->user()->branchID)->get();
+
+        if ($bookerID) {
+            $sales = $sales->where('orderbookerID', $bookerID);
+        }
+        if ($supplymanID) {
+            $sales = $sales->where('supplymanID', $supplymanID);
+        }
+        if ($areaID) {
+            $sales = $sales->where('customer.areaID', $areaID);
+        }
+        if ($fromDate) {
+            $sales = $sales->where('date', '>=', $fromDate);
+        }
+        if ($toDate) {
+            $sales = $sales->where('date', '<=', $toDate);
+        }
+
+        $ids = $sales->pluck('id')->toArray();
+        if (count($ids) > 0) {
+            sales::whereIn('id', $ids)->update(['branch_admin_viewed' => true]);
+        }
+
+        return back()->with('success', 'Filtered Sales Marked as Viewed');
+    }
 }
