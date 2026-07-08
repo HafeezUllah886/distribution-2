@@ -79,10 +79,10 @@
                                                     {{ $product->units->first()->value }}
                                                 </td>
                                                 <td class="text-end p-1">
-                                                    {{ $product->price }}
+                                                    {{ number_format($product->price * $product->units->first()->value, 2) }}
                                                 </td>
                                                 <td class="text-end p-1">
-                                                    {{ $product->discount }}
+                                                    {{ number_format($product->discount * $product->units->first()->value, 2) }}
                                                 </td>
                                             </tr>
                                         @endforeach
