@@ -142,7 +142,8 @@ class ExpensesController extends Controller
     public function delete($ref)
     {
         $expense = expenses::where('refID', $ref)->first();
-        $notes = 'Expense - Method '.$expense->method.' Notes : '.$expense->notes;
+        $category = $expense->category->name;
+        $notes = " Expense - Category $category Method $expense->method Amount Rs. $expense->amount Notes : $expense->notes";
         $delete = storeDeleteRequest(auth()->user()->id, $expense->branchID, $expense->refID, 'expenses', $notes);
 
         session()->forget('confirmed_password');

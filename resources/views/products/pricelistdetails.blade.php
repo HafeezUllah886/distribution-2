@@ -69,22 +69,34 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($products as $key => $product)
+                                        @php
+                                            $groupedProducts = $products->groupBy(function ($item) {
+                                                return $item->vendor->title ?? 'Unknown Vendor';
+                                            });
+                                        @endphp
+                                        @foreach ($groupedProducts as $vendorName => $vendorProducts)
                                             <tr>
-                                                <td class="p-1">{{ $key + 1 }}</td>
-                                                <td class="text-start p-1">{{ $product->name }}</td>
-                                                <td class="text-start p-1">{{ $product->vendor->title }}</td>
-                                                <td class="text-start p-1">{{ $product->units->first()->unit_name }}</td>
-                                                <td class="text-end p-1">
-                                                    {{ $product->units->first()->value }}
-                                                </td>
-                                                <td class="text-end p-1">
-                                                    {{ number_format($product->price * $product->units->first()->value, 2) }}
-                                                </td>
-                                                <td class="text-end p-1">
-                                                    {{ number_format($product->discount * $product->units->first()->value, 2) }}
-                                                </td>
+                                                <td colspan="7" class="text-start fw-bold bg-light p-2">
+                                                    {{ $vendorName }}</td>
                                             </tr>
+                                            @foreach ($vendorProducts as $key => $product)
+                                                <tr>
+                                                    <td class="p-1">{{ $loop->iteration }}</td>
+                                                    <td class="text-start p-1">{{ $product->name }}</td>
+                                                    <td class="text-start p-1">{{ $product->vendor->title }}</td>
+                                                    <td class="text-start p-1">{{ $product->units->first()->unit_name }}
+                                                    </td>
+                                                    <td class="text-end p-1">
+                                                        {{ $product->units->first()->value }}
+                                                    </td>
+                                                    <td class="text-end p-1">
+                                                        {{ number_format($product->price * $product->units->first()->value, 2) }}
+                                                    </td>
+                                                    <td class="text-end p-1">
+                                                        {{ number_format($product->discount * $product->units->first()->value, 2) }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         @endforeach
                                     </tbody>
                                 </table><!--end table-->
