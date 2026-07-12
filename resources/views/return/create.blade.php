@@ -7,8 +7,11 @@
                     <div class="col-12">
                         <div class="card-header">
                             <div class="row">
-                                <div class="col-6"><h3> Create Return </h3></div>
-                                <div class="col-6 d-flex flex-row-reverse"><a href="{{route('return.index')}}" class="btn btn-danger">Close</a></div>
+                                <div class="col-6">
+                                    <h3> Create Return </h3>
+                                </div>
+                                <div class="col-6 d-flex flex-row-reverse"><a href="{{ route('return.index') }}"
+                                        class="btn btn-danger">Close</a></div>
                             </div>
                         </div>
                     </div>
@@ -52,21 +55,22 @@
                             <div class="col-2">
                                 <div class="form-group">
                                     <label for="date">Date</label>
-                                    <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}" class="form-control">
+                                    <input type="date" name="date" id="date" value="{{ date('Y-m-d') }}"
+                                        class="form-control">
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="customer">Customer</label>
-                                    <input type="text" value="{{$customer->title}}" class="form-control" readonly>
-                                    <input type="hidden" name="customerID" value="{{$customer->id}}">
+                                    <input type="text" value="{{ $customer->title }}" class="form-control" readonly>
+                                    <input type="hidden" name="customerID" value="{{ $customer->id }}">
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="form-group">
                                     <label for="orderbooker">Order Booker</label>
-                                    <input type="text" value="{{$orderbooker->name}}" class="form-control" readonly>
-                                    <input type="hidden" name="orderbookerID" value="{{$orderbooker->id}}">
+                                    <input type="text" value="{{ $orderbooker->name }}" class="form-control" readonly>
+                                    <input type="hidden" name="orderbookerID" value="{{ $orderbooker->id }}">
                                 </div>
                             </div>
                             <div class="col-2">
@@ -85,7 +89,10 @@
                                     <label for="pendingInvoice">Pending Invoice</label>
                                     <select name="pendingInvoice" class="selectize1" readonly id="pending">
                                         @foreach ($pendingInvoices as $pendingInvoice)
-                                            <option value="{{ $pendingInvoice->id }}" data-due="{{$pendingInvoice->due()}}">{{ $pendingInvoice->id }} | {{date('d M Y', strtotime($pendingInvoice->date))}} | {{number_format($pendingInvoice->due())}}</option>
+                                            <option value="{{ $pendingInvoice->id }}"
+                                                data-due="{{ $pendingInvoice->due() }}">{{ $pendingInvoice->id }} |
+                                                {{ date('d M Y', strtotime($pendingInvoice->date)) }} |
+                                                {{ number_format($pendingInvoice->due()) }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -102,10 +109,10 @@
                         </div>
                     </form>
                 </div>
+            </div>
+            <!--end card-->
         </div>
-        <!--end card-->
-    </div>
-    <!--end col-->
+        <!--end col-->
     </div>
     <!--end row-->
 @endsection
@@ -131,12 +138,13 @@
                     getSingleProduct(value);
                     this.clear();
                     this.focus();
-                    
+
                 }
             },
         });
 
         var existingProducts = [];
+
         function getSingleProduct(id) {
             $.ajax({
                 url: "{{ url('return/getproduct/') }}/" + id,
@@ -145,22 +153,39 @@
                     let found = $.grep(existingProducts, function(element) {
                         return element === product.id;
                     });
-                    if (found.length > 0) {
-                    } else {
+                    if (found.length > 0) {} else {
                         var id = product.id;
                         var units = product.units;
                         var html = '<tr id="row_' + id + '">';
                         html += '<td class="no-padding">' + product.name + '</td>';
-                        html += '<td class="no-padding"><select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges(' + id +')" id="unit_' + id + '">';
-                            units.forEach(function(unit) {
-                                html += '<option data-unit="'+unit.value+'" value="' + unit.id + '">' + unit.unit_name + '</option>';
-                            });
+                        html +=
+                            '<td class="no-padding"><select name="unit[]" class="form-control text-center no-padding" onchange="updateChanges(' +
+                            id + ')" id="unit_' + id + '">';
+                        units.forEach(function(unit) {
+                            html += '<option data-unit="' + unit.value + '" value="' + unit.id + '">' +
+                                unit.unit_name + '</option>';
+                        });
                         html += '</select></td>';
-                        html += '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' + id + ')" max="'+product.stock+'" min="0" required step="any" value="1" class="form-control text-center no-padding" id="qty_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="loose[]" oninput="updateChanges(' + id + ')" min="0" required step="any" value="0" class="form-control text-center no-padding" id="loose_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' + id + ')" required step="any" value="'+product.price+'" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
-                        html += '<td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_' + id + '"></td>';
-                        html += '<td class="no-padding"> <span class="btn btn-sm btn-danger" onclick="deleteRow('+id+')">X</span> </td>';
+                        html +=
+                            '<td class="no-padding"><input type="number" name="qty[]" oninput="updateChanges(' +
+                            id + ')" max="' + product.stock +
+                            '" min="0" required step="any" value="1" class="form-control text-center no-padding" id="qty_' +
+                            id + '"></td>';
+                        html +=
+                            '<td class="no-padding"><input type="number" name="loose[]" oninput="updateChanges(' +
+                            id +
+                            ')" min="0" required step="any" value="0" class="form-control text-center no-padding" id="loose_' +
+                            id + '"></td>';
+                        html +=
+                            '<td class="no-padding"><input type="number" name="price[]" oninput="updateChanges(' +
+                            id + ')" required step="any" value="' + product.price +
+                            '" min="1" class="form-control text-center no-padding" id="price_' + id + '"></td>';
+                        html +=
+                            '<td class="no-padding"><input type="number" name="amount[]" min="0.1" readonly required step="any" value="1" class="form-control text-center no-padding" id="amount_' +
+                            id + '"></td>';
+                        html +=
+                            '<td class="no-padding"> <span class="btn btn-sm btn-danger" onclick="deleteRow(' +
+                            id + ')">X</span> </td>';
                         html += '<input type="hidden" name="id[]" value="' + id + '">';
                         html += '</tr>';
                         $("#products_list").prepend(html);
@@ -170,6 +195,7 @@
                 }
             });
         }
+
         function updateChanges(id) {
             var qty = parseFloat($('#qty_' + id).val());
             var loose = parseFloat($('#loose_' + id).val());
@@ -185,7 +211,7 @@
 
             qty = loose + (qty * unit);
             var amount = price * qty;
-            $("#amount_"+id).val(amount.toFixed(0));
+            $("#amount_" + id).val(amount.toFixed(0));
             updateTotal();
         }
 
@@ -197,19 +223,17 @@
                 total += parseFloat(inputValue);
             });
 
-            $("#totalAmount").html(total.toFixed(2));
+            $("#totalAmount").html(total.toFixed(0));
 
-            $("#net").val(total.toFixed(2));
+            $("#net").val(total.toFixed(0));
         }
 
         function deleteRow(id) {
             existingProducts = $.grep(existingProducts, function(value) {
                 return value !== id;
             });
-            $('#row_'+id).remove();
+            $('#row_' + id).remove();
             updateTotal();
         }
-
-
     </script>
 @endsection

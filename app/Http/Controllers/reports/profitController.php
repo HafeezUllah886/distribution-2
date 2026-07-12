@@ -193,7 +193,7 @@ class profitController extends Controller
             }
 
             $returns_query = returnsDetails::where('productID', $prod->id)
-                ->whereHas('return', function ($q) use ($branch, $from, $to, $customer, $orderbooker, $area, $town) {
+                ->whereHas('return', function ($q) use ($branch, $from, $to, $customer, $orderbooker, $area, $town, $warehouse) {
                     if ($branch != 'All') {
                         $q->where('branchID', $branch);
                     }
@@ -203,6 +203,9 @@ class profitController extends Controller
                     }
                     if ($orderbooker) {
                         $q->whereIn('orderbookerID', $orderbooker);
+                    }
+                    if ($warehouse) {
+                        $q->whereIn('warehouseID', $warehouse);
                     }
                     if ($area || $town) {
                         $q->whereHas('customer', function ($q2) use ($area, $town) {

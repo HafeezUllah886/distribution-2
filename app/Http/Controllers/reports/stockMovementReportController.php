@@ -36,25 +36,39 @@ class stockMovementReportController extends Controller
         $products = products::active()->get();
         $warehouses = warehouses::where('branchID', $branch)->pluck('id')->toArray();
 
-        foreach($products as $product){
+        $opening_stock_cr = stock::whereIn('warehouseID', $warehouses)->where('date', '<', $from)->groupBy('productID')->selectRaw('productID, sum(cr) as total')->pluck('total', 'productID')->toArray();
+        $opening_stock_db = stock::whereIn('warehouseID', $warehouses)->where('date', '<', $from)->groupBy('productID')->selectRaw('productID, sum(db) as total')->pluck('total', 'productID')->toArray();
+        
+        $purchased_all = purchase_details::where('branchID', $branch)->whereBetween('date', [$from, $to])->groupBy('productID')->selectRaw('productID, sum(pc) as total')->pluck('total', 'productID')->toArray();
+        $returned_all = returnsDetails::where('branchID', $branch)->whereBetween('date', [$from, $to])->groupBy('productID')->selectRaw('productID, sum(pc) as total')->pluck('total', 'productID')->toArray();
+        $stock_in_Adjustments_all = stockAdjustment::where('branchID', $branch)->where('type', 'Stock-In')->whereBetween('date', [$from, $to])->groupBy('productID')->selectRaw('productID, sum(pc) as total')->pluck('total', 'productID')->toArray();
+        
+        $sales_all = sale_details::where('branchID', $branch)->whereBetween('date', [$from, $to])->groupBy('productID')->selectRaw('productID, sum(pc) as total')->pluck('total', 'productID')->toArray();
+        $stock_out_Adjustments_all = stockAdjustment::where('branchID', $branch)->where('type', 'Stock-Out')->whereBetween('date', [$from, $to])->groupBy('productID')->selectRaw('productID, sum(pc) as total')->pluck('total', 'productID')->toArray();
+        $obsolete_all = obsolete_stock::where('branchID', $branch)->whereBetween('date', [$from, $to])->groupBy('productID')->selectRaw('productID, sum(pc) as total')->pluck('total', 'productID')->toArray();
 
-            $opening_stock = stock::where('productID', $product->id)->whereIn('warehouseID', $warehouses)->where('date', '<', $from)->sum('cr') - stock::where('productID', $product->id)->whereIn('warehouseID', $warehouses)->where('date', '<', $from)->sum('db');
+        $current_stocks_cr = stock::whereIn('warehouseID', $warehouses)->groupBy('productID')->selectRaw('productID, sum(cr) as total')->pluck('total', 'productID')->toArray();
+        $current_stocks_db = stock::whereIn('warehouseID', $warehouses)->groupBy('productID')->selectRaw('productID, sum(db) as total')->pluck('total', 'productID')->toArray();
+
+        foreach($products as $product){
+            $id = $product->id;
+
+            $opening_stock = ($opening_stock_cr[$id] ?? 0) - ($opening_stock_db[$id] ?? 0);
             
-            $purchased = purchase_details::where('productID', $product->id)->where('branchID', $branch)->whereBetween('date', [$from, $to])->sum('pc');
-            $returned = returnsDetails::where('productID', $product->id)->where('branchID', $branch)->whereBetween('date', [$from, $to])->sum('pc');
-            $stock_in_Adjustments = stockAdjustment::where('productID', $product->id)->where('branchID', $branch)->where('type', 'Stock-In')->whereBetween('date', [$from, $to])->sum('pc');
+            $purchased = $purchased_all[$id] ?? 0;
+            $returned = $returned_all[$id] ?? 0;
+            $stock_in_Adjustments = $stock_in_Adjustments_all[$id] ?? 0;
 
             $totalStockIn = $purchased + $stock_in_Adjustments + $returned;
 
-
-            $sales = sale_details::where('productID', $product->id)->where('branchID', $branch)->whereBetween('date', [$from, $to])->sum('pc');
-            $stock_out_Adjustments = stockAdjustment::where('productID', $product->id)->where('branchID', $branch)->where('type', 'Stock-Out')->whereBetween('date', [$from, $to])->sum('pc');
-            $obsolete = obsolete_stock::where('productID', $product->id)->where('branchID', $branch)->whereBetween('date', [$from, $to])->sum('pc');
+            $sales = $sales_all[$id] ?? 0;
+            $stock_out_Adjustments = $stock_out_Adjustments_all[$id] ?? 0;
+            $obsolete = $obsolete_all[$id] ?? 0;
 
             $totalStockOut = $sales + $stock_out_Adjustments + $obsolete;
 
             $closing_stock = $opening_stock + $totalStockIn - $totalStockOut;
-            $current_stock = getBranchProductStock($product->id, $branch);
+            $current_stock = ($current_stocks_cr[$id] ?? 0) - ($current_stocks_db[$id] ?? 0);
 
             $product->opening_stock = $opening_stock;
             $product->stock_in = $totalStockIn;
