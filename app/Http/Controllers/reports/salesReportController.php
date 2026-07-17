@@ -72,8 +72,8 @@ class salesReportController extends Controller
         if ($request->orderbooker) {
             $sales = $sales->whereIn('orderbookerID', $request->orderbooker);
         }
-        if ($request->warehouse) {
-            $sales = $sales->whereIn('warehouseID', $request->warehouse);
+        if ($request->warehouses) {
+            $sales = $sales->whereIn('warehouseID', $request->warehouses);
         }
         $sales = $sales->get();
         $branch = branches::find($request->branch);
