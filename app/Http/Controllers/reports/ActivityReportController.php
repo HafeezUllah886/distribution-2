@@ -5,14 +5,12 @@ namespace App\Http\Controllers\reports;
 use App\Http\Controllers\Controller;
 use App\Models\accounts;
 use App\Models\branches;
-use App\Models\employee;
 use App\Models\employees_payment_cats;
 use App\Models\expense_categories;
 use App\Models\expenses;
 use App\Models\issue_advance;
 use App\Models\issue_misc;
 use App\Models\issue_salary;
-use App\Models\paymentReceiving;
 use App\Models\payments;
 use App\Models\paymentsReceiving;
 use App\Models\sale_payments;
@@ -24,50 +22,49 @@ class ActivityReportController extends Controller
 {
     public function index()
     {
-        if(auth()->user()->role == "Admin")
-        {
+        if (auth()->user()->role == 'Admin') {
             $branches = branches::all();
-        }
-        else
-        {
+        } else {
             $branches = branches::where('id', auth()->user()->branchID)->get();
         }
+
         return view('reports.activity_report.index', compact('branches'));
     }
 
     public function data(Request $request)
     {
-       $from = $request->from;
-       $to = $request->to;
-       $branch = $request->branch;
+        $from = $request->from;
+        $to = $request->to;
+        $branch = $request->branch;
 
-       $payment_accounts = accounts::orderBy('type', 'asc')->where('branchID', $branch)->get();
+        $payment_accounts = accounts::orderBy('type', 'asc')->where('branchID', $branch)->get();
 
-        foreach($payment_accounts as $payment_account)
-        {
+        foreach ($payment_accounts as $payment_account) {
             $payment_account->payments = payments::where('receiverID', $payment_account->id)->whereBetween('date', [$from, $to])->get();
 
             $payment_account->receivings = paymentsReceiving::where('depositerID', $payment_account->id)->whereBetween('date', [$from, $to])->get();
+
+            $payment_account->closing = accountTillDateBalance($payment_account->id, $to);
         }
 
-        $staffs = User::where("branchID", $branch)->orderBy('role', 'asc')->active()->get();
+        $staffs = User::where('branchID', $branch)->orderBy('role', 'asc')->active()->get();
 
-        foreach($staffs as $staff)
-        {
+        foreach ($staffs as $staff) {
             $staff->payments = staffPayments::where('fromID', $staff->id)->whereBetween('date', [$from, $to])->get();
+
+            $staff->closing = userBalanceTillDate($staff->id, $to);
         }
 
         $customers = accounts::customer()->where('branchID', $branch)->orderBy('id', 'asc')->get();
 
-        foreach($customers as $customer)
-        {
+        foreach ($customers as $customer) {
             $customer->salePayments = sale_payments::where('customerID', $customer->id)->whereBetween('date', [$from, $to])->get();
+            $customer->closing = accountTillDateBalance($customer->id, $to);
         }
 
         $expense_categories = expense_categories::all();
 
-        foreach($expense_categories as $expense_category)
-        {
+        foreach ($expense_categories as $expense_category) {
             $expense_category->trans = expenses::where('categoryID', $expense_category->id)->where('branchID', $branch)->whereBetween('date', [$from, $to])->get();
         }
 
@@ -77,8 +74,7 @@ class ActivityReportController extends Controller
 
         $emp_payment_cats = employees_payment_cats::all();
 
-        foreach($emp_payment_cats as $emp_payment_cat)
-        {
+        foreach ($emp_payment_cats as $emp_payment_cat) {
             $emp_payment_cat->trans = issue_misc::where('catID', $emp_payment_cat->id)->where('branchID', $branch)->whereBetween('date', [$from, $to])->get();
         }
 

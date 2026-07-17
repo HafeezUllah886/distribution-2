@@ -41,7 +41,6 @@
                                 <div class="col-lg-3 col-6">
                                     <p class="text-muted mb-2 text-uppercase fw-semibold">Printed On</p>
                                     <h5 class="fs-14 mb-0"><span id="total-amount">{{ date('d M Y') }}</span></h5>
-                                    {{-- <h5 class="fs-14 mb-0"><span id="total-amount">{{ \Carbon\Carbon::now()->format('h:i A') }}</span></h5> --}}
                                 </div>
                                 <!--end col-->
                             </div>
@@ -106,6 +105,13 @@
                                                         {{ $payment_account->title }}</th>
                                                     <th class="text-end p-1">
                                                         {{ number_format($payment_account->payments->sum('amount'), 2) }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="8" class="text-end p-1">Closing Balance of
+                                                        {{ $payment_account->title }}</th>
+                                                    <th class="text-end p-1">
+                                                        {{ number_format($payment_account->closing, 2) }}
                                                     </th>
                                                 </tr>
                                             @endif
@@ -180,6 +186,13 @@
                                                         {{ number_format($payment_account->receivings->sum('amount'), 2) }}
                                                     </th>
                                                 </tr>
+                                                <tr>
+                                                    <th colspan="8" class="text-end p-1">Closing Balance of
+                                                        {{ $payment_account->title }}</th>
+                                                    <th class="text-end p-1">
+                                                        {{ number_format($payment_account->closing, 2) }}
+                                                    </th>
+                                                </tr>
                                             @endif
                                         @endforeach
                                         <tr>
@@ -249,6 +262,13 @@
                                                     </th>
                                                     <th class="text-end p-1">
                                                         {{ number_format($staff->payments->sum('amount'), 2) }}</th>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="8" class="text-end p-1">Closing Balance of
+                                                        {{ $staff->name }}
+                                                    </th>
+                                                    <th class="text-end p-1">
+                                                        {{ number_format($staff->closing, 2) }}</th>
                                                 </tr>
                                             @endif
                                         @endforeach
@@ -323,6 +343,12 @@
                                                         {{ $customer->title }}</th>
                                                     <th class="text-end p-1">
                                                         {{ number_format($customer->salePayments->sum('amount'), 2) }}</th>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="10" class="text-end p-1">Closing Balance of
+                                                        {{ $customer->title }}</th>
+                                                    <th class="text-end p-1">
+                                                        {{ number_format($customer->closing, 2) }}</th>
                                                 </tr>
                                             @endif
                                         @endforeach
