@@ -339,7 +339,7 @@
                                                     <th colspan="10" class="p-1 text-start">{{ $customer->title }}</th>
                                                 </tr>
                                                 <tr>
-                                                    <th colspan="8" class="text-end p-1">Opening Balance of
+                                                    <th colspan="10" class="text-end p-1">Opening Balance of
                                                         {{ $customer->title }}</th>
                                                     <th class="text-end p-1">
                                                         {{ number_format($customer->opening, 2) }}</th>
