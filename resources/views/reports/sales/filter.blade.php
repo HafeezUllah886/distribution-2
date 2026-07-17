@@ -6,58 +6,66 @@
                 <div class="card-header d-flex justify-content-between">
                     <h3>View Sales Report</h3>
                 </div>
-                <form action="{{route('reportSalesData')}}" method="get">
-                <div class="card-body">
-                    <div class="form-group mt-2">
-                        <label for="from">From</label>
-                        <input type="date" name="from" id="from" value="{{firstDayOfMonth()}}" class="form-control">
+                <form action="{{ route('reportSalesData') }}" method="get">
+                    <div class="card-body">
+                        <div class="form-group mt-2">
+                            <label for="from">From</label>
+                            <input type="date" name="from" id="from" value="{{ firstDayOfMonth() }}"
+                                class="form-control">
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="to">To</label>
+                            <input type="date" name="to" id="to" value="{{ lastDayOfMonth() }}"
+                                class="form-control">
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="customer">Customer</label>
+                            <select name="customer[]" id="customer" class="selectize" multiple>
+                                @foreach ($customers as $customer)
+                                    <option value="{{ $customer->id }}">{{ $customer->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="orderbooker">Orderbooker</label>
+                            <select name="orderbooker[]" id="orderbooker" class="selectize" multiple>
+
+                                @foreach ($orderbookers as $orderbooker)
+                                    <option value="{{ $orderbooker->id }}">{{ $orderbooker->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group mt-2">
+                            <label for="warehouses">Warehouses</label>
+                            <select name="warehouses[]" id="warehouses" class="selectize" multiple>
+
+                                @foreach ($warehouses as $warehouse)
+                                    <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <input type="hidden" name="branch" value="{{ $branch }}">
+                        <input type="hidden" name="area" value="{{ $area }}">
+                        <div class="form-group mt-2">
+                            <button class="btn btn-success w-100" id="viewBtn">View Report</button>
+                        </div>
                     </div>
-                    <div class="form-group mt-2">
-                        <label for="to">To</label>
-                                <input type="date" name="to" id="to" value="{{lastDayOfMonth()}}" class="form-control">
-                    </div>
-                    <div class="form-group mt-2">
-                        <label for="customer">Customer</label>
-                        <select name="customer[]" id="customer" class="selectize" multiple>
-                            @foreach ($customers as $customer)
-                                <option value="{{$customer->id}}">{{$customer->title}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group mt-2">
-                        <label for="orderbooker">Orderbooker</label>
-                        <select name="orderbooker[]" id="orderbooker" class="selectize" multiple>
-                            
-                            @foreach ($orderbookers as $orderbooker)
-                                <option value="{{$orderbooker->id}}">{{$orderbooker->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <input type="hidden" name="branch" value="{{$branch}}">
-                    <input type="hidden" name="area" value="{{$area}}">
-                    <div class="form-group mt-2">
-                        <button class="btn btn-success w-100" id="viewBtn">View Report</button>
-                    </div>
-                </div>
                 </form>
             </div>
         </div>
     </div>
-
-
 @endsection
 @section('page-css')
     <link rel="stylesheet" href="{{ asset('assets/libs/selectize/selectize.min.css') }}">
 @endsection
 @section('page-js')
-<script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/selectize/selectize.min.js') }}"></script>
     <script>
         $(".selectize").selectize({
-        plugins: ['remove_button'],
-        maxItems: null,
-        create: false,
-        placeholder: 'Select Option...'
-    });
-        
+            plugins: ['remove_button'],
+            maxItems: null,
+            create: false,
+            placeholder: 'Select Option...'
+        });
     </script>
 @endsection

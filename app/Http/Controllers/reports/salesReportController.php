@@ -8,6 +8,7 @@ use App\Models\area;
 use App\Models\branches;
 use App\Models\sales;
 use App\Models\User;
+use App\Models\warehouses;
 use Illuminate\Http\Request;
 
 class salesReportController extends Controller
@@ -46,7 +47,9 @@ class salesReportController extends Controller
             $area = 'All';
         }
 
-        return view('reports.sales.filter', compact('customers', 'orderbookers', 'branch', 'area'));
+        $warehouses = warehouses::where('branchID', $request->branch)->get();
+
+        return view('reports.sales.filter', compact('customers', 'orderbookers', 'branch', 'area', 'warehouses'));
     }
 
     public function data(Request $request)
@@ -68,6 +71,9 @@ class salesReportController extends Controller
         $sales = sales::with('customer', 'orderbooker', 'supplyman')->whereBetween('date', [$from, $to])->whereIn('customerID', $customers);
         if ($request->orderbooker) {
             $sales = $sales->whereIn('orderbookerID', $request->orderbooker);
+        }
+        if ($request->warehouse) {
+            $sales = $sales->whereIn('warehouseID', $request->warehouse);
         }
         $sales = $sales->get();
         $branch = branches::find($request->branch);
@@ -98,6 +104,14 @@ class salesReportController extends Controller
             $customers = 'All';
         }
 
-        return view('reports.sales.details', compact('from', 'to', 'sales', 'branch', 'area', 'orderbookers', 'customers'));
+        $warehouses = '';
+        if ($request->warehouse) {
+            $warehouses = warehouses::whereIn('id', $request->warehouse)->pluck('name')->toArray();
+            $warehouses = implode(',', $warehouses);
+        } else {
+            $warehouses = 'All';
+        }
+
+        return view('reports.sales.details', compact('from', 'to', 'sales', 'branch', 'area', 'orderbookers', 'customers', 'warehouses'));
     }
 }
