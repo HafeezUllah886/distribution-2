@@ -84,6 +84,12 @@
                                                     <th colspan="9" class="p-1 text-start">{{ $payment_account->title }}
                                                     </th>
                                                 </tr>
+                                                <tr>
+                                                    <th colspan="8" class="text-end p-1">Opening Balance of
+                                                        {{ $payment_account->title }}</th>
+                                                    <th class="text-end p-1">
+                                                        {{ number_format($payment_account->opening, 2) }}</th>
+                                                </tr>
                                                 @foreach ($payment_account->payments as $payment)
                                                     <tr>
                                                         <td class="p-1">{{ $loop->iteration }}</td>
@@ -163,6 +169,12 @@
                                                     <th colspan="9" class="p-1 text-start">{{ $payment_account->title }}
                                                     </th>
                                                 </tr>
+                                                <tr>
+                                                    <th colspan="8" class="text-end p-1">Opening Balance of
+                                                        {{ $payment_account->title }}</th>
+                                                    <th class="text-end p-1">
+                                                        {{ number_format($payment_account->opening, 2) }}</th>
+                                                </tr>
                                                 @foreach ($payment_account->receivings as $payment)
                                                     <tr>
                                                         <td class="p-1">{{ $loop->iteration }}</td>
@@ -240,6 +252,12 @@
                                                 @endphp
                                                 <tr>
                                                     <th colspan="9" class="p-1 text-start">{{ $staff->name }}</th>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="8" class="text-end p-1">Opening Balance of
+                                                        {{ $staff->name }}</th>
+                                                    <th class="text-end p-1">
+                                                        {{ number_format($staff->opening, 2) }}</th>
                                                 </tr>
                                                 @foreach ($staff->payments as $payment)
                                                     <tr>
@@ -319,6 +337,12 @@
                                                 @endphp
                                                 <tr>
                                                     <th colspan="10" class="p-1 text-start">{{ $customer->title }}</th>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="8" class="text-end p-1">Opening Balance of
+                                                        {{ $customer->title }}</th>
+                                                    <th class="text-end p-1">
+                                                        {{ number_format($customer->opening, 2) }}</th>
                                                 </tr>
                                                 @foreach ($customer->salePayments as $payment)
                                                     <tr>

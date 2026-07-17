@@ -44,6 +44,7 @@ class ActivityReportController extends Controller
 
             $payment_account->receivings = paymentsReceiving::where('depositerID', $payment_account->id)->whereBetween('date', [$from, $to])->get();
 
+            $payment_account->opening = accountBeforeDateBalance($payment_account->id, $from);
             $payment_account->closing = accountTillDateBalance($payment_account->id, $to);
         }
 
@@ -52,6 +53,7 @@ class ActivityReportController extends Controller
         foreach ($staffs as $staff) {
             $staff->payments = staffPayments::where('fromID', $staff->id)->whereBetween('date', [$from, $to])->get();
 
+            $staff->opening = userBalanceBeforeDate($staff->id, $from);
             $staff->closing = userBalanceTillDate($staff->id, $to);
         }
 
@@ -59,6 +61,7 @@ class ActivityReportController extends Controller
 
         foreach ($customers as $customer) {
             $customer->salePayments = sale_payments::where('customerID', $customer->id)->whereBetween('date', [$from, $to])->get();
+            $customer->opening = accountBeforeDateBalance($customer->id, $from);
             $customer->closing = accountTillDateBalance($customer->id, $to);
         }
 

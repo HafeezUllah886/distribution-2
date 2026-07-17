@@ -5,12 +5,11 @@ use App\Models\cheques;
 use App\Models\currency_transactions;
 use App\Models\employee_ledger;
 use App\Models\method_transactions;
-use App\Models\ref;
 use App\Models\transactions;
-use App\Models\userAccounts;
 use App\Models\users_transactions;
 
-function createTransaction($accountID, $date, $cr, $db, $notes, $ref, $orderbookerID){
+function createTransaction($accountID, $date, $cr, $db, $notes, $ref, $orderbookerID)
+{
     transactions::create(
         [
             'accountID' => $accountID,
@@ -25,7 +24,8 @@ function createTransaction($accountID, $date, $cr, $db, $notes, $ref, $orderbook
 
 }
 
-function createUserTransaction($userID, $date, $cr, $db, $notes, $ref){
+function createUserTransaction($userID, $date, $cr, $db, $notes, $ref)
+{
     users_transactions::create(
         [
             'userID' => $userID,
@@ -37,7 +37,8 @@ function createUserTransaction($userID, $date, $cr, $db, $notes, $ref){
         ]
     );
 }
-function createEmployeeTransaction($employeeID, $date, $cr, $db, $notes, $ref){
+function createEmployeeTransaction($employeeID, $date, $cr, $db, $notes, $ref)
+{
     employee_ledger::create(
         [
             'employeeID' => $employeeID,
@@ -50,13 +51,11 @@ function createEmployeeTransaction($employeeID, $date, $cr, $db, $notes, $ref){
     );
 }
 
-function createCurrencyTransaction($userID, $currencyID, $qty, $type ,$date, $notes, $ref){
-    foreach($currencyID as $key => $id)
-    {
-        if($qty[$key] > 0)
-        {
-            if($type == "cr")
-            {
+function createCurrencyTransaction($userID, $currencyID, $qty, $type, $date, $notes, $ref)
+{
+    foreach ($currencyID as $key => $id) {
+        if ($qty[$key] > 0) {
+            if ($type == 'cr') {
                 currency_transactions::create(
                     [
                         'userID' => $userID,
@@ -67,9 +66,7 @@ function createCurrencyTransaction($userID, $currencyID, $qty, $type ,$date, $no
                         'refID' => $ref,
                     ]
                 );
-            }
-            else
-            {
+            } else {
                 currency_transactions::create(
                     [
                         'userID' => $userID,
@@ -86,7 +83,8 @@ function createCurrencyTransaction($userID, $currencyID, $qty, $type ,$date, $no
     }
 }
 
-function createMethodTransaction($user, $method, $cr, $db, $date, $number, $bank, $cheque_date, $notes, $ref){
+function createMethodTransaction($user, $method, $cr, $db, $date, $number, $bank, $cheque_date, $notes, $ref)
+{
     method_transactions::create(
         [
             'userID' => $user,
@@ -115,19 +113,20 @@ function deleteAttachment($ref)
 
 function createAttachment($file, $ref)
 {
-    $filename = time() . '.' . $file->getClientOriginalExtension();
+    $filename = time().'.'.$file->getClientOriginalExtension();
     $file->move('attachments', $filename);
 
     attachment::create(
         [
-            'path' => "attachments/" . $filename,
+            'path' => 'attachments/'.$filename,
             'refID' => $ref,
         ]
     );
 }
 
-function getAccountBalance($id){
-    $transactions  = transactions::where('accountID', $id);
+function getAccountBalance($id)
+{
+    $transactions = transactions::where('accountID', $id);
 
     $cr = $transactions->sum('cr');
     $db = $transactions->sum('db');
@@ -136,8 +135,9 @@ function getAccountBalance($id){
     return $balance;
 }
 
-function getEmployeeBalance($id){
-    $transactions  = employee_ledger::where('employeeID', $id);
+function getEmployeeBalance($id)
+{
+    $transactions = employee_ledger::where('employeeID', $id);
 
     $cr = $transactions->sum('cr');
     $db = $transactions->sum('db');
@@ -146,8 +146,9 @@ function getEmployeeBalance($id){
     return $balance;
 }
 
-function getAccountBalanceOrderbookerWise($accountID, $orderbookerID){
-    $transactions  = transactions::where('accountID', $accountID)->where('orderbookerID', $orderbookerID);
+function getAccountBalanceOrderbookerWise($accountID, $orderbookerID)
+{
+    $transactions = transactions::where('accountID', $accountID)->where('orderbookerID', $orderbookerID);
 
     $cr = $transactions->sum('cr');
     $db = $transactions->sum('db');
@@ -156,8 +157,9 @@ function getAccountBalanceOrderbookerWise($accountID, $orderbookerID){
     return $balance;
 }
 
-function getUserAccountBalance($id){
-    $transactions  = users_transactions::where('userID', $id);
+function getUserAccountBalance($id)
+{
+    $transactions = users_transactions::where('userID', $id);
 
     $cr = $transactions->sum('cr');
     $db = $transactions->sum('db');
@@ -166,18 +168,9 @@ function getUserAccountBalance($id){
     return $balance;
 }
 
-
-function getCurrencyBalance($id, $user){
-    $transactions  = currency_transactions::where('currencyID', $id)->where('userID', $user);
-
-    $cr = $transactions->sum('cr');
-    $db = $transactions->sum('db');
-    $balance = $cr - $db;
-
-    return $balance;
-}
-function getMethodBalance($method, $user){
-    $transactions  = method_transactions::where('method', $method)->where('userID', $user);
+function getCurrencyBalance($id, $user)
+{
+    $transactions = currency_transactions::where('currencyID', $id)->where('userID', $user);
 
     $cr = $transactions->sum('cr');
     $db = $transactions->sum('db');
@@ -185,53 +178,63 @@ function getMethodBalance($method, $user){
 
     return $balance;
 }
+function getMethodBalance($method, $user)
+{
+    $transactions = method_transactions::where('method', $method)->where('userID', $user);
 
+    $cr = $transactions->sum('cr');
+    $db = $transactions->sum('db');
+    $balance = $cr - $db;
 
-function checkMethodExceed($method, $user, $amount){
+    return $balance;
+}
+
+function checkMethodExceed($method, $user, $amount)
+{
     $balance = getMethodBalance($method, $user);
-    if($balance < $amount)
-    {
+    if ($balance < $amount) {
         return false;
     }
+
     return true;
 }
 
-function checkCurrencyExceed($userID, $currencyID, $qty){
-    foreach($currencyID as $key => $id)
-    {
-        if($qty[$key] > 0)
-        {
+function checkCurrencyExceed($userID, $currencyID, $qty)
+{
+    foreach ($currencyID as $key => $id) {
+        if ($qty[$key] > 0) {
             $balance = getCurrencyBalance($id, $userID);
-            if($balance < $qty[$key])
-            {
+            if ($balance < $qty[$key]) {
                 return false;
             }
         }
     }
+
     return true;
 }
 
-function checkUserAccountExceed($userID, $amount){
+function checkUserAccountExceed($userID, $amount)
+{
     $balance = getUserAccountBalance($userID);
-    if($balance < $amount)
-    {
+    if ($balance < $amount) {
         return false;
     }
+
     return true;
 }
-
 
 function numberToWords($number)
 {
-    $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+    $f = new NumberFormatter('en', NumberFormatter::SPELLOUT);
+
     return ucfirst($f->format($number));
 }
-
 
 function spotBalanceBefore($id, $ref)
 {
     $cr = transactions::where('accountID', $id)->where('refID', '<', $ref)->sum('cr');
     $db = transactions::where('accountID', $id)->where('refID', '<', $ref)->sum('db');
+
     return $balance = $cr - $db;
 }
 
@@ -239,6 +242,7 @@ function spotBalance($id, $ref)
 {
     $cr = transactions::where('accountID', $id)->where('refID', '<=', $ref)->sum('cr');
     $db = transactions::where('accountID', $id)->where('refID', '<=', $ref)->sum('db');
+
     return $balance = $cr - $db;
 }
 
@@ -246,6 +250,14 @@ function accountTillDateBalance($id, $date)
 {
     $cr = transactions::where('accountID', $id)->whereDate('date', '<=', $date)->sum('cr');
     $db = transactions::where('accountID', $id)->whereDate('date', '<=', $date)->sum('db');
+
+    return $balance = $cr - $db;
+}
+function accountBeforeDateBalance($id, $date)
+{
+    $cr = transactions::where('accountID', $id)->whereDate('date', '<', $date)->sum('cr');
+    $db = transactions::where('accountID', $id)->whereDate('date', '<', $date)->sum('db');
+
     return $balance = $cr - $db;
 }
 
@@ -253,6 +265,7 @@ function spotUserBalanceBefore($id, $ref)
 {
     $cr = users_transactions::where('userID', $id)->where('refID', '<', $ref)->sum('cr');
     $db = users_transactions::where('userID', $id)->where('refID', '<', $ref)->sum('db');
+
     return $balance = $cr - $db;
 }
 
@@ -260,6 +273,7 @@ function spotUserBalance($id, $ref)
 {
     $cr = users_transactions::where('userID', $id)->where('refID', '<=', $ref)->sum('cr');
     $db = users_transactions::where('userID', $id)->where('refID', '<=', $ref)->sum('db');
+
     return $balance = $cr - $db;
 }
 
@@ -267,6 +281,7 @@ function accountBalanceTillDate($id, $date)
 {
     $cr = transactions::where('accountID', $id)->whereDate('date', '<=', $date)->sum('cr');
     $db = transactions::where('accountID', $id)->whereDate('date', '<=', $date)->sum('db');
+
     return $balance = $cr - $db;
 }
 
@@ -274,6 +289,14 @@ function userBalanceTillDate($id, $date)
 {
     $cr = users_transactions::where('userID', $id)->whereDate('date', '<=', $date)->sum('cr');
     $db = users_transactions::where('userID', $id)->whereDate('date', '<=', $date)->sum('db');
+
+    return $balance = $cr - $db;
+}
+function userBalanceBeforeDate($id, $date)
+{
+    $cr = users_transactions::where('userID', $id)->whereDate('date', '<', $date)->sum('cr');
+    $db = users_transactions::where('userID', $id)->whereDate('date', '<', $date)->sum('db');
+
     return $balance = $cr - $db;
 }
 
@@ -281,11 +304,19 @@ function employeeBalanceTillDate($id, $date)
 {
     $cr = employee_ledger::where('employeeID', $id)->whereDate('date', '<=', $date)->sum('cr');
     $db = employee_ledger::where('employeeID', $id)->whereDate('date', '<=', $date)->sum('db');
+
+    return $balance = $cr - $db;
+}
+function employeeBalanceBeforeDate($id, $date)
+{
+    $cr = employee_ledger::where('employeeID', $id)->whereDate('date', '<', $date)->sum('cr');
+    $db = employee_ledger::where('employeeID', $id)->whereDate('date', '<', $date)->sum('db');
+
     return $balance = $cr - $db;
 }
 
-
-function saveCheque($customerID, $userID, $orderbookerID, $chequeDate, $amount, $number, $bank, $notes, $ref){
+function saveCheque($customerID, $userID, $orderbookerID, $chequeDate, $amount, $number, $bank, $notes, $ref)
+{
     cheques::create(
         [
             'customerID' => $customerID,
