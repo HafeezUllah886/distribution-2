@@ -48,6 +48,10 @@
                                     <p class="text-muted mb-2 text-uppercase fw-semibold">Branch</p>
                                     <h5 class="fs-14 mb-0">{{ $branch }}</h5>
                                 </div>
+                                <div class="col-lg-3 col-6">
+                                    <p class="text-muted mb-2 text-uppercase fw-semibold">Warehouses</p>
+                                    <h5 class="fs-14 mb-0">{{ $warehouses }}</h5>
+                                </div>
                                 <!--end col-->
                                 <!--end col-->
                                 <div class="col-lg-3 col-6">

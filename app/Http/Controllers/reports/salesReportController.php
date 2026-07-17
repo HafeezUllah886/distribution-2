@@ -105,8 +105,8 @@ class salesReportController extends Controller
         }
 
         $warehouses = '';
-        if ($request->warehouse) {
-            $warehouses = warehouses::whereIn('id', $request->warehouse)->pluck('name')->toArray();
+        if ($request->warehouses) {
+            $warehouses = warehouses::whereIn('id', $request->warehouses)->pluck('name')->toArray();
             $warehouses = implode(',', $warehouses);
         } else {
             $warehouses = 'All';
