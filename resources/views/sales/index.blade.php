@@ -75,7 +75,7 @@
                                     $paid = $sale->payments->sum('amount');
                                     $due = $amount - $paid;
                                 @endphp
-                                <tr>
+                                <tr class="{{ $sale->has_expense ? 'bg-danger' : '' }}">
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $sale->id }}</td>
                                     <td>{{ $sale->customer->title }}</td>
